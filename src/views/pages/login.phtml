@@ -19,7 +19,10 @@
         <div class="right-panel">
             <div class="login-container">
                 <h2>Đăng nhập</h2>
-                <form action="/login" method="POST">
+                <?php if (isset($error_message)): ?>
+                        <p style="color: red;"><?php echo htmlspecialchars($error_message); ?></p>
+                <?php endif; ?>
+                <form action="index.php?action=checklogin" method="POST">
                     <div class="form-group">
                         <label for="username">Tài khoản</label>
                         <input type="text" class="form-control" id="username" name="username" required>
