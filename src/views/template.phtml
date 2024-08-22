@@ -9,9 +9,13 @@
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/sidebar.css">
 </head>
 <body>
-    <?php include(__DIR__ . '/partials/sidebar.phtml'); ?>
-    <main>
+    <nav id="sidebar" class="bg-light">
+        <?php include(__DIR__ . '/partials/sidebar.phtml'); ?>
+    </nav>
+    <main class="ml-auto" style="margin-left: 250px; padding: 20px;">
         <?php echo $content; ?>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2LcRnv7AZHJnKAYmQzK3sFSB3/6OLk+Ra7/RRShuWE" crossorigin="anonymous"></script>
 </body>
 </html>

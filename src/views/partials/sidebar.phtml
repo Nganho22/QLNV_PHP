@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main id="main-content">
+        <div id="sidebar-wrapper" class="sidebar-wrapper">
+            <div id="sidebar-icon" class="sidebar sidebar-icon">
+                <div class="d-flex flex-column align-items-center py-3">
+                    <div class="profile-section text-center">
+                        <img src="https://via.placeholder.com/50" alt="User Image" class="rounded-circle">
+                    </div>
+                    <hr class="w-100">
+                    <ul class="nav nav-pills flex-column w-100">
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/check_list.png" alt="Danh Sách Yêu Cầu" class="icon">
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/calendar.png" alt="Hoạt Động Chiến Dịch" class="icon">
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/bar-chart.png" alt="Khen Thưởng" class="icon">
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/project.png" alt="Dự Án" class="icon">
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/home.png" alt="Home" class="icon">
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/logout.png" alt="Logout" class="icon">
+                            </a>
+                        </li>
+                    </ul>
+                   
+                </div>
+            </div>
+
+            <div id="sidebar-text" class="sidebar sidebar-text">
+                <div class="d-flex flex-column align-items-start py-3">
+                    <div class="profile-section text-center">
+                        <img src="https://via.placeholder.com/50" alt="User Image" class="rounded-circle">
+                    </div>
+                    <hr class="w-100">
+                    <!-- Menu Items -->
+                    <ul class="nav nav-pills flex-column w-100">
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/check_list.png" alt="Danh Sách Yêu Cầu" class="icon">
+                                <span class="menu-text">Danh Sách Yêu Cầu</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/calendar.png" alt="Hoạt Động Chiến Dịch" class="icon">
+                                <span class="menu-text">Hoạt Động Chiến Dịch</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/bar-chart.png" alt="Khen Thưởng" class="icon">
+                                <span class="menu-text">Khen Thưởng</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/project.png" alt="Dự Án" class="icon">
+                                <span class="menu-text">Dự Án</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
+                                <span class="menu-text">Check-In</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/home.png" alt="Home" class="icon">
+                                <span class="menu-text">Home</span>
+                            </a>
+                        </li>
+                        <li class="nav-item mb-2">
+                            <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <img src="/QLNV_PHP/src/public/img/logo/logout.png" alt="Logout" class="icon">
+                                <span class="menu-text">Logout</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <button id="sidebarToggle" class="btn btn-light mt-auto">
+                <span>&#9776;</span>
+            </button>
+        </div>
+    </main>
+    <script>
+        document.getElementById("sidebarToggle").addEventListener("click", function() {
+            var sidebarIcon = document.getElementById("sidebar-icon");
+            var sidebarText = document.getElementById("sidebar-text");
+            var mainContent = document.getElementById("main-content");
+
+            // Toggle visibility of sidebars
+            sidebarIcon.classList.toggle("collapsed");
+            sidebarText.classList.toggle("collapsed");
+            mainContent.classList.toggle("expanded");
+        });
+    </script>
+</body>
+</html>
