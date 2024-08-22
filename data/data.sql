@@ -222,6 +222,6 @@ INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Date_checkout, 
 
 
 -- update PhongBan
-UPDATE PhongBan SET QuanLyID = '1' WHERE PhongID = 'P01';
-UPDATE PhongBan SET QuanLyID = '2' WHERE PhongID = 'P02';
-UPDATE PhongBan SET QuanLyID = '4' WHERE PhongID = 'P03';
+UPDATE PhongBan SET QuanLyID = '2' WHERE PhongID = 'P01';
+UPDATE PhongBan SET QuanLyID = '7' WHERE PhongID = 'P02';
+UPDATE PhongBan SET QuanLyID = '14' WHERE PhongID = 'P03';
