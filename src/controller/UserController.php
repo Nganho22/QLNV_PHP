@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../model/UserModel.php';
+require_once __DIR__ . '/../model/PassModel.php';
 require_once __DIR__ . '/../controller/HomeController.php';
 class UserController{
     public function checklogin(){
@@ -31,7 +32,5 @@ class UserController{
             exit();
         }
     }
-
-
 }
 ?>

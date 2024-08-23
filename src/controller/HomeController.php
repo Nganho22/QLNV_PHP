@@ -6,6 +6,11 @@ class HomeController{
         require(__DIR__ . '/../views/pages/login.phtml');
     }
 
+    public function forgotpass() {
+        $title='ForgotPass';
+        require(__DIR__ . '/../views/pages/forgot_pass.phtml');
+    }
+
     public function home() {
         if (isset($_SESSION['user'])) {
             $Role= $_SESSION['user']['Role'];
