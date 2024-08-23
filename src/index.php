@@ -36,10 +36,16 @@ switch ($action)
         $controller = new HomeController();
         $controller->Home();
         break;
+    case "logout":
+        $controller = new UserController();
+        $controller->logout();
+        break;
 
 default:
         $controller = new HomeController();
         $controller->login();
         break;
+
+    
 }
 ?>

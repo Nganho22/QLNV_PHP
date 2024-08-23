@@ -32,5 +32,19 @@ class UserController{
             exit();
         }
     }
+
+    public function logout() {
+        $_SESSION['logged_in'] = false;
+        session_unset();
+        session_destroy();
+        $redirect_url = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '/QLNV/src/index.php?action=login';
+
+
+        if (strpos($redirect_url, 'status=logged_out') === false) {
+            $redirect_url .= (strpos($redirect_url, '?') !== false) ? '&status=logged_out' : '?status=logged_out';
+        }
+        header('Location: ' . $redirect_url);
+        exit();
+    }
 }
 ?>
