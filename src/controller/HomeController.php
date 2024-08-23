@@ -43,6 +43,12 @@ class HomeController{
             }
             
             if ($file && file_exists($file)) {
+                $message='';
+                if (isset($_GET['status'])) {
+                    if ($_GET['status'] === 'logged_in') {
+                        $message = 'Chúc mừng đăng nhập thành công!';
+                    }
+                }
                 ob_start();
                 require($file);
                 $content = ob_get_clean();

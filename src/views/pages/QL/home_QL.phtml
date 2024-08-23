@@ -8,6 +8,15 @@
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/gd_quanly.css">
 </head>
 <body>
+    <?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        </div>
+    <?php endif; ?>
+    
     <div class="container">
         <div class="left-panel">
             <div class="stats1">
