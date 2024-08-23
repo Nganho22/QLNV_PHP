@@ -8,61 +8,65 @@ body {
 
 .container {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
+    padding: 20px;
 }
 
-
 .left-panel {
-    width: 60%;
+    width: 100%;
     background-color: #e6e6e6;
-    padding: 50px;
+    padding: 20px;
     border-radius: 8px;
 }
 
 .right-panel {
-    width: 35%;
+    width: 70%;
     background-color: #e6e6e6;
     padding: 20px;
-    margin-right: -300px;
     border-radius: 8px;
+    margin-left: 20px;
+    margin-right: -300px;
 }
 
 h1, h2, h3 {
     margin-bottom: 10px;
+    color: #333;
 }
 
-.stats{
+.stats1 {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column; /* Đặt các phần tử theo chiều dọc */
 }
 
-
-.stat-box {
-    background-color: #a6a6a6;
-    border-radius: 8px;
-    padding: 10px;
-    text-align: center;
-    width: 45%;
+.header {
+    display: flex;
+    flex-direction: row; /* Đặt tiêu đề và stat-box1 trên cùng một hàng */
+    align-items: center; /* Căn giữa theo chiều dọc nếu cần */
+    gap: 35px; /* Khoảng cách giữa tiêu đề và stat-box1 */
 }
 
-.tasks-today, .activities {
-    margin-top: 20px;
-}
-
-.tasks-today ul, .activities ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.tasks-today li, .activities li {
+.stat-box1 {
     background-color: #ffffff;
     border-radius: 8px;
-    margin-bottom: 10px;
     padding: 10px;
+    margin-left: 150px;
+}
+
+
+.stats {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.stat-box {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: left; /* Ensure the text aligns to the left */
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align items to the start of the flex container */
 }
 
 .calendar {
@@ -87,19 +91,40 @@ h1, h2, h3 {
     font-weight: bold;
 }
 
-.stats-chart img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+.tasks-today ul, .employee-list ul, .timesheet-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
+.tasks-today li, .employee-list li, .timesheet-list li {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-.status {
+.tasks-today li .status {
     background-color: #888;
     color: white;
     padding: 3px 10px;
     border-radius: 5px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+a {
+    color: #1abc9c;
+    text-decoration: none;
 }
 
 .calendar .month {
@@ -143,7 +168,7 @@ h1, h2, h3 {
     text-align: center;
     margin-bottom: 5px;
     margin-right: -2px;
-    font-size: 12px;
+    font-size: 20px;
     color: #666;
 }
 
