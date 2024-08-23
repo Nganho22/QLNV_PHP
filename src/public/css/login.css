@@ -152,3 +152,46 @@ h2::after {
 .back-button .btn-link:hover {
     text-decoration: underline;
 }
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    border-radius: 10px;
+}
+
+.popup .popup-content {
+    text-align: center;
+}
+
+.popup .popup-button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border: none;
+    background: #007bff;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.popup .popup-button:hover {
+    background: #0056b3;
+}
+
+.popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}

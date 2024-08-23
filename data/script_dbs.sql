@@ -46,3 +46,16 @@ CREATE TABLE Check_inout (
     Nghi INT DEFAULT 0,
     FOREIGN KEY (EmpID) REFERENCES Profile(EmpID)
 );
+
+------------------------------------
+
+ALTER TABLE Profile MODIFY Email VARCHAR(50) NOT NULL;
+ALTER TABLE Profile ADD UNIQUE (Email);
+
+CREATE TABLE password_resets (
+    email VARCHAR(50) NOT NULL,
+    code VARCHAR(6) NOT NULL,
+    created_at DATETIME NOT NULL,
+    PRIMARY KEY (email, code),
+    FOREIGN KEY (email) REFERENCES Profile(Email) ON DELETE CASCADE
+);

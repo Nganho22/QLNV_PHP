@@ -23,7 +23,7 @@ class PassModel {
     }
 
     public function storeResetCode($email, $code) {
-        $expiry = date('Y-m-d H:i:s', strtotime('+60 seconds')); // Mã hết hạn sau 60s
+        $expiry = gmdate('Y-m-d H:i:s', strtotime('+120 seconds')); // Mã hết hạn sau 120s
         $sql = "INSERT INTO password_resets (Email, Code, Expiry) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("sss", $email, $code, $expiry);
@@ -31,7 +31,7 @@ class PassModel {
     }
 
     public function isValidResetCode($email, $code) {
-        $sql = "SELECT * FROM password_resets WHERE Email = ? AND Code = ? AND Expiry > NOW()";
+        $sql = "SELECT * FROM password_resets WHERE Email = ? AND Code = ? AND Expiry > UTC_TIMESTAMP()";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("ss", $email, $code);
         $stmt->execute();
@@ -50,6 +50,13 @@ class PassModel {
         $sql = "DELETE FROM password_resets WHERE Email = ? AND Code = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("ss", $email, $code);
+        return $stmt->execute();
+    }
+
+    public function deleteOldResetCode($email) {
+        $sql = "DELETE FROM password_resets WHERE email = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param("s", $email);
         return $stmt->execute();
     }
 }
