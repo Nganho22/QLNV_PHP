@@ -3,6 +3,15 @@
 class HomeController{
     public function login() {
         $title='Login';
+        $message='';
+        if (isset($_GET['status'])) {
+            if ($_GET['status'] === 'logged_out') {
+                $message = 'You have been logged out successfully.';
+            }
+            elseif ($_GET['status'] === 'needlogin') {
+                $message = 'You need to login!';
+            }
+        }
         require(__DIR__ . '/../views/pages/login.phtml');
     }
 
@@ -43,8 +52,49 @@ class HomeController{
             }
         }
         else{
-            $title='Login';
-            require(__DIR__ . '/../views/pages/login.phtml');
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+     
+    }
+    public function GetProfile_page() {
+        if (isset($_SESSION['user'])) {
+            ob_start();
+            require("./views/pages/profile.phtml");
+            $content = ob_get_clean();
+            require(__DIR__ . '/../views/template.phtml');
+        }
+        else{
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+     
+    }
+
+    public function GetUpdateprofile_page() {
+        if (isset($_SESSION['user'])) {
+            ob_start();
+            require("./views/pages/update_profile.phtml");
+            $content = ob_get_clean();
+            require(__DIR__ . '/../views/template.phtml');
+        }
+        else{
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+     
+    }
+
+    public function Getcheckinout_page() {
+        if (isset($_SESSION['user'])) {
+            ob_start();
+            require("./views/pages/checkin_out.phtml");
+            $content = ob_get_clean();
+            require(__DIR__ . '/../views/template.phtml');
+        }
+        else{
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
         }
      
     }

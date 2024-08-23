@@ -40,12 +40,21 @@ switch ($action)
         $controller = new UserController();
         $controller->logout();
         break;
-
+    case "GetProfilePage":
+        $controller = new HomeController();
+        $controller->GetProfile_page();
+        break;
+    case "GetUpdateProfilePage":
+        $controller = new HomeController();
+        $controller->GetUpdateprofile_page();
+        break;
+    case "GetCheckinoutPage":
+        $controller = new HomeController();
+        $controller->Getcheckinout_page();
+        break;
 default:
         $controller = new HomeController();
         $controller->login();
         break;
-
-    
 }
 ?>

@@ -77,6 +77,14 @@ body {
     margin-left: 2px;
 }
 
+.profile-section {
+    text-decoration: none;
+}
+
+.profile-section:hover {
+    text-decoration: none;
+}
+
 .nav-pills .nav-link {
     border-radius: 0;
     padding: 10px 15px;

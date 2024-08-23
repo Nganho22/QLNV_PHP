@@ -10,9 +10,9 @@
         <div id="sidebar-wrapper" class="sidebar-wrapper">
             <div id="sidebar-icon" class="sidebar sidebar-icon">
                 <div class="d-flex flex-column align-items-center py-3">
-                <div class="profile-section text-center">
-                    <img src="<?php echo htmlspecialchars(isset($_SESSION['user']['Image']) ? $_SESSION['user']['Image'] : 'default-avatar.jpg'); ?>" alt="User Image" class="rounded-circle">
-                </div>
+                    <a href="/QLNV_PHP/src/index.php?action=GetProfilePage" class="profile-section text-center">
+                        <img src="<?php echo htmlspecialchars(isset($_SESSION['user']['Image']) ? $_SESSION['user']['Image'] : 'default-avatar.jpg'); ?>" alt="User Image" class="rounded-circle">
+                    </a>
                     <hr class="w-100">
                     <ul class="nav nav-pills flex-column w-100">
                         <li class="nav-item mb-2">
@@ -74,10 +74,10 @@
             <div id="sidebar-text" class="sidebar sidebar-text">
                 <div class="d-flex flex-column align-items-start py-3">
                     <span class="menu-text" style="margin-left: 60px; font-weight:lighter;"><?php echo htmlspecialchars($_SESSION['user']['Role'])?></span>
-                    <div class="profile-section text-center">
+                    <a href="/QLNV_PHP/src/index.php?action=GetProfilePage" class="profile-section text-center">
                         <img src="<?php echo htmlspecialchars(isset($_SESSION['user']['Image']) ? $_SESSION['user']['Image'] : 'default-avatar.jpg'); ?>" alt="User Image" class="rounded-circle">
-                        <span class="menu-text" style="margin-left: 2px; font-weight: bold"><?php echo htmlspecialchars($_SESSION['user']['HoTen'])?></span>
-                    </div>
+                        <span class="menu-text" style="margin-left: 2px; font-weight: bold; color:black;"><?php echo htmlspecialchars($_SESSION['user']['HoTen'])?></span>
+                    </a>
                     <hr class="w-100">
                     <!-- Menu Items -->
                     <ul class="nav nav-pills flex-column w-100">

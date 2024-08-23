@@ -11,6 +11,14 @@
 </head>
 <body>
     <main>
+        <?php if (!empty($message)): ?>
+            <div class="notification-wrapper">
+                <div class="notification">
+                    <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
+            </div>
+        <?php endif; ?>
         <div class="left-panel">
             <div class="content">
                 <h1>Cùng nhau phát triển</h1>
