@@ -5,17 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($title); ?></title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2LcRnv7AZHJnKAYmQzK3sFSB3/6OLk+Ra7/RRShuWE" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/sidebar.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        #sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 60px;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        main {
+            margin-left: 65px;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
     <nav id="sidebar" class="bg-light">
-        <?php include(__DIR__ . '/partials/sidebar.phtml'); ?>
+            <?php include(__DIR__ . '/partials/sidebar.phtml'); ?>
     </nav>
-    <main class="ml-auto" style="margin-left: 250px; padding: 20px;">
+    <main>
         <?php echo $content; ?>
     </main>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2LcRnv7AZHJnKAYmQzK3sFSB3/6OLk+Ra7/RRShuWE" crossorigin="anonymous"></script>
 </body>
 </html>

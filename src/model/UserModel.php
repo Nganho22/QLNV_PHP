@@ -31,16 +31,17 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT EmpID, HoTen, Role, PhongID FROM Profile WHERE TenTaiKhoan = ? AND MatKhau = ? AND TinhTrang = '1'");
+        $stmt = $conn->prepare("SELECT EmpID, HoTen, Role, PhongID, Image FROM Profile WHERE TenTaiKhoan = ? AND MatKhau = ? AND TinhTrang = '1'");
         
         $stmt->bind_param("ss", $username, $password);
         $stmt->execute();
         $result = $stmt->get_result();
         $user = [
             'EmpID' => null,
-            'Phong' => null,
+            'TenPhong' => null,
             'HoTen' => null,
-            'Role' => null
+            'Role' => null,
+            'Image' => null
         ];
         if($result->num_rows > 0){
             $u = $result->fetch_assoc();
@@ -48,6 +49,7 @@ class UserModel {
             $user['EmpID'] = $u['EmpID'];
             $user['HoTen'] = $u['HoTen'];
             $user['Role'] = $u['Role'];
+            $user['Image'] = 'public/img/avatar/'.$u['Image'];
 
             $phong_stmt = $conn->prepare("SELECT TenPhong FROM PhongBan WHERE PhongID = ?");
             $phong_stmt->bind_param("i", $u['PhongID']);

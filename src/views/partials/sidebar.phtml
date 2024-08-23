@@ -10,44 +10,58 @@
         <div id="sidebar-wrapper" class="sidebar-wrapper">
             <div id="sidebar-icon" class="sidebar sidebar-icon">
                 <div class="d-flex flex-column align-items-center py-3">
-                    <div class="profile-section text-center">
-                        <img src="https://via.placeholder.com/50" alt="User Image" class="rounded-circle">
-                    </div>
+                <div class="profile-section text-center">
+                    <img src="<?php echo htmlspecialchars(isset($_SESSION['user']['Image']) ? $_SESSION['user']['Image'] : 'default-avatar.jpg'); ?>" alt="User Image" class="rounded-circle">
+                </div>
                     <hr class="w-100">
                     <ul class="nav nav-pills flex-column w-100">
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/check_list.png" alt="Danh Sách Yêu Cầu" class="icon">
+                                </div>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/calendar.png" alt="Hoạt Động Chiến Dịch" class="icon">
+                                </div>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/bar-chart.png" alt="Khen Thưởng" class="icon">
+                            </div>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/project.png" alt="Dự Án" class="icon">
+                            </div>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
+                            </div>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/home.png" alt="Home" class="icon">
+                            </div>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/logout.png" alt="Logout" class="icon">
+                            </div>
                             </a>
                         </li>
                     </ul>
@@ -57,51 +71,67 @@
 
             <div id="sidebar-text" class="sidebar sidebar-text">
                 <div class="d-flex flex-column align-items-start py-3">
+                    <span class="menu-text" style="margin-left: 60px; font-weight:lighter;"><?php echo htmlspecialchars($_SESSION['user']['Role'])?></span>
                     <div class="profile-section text-center">
-                        <img src="https://via.placeholder.com/50" alt="User Image" class="rounded-circle">
+                        <img src="<?php echo htmlspecialchars(isset($_SESSION['user']['Image']) ? $_SESSION['user']['Image'] : 'default-avatar.jpg'); ?>" alt="User Image" class="rounded-circle">
+                        <span class="menu-text" style="margin-left: 2px; font-weight: bold"><?php echo htmlspecialchars($_SESSION['user']['HoTen'])?></span>
                     </div>
                     <hr class="w-100">
                     <!-- Menu Items -->
                     <ul class="nav nav-pills flex-column w-100">
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/check_list.png" alt="Danh Sách Yêu Cầu" class="icon">
+                            </div>
                                 <span class="menu-text">Danh Sách Yêu Cầu</span>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/calendar.png" alt="Hoạt Động Chiến Dịch" class="icon">
+                            </div>
                                 <span class="menu-text">Hoạt Động Chiến Dịch</span>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/bar-chart.png" alt="Khen Thưởng" class="icon">
+                            </div>
                                 <span class="menu-text">Khen Thưởng</span>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/project.png" alt="Dự Án" class="icon">
+                            </div>
                                 <span class="menu-text">Dự Án</span>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
+                            </div>
                                 <span class="menu-text">Check-In</span>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/home.png" alt="Home" class="icon">
+                            </div>
                                 <span class="menu-text">Home</span>
                             </a>
                         </li>
                         <li class="nav-item mb-2">
                             <a href="#" class="nav-link text-dark d-flex align-items-center">
+                            <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/logout.png" alt="Logout" class="icon">
+                            </div>
                                 <span class="menu-text">Logout</span>
                             </a>
                         </li>
