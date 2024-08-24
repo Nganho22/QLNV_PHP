@@ -6,10 +6,10 @@ class HomeController{
         $message='';
         if (isset($_GET['status'])) {
             if ($_GET['status'] === 'logged_out') {
-                $message = 'You have been logged out successfully.';
+                $message = 'Đăng xuất thành công!';
             }
             elseif ($_GET['status'] === 'needlogin') {
-                $message = 'You need to login!';
+                $message = 'Bạn cần phải đăng nhập!';
             }
         }
         require(__DIR__ . '/../views/pages/login.phtml');

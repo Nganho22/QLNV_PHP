@@ -58,7 +58,7 @@ class PasswordController {
             $mail->Host = 'smtp.gmail.com';
             $mail->SMTPAuth = true;
             $mail->Username = 'bapbap241202@gmail.com';
-            $mail->Password = 'ymry lozm bmzh xcdz';
+            $mail->Password = 'fwak arfc rlji puhc';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port = 587;
 

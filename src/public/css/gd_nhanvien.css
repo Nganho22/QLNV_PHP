@@ -207,33 +207,42 @@ h3 {
 .notification-wrapper {
     position: fixed;
     top: 50%;
-    left: 35%;
-    width: 20%;
-    height: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 12px;
 }
 
 .notification {
     background-color: #ffffff;
-    color: #302e2d;
-    border: 5px solid rgba(183, 183, 183, 0.5);
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 20px;
-    width: 300px;
-    margin: 20px auto;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
     text-align: center;
     position: relative;
+    z-index: 1001;
+    max-width: 90%;
+    box-sizing: border-box;
 }
 
 .notification .close {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 8px;
     cursor: pointer;
-    font-size: 18px;
-    color: #5c615d;
+    font-size: 20px;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.notification .close:hover {
+    color: #333;
 }
