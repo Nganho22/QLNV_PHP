@@ -15,6 +15,7 @@ class PassModel {
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
+        $stmt->close();
         return $result->num_rows > 0;
     }
 
@@ -27,7 +28,10 @@ class PassModel {
         $sql = "INSERT INTO password_resets (Email, Code, Expiry) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("sss", $email, $code, $expiry);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close(); // Close statement
+        return $result;
+        //return $stmt->execute();
     }
 
     public function isValidResetCode($email, $code) {
@@ -36,6 +40,7 @@ class PassModel {
         $stmt->bind_param("ss", $email, $code);
         $stmt->execute();
         $result = $stmt->get_result();
+        $stmt->close();
         return $result->num_rows > 0;
     }
 
@@ -43,21 +48,31 @@ class PassModel {
         $sql = "UPDATE Profile SET MatKhau = ? WHERE Email = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("ss", $newPassword, $email);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close(); // Close statement
+        return $result;
     }
 
     public function deletePasswordReset($email, $code) {
         $sql = "DELETE FROM password_resets WHERE Email = ? AND Code = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("ss", $email, $code);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close(); // Close statement
+        return $result;
     }
 
     public function deleteOldResetCode($email) {
         $sql = "DELETE FROM password_resets WHERE email = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param("s", $email);
-        return $stmt->execute();
+        $result = $stmt->execute();
+        $stmt->close(); // Close statement
+        return $result;
+    }
+
+    public function __destruct() {
+        $this->db->close(); // Close database connection when the object is destroyed
     }
 }
 ?>

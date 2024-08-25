@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../model/UserModel.php';
 
 class HomeController{
     public function login() {
@@ -65,6 +66,23 @@ class HomeController{
     }
     public function GetProfile_page() {
         if (isset($_SESSION['user'])) {
+            $title='Profile';
+            $user_id = $_SESSION['user']['EmpID'];
+            $profile = UserModel::getprofile($user_id);
+            $timesheet = UserModel::gettimesheet($user_id);
+            $cNghi= UserModel::getCountNghiPhep($user_id);
+            $cTre= UserModel::getCountTre($user_id);
+            $cPrj = UserModel::getCountPrj_GD();
+            $listPrj = UserModel::getListPrj_GD();
+
+            if ($_SESSION['user']['Role'] == 'Nhân viên') {
+                $cPrj_NV = UserModel::getCountPrj_NV($user_id);
+                $listPrj_NV = UserModel::getListPrj_NV($user_id);
+            } elseif ($_SESSION['user']['Role'] == 'Quản lý') {
+                $cPrj_QL= UserModel::getCountPrj_QL($user_id);
+                $listPrj_QL = UserModel::getListPrj_QL($user_id);
+            }
+
             ob_start();
             require("./views/pages/profile.phtml");
             $content = ob_get_clean();

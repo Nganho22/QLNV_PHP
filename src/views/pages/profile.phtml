@@ -1,1 +1,168 @@
-Profile
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông tin nhân viên</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/profile.css"> 
+</head>
+<body>
+    <div class="container my6">
+        <div class="profile-container">
+                <div class="profile-header text-center" 
+                style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                url('<?php echo htmlspecialchars($profile['Image']); ?>');
+                background-position: center;">
+
+                    <img src="<?php echo htmlspecialchars($profile['Image']); ?>" alt="Profile Picture" class="profile-picture">
+                    <?php if ($profile['Email']): ?>
+                        <p class="profile-title"><?php echo htmlspecialchars($profile['Email']); ?></p>
+                    <?php endif; ?>
+                    <h1 class="profile-name"><?php echo htmlspecialchars($profile['HoTen']); ?></h1>
+
+                </div>
+
+                <div class="profile-details profile-content ">
+                    <div class="row text-center mb-4">
+                        <div class="col-md-4">
+                            <div class="info-box">
+                                    <p>TỔNG SỐ DỰ ÁN</p>
+                                    <h4><?php 
+                                        if ($_SESSION['user']['Role'] == 'Quản lý') {
+                                            echo htmlspecialchars($cPrj_QL); 
+                                        } elseif ($_SESSION['user']['Role'] == 'Nhân viên') {
+                                            echo htmlspecialchars($cPrj_NV); 
+                                        } else {
+                                            echo htmlspecialchars($cPrj); 
+                                        }
+                                    ?></h4>
+                            </div>
+                        </div>
+                            <div class="col-md-4">
+                                <div class="info-box">
+                                    <p>NGHỈ PHÉP</p>
+                                    <h4><?php echo htmlspecialchars($cNghi); ?></h4>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info-box">
+                                    <p>ĐI TRỄ</p>
+                                    <h4><?php echo htmlspecialchars($cTre); ?></h4>
+                                </div>
+                            </div>
+                    </div>
+                
+                    <div class="row">
+                        <!-- Cột bên trái: Thông tin nhân viên -->
+                        <div class="col-md-8">
+                            <div class="info-box">
+                                <h5>Thông tin cơ bản</h5>
+                                <p><strong>Mã nhân viên:</strong> <?php echo htmlspecialchars($profile['EmpID'])?></p>
+                                <p><strong>Họ và tên:</strong> <?php echo htmlspecialchars($profile['HoTen'])?></p>
+                                <p><strong>Email:</strong> <?php echo htmlspecialchars($profile['Email'])?></p>
+                                <?php if ($profile['Role'] !== 'Giám đốc'): ?>
+                                    <p><strong>Phòng ban:</strong> <?php echo htmlspecialchars($profile['TenPhong'])?></p>
+                                <?php endif; ?>
+                                <br>
+                                <h5>Thông tin thêm</h5>
+                                <p><strong>Giới tính:</strong> <?php echo htmlspecialchars($profile['GioiTinh'])?></p>
+                                <p><strong>CCCD:</strong> <?php echo htmlspecialchars($profile['CCCD'])?></p>
+                                <p><strong>Số điện thoại:</strong> <?php echo htmlspecialchars($profile['SoDienThoai'])?></p>
+                                <p><strong>Lương:</strong> <?php echo htmlspecialchars($profile['Luong'])?></p>
+                                <p><strong>Điểm thưởng:</strong> <?php echo htmlspecialchars($profile['DiemThuong'])?></p>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                        <div class="info-box">
+                        <h5>Thông tin dự án</h5>
+                            <?php
+                            if ($_SESSION['user']['Role'] == 'Nhân viên') {
+                                $projectList = $listPrj_NV;
+                            } elseif ($_SESSION['user']['Role'] == 'Quản lý') {
+                                $projectList = $listPrj_QL;
+                            } else {
+                                $projectList = $listPrj;
+                            }
+                            ?>
+
+                            <?php if (!empty($projectList)): ?>
+                                <?php foreach ($projectList as $prj): ?>
+                                    <?php
+                                    $progressClass = 'success';
+                                    $percent = intval(trim($prj['TienDo'], '%'));
+
+                                    if ($percent >= 80) {
+                                        $progressClass = 'success';
+                                    } elseif ($percent >= 50) {
+                                        $progressClass = 'warning';
+                                    } else {
+                                        $progressClass = 'danger';
+                                    }
+                                    ?>
+                                    <p>Dự án <?php echo htmlspecialchars($prj['ProjectID']); ?></p>
+                                    <div class="progress">
+                                        <div class="progress-bar <?php echo $progressClass; ?>" style="width: <?php echo htmlspecialchars($prj['TienDo']); ?>%;">
+                                            <?php echo htmlspecialchars($prj['TienDo']); ?>%
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>Hiện tại không có thông tin dự án.</p>
+                            <?php endif; ?>
+                        </div>
+
+
+                            <div class="text-center-btn mt-4">
+                                <a href="index.php?action=GetUpdateProfilePage" class="btn btn-primary btn-block">Update Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <br>
+
+        <?php if ($_SESSION['user']['Role'] == 'Nhân viên'): ?>
+            <div class="timesheet">
+                <h5>Time-sheet</h5>
+                <?php if (!empty($timesheet)): ?>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Tên project</th>
+                                <th>Người gửi</th>
+                                <th>Ngày giao</th>
+                                <th>Hạn chót</th>
+                                <th>Trạng thái</th>
+                                <th>Điểm thưởng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($timesheet as $timesheet): ?>
+                                <tr>
+                                    <td> <?php echo htmlspecialchars($timesheet['ProjectID']); ?></td>
+                                    <td> <?php echo htmlspecialchars($timesheet['TenDuAn']); ?></td>
+                                    <td> <?php echo htmlspecialchars($timesheet['NguoiGui']); ?></td>
+                                    <td> <?php echo htmlspecialchars($timesheet['NgayGiao']); ?></td>
+                                    <td> <?php echo htmlspecialchars($timesheet['HanChot']); ?></td>
+                                    <td> <?php echo htmlspecialchars($timesheet['TrangThai']); ?></td>
+                                    <td> <?php echo htmlspecialchars($timesheet['DiemThuong']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php else: ?>
+                    <p>Hiện tại không có time-sheet.</p>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
