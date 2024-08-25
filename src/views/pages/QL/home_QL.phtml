@@ -6,6 +6,7 @@
     <title>Dashboard Quản Lý</title>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/gd_quanly.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <?php if (!empty($message)): ?>
@@ -86,36 +87,58 @@
                     </ul>
                 </div>
             <div class="tasks-today">
-                <h3>Lịch trình hôm nay:</h3>
+                <h3>Lịch trình hôm nay</h3>
                 <ul>
-                    <li>
+                <li>
                         <p>Quản lý</p>
                         <span>Số lượng: 20</span>
                         <span class="status">Trong quá trình</span>
+                    </li>
+                    <li class="sub-project">
+                        <p>Ghi chú 1</p>
+                        <span>01/07/2024</span>
+                        <span>Lorem ipsum dolor sit amet</span>
+                    </li>
+                    <li class="sub-project">
+                        <p>Ghi chú 2</p>
+                        <span>01/07/2024</span>
+                        <span>Lorem ipsum dolor sit amet</span>
                     </li>
                 </ul>
                 <a href="#">Xem thêm</a>
             </div>
         </div>
         <div class="right-panel">
-            <div class="stats">
-                <div class="stat-box">
-                            <h2>Tại nhà: 01</h2>
-                            <h2>Vắng: 01 </h2>
-                        </div>
-                        <div class="stat-box">
-                            <h2>Check-in: 19</h2>
-                            <h2>Check-out: 15</h2>
-                        </div>
-                        </div>
+            <div class="stats2">
+                <div class="stat-box2">
+                    <h2>Tại nhà: 01</h2>
+                    <h2>Vắng: 01 </h2>
+                </div>
+                <div class="stat-box2">
+                    <h2>Check-in: 19</h2>
+                    <h2>Check-out: 15</h2>
+                </div>
+            </div>
             <div class="employee-list">
                 <h3>Danh sách nhân viên:</h3>
-                <input type="text" placeholder="Tìm kiếm...">
+                <div class="search-wrapper">
+                    <input type="text" placeholder="Tìm kiếm...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
                 <ul>
                     <li>Bông Bông<br><span>deanan@smail.com</span></li>
                     <li>Andrea Willis<br><span>andrea@willis.com</span></li>
 
                 </ul>
+                <div class="pagination">
+                        <a href="#" class="prev">&#10094;</a>
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">...</a>
+                        <a href="#">40</a>
+                        <a href="#" class="next"> &#10095;</a>
+                    </div>
                 <a href="#">Xem thêm</a>
             </div>
             <div class="timesheet-list">
@@ -124,6 +147,15 @@
                     <li><span>01/01/2024</span> Lorem ipsum dolor sit amet <span>Bập Bập</span></li>
                     <li><span>01/01/2024</span> Lorem ipsum dolor sit amet <span>Bông Bông</span></li>
                 </ul>
+                <div class="pagination">
+                        <a href="#" class="prev">&#10094;</a>
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">...</a>
+                        <a href="#">40</a>
+                        <a href="#" class="next"> &#10095;</a>
+                    </div>
                 <a href="#">Xem thêm</a>
             </div>
         </div>

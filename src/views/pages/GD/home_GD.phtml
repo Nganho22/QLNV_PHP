@@ -1,1 +1,207 @@
-Giam Doc
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Giám Đốc</title>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/gd_quanly.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <h1>Chào mừng, Bông!</h1>
+            <p>Chức vụ: Tổng giám đốc</p>
+            <div class="calendar">
+                <div class="month">      
+                    <ul>
+                        <li class="prev">&#10094;</li>
+                        <li class="next">&#10095;</li>
+                        <li>
+                            August<br>
+                            <span style="font-size:18px">2024</span>
+                        </li>
+                    </ul>
+                </div>
+                <ul class="weekdays">
+                    <li>Mo</li>
+                    <li>Tu</li>
+                    <li>We</li>
+                    <li>Th</li>
+                    <li>Fr</li>
+                    <li>Sa</li>
+                    <li>Su</li>
+                </ul>
+                <ul class="days">  
+                    <li>1</li>
+                    <li>2</li>
+                    <li>3</li>
+                    <li>4</li>
+                    <li>5</li>
+                    <li>6</li>
+                    <li>7</li>
+                    <li>8</li>
+                    <li>9</li>
+                    <li>10</li>
+                    <li>11</li>
+                    <li>12</li>
+                    <li>13</li>
+                    <li>14</li>
+                    <li>15</li>
+                    <li>16</li>
+                    <li>17</li>
+                    <li>18</li>
+                    <li>19</li>
+                    <li>20</li>
+                    <li>21</li>
+                    <li>22</li>
+                    <li>23</li>
+                    <li>24</li>
+                    <li>25</li>
+                    <li>26</li>
+                    <li>27</li>
+                    <li>28</li>
+                    <li>29</li>
+                    <li>30</li>
+                    <li>31</li>
+                </ul>
+            </div>
+            <div class="project-list">
+                <h3>Danh sách dự án:</h3>
+                <div class="search-wrapper">
+                    <input type="text" placeholder="Tìm kiếm...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <ul>
+                    <li>
+                        <p>Dự án 007</p>
+                        <span>01/07/2024</span>
+                        <span class="status">Trong quá trình</span>
+                    </li>
+                    <li class="sub-project">
+                        <p>Ghi chú 1</p>
+                        <span>01/07/2024</span>
+                        <span>Lorem ipsum dolor sit amet</span>
+                    </li>
+                    <li class="sub-project">
+                        <p>Ghi chú 2</p>
+                        <span>01/07/2024</span>
+                        <span>Lorem ipsum dolor sit amet</span>
+                    </li>
+                </ul>
+                <div class="pagination">
+                        <a href="#" class="prev">&#10094;</a>
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">...</a>
+                        <a href="#">40</a>
+                        <a href="#" class="next"> &#10095;</a>
+                    </div>
+                <a href="#">Xem thêm</a>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="employee-list">
+                <h3>Danh sách nhân viên:</h3>
+                <div class="search-wrapper">
+                    <input type="text" placeholder="Tìm kiếm...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <ul>
+                    <li>Deanna Annis<br><span>deanna@smail.com</span></li>
+                    <li>Andrea Willis<br><span>andrea@willis.com</span></li>
+                    <li>Brent Rodrigues<br><span>brent@rodrigues.com</span></li>
+                </ul>
+                    <div class="pagination">
+                        <a href="#" class="prev">&#10094;</a>
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">...</a>
+                        <a href="#">40</a>
+                        <a href="#" class="next"> &#10095;</a>
+                    </div>
+            </div>
+
+            <div class="room-list">
+                <h3>Danh sách phòng ban:</h3>
+                <div class="search-wrapper">
+                    <input type="text" placeholder="Tìm kiếm...">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Phòng ban</th>
+                            <th>Đảm nhiệm</th>
+                            <th>Quản lý</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A01</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                            <td>Bắp Bắp</td>
+                        </tr>
+                        <tr>
+                            <td>A02</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                            <td>Bông Bông</td>
+                        </tr>
+                        <tr>
+                            <td>A03</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                            <td>Ngân H</td>
+                        </tr>
+                        <tr>
+                            <td>A04</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                            <td>Ngân H</td>
+                        </tr>
+                        <tr>
+                            <td>A05</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                            <td>Ngân H</td>
+                        </tr>
+                        <tr>
+                            <td>A06</td>
+                            <td>Lorem ipsum dolor sit amet</td>
+                            <td>Ngân H</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                        <a href="#" class="prev">&#10094;</a>
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">...</a>
+                        <a href="#">40</a>
+                        <a href="#" class="next"> &#10095;</a>
+                    </div>
+                <a href="#">Xem thêm</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const days = document.querySelectorAll('.days li');
+            const today = new Date().getDate();
+
+            days.forEach(day => {
+                if (parseInt(day.textContent) === today) {
+                    day.classList.add('day-today');
+                }
+
+                day.addEventListener('click', function() {
+                    days.forEach(d => d.classList.remove('day-selected'));
+                    this.classList.add('day-selected');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
