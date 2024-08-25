@@ -200,9 +200,9 @@ a {
     color: #333;
 }
 
-.project-list {
+.project-list a{
     position: relative;
-    z-index: 10;
+        margin-left: 650px;
 }
 
 .project-list ul,
@@ -237,6 +237,31 @@ a {
     color: #1abc9c;
     text-decoration: none;
 }
+
+.search-wrapper1 {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px;
+    margin-left: 350px;
+}
+
+.search-wrapper1 input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    padding-right: 30px; 
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-wrapper1 i {
+    position: absolute;
+    right: 10px; 
+    color: #a6a6a6; 
+    font-size: 18px; 
+    top: 15px;
+}
+
 .search-wrapper {
     display: flex;
     align-items: center;

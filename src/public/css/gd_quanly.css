@@ -112,9 +112,10 @@ h3 {
     align-items: center;
 }
 
-.tasks-today {
+
+.tasks-today a{
     position: relative;
-    z-index: 10;
+    margin-left: 650px;
 }
 
 .tasks-today ul {
