@@ -1,1 +1,222 @@
-update
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($title); ?></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/profile_update.css" type="text/css"/> 
+</head>
+<body>
+    <div class="container-fluid my6">
+        <div class="back-button">
+            <a href="index.php?action=GetProfilePage" class="btn btn-link"><i class="fas fa-arrow-left"></i> Quay lại</a>
+        </div>
+
+        <form action="index.php?action=GetUpdateProfilePage" method="POST" enctype="multipart/form-data">
+            <div class="profile-container">
+                <div class="profile-left">
+                    <!-- Profile Header -->
+                    <div class="profile-header"  id="profileHeader"
+                            style="background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                            url('<?php echo htmlspecialchars($profile['Image']); ?>');
+                            background-position: center;">
+                        <img id="profilePicture" src="<?php echo htmlspecialchars($profile['Image']); ?>" alt="Profile Picture" class="profile-picture">
+                        <?php if ($profile['Email']): ?>
+                            <p class="profile-title"><?php echo htmlspecialchars($profile['Email']); ?></p>
+                        <?php endif; ?>
+                        <h1 class="profile-name"><?php echo htmlspecialchars($profile['HoTen']); ?></h1>
+                    </div>
+
+                    <!-- Change Password Form -->
+                    <h5>Đổi mật khẩu</h5>
+                    <br>
+                    <div class="form-group">
+                        <label for="newPassword">Mật khẩu mới</label>
+                        <div class="input-wrapper1">
+                            <input type="password" class="form-control" id="newPassword" name="newPassword">
+                            <span class="toggle-password" onclick="togglePassword('newPassword', 'eye-icon-new')">
+                                <i class="fas fa-eye-slash" id="eye-icon-new"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirmPassword">Nhập lại mật khẩu mới</label>
+                        <div class="input-wrapper1">
+                            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                            <span class="toggle-password" onclick="togglePassword('confirmPassword', 'eye-icon-confirm')">
+                                <i class="fas fa-eye-slash" id="eye-icon-confirm"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-right">
+                    <!-- Profile Update Form -->
+                    <div class="info-box">
+                        <h5>Thông tin cơ bản</h5>
+                        <div class="form-group">
+                            <label for="gender">Giới tính</label>
+                            <input type="text" class="form-control" id="gender" name="gender" value="<?php echo htmlspecialchars($profile['GioiTinh']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label for="cccd">CCCD</label>
+                            <input type="text" class="form-control" id="cccd" name="cccd" value="<?php echo htmlspecialchars($profile['CCCD']); ?>" >
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại</label>
+                            <input type="text" class="form-control" id="phone" name="phone" value="<?php echo htmlspecialchars($profile['SoDienThoai']); ?>" >
+                        </div>
+                        <div class="form-group">
+                            <label for="stk">Số tài khoản</label>
+                            <input type="text" class="form-control" id="stk" name="stk" value="<?php echo htmlspecialchars($profile['STK']); ?>" >
+                        </div>
+                        <div class="form-group">
+                            <label for="diachi">Địa chỉ</label>
+                            <input type="text" class="form-control" id="diachi" name="diachi" value="<?php echo htmlspecialchars($profile['DiaChi']); ?>" >
+                        </div>
+                        <div class="form-group">
+                            <label for="image">Tải lên hình ảnh</label>
+                            <input type="file" class="form-control-file" id="image" name="image" onchange="previewImage(event)">
+                            <!-- <img id="imagePreview" src="#" alt="Image Preview" style="display: none; max-width: 100%; margin-top: 10px;"> -->
+                            </div>
+                        <!-- Update Profile Button -->
+                        <button type="submit" class="btn btn-primary">Cập nhật hồ sơ</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <!-- <span class="close-btn" onclick="closePopup()">&times;</span> -->
+            <h2 class="popup-title">Thông báo</h2>
+            <p id="popupMessage"></p>
+            <button class="btn btn-primary close-popup-btn popup-button" onclick="closePopup()">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+            function togglePassword(inputId, iconId) {
+                const passwordInput = document.getElementById(inputId);
+                const eyeIcon = document.getElementById(iconId);
+
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                }
+            }
+
+            function previewImage(event) {
+                var input = event.target;
+                var file = input.files[0];
+                var profileHeader = document.getElementById('profileHeader');
+                var profilePicture = document.getElementById('profilePicture');
+
+                if (file) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        // Cập nhật nền của profile-header
+                        profileHeader.style.backgroundImage = `linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${e.target.result}')`;
+                        
+                        // Cập nhật ảnh profile
+                        profilePicture.src = e.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            // function showErrorPopup(message) {
+            //     document.getElementById('errorMessage').textContent = message;
+            //     document.getElementById('errorPopup').style.display = 'flex';
+            // }
+
+            // function showSuccessPopup(message) {
+            //     const successPopup = document.getElementById('successPopup');
+            //     successPopup.textContent = message;
+            //     successPopup.style.display = 'flex';
+                
+            //     document.getElementById('errorPopup').style.display = 'none';
+
+            //     setTimeout(() => {
+            //         window.location.href = 'index.php?action=GetProfilePage&status=success';
+            //     }, 3000);
+            // }
+
+            // function closePopup() {
+            //     document.getElementById('errorPopup').style.display = 'none';
+            // }
+
+            // document.querySelector('form').addEventListener('submit', function(e) {
+            //     e.preventDefault(); // Ngăn chặn hành vi gửi form mặc định
+
+            //     var formData = new FormData(this);
+
+            //     fetch('index.php?action=GetUpdateProfilePage', {
+            //         method: 'POST',
+            //         body: formData
+            //     })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         console.log(data); 
+            //         if (!data.success) {
+            //             showErrorPopup(data.message);
+            //         } else {
+            //             showSuccessPopup(data.message);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         showErrorPopup('Đã xảy ra lỗi!');
+            //     });
+            // });
+
+            function showPopup(message, isSuccess) {
+                const popup = document.getElementById('popup');
+                const popupMessage = document.getElementById('popupMessage');
+                popupMessage.textContent = message;
+                
+                popup.style.display = 'flex';
+
+                if (isSuccess) {
+                    const closeButton = document.querySelector('.close-popup-btn');
+                    closeButton.onclick = function() {
+                        window.location.href = 'index.php?action=GetProfilePage&status=success';
+                    };
+                }
+            }
+
+            function closePopup() {
+                document.getElementById('popup').style.display = 'none';
+            }
+
+            document.querySelector('form').addEventListener('submit', function(e) {
+                e.preventDefault(); 
+                var formData = new FormData(this);
+
+                fetch('index.php?action=GetUpdateProfilePage', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        showPopup(data.message, false); // Hiển thị pop-up lỗi
+                    } else {
+                        showPopup(data.message, true); // Hiển thị pop-up thành công
+                    }
+                })
+                .catch(error => {
+                    showPopup('Đã xảy ra lỗi!', false);
+                });
+            });
+
+    </script>
+</body>
+</html>

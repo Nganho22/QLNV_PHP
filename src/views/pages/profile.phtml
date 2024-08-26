@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thông tin nhân viên</title>
+    <title><?php echo htmlspecialchars($title); ?></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/profile.css"> 
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/profile.css" type="text/css"/> 
 </head>
 <body>
     <div class="container my6">
@@ -75,44 +75,43 @@
                         </div>
                         
                         <div class="col-md-4">
-                        <div class="info-box">
-                        <h5>Thông tin dự án</h5>
-                            <?php
-                            if ($_SESSION['user']['Role'] == 'Nhân viên') {
-                                $projectList = $listPrj_NV;
-                            } elseif ($_SESSION['user']['Role'] == 'Quản lý') {
-                                $projectList = $listPrj_QL;
-                            } else {
-                                $projectList = $listPrj;
-                            }
-                            ?>
+                            <div class="info-box">
+                                <h5>Thông tin dự án</h5>
+                                <?php
+                                if ($_SESSION['user']['Role'] == 'Nhân viên') {
+                                    $projectList = $listPrj_NV;
+                                } elseif ($_SESSION['user']['Role'] == 'Quản lý') {
+                                    $projectList = $listPrj_QL;
+                                } else {
+                                    $projectList = $listPrj;
+                                }
+                                ?>
 
-                            <?php if (!empty($projectList)): ?>
-                                <?php foreach ($projectList as $prj): ?>
-                                    <?php
-                                    $progressClass = 'success';
-                                    $percent = intval(trim($prj['TienDo'], '%'));
-
-                                    if ($percent >= 80) {
+                                <?php if (!empty($projectList)): ?>
+                                    <?php foreach ($projectList as $prj): ?>
+                                        <?php
                                         $progressClass = 'success';
-                                    } elseif ($percent >= 50) {
-                                        $progressClass = 'warning';
-                                    } else {
-                                        $progressClass = 'danger';
-                                    }
-                                    ?>
-                                    <p>Dự án <?php echo htmlspecialchars($prj['ProjectID']); ?></p>
-                                    <div class="progress">
-                                        <div class="progress-bar <?php echo $progressClass; ?>" style="width: <?php echo htmlspecialchars($prj['TienDo']); ?>%;">
-                                            <?php echo htmlspecialchars($prj['TienDo']); ?>%
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p>Hiện tại không có thông tin dự án.</p>
-                            <?php endif; ?>
-                        </div>
+                                        $percent = intval(trim($prj['TienDo'], '%'));
 
+                                        if ($percent >= 80) {
+                                            $progressClass = 'success';
+                                        } elseif ($percent >= 50) {
+                                            $progressClass = 'warning';
+                                        } else {
+                                            $progressClass = 'danger';
+                                        }
+                                        ?>
+                                        <p>Dự án <?php echo htmlspecialchars($prj['ProjectID']); ?></p>
+                                        <div class="progress">
+                                            <div class="progress-bar <?php echo $progressClass; ?>" style="width: <?php echo htmlspecialchars($prj['TienDo']); ?>%;">
+                                                <?php echo htmlspecialchars($prj['TienDo']); ?>%
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p>Hiện tại không có thông tin dự án.</p>
+                                <?php endif; ?>
+                            </div>
 
                             <div class="text-center-btn mt-4">
                                 <a href="index.php?action=GetUpdateProfilePage" class="btn btn-primary btn-block">Update Profile</a>

@@ -105,6 +105,7 @@ class UserModel {
             $profile['DiaChi'] = $u['DiaChi'];
 
             $profile['Image'] = 'public/img/avatar/'.$u['Image'];
+            $profile['Image_name'] = $u['Image'];
 
             if (!is_null($u['PhongID'])) {
                 $phong_stmt = $conn->prepare("SELECT TenPhong FROM PhongBan WHERE PhongID = ?");
@@ -318,6 +319,23 @@ class UserModel {
         return $projects;
     }
     
+    public static function updateProfile ($suser_id, $gioitinh, $cccd, $sdt, $stk, $diachi, $img , $newPass ) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        if ($newPass) {
+            $sql = "UPDATE Profile SET GioiTinh = ?, CCCD = ?, SoDienThoai = ?, STK = ?, DiaChi = ?, Image = ?, MatKhau = ? WHERE EmpID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("sssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $newPass, $suser_id);
+        } else {
+            $sql = "UPDATE Profile SET GioiTinh = ?, CCCD = ?, SoDienThoai = ?, STK = ?, DiaChi = ?, Image = ? WHERE EmpID = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("ssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $suser_id);
+        }
+        $result = $stmt->execute();
+        $stmt->close(); // Close statement
+        return $result;
+    }
 
     public static function checkpw($user_id, $pw) {
        

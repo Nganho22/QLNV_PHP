@@ -1,0 +1,187 @@
+/* Đảm bảo container chiếm toàn bộ chiều rộng */
+.container-fluid {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    /* border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+/* Nút quay lại nằm ở góc trái trên cùng */
+.back-button {
+    padding: 10px 0;
+}
+
+/* Cấu trúc chia cột với Flexbox */
+.profile-container {
+    display: flex;
+    flex-wrap: nowrap;
+
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+}
+
+.profile-left {
+    flex: 1 1 40%;
+    /* 40% chiều rộng cho cột trái */
+    padding: 20px;
+}
+
+.profile-right {
+    flex: 1 1 60%;
+    /* 60% chiều rộng cho cột phải */
+    padding: 20px;
+}
+
+/* Profile Header */
+.profile-header {
+    text-align: center;
+    background-position: center;
+    background-size: cover;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 3px solid #fff;
+    margin: 0 auto 20px;
+}
+
+.profile-title,
+.profile-name {
+    color: #fff;
+}
+
+.profile-name {
+    font-size: 24px;
+}
+
+/* Form và input */
+.form-group {
+    margin-bottom: 15px;
+    /* position: relative;
+    width: 100%; */
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+    /* Label căn trái */
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.form-control-file {
+    padding: 10px;
+}
+
+.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    border-radius: 4px;
+}
+
+
+.input-wrapper1 {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-password {
+    margin-left: -2.5rem;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.toggle-password i {
+    font-size: 1rem;
+}
+
+/* CSS cho popup */
+.popup {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    margin: auto;
+    position: relative;
+    width: 70%;
+}
+
+/* CSS cho overlay */
+.popup-overlay {
+    border-radius: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+/* CSS cho button đóng */
+.popup .popup-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    width: 150px;
+    max-width: 100%;
+    display: inline-block;
+}
+
+.popup .popup-button:hover {
+    background-color: #0056b3;
+}
+
+/* CSS cho nội dung thông báo */
+.popup .popup-message {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* Hiển thị popup */
+.show-popup .popup,
+.show-popup .popup-overlay {
+    display: block;
+}

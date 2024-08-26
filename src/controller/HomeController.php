@@ -97,6 +97,10 @@ class HomeController{
 
     public function GetUpdateprofile_page() {
         if (isset($_SESSION['user'])) {
+            $title='Cập nhật Profile';
+            $user_id = $_SESSION['user']['EmpID'];
+            $profile = UserModel::getprofile($user_id);
+            
             ob_start();
             require("./views/pages/update_profile.phtml");
             $content = ob_get_clean();
@@ -108,6 +112,90 @@ class HomeController{
         }
      
     }
+
+    public function updateProfile() {
+        if (isset($_SESSION['user']) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user_id = $_SESSION['user']['EmpID'];
+            $gioitinh = $_POST['gender'] ?? '';
+            $cccd = $_POST['cccd'] ?? '';
+            $sdt = $_POST['phone'] ?? '';
+            $stk = $_POST['stk'] ?? '';
+            $diachi = $_POST['diachi'] ?? '' ;
+            $newPassword = $_POST['newPassword'] ?? '';
+            $confirmPassword = $_POST['confirmPassword'] ?? '';
+    
+            if (!empty($newPassword)) {
+                if (empty($confirmPassword)) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Vui lòng nhập lại mật khẩu mới!'
+                    ]);
+                    exit();
+                }
+    
+                if ($newPassword !== $confirmPassword) {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Mật khẩu nhập lại không đúng!'
+                    ]);
+                    exit();                
+                }
+            }
+
+            $currentProfile = UserModel::getprofile($user_id);
+            $currentImage = $currentProfile['Image_name'];
+
+            // Xử lý ảnh
+            $image_path = $currentImage; 
+
+            if (isset($_FILES['image']) && $_FILES['image']['error'] == UPLOAD_ERR_OK) {
+                $target_dir =  __DIR__ . '/../public/img/avatar/';
+                $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+                $target_file = $target_dir . $user_id . "." . $extension;
+
+                if (file_exists($target_file)) {
+                    unlink($target_file);
+                } else {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Không xóa được file ảnh cũ!'
+                    ]);
+                    exit();
+                }
+
+                if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                    $image_path = $user_id . "." . $extension;
+                } else {
+                    echo json_encode([
+                        'success' => false,
+                        'message' => 'Lỗi không cập nhật được ảnh!'
+                    ]);
+                    exit();
+                }
+            }
+
+            $result = UserModel::updateProfile($user_id, $gioitinh, $cccd, $sdt, $stk, $diachi, $image_path, !empty($newPassword) ? $newPassword : null);
+
+            if ($result) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Cập nhật hồ sơ thành công!'
+                ]);
+                exit();
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Lỗi không cập nhật được hồ sơ!'
+                ]);
+                exit();
+            }
+        }
+        else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+
 
     public function Getcheckinout_page() {
         if (isset($_SESSION['user'])) {

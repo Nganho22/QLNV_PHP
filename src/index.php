@@ -45,8 +45,12 @@ switch ($action)
         $controller->GetProfile_page();
         break;
     case "GetUpdateProfilePage":
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller = new HomeController();
+            $controller->updateProfile();
+        } else {
         $controller = new HomeController();
-        $controller->GetUpdateprofile_page();
+        $controller->GetUpdateprofile_page();}
         break;
     case "GetCheckinoutPage":
         $controller = new HomeController();
