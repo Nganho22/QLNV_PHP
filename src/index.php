@@ -42,8 +42,8 @@ switch ($action)
         $controller->logout();
         break;
     case "GetProfilePage":
-        $controller = new ProjectController();
-        $controller->GetProjectPage();
+        $controller = new HomeController();
+        $controller->GetProfile_page();
         break;
     case "GetUpdateProfilePage":
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -54,6 +54,8 @@ switch ($action)
         $controller->GetUpdateprofile_page();}
         break;
     case "GetProjectPage": 
+        $controller = new ProjectController();
+        $controller->GetProjectPage();
         break;
     case "GetCheckinoutPage":
         $controller = new HomeController();

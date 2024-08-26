@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($title); ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/project.css" type="text/css"/> 
+</head>
+<body>
+    <div class="container">
+        <div class="filter-section">
+            <h2>Tìm kiếm và lọc:</h2>
+            <div class="search-wrapper">
+                <input type="text" placeholder="Tên dự án, Người phụ trách..." class="search-box">
+                <button class="search-button">Tìm kiếm</button>
+            </div>
+            <div class="filters">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <h3>Phòng ban phụ trách</h3>
+                        <label><input type="checkbox" checked> A01</label>
+                        <label><input type="checkbox"> A02</label>
+                        <label><input type="checkbox"> B01</label>
+                        <label><input type="checkbox"> B02</label>
+                        <button class="filter-button">Lọc</button>
+                    </div>
+                    <div class="filter-group">
+                        <h3>Trạng thái</h3>
+                        <label><input type="checkbox" checked> Đã hoàn thành</label>
+                        <label><input type="checkbox" checked> Trong quá trình</label>
+                        <label><input type="checkbox"> Đã huỷ</label>
+                        <label><input type="checkbox"> Tạm dừng</label>
+                        <button class="filter-button">Lọc</button>
+                    </div>
+                </div>
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <h3>Tiến độ</h3>
+                        <label><input type="checkbox" checked> 100%</label>
+                        <label><input type="checkbox"> 75%</label>
+                        <label><input type="checkbox" checked> 50%</label>
+                        <label><input type="checkbox"> 25%</label>
+                        <button class="filter-button">Lọc</button>
+                    </div>
+                    <div class="filter-group">
+                        <h3>Thời gian</h3>
+                        <label> Từ </label>
+                        <input type="date" >
+                        <label> Đến </label>
+                        <input type="date">
+                        <button class="filter-button">Lọc</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="project-list-section">
+            <div class="project-summary">
+                <h3>Tổng dự án</h3>
+                <div class="project-count">70</div>
+                <div class="project-chart">
+                    <!-- Include a chart library like Chart.js to display the chart -->
+                </div>
+            </div>
+            <h2>Danh sách dự án:</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dự án</th>
+                        <th>Tên dự án</th>
+                        <th>Trạng thái</th>
+                        <th>Hạn chót</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Use PHP to loop through the project data -->
+                    <?php
+                    // Example loop for displaying rows
+                    for($i = 0; $i < 5; $i++) {
+                        echo "<tr>
+                                <td>A01</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                <td>Trong quá trình</td>
+                                <td>01/01/2024</td>
+                              </tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+            <div class="pagination-wrapper">
+                <div class="pagination">
+                    <a href="#">&lt;</a>
+                    <a href="#" class="active">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#">4</a>
+                    <span>...</span>
+                    <a href="#">20</a>
+                    <a href="#">&gt;</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
