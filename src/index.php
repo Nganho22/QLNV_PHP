@@ -3,6 +3,7 @@ session_start();
 require_once './controller/HomeController.php';
 require_once './controller/UserController.php';
 require_once './controller/PassController.php';
+require_once './controller/ProjectController.php';
 
 $action = "";
 if (isset($_REQUEST["action"]))
@@ -41,8 +42,8 @@ switch ($action)
         $controller->logout();
         break;
     case "GetProfilePage":
-        $controller = new HomeController();
-        $controller->GetProfile_page();
+        $controller = new ProjectController();
+        $controller->GetProjectPage();
         break;
     case "GetUpdateProfilePage":
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -51,6 +52,8 @@ switch ($action)
         } else {
         $controller = new HomeController();
         $controller->GetUpdateprofile_page();}
+        break;
+    case "GetProjectPage": 
         break;
     case "GetCheckinoutPage":
         $controller = new HomeController();

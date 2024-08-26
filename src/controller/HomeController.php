@@ -165,6 +165,7 @@ class HomeController{
 
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
                     $image_path = $user_id . "." . $extension;
+                    $_SESSION['user']['Image'] = 'public/img/avatar/' . $image_path;
                 } else {
                     echo json_encode([
                         'success' => false,
