@@ -20,58 +20,55 @@
     <?php endif; ?>
     <div class="container">
         <div class="left-panel">
-            <h1>Chào mừng, Bông!</h1>
-            <p>Phòng ban: A01</p>
-            <div class="stats-up">
+        <h1>Chào mừng, <?php echo htmlspecialchars($_SESSION['user']['HoTen']); ?>!</h1>
+        <p>Phòng ban: <?php echo htmlspecialchars($_SESSION['user']['TenPhong']); ?></p>
+        <div class="stats-up">
                 <div class="stat-box-up">
                     <h2>Tổng dự án</h2>
-                    <p>12</p>
+                    <p><?php echo count($projects); ?></p>
                 </div>
                 <div class="stat-box-up">
                     <h2>Tổng hoạt động</h2>
-                    <p>12</p>
+                    <p><?php echo count($activities); ?></p>
                 </div>
             </div>
             <div class="stats-down">
                 <div class="stat-box-down">
                     <h2>Dự án hoàn thành</h2>
-                    <p>10</p>
+                    <p><?php echo count(array_filter($projects, fn($p) => $p['TinhTrang'] == 'Hoàn thành')); ?></p>
                 </div>
                 <div class="stat-box-down">
                     <h2>Hoạt động hoàn thành</h2>
-                    <p>10</p>
+                    <p><?php echo count(array_filter($activities, fn($a) => $a['TrangThai'] == 'Hoàn thành')); ?></p>
                 </div>
             </div>
-            <div class="tasks-today">
-                <h3>Công việc hôm nay:</h3>
-                <ul>
+        <div class="tasks-today">
+            <h3>Công việc hôm nay:</h3>
+            <ul>
+                <?php foreach ($projects as $project): ?>
                     <li>
-                        <p>Dự án 007</p>
-                        <span>Hạn chót: 07/01/2024</span>
-                        <span class="status">Trong Quá Trình</span>
+                        <p><?php echo htmlspecialchars($project['Ten']); ?></p>
+                        <span>Hạn chót: <?php echo htmlspecialchars($project['HanChotDuKien']); ?></span>
+                        <span class="status"><?php echo htmlspecialchars($project['TinhTrang']); ?></span>
                     </li>
+                <?php endforeach; ?>
+            </ul>
+            <a href="#">Xem thêm</a>
+        </div>
+
+        <div class="activities">
+            <h3>Hoạt động:</h3>
+            <ul>
+                <?php foreach ($activities as $activity): ?>
                     <li>
-                        <p>Dự án 007</p>
-                        <span>Hạn chót: 07/01/2024</span>
-                        <span class="status">Trong Quá Trình</span>
+                        <p><?php echo htmlspecialchars($activity['TenHoatDong']); ?></p>
+                        <span class="status"><?php echo htmlspecialchars($activity['TrangThai']); ?></span>
                     </li>
-                </ul>
-                <a href="#">Tải thêm</a>
-            </div>
-            <div class="activities">
-                <h3>Hoạt động:</h3>
-                <ul>
-                    <li>
-                        <p>Hoạt động 1</p>
-                        <span class="status">Đang diễn ra</span>
-                    </li>
-                    <li>
-                        <p>Hoạt động 2</p>
-                        <span class="status">Đang diễn ra</span>
-                    </li>
-                </ul>
-                <a href="#">Tải thêm</a>
-            </div>
+                <?php endforeach; ?>
+            </ul>
+            <a href="#">Xem thêm</a>
+        </div>
+
         </div>
         <div class="right-panel">
             <div class="calendar">
@@ -133,6 +130,11 @@
             <div class="stats-chart">
                 <h3>Thống kê điểm thưởng:</h3>
                 <img src="/path/to/chart.png" alt="Thống kê điểm thưởng">
+            </div>
+            <div class="checkin-out">
+                <h3>Thời gian ra vào:</h3>
+                <p>Check-in: <?php echo htmlspecialchars($checkInOut['CheckIn'] ?? 'Chưa có'); ?></p>
+                <p>Check-out: <?php echo htmlspecialchars($checkInOut['CheckOut'] ?? 'Chưa có'); ?></p>
             </div>
         </div>
     </div>

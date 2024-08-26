@@ -25,11 +25,19 @@ class HomeController{
         if (isset($_SESSION['user'])) {
             $Role= $_SESSION['user']['Role'];
             $title = 'Home'; 
+            $empID = $_SESSION['user']['EmpID'];
             switch ($Role) {
                 case 'Nhân viên':
+                    $projects = UserModel::getProjectsForNV($empID);
+                    $activities = UserModel::getActivities($empID);
+                    $checkInOut = UserModel::getCheckInOut($empID);
                     $file = "./views/pages/NV/home_NV.phtml";
                     break;
                 case 'Quản lý':
+                    $phongBans = UserModel::getPhongBanStatistics();
+                    $employees = UserModel::getEmployeesList($empID);
+                    $timesheets = UserModel::getTimesheetList($empID); 
+                    $managedProjects = UserModel::getManagedProjects($empID);
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 case 'Giám đốc':

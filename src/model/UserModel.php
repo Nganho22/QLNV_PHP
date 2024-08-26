@@ -341,6 +341,189 @@ class UserModel {
        
     }
 
+    //Phần Home
+    // Lấy danh sách dự án
+    public static function getProjectsForNV($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Project.TinhTrang 
+                                FROM Assignment 
+                                JOIN Project ON Assignment.ProjectID = Project.ProjectID 
+                                WHERE Assignment.EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $projects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
+    
+
+    // Lấy danh sách hoạt động
+    public static function getActivities($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT TenHoatDong, TrangThai 
+                                FROM Activity 
+                                WHERE EXISTS (
+                                    SELECT * FROM Assignment 
+                                    WHERE Assignment.EmpID = ? AND Assignment.ProjectID = Activity.ActivityID
+                                )");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $activities = [];
+        while ($row = $result->fetch_assoc()) {
+            $activities[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $activities;
+    }
+
+    // Lấy thông tin chấm công
+    public static function getCheckInOut($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT Date_checkin, Time_checkin, Date_checkout, Time_checkout 
+                                FROM Check_inout 
+                                WHERE EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $checkInOut = [];
+        while ($row = $result->fetch_assoc()) {
+            $checkInOut[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $checkInOut;
+    }
+
+    public static function getPhongBanStatistics() {
+        $db = new Database();
+        $conn = $db->connect();
+
+        // Cập nhật câu lệnh SQL để chỉ rõ bảng
+        $stmt = $conn->prepare("SELECT PhongBan.PhongID, PhongBan.TenPhong, COUNT(Profile.EmpID) AS SoThanhVien
+                                FROM Profile 
+                                LEFT JOIN PhongBan ON Profile.PhongID = PhongBan.PhongID
+                                GROUP BY PhongBan.PhongID, PhongBan.TenPhong");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $phongBans = [];
+        while ($row = $result->fetch_assoc()) {
+            $phongBans[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $phongBans;
+    }
+
+
+    public static function getEmployeesList($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        // Lấy PhongID của người dùng hiện tại
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $phongID = $row['PhongID'];
+        $stmt->close();
+
+        // Lấy danh sách nhân viên cùng PhongID, loại bỏ người có EmpID trùng với người quản lý
+        $stmt = $conn->prepare("SELECT HoTen, Email FROM Profile WHERE PhongID = ? AND EmpID != ? LIMIT 3");
+        $stmt->bind_param("ii", $phongID, $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $employees = [];
+        while ($row = $result->fetch_assoc()) {
+            $employees[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $employees;
+    }
+
+
+    public static function getTimesheetList($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Lấy PhongID của người dùng hiện tại
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $phongID = $row['PhongID'];
+        $stmt->close();
+    
+        // Lấy danh sách time-sheet của nhân viên cùng PhongID, chỉ lấy 3 người đầu tiên
+        $stmt = $conn->prepare("SELECT NgayGiao, NoiDung, NguoiGui 
+                                FROM Time_sheet 
+                                WHERE EmpID IN (
+                                    SELECT EmpID FROM Profile WHERE PhongID = ?
+                                ) LIMIT 3");
+        $stmt->bind_param("i", $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $timesheets = [];
+        while ($row = $result->fetch_assoc()) {
+            $timesheets[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+        return $timesheets;
+    }
+    public static function getManagedProjects($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT p.Ten AS ProjectName, 
+                                       p.TienDo, p.TinhTrang
+                                FROM Project p
+                                JOIN Profile prof ON p.QuanLy = prof.EmpID
+                                WHERE prof.EmpID = ? AND p.TinhTrang <> 'Đã hoàn thành'
+                                ORDER BY p.NgayGiao DESC");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $projects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
+
 }
     
 

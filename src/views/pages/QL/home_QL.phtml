@@ -20,15 +20,15 @@
     
     <div class="container">
         <div class="left-panel">
-            <div class="stats1">
+        <div class="stats1">
                 <div class="header">
                     <h1>Chào mừng, quản lý!</h1>
                     <div class="stat-box1">
-                        <h2>Tổng: 20</h2> 
-                        <h2>Hiện diện: 18</h2> 
+                        <h2>Tổng: <?php echo count($phongBans); ?></h2> 
+                        <h2>Hiện diện: <?php // Hiện diện - cần tính toán riêng ?></h2> 
                     </div>
-            </div>
-                <p>Phòng ban: A01</p>
+                </div>
+                <p>Phòng ban: <?php echo htmlspecialchars($_SESSION['user']['TenPhong']); ?></p>
             </div>
             <div class="calendar">
                     <div class="month">      
@@ -89,21 +89,18 @@
             <div class="tasks-today">
                 <h3>Lịch trình hôm nay</h3>
                 <ul>
-                <li>
-                        <p>Quản lý</p>
-                        <span>Số lượng: 20</span>
-                        <span class="status">Trong quá trình</span>
-                    </li>
-                    <li class="sub-project">
+                <?php foreach ($managedProjects as $project): ?>
+                        <li>
+                            <p><?php echo htmlspecialchars($project['ProjectName']); ?></p>
+                            <span>Tiến độ: <?php echo htmlspecialchars($project['TienDo']); ?></span>
+                            <span>Tình trạng: <?php echo htmlspecialchars($project['TinhTrang']); ?></span>
+                        </li>
+                        <li class="sub-project">
                         <p>Ghi chú 1</p>
                         <span>01/07/2024</span>
                         <span>Lorem ipsum dolor sit amet</span>
                     </li>
-                    <li class="sub-project">
-                        <p>Ghi chú 2</p>
-                        <span>01/07/2024</span>
-                        <span>Lorem ipsum dolor sit amet</span>
-                    </li>
+                <?php endforeach; ?>
                 </ul>
                 <a href="#">Xem thêm</a>
             </div>
@@ -126,8 +123,9 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <ul>
-                    <li>Bông Bông<br><span>deanan@smail.com</span></li>
-                    <li>Andrea Willis<br><span>andrea@willis.com</span></li>
+                    <?php foreach ($employees as $employee): ?>
+                        <li><?php echo htmlspecialchars($employee['HoTen']); ?><br><span><?php echo htmlspecialchars($employee['Email']); ?></span></li>
+                    <?php endforeach; ?>
 
                 </ul>
                 <div class="pagination">
@@ -144,8 +142,9 @@
             <div class="timesheet-list">
                 <h3>Danh sách Time-sheet nhân viên:</h3>
                 <ul>
-                    <li><span>01/01/2024</span> Lorem ipsum dolor sit amet <span>Bập Bập</span></li>
-                    <li><span>01/01/2024</span> Lorem ipsum dolor sit amet <span>Bông Bông</span></li>
+                <?php foreach ($timesheets as $timesheet): ?>
+                        <li><span><?php echo htmlspecialchars($timesheet['NgayGiao']); ?></span> <?php echo htmlspecialchars($timesheet['NoiDung']); ?> <span><?php echo htmlspecialchars($timesheet['NguoiGui']); ?></span></li>
+                    <?php endforeach; ?>
                 </ul>
                 <div class="pagination">
                         <a href="#" class="prev">&#10094;</a>
