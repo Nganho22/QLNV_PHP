@@ -50,7 +50,6 @@ CREATE TABLE Check_inout (
     EmpID INT,
     Date_checkin DATE,
     Time_checkin TIME NULL,
-    Date_checkout DATE,
     Time_checkout TIME NULL,
     Overtime INT DEFAULT 0,
     Late INT DEFAULT 0,
