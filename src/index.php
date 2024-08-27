@@ -4,6 +4,8 @@ require_once './controller/HomeController.php';
 require_once './controller/UserController.php';
 require_once './controller/PassController.php';
 require_once './controller/ProjectController.php';
+require_once './controller/RequestController.php';
+
 
 $action = "";
 if (isset($_REQUEST["action"]))
@@ -65,6 +67,10 @@ switch ($action)
         $controller = new HomeController();
         $controller->GetActivity_page();
         break;
+    case "GetRequestPage": 
+        $controller = new RequestController();
+        $controller->GetRequestPage();
+        break;   
 default:
         $controller = new HomeController();
         $controller->login();

@@ -161,14 +161,12 @@ class HomeController{
                 $extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
                 $target_file = $target_dir . $user_id . "." . $extension;
 
-                if (file_exists($target_file)) {
-                    unlink($target_file);
-                } else {
-                    echo json_encode([
-                        'success' => false,
-                        'message' => 'Không xóa được file ảnh cũ!'
-                    ]);
-                    exit();
+                // if (file_exists($target_file)) {
+                //     unlink($target_file);
+                // } 
+                // Xóa tất cả các file với cùng tên nhưng khác phần mở rộng
+                foreach (glob($target_dir . $user_id . ".*") as $oldFile) {
+                    unlink($oldFile);
                 }
 
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {

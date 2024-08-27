@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($title); ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/request.css" type="text/css"/> 
+</head>
+<body>
+<div class="container">
+        <!-- Cột bên trái -->
+        <div class="left-column">
+            <div class="row">
+                <div class="info-box">
+                    <p>TỔNG SỐ DỰ ÁN</p>
+                    <h4>5</h4>
+                </div>
+                <div class="info-box">
+                    <p>TỔNG SỐ DỰ ÁN</p>
+                    <h4>5</h4>
+                </div>
+                <div class="info-box">
+                    <p>TỔNG SỐ DỰ ÁN</p>
+                    <h4>5</h4>
+                </div>
+            </div>
+            <br>
+            <div class="request-list">
+                <h2>Tạo đơn yêu cầu</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Yêu cầu</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Đơn xin nghỉ phép</td>
+                            <td><a class="write-request btn btn-primary btn-block" href="index.php?action=GetCreateReq&req=NghiPhep">Viết đơn</a></td>
+                        </tr>
+                        <tr>
+                            <td>Đơn xin làm việc tại nhà</td>
+                            <td><a class="write-request btn btn-primary btn-block" href="index.php?action=GetCreateReq&req=TaiNha">Viết đơn</a></td>
+                        </tr>
+                        <tr>
+                            <td>Đơn xin cập nhật Time-sheet</td>
+                            <td><a class="write-request btn btn-primary btn-block" href="index.php?action=GetCreateReq&req=TimeSheet">Viết đơn</a></td>
+                        </tr>
+                        <tr>
+                            <td>Đơn xin nghỉ việc</td>
+                            <td><a class="write-request btn btn-primary btn-block" href="index.php?action=GetCreateReq&req=NghiViec">Viết đơn</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Cột bên phải -->
+        <div class="right-column">
+            <div class="pending-requests">
+                <h2>Yêu cầu chờ duyệt</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Yêu cầu</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        // Vòng lặp để hiển thị các yêu cầu chờ duyệt
+                        for($i = 1; $i <= 3; $i++) {
+                            echo "
+                            <tr>
+                                <td>Yêu cầu chờ duyệt $i</td>
+                                <td>Đợi</td>
+                            </tr>
+                            ";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+                <div class="pagination-wrapper">
+                    <div class="pagination">
+                        <a href="#">&lt;</a>
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <span>...</span>
+                        <a href="#">20</a>
+                        <a href="#">&gt;</a>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="approved-requests">
+                <h2>Yêu cầu đã duyệt</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Yêu cầu</th>
+                            <th>Ngày duyệt</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        // Vòng lặp để hiển thị các yêu cầu chờ duyệt
+                        for($i = 1; $i <= 3; $i++) {
+                            echo "
+                            <tr>
+                                <td>Yêu cầu đã duyệt $i</td>
+                                <td>01/01/2024</td>
+                            </tr>
+                            ";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+
+                <div class="pagination-wrapper">
+                    <div class="pagination">
+                        <a href="#">&lt;</a>
+                        <a href="#" class="active">1</a>
+                        <a href="#">2</a>
+                        <a href="#">3</a>
+                        <a href="#">4</a>
+                        <span>...</span>
+                        <a href="#">20</a>
+                        <a href="#">&gt;</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
