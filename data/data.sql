@@ -484,29 +484,6 @@ INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, TrangTha
 INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, TrangThai, NoiDung) VALUES ('200', '4', 'Tara Applewhite', 'Nghỉ việc', 'Khác', '2024-08-15 00:00:00', '0', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ');
 
 
-INSERT INTO Assignment (EmpID, ProjectID, Date_start_assignment, Date_end_assignment, Hours, Content, Point, Documents)
-VALUES
-(1, 'PJ1', '2024-08-18', '2024-08-18', 160, 'Nghiên cứu API', 30, 'Nghiên cứu API'),
-(2, 'PJ1', '2024-08-27', '2024-08-27', 170, 'Thiết kế Web', 20, 'Thiết kế Web'),
-(4, 'PJ1', '2024-07-23', '2024-07-23', 160, 'Nghiên cứu ODI', 30, 'Nghiên cứu ODI'),
-(5, 'PJ2', '2024-08-13', '2024-08-13', 25, 'Nghiên cứu NoSQL', 15, 'Nghiên cứu NoSQL'),
-(6, 'PJ4', '2024-08-13', '2024-08-13', 250, 'Nghiên cứu NoSQL', 15, 'Nghiên cứu NoSQL'),
-(7, 'PJ2', '2024-08-27', '2024-08-27', 50, 'Thiết kế Web', 20, 'Thiết kế Web'),
-(8, 'PJ3', '2024-07-23', '2024-07-23', 110, 'Nghiên cứu ODI', 30, 'Nghiên cứu ODI'),
-(9, 'PJ5', '2024-08-13', '2024-08-13', 50, 'Nghiên cứu NoSQL', 15, 'Nghiên cứu NoSQL'),
-(10, 'PJ2', '2024-08-20', '2024-08-20', 15, 'Nghiên cứu PHP', 25, 'Nghiên cứu PHP'),
-(11, 'PJ3', '2024-07-23', '2024-07-23', 100, 'Nghiên cứu ODI', 30, 'Nghiên cứu ODI'),
-(12, 'PJ4', '2024-08-18', '2024-08-18', 150, 'Nghiên cứu API', 30, 'Nghiên cứu API'),
-(13, 'PJ2', '2024-08-20', '2024-08-20', 25, 'Nghiên cứu PHP', 25, 'Nghiên cứu PHP'),
-(14, 'PJ5', '2024-08-27', '2024-08-27', 100, 'Thiết kế Web', 20, 'Thiết kế Web'),
-(15, 'PJ2', '2024-08-20', '2024-08-20', 25, 'Nghiên cứu PHP', 25, 'Nghiên cứu PHP'),
-
-(1, 'PJ4', '2024-08-13', '2024-08-13', 250, 'Nghiên cứu NoSQL', 15, 'Nghiên cứu NoSQL'),
-(2, 'PJ4', '2024-08-13', '2024-08-13', 250, 'Nghiên cứu NoSQL', 15, 'Nghiên cứu NoSQL'),
-(9, 'PJ3', '2024-07-23', '2024-07-23', 110, 'Nghiên cứu ODI', 30, 'Nghiên cứu ODI'),
-(12, 'PJ1', '2024-07-23', '2024-07-23', 160, 'Nghiên cứu ODI', 30, 'Nghiên cứu ODI'),
-(14, 'PJ3', '2024-07-23', '2024-07-23', 110, 'Nghiên cứu ODI', 30, 'Nghiên cứu ODI');
-
 INSERT INTO Activity (ActivityID, TenHoatDong, LoaiHoatDong, TrangThai, Point, NoiDung, ChiTiet, SoNguoiThamGia, ChiPhi, HanCuoiDangKy, NgayBatDau, NgayKetThuc)
 VALUES 
 ('HD1', 'Tuần Lễ Trà sữa', 'Hoạt động gây quỹ', 'Còn chỗ', 5, 'Tuần lễ trà sữa cuối tháng 9', 'Lập team tham gia tuần lễ trà sữa giảm 30%', 30, 100000, '2024-10-01', '2024-11-01', '2024-11-03'),

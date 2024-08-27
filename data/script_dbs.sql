@@ -112,20 +112,6 @@ CREATE TABLE Request (
     FOREIGN KEY (Time_sheetID) REFERENCES Time_sheet(Time_sheetID)
 );
 
-CREATE TABLE Assignment (
-    AssignmentID INT AUTO_INCREMENT PRIMARY KEY,
-    EmpID INT,
-    ProjectID VARCHAR(10),
-    Date_start_assignment DATE NOT NULL,
-    Date_end_assignment DATE NOT NULL,
-    Hours INT,
-    Content TEXT NOT NULL,
-    Point INT NOT NULL,
-    Documents TEXT,
-    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID),
-    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID)
-);
-
 CREATE TABLE Voucher (
     VoucherID INT PRIMARY KEY,
     TenVoucher VARCHAR(255),

@@ -348,9 +348,9 @@ class UserModel {
         $conn = $db->connect();
 
         $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Project.TinhTrang 
-                                FROM Assignment 
-                                JOIN Project ON Assignment.ProjectID = Project.ProjectID 
-                                WHERE Assignment.EmpID = ?");
+                                FROM Time_sheet
+                                JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
+                                WHERE Time_sheet.EmpID = ? LIMIT 3" );
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
