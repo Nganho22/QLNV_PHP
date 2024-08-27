@@ -22,13 +22,13 @@
         <div class="left-panel">
         <div class="stats1">
                 <div class="header">
-                    <h1>Chào mừng, quản lý!</h1>
+                    <h1>Chào mừng, <?php echo htmlspecialchars($_SESSION['user']['HoTen']); ?>!</h1>
                     <div class="stat-box1">
                         <h2>Tổng: <?php echo count($phongBans); ?></h2> 
                         <h2>Hiện diện: <?php // Hiện diện - cần tính toán riêng ?></h2> 
                     </div>
                 </div>
-                <p>Phòng ban: <?php echo htmlspecialchars($_SESSION['user']['TenPhong']); ?></p>
+                <p>Chức vụ: Quản lý phòng ban <?php echo htmlspecialchars($_SESSION['user']['TenPhong']); ?></p>
             </div>
             <div class="calendar">
                     <div class="month">      

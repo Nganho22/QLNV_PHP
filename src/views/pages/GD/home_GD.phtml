@@ -19,7 +19,7 @@
     <?php endif; ?>
     <div class="container">
         <div class="left-panel">
-            <h1>Chào mừng, Bông!</h1>
+        <h1>Chào mừng, <?php echo htmlspecialchars($_SESSION['user']['HoTen']); ?>!</h1>
             <p>Chức vụ: Tổng giám đốc</p>
             <div class="calendar">
                 <div class="month">      
@@ -82,21 +82,13 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <ul>
-                    <li>
-                        <p>Dự án 007</p>
-                        <span>01/07/2024</span>
-                        <span class="status">Trong quá trình</span>
-                    </li>
-                    <li class="sub-project">
-                        <p>Ghi chú 1</p>
-                        <span>01/07/2024</span>
-                        <span>Lorem ipsum dolor sit amet</span>
-                    </li>
-                    <li class="sub-project">
-                        <p>Ghi chú 2</p>
-                        <span>01/07/2024</span>
-                        <span>Lorem ipsum dolor sit amet</span>
-                    </li>
+                    <?php foreach ($projects as $project): ?>
+                        <li>
+                            <p><?php echo htmlspecialchars($project['Ten']); ?></p>
+                            <span><?php echo htmlspecialchars($project['NgayGiao']); ?></span>
+                            <span class="status"><?php echo htmlspecialchars($project['TienDo']); ?></span>
+                        </li>
+                    <?php endforeach; ?>
                 </ul>
                 <div class="pagination">
                         <a href="#" class="prev">&#10094;</a>
@@ -119,9 +111,9 @@
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <ul>
-                    <li>Deanna Annis<br><span>deanna@smail.com</span></li>
-                    <li>Andrea Willis<br><span>andrea@willis.com</span></li>
-                    <li>Brent Rodrigues<br><span>brent@rodrigues.com</span></li>
+                    <?php foreach ($employees as $employee): ?>
+                        <li><?php echo htmlspecialchars($employee['HoTen']); ?><br><span><?php echo htmlspecialchars($employee['Email']); ?></span></li>
+                    <?php endforeach; ?>
                 </ul>
                     <div class="pagination">
                         <a href="#" class="prev">&#10094;</a>
@@ -149,36 +141,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>A01</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Bắp Bắp</td>
-                        </tr>
-                        <tr>
-                            <td>A02</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Bông Bông</td>
-                        </tr>
-                        <tr>
-                            <td>A03</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Ngân H</td>
-                        </tr>
-                        <tr>
-                            <td>A04</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Ngân H</td>
-                        </tr>
-                        <tr>
-                            <td>A05</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Ngân H</td>
-                        </tr>
-                        <tr>
-                            <td>A06</td>
-                            <td>Lorem ipsum dolor sit amet</td>
-                            <td>Ngân H</td>
-                        </tr>
+                    <?php foreach ($phongBans as $phongBan): ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars($phongBan['PhongID']); ?></td>
+                                <td><?php echo htmlspecialchars($phongBan['TenPhong']); ?></td>
+                                <td><?php // Query to get manager name by EmpID ?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
                 <div class="pagination">

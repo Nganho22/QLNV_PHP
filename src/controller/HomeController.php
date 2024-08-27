@@ -28,19 +28,22 @@ class HomeController{
             $empID = $_SESSION['user']['EmpID'];
             switch ($Role) {
                 case 'Nhân viên':
-                    $projects = UserModel::getProjectsForNV($empID);
+                    $projects = UserModel::getProjects_NV($empID);
                     $activities = UserModel::getActivities($empID);
                     $checkInOut = UserModel::getCheckInOut($empID);
                     $file = "./views/pages/NV/home_NV.phtml";
                     break;
                 case 'Quản lý':
                     $phongBans = UserModel::getPhongBanStatistics();
-                    $employees = UserModel::getEmployeesList($empID);
+                    $employees = UserModel::getEmployeesList_QL($empID);
                     $timesheets = UserModel::getTimesheetList($empID); 
-                    $managedProjects = UserModel::getManagedProjects($empID);
+                    $managedProjects = UserModel::getProjects_QL($empID);
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 case 'Giám đốc':
+                    $projects = UserModel::getProjects_GD();
+                    $employees = UserModel::getEmployeesList_GD();
+                    $phongBans = UserModel::getPhongBan_GD();
                     $file = "./views/pages/GD/home_GD.phtml";
 
                     break;

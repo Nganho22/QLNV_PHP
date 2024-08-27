@@ -35,11 +35,11 @@
             <div class="stats-down">
                 <div class="stat-box-down">
                     <h2>Dự án hoàn thành</h2>
-                    <p><?php echo count(array_filter($projects, fn($p) => $p['TinhTrang'] == 'Hoàn thành')); ?></p>
+                    <p><?php echo count(array_filter($projects, fn($p) => $p['TinhTrang'] == 'Đã hoàn thành')); ?></p>
                 </div>
                 <div class="stat-box-down">
                     <h2>Hoạt động hoàn thành</h2>
-                    <p><?php echo count(array_filter($activities, fn($a) => $a['TrangThai'] == 'Hoàn thành')); ?></p>
+                    <p><?php echo count(array_filter($activities, fn($a) => $a['ThanhTich'] == 'Tốt')); ?></p>
                 </div>
             </div>
         <div class="tasks-today">
@@ -62,7 +62,7 @@
                 <?php foreach ($activities as $activity): ?>
                     <li>
                         <p><?php echo htmlspecialchars($activity['TenHoatDong']); ?></p>
-                        <span class="status"><?php echo htmlspecialchars($activity['TrangThai']); ?></span>
+                        <span class="status"><?php echo htmlspecialchars($activity['ThoiGianThucHien']); ?></span>
                     </li>
                 <?php endforeach; ?>
             </ul>

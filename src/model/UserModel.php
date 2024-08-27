@@ -343,7 +343,7 @@ class UserModel {
 
     //Phần Home
     // Lấy danh sách dự án
-    public static function getProjectsForNV($empID) {
+    public static function getProjects_NV($empID) {
         $db = new Database();
         $conn = $db->connect();
 
@@ -365,19 +365,54 @@ class UserModel {
         return $projects;
     }
 
+    public static function getProjects_QL($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT p.Ten AS ProjectName, 
+                                       p.TienDo, p.TinhTrang
+                                FROM Project p
+                                JOIN Profile prof ON p.QuanLy = prof.EmpID
+                                WHERE prof.EmpID = ? AND p.TinhTrang <> 'Đã hoàn thành'
+                                ORDER BY p.NgayGiao DESC");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $projects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
     
+    public static function getProjects_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT * FROM Project LIMIT 3");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $projects = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
 
     // Lấy danh sách hoạt động
     public static function getActivities($empID) {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT TenHoatDong, TrangThai 
+        $stmt = $conn->prepare("SELECT Activity.TenHoatDong, emp_activity.ThoiGianThucHien, emp_activity.ThanhTich
                                 FROM Activity 
-                                WHERE EXISTS (
-                                    SELECT * FROM Assignment 
-                                    WHERE Assignment.EmpID = ? AND Assignment.ProjectID = Activity.ActivityID
-                                )");
+                                JOIN emp_activity ON Activity.ActivityID = emp_activity.ActivityID
+                                WHERE emp_activity.EmpID = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -437,7 +472,7 @@ class UserModel {
     }
 
 
-    public static function getEmployeesList($empID) {
+    public static function getEmployeesList_QL($empID) {
         $db = new Database();
         $conn = $db->connect();
 
@@ -460,6 +495,20 @@ class UserModel {
         while ($row = $result->fetch_assoc()) {
             $employees[] = $row;
         }
+
+        $stmt->close();
+        $db->close();
+        return $employees;
+    }
+
+    public static function getEmployeesList_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT EmpID, HoTen, Email FROM Profile LIMIT 5");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $employees = $result->fetch_all(MYSQLI_ASSOC);
 
         $stmt->close();
         $db->close();
@@ -499,30 +548,20 @@ class UserModel {
         $db->close();
         return $timesheets;
     }
-    public static function getManagedProjects($empID) {
+
+    public static function getPhongBan_GD() {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT p.Ten AS ProjectName, 
-                                       p.TienDo, p.TinhTrang
-                                FROM Project p
-                                JOIN Profile prof ON p.QuanLy = prof.EmpID
-                                WHERE prof.EmpID = ? AND p.TinhTrang <> 'Đã hoàn thành'
-                                ORDER BY p.NgayGiao DESC");
-        $stmt->bind_param("i", $empID);
+        $stmt = $conn->prepare("SELECT * FROM PhongBan LIMIT 3");
         $stmt->execute();
         $result = $stmt->get_result();
-
-        $projects = [];
-        while ($row = $result->fetch_assoc()) {
-            $projects[] = $row;
-        }
+        $phongBans = $result->fetch_all(MYSQLI_ASSOC);
 
         $stmt->close();
         $db->close();
-        return $projects;
+        return $phongBans;
     }
-
 
 }
     

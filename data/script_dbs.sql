@@ -159,3 +159,16 @@ CREATE TABLE Felicitation (
     NguoiNhan INT,
     FOREIGN KEY (NguoiNhan) REFERENCES Profile(EmpID)
 );
+
+CREATE TABLE emp_activity (
+    emp_activityID INT AUTO_INCREMENT PRIMARY KEY,
+    EmpID INT,
+    ActivityID VARCHAR(10),
+    Start_date_join DATE NOT NULL,
+    End_date_join DATE NOT NULL,
+    NgayThamGia DATE NOT NULL,
+    ThanhTich VARCHAR(255),
+    ThoiGianThucHien DATE NOT NULL,
+    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID),
+    FOREIGN KEY (ActivityID) REFERENCES Activity(ActivityID)
+);
