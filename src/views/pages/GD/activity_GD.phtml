@@ -1,1 +1,114 @@
-Hoat dong giam doc
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($title); ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/activity.css" type="text/css"/> 
+</head>
+    <body>
+    <main>
+    <div class="container">
+        <h1 class="mb-4">Danh sách hoạt động</h1>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="activity-summary" style=" z-index: 0;">
+                    <div class="total-activities">
+                        <div><img src="path_to_icon" alt="icon"> Tổng hoạt động trong tháng</div>
+                        <div><h2>12</h2></div>
+                    </div>
+                    <div class="ongoing-activities">
+                        <div><img src="path_to_icon" alt="icon"> Số hoạt động đang diễn ra</div>
+                        <div><h2>10</h2></div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary">Tạo hoạt động cơ bản</button>
+                        <button class="btn btn-secondary">Tạo hoạt động liên kết</button>
+                    </div>
+                    <div class="activity-list">
+                        <h4>Danh sách các hoạt động, chiến dịch đang diễn ra</h4>
+                        <div class="activity-item">
+                            <div>Chạy bộ xuyên việt<br><small>Hạn chót: 07/01/2024</small></div>
+                            <div class="status">Trong Quá Trình</div>
+                        </div>
+                        <div class="activity-item">
+                            <div>Đi vùng tàu<br><small>Hạn chót: 07/01/2024</small></div>
+                            <div class="status">Chờ đăng ký</div>
+                        </div>
+                        <div class="activity-item">
+                            <div>Đi vùng tàu<br><small>Hạn chót: 07/01/2024</small></div>
+                            <div class="status">Chờ đăng ký</div>
+                        </div>
+                        <!-- Pagination -->
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination">
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">...</a></li>
+                                <li class="page-item"><a class="page-link" href="#">20</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="activity-list">
+                    <h4>Hoạt động cơ bản:</h4>
+                    <input type="text" class="form-control search-bar" placeholder="Tìm kiếm...">
+                    <div class="activity-item">
+                        <div>Đi vùng tàu<br><small>Hạn chót: 07/01/2024</small></div>
+                        <div class="status">Trong Quá Trình</div>
+                    </div>
+                    <div class="activity-item">
+                        <div>Đi Đà Lạt<br><small>Hạn chót: 07/01/2024</small></div>
+                        <div class="status">Trong Quá Trình</div>
+                    </div>
+                    <div class="activity-item">
+                        <div>Tuần lễ trà sữa<br><small>Hạn chót: 07/01/2024</small></div>
+                        <div class="status">Trong Quá Trình</div>
+                    </div>
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">20</a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+                <div class="activity-list mt-4">
+                    <h4>Hoạt động liên kết:</h4>
+                    <input type="text" class="form-control search-bar" placeholder="Tìm kiếm...">
+                    <div class="activity-item">
+                        <div>Chạy bộ xuyên việt<br><small>Hạn chót: 07/01/2024</small></div>
+                        <div class="status">Trong Quá Trình</div>
+                    </div>
+                    <div class="activity-item">
+                        <div>Chạy bộ xuyên việt<br><small>Hạn chót: 07/01/2024</small></div>
+                        <div class="status">Trong Quá Trình</div>
+                    </div>
+                    <div class="activity-item">
+                        <div>Chạy bộ xuyên việt<br><small>Hạn chót: 07/01/2024</small></div>
+                        <div class="status">Trong Quá Trình</div>
+                    </div>
+                    <!-- Pagination -->
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">...</a></li>
+                            <li class="page-item"><a class="page-link" href="#">20</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    </main>
+</body>

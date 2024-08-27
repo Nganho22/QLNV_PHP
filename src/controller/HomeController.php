@@ -208,10 +208,50 @@ class HomeController{
 
     public function Getcheckinout_page() {
         if (isset($_SESSION['user'])) {
+            $title='CheckinOut Page';
             ob_start();
             require("./views/pages/checkin_out.phtml");
             $content = ob_get_clean();
             require(__DIR__ . '/../views/template.phtml');
+        }
+        else{
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+     
+    }
+
+    public function GetActivity_page() {
+        if (isset($_SESSION['user'])) {
+            $Role= $_SESSION['user']['Role'];
+            $title = 'Activity Page'; 
+            $empID = $_SESSION['user']['EmpID'];
+            switch ($Role) {
+                case 'Nhân viên':
+                    $file = "./views/pages/NV/activity_NV.phtml";
+                    break;
+                case 'Quản lý':
+                    $file = "./views/pages/QL/activity_QL.phtml";
+                    break;
+                case 'Giám đốc':
+                    $file = "./views/pages/GD/activity_GD.phtml";
+
+                    break;
+                default:
+                    $file = null;
+                    $title = 'Error';
+                    break;
+
+            }
+            
+            if ($file && file_exists($file)) {
+                ob_start();
+                require($file);
+                $content = ob_get_clean();
+                require(__DIR__ . '/../views/template.phtml');
+            } else {
+                echo "Vai trò không hợp lệ.";
+            }
         }
         else{
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');

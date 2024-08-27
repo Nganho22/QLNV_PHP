@@ -61,6 +61,10 @@ switch ($action)
         $controller = new HomeController();
         $controller->Getcheckinout_page();
         break;
+    case "GetActivityPage":
+        $controller = new HomeController();
+        $controller->GetActivity_page();
+        break;
 default:
         $controller = new HomeController();
         $controller->login();
