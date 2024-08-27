@@ -34,8 +34,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
     border-radius: 8px;
     background-color: #ffffff;
 }
@@ -43,6 +43,19 @@ body {
 .total-activities {
     background-color: #bdbdbd;
 }
+
+.total-activities img {
+    width: 30px;
+    height: 30px;
+}
+
+
+.ongoing-activities img {
+    width: 30px;
+    height: 30px;
+}
+
+
 
 .btn-group {
     display: flex;
