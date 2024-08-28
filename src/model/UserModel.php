@@ -427,6 +427,45 @@ class UserModel {
         return $activities;
     }
 
+    public static function UpCheckInOut($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Kiểm tra xem đã check-in hôm nay chưa
+        $stmt = $conn->prepare("SELECT STT, Time_checkin, Time_checkout FROM Check_inout WHERE EmpID = ? AND Date_checkin = CURDATE()");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            
+            if (is_null($row['Time_checkout'])) {
+                // Nếu đã check-in nhưng chưa check-out, tiến hành check-out
+                $updateStmt = $conn->prepare("UPDATE Check_inout SET Time_checkout = CURTIME() WHERE STT = ?");
+                $updateStmt->bind_param("i", $row['STT']);
+                $updateStmt->execute();
+                $updateStmt->close();
+                $status = 'checked-out';
+            } else {
+                // Đã check-out, không thể thực hiện lại
+                $status = 'already-checked-out';
+            }
+        } else {
+            // Nếu chưa check-in, tiến hành check-in
+            $insertStmt = $conn->prepare("INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin) VALUES (?, CURDATE(), CURTIME())");
+            $insertStmt->bind_param("i", $empID);
+            $insertStmt->execute();
+            $insertStmt->close();
+            $status = 'checked-in';
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $status;
+    }
+    
     // Lấy thông tin chấm công
     public static function getCheckInOut($empID) {
         $db = new Database();

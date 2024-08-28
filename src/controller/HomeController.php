@@ -26,6 +26,20 @@ class HomeController{
             $Role= $_SESSION['user']['Role'];
             $title = 'Home'; 
             $empID = $_SESSION['user']['EmpID'];
+            // Xử lý check-in/check-out khi nhận được yêu cầu POST
+            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['checkinout'])) {
+                $status = UserModel::UpCheckInOut($empID);
+
+                if ($status === 'checked-in') {
+                    $message = "Bạn đã check-in thành công.";
+                } elseif ($status === 'checked-out') {
+                    $message = "Bạn đã check-out thành công.";
+                } elseif ($status === 'already-checked-out') {
+                    $message = "Bạn đã check-out, không thể thực hiện lại.";
+                } else {
+                    $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                }
+            }
             switch ($Role) {
                 case 'Nhân viên':
                     $projects = UserModel::getProjects_NV($empID);

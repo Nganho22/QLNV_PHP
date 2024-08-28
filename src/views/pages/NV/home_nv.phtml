@@ -72,6 +72,18 @@
 
         </div>
         <div class="right-panel">
+            <div class="checkin-out">
+                <h3>Thời gian ra vào:</h3>
+                <div class="button-inout">
+                    <form method="POST">
+                            <button type="submit" name="checkinout" class="btn btn-primary">
+                                <?php echo isset($checkInOut['Time_checkin']) && is_null($checkInOut['Time_checkout']) ? 'Check-out' : 'Check-in'; ?>
+                            </button>
+                    </form>
+                </div>
+                <p>Check-in: <?php echo htmlspecialchars($checkInOut['Time_checkin'] ?? 'Chưa có'); ?></p>
+                <p>Check-out: <?php echo htmlspecialchars($checkInOut['Time_checkout'] ?? 'Chưa có'); ?></p>
+            </div>
             <div class="calendar">
                 <div class="month">      
                     <ul>
@@ -132,11 +144,6 @@
             <div class="stats-chart">
                 <h3>Thống kê điểm thưởng theo tháng:</h3>
                 <canvas id="rewardChart"></canvas>
-            </div>
-            <div class="checkin-out">
-                <h3>Thời gian ra vào:</h3>
-                <p>Check-in: <?php echo htmlspecialchars($checkInOut['Time_checkin'] ?? 'Chưa có'); ?></p>
-                <p>Check-out: <?php echo htmlspecialchars($checkInOut['Time_checkout'] ?? 'Chưa có'); ?></p>
             </div>
     </div>
     
