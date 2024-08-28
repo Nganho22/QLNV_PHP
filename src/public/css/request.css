@@ -74,8 +74,12 @@ table td {
 /* Điều chỉnh chiều rộng của cột "Yêu cầu" */
 table th:first-child,
 table td:first-child {
-    width: 70%;
+    width: 50%;
     /* Điều chỉnh tỷ lệ theo nhu cầu */
+}
+
+.text-center {
+    text-align: center;
 }
 
 .write-request {
@@ -86,6 +90,7 @@ table td:first-child {
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
+    display: inline-block;
 }
 
 .write-request:hover {
@@ -109,24 +114,91 @@ table td:first-child {
     margin-top: 20px;
 }
 
-.pagination {
-    display: inline-block;
-}
-
 .pagination a {
-    padding: 10px 15px;
-    margin: 0 5px;
-    background-color: #f0f0f0;
-    color: #333;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     text-decoration: none;
-    border-radius: 5px;
+    color: #007bff;
 }
 
 .pagination a.active {
     background-color: #007bff;
-    color: #fff;
+    color: white;
 }
 
-.pagination span {
-    padding: 10px 15px;
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+}
+
+/* ===================== CÁC LOẠI FORM  ================= */
+.request-form {
+    margin: auto;
+    padding: 20px;
+    max-width: 1360px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 15px;
+}
+
+.form-group:last-child {
+    margin-right: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.custom-btn {
+    border-radius: 10px;
+    width: 200px;
+    justify-content: center;
+    margin: 0 auto;
+    display: block;
+}
+
+#timeSheetDropdown {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    outline: none;
+    cursor: pointer;
+}
+
+#timeSheetDropdown option {
+    padding: 10px;
 }

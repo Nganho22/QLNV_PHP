@@ -1,34 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo htmlspecialchars($title); ?></title>
+    <title>Yêu cầu</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/request.css" type="text/css"/> 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/request.css">
 </head>
 <body>
-<div class="container">
+    <div class="container">
         <!-- Cột bên trái -->
         <div class="left-column">
             <div class="row">
                 <div class="info-box">
-                    <p>TỔNG SỐ DỰ ÁN</p>
-                    <h4>5</h4>
+                    <p><strong>Tổng các đơn yêu cầu</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['total']); ?></h4>
                 </div>
                 <div class="info-box">
-                    <p>TỔNG SỐ DỰ ÁN</p>
-                    <h4>5</h4>
+                    <p><strong>Tổng đơn đã duyệt</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['pending']); ?></h4>
                 </div>
                 <div class="info-box">
-                    <p>TỔNG SỐ DỰ ÁN</p>
-                    <h4>5</h4>
+                    <p><strong>Tổng đơn chưa duyệt</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['approved']); ?></h4>
                 </div>
             </div>
-            <br>
+            
             <div class="request-list">
+                <br>
                 <h2>Tạo đơn yêu cầu</h2>
-                <table>
+                <br>
+                <table class="table">
                     <thead>
                         <tr>
                             <th>Yêu cầu</th>
@@ -38,19 +42,19 @@
                     <tbody>
                         <tr>
                             <td>Đơn xin nghỉ phép</td>
-                            <td><a class="write-request btn btn-primary btn-block" href="index.php?action=GetCreateReq&req=NghiPhep">Viết đơn</a></td>
+                            <td class="text-center"><a class="write-request btn btn-primary btn-block custom-btn" href="#" data-req="Chung" loai-req="Nghỉ phép">Viết đơn</a></td>
                         </tr>
                         <tr>
                             <td>Đơn xin làm việc tại nhà</td>
-                            <td><a class="write-request btn btn-primary btn-block" href="index.php?action=GetCreateReq&req=TaiNha">Viết đơn</a></td>
+                            <td class="text-center"><a class="write-request btn btn-primary btn-block custom-btn" href="#" data-req="Chung" loai-req="Làm việc tại nhà">Viết đơn</a></td>
                         </tr>
                         <tr>
                             <td>Đơn xin cập nhật Time-sheet</td>
-                            <td><a class="write-request btn btn-primary btn-block" href="index.php?action=GetCreateReq&req=TimeSheet">Viết đơn</a></td>
+                            <td class="text-center"><a class="write-request btn btn-primary btn-block custom-btn" href="#" data-req="TimeSheet" loai-req="Time-sheet">Viết đơn</a></td>
                         </tr>
                         <tr>
                             <td>Đơn xin nghỉ việc</td>
-                            <td><a class="write-request btn btn-primary btn-block" href="index.php?action=GetCreateReq&req=NghiViec">Viết đơn</a></td>
+                            <td class="text-center"><a class="write-request btn btn-primary btn-block custom-btn" href="#" data-req="Chung" loai-req="Nghỉ việc">Viết đơn</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -61,81 +65,315 @@
         <div class="right-column">
             <div class="pending-requests">
                 <h2>Yêu cầu chờ duyệt</h2>
-                <table>
+                <table class="table" id="pending-requests-table">
                     <thead>
                         <tr>
                             <th>Yêu cầu</th>
                             <th>Trạng thái</th>
+                            <th>Ngày gửi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        // Vòng lặp để hiển thị các yêu cầu chờ duyệt
-                        for($i = 1; $i <= 3; $i++) {
-                            echo "
+                        <?php foreach ($pendingRequests as $request): ?>
                             <tr>
-                                <td>Yêu cầu chờ duyệt $i</td>
-                                <td>Đợi</td>
+                                <td><?php echo htmlspecialchars($request['TieuDe']); ?></td>
+                                <td><?php echo $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt'; ?></td>
+                                <td><?php echo htmlspecialchars($request['NgayGui']); ?></td>
                             </tr>
-                            ";
-                        }
-                        ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
-                <div class="pagination-wrapper">
-                    <div class="pagination">
-                        <a href="#">&lt;</a>
-                        <a href="#" class="active">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">4</a>
-                        <span>...</span>
-                        <a href="#">20</a>
-                        <a href="#">&gt;</a>
-                    </div>
+                <div id="pending-pagination" class="pagination pagination-wrapper">
+                    <?php if ($totalPending > $limit): ?>
+                        <?php for ($i = 1; $i <= ceil($totalPending / $limit); $i++): ?>
+                            <li class="page-item <?php echo ($i == $pagePending) ? 'active' : ''; ?>">
+                                <a class="page-link" href="#" data-page="<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+                    <?php endif; ?>
                 </div>
             </div>
 
-
             <div class="approved-requests">
                 <h2>Yêu cầu đã duyệt</h2>
-                <table>
+                <table class="table" id="approved-requests-table">
                     <thead>
                         <tr>
                             <th>Yêu cầu</th>
-                            <th>Ngày duyệt</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày xử lý</th>
                         </tr>
                     </thead>
                     <tbody>
-                    <?php
-                        // Vòng lặp để hiển thị các yêu cầu chờ duyệt
-                        for($i = 1; $i <= 3; $i++) {
-                            echo "
+                        <?php foreach ($approvedRequests as $request): ?>
                             <tr>
-                                <td>Yêu cầu đã duyệt $i</td>
-                                <td>01/01/2024</td>
+                                <td><?php echo htmlspecialchars($request['TieuDe']); ?></td>
+                                <td><?php echo $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt'; ?></td>
+                                <td><?php echo htmlspecialchars($request['NgayXuLy']); ?></td>
                             </tr>
-                            ";
-                        }
-                        ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
-
-                <div class="pagination-wrapper">
-                    <div class="pagination">
-                        <a href="#">&lt;</a>
-                        <a href="#" class="active">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">4</a>
-                        <span>...</span>
-                        <a href="#">20</a>
-                        <a href="#">&gt;</a>
-                    </div>
+                <div id="approved-pagination" class="pagination pagination-wrapper">
+                    <?php if ($totalApproved > $limit): ?>
+                        <?php for ($i = 1; $i <= ceil($totalApproved / $limit); $i++): ?>
+                            <li class="page-item <?php echo ($i == $pageApproved) ? 'active' : ''; ?>">
+                                <a class="page-link" href="#" data-page="<?php echo $i; ?>"><?php echo $i; ?></a>
+                            </li>
+                        <?php endfor; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
-    
+
+
+    <div id="Chung" class="request-form" style="display: none;">
+            <h3 class = "text-center">Form điền đơn</h3>
+            <br>
+            <form>
+                <!-- Hàng đầu tiên: Thông tin điền sẵn -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nguoiGui">Người gửi</label>
+                        <input type="text" id="nguoiGui" name="nguoiGui" value="<?php echo htmlspecialchars($_SESSION['user']['HoTen'])?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="ngayGui">Ngày gửi</label>
+                        <input type="text" id="ngayGui" name="ngayGui" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="loai">Loại</label>
+                        <input type="text" id="loai" name="loai" readonly>
+                    </div>
+                </div>
+
+                <!-- Hàng thứ hai: Tiêu đề -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tieuDe">Tiêu đề</label>
+                        <input type="text" id="tieuDe" name="tieuDe" placeholder="Nhập tiêu đề">
+                    </div>
+                </div>
+
+                <!-- Hàng thứ ba: Nội dung -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="noiDung">Nội dung</label>
+                        <textarea id="noiDung" name="noiDung" rows="6" placeholder="Nhập nội dung"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class = " btn btn-primary btn-block custom-btn text-center">Gửi đơn</button>
+            </form>
+    </div>
+
+    <div id="TimeSheet" class="request-form" style="display: none;">
+            <h3 class = "text-center">Form điền đơn</h3>
+            <br>
+            <form>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nguoiGui">Người gửi</label>
+                        <input type="text" id="nguoiGui" name="nguoiGui" value="<?php echo htmlspecialchars($_SESSION['user']['HoTen'])?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="ngayGui">Ngày gửi</label>
+                        <input type="text" id="ngayGui" name="ngayGui" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="loai">Loại</label>
+                        <input type="text" id="loai" name="loai" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="timeSheetDropdown">Chọn Time-sheet</label>
+                        <select id="timeSheetDropdown" name="timeSheetDropdown">
+                            <option value="">Chọn Time-sheet</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="project-info" class="form-row" style="display: none;">
+                <div class="form-group">
+                    <label for="projectID">Project ID</label>
+                    <input type="text" id="projectID" name="projectID" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="ngayGiao">Ngày giao</label>
+                    <input type="text" id="ngayGiao" name="ngayGiao" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="hanChot">Hạn chót</label>
+                    <input type="text" id="hanChot" name="hanChot" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="diemThuong">Điểm thưởng</label>
+                    <input type="text" id="diemThuong" name="diemThuong" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="soGioThucHien">Số giờ thực hiện</label>
+                    <input type="text" id="soGioThucHien" name="soGioThucHien" readonly>
+                </div>
+            </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tieuDe">Tiêu đề</label>
+                        <input type="text" id="tieuDe" name="tieuDe" placeholder="Nhập tiêu đề">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="noiDung">Nội dung</label>
+                        <textarea id="noiDung" name="noiDung" rows="6" placeholder="Nhập nội dung"></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class = " btn btn-primary btn-block custom-btn text-center">Gửi đơn</button>
+            </form>
+    </div>
+
+
+
+
+    <script>
+        $(document).ready(function() {
+    // Xử lý phân trang cho yêu cầu chờ duyệt
+    $(document).on('click', '#pending-pagination .page-link', function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        loadPendingRequests(page, $(this));
+    });
+
+    // Xử lý phân trang cho yêu cầu đã duyệt
+    $(document).on('click', '#approved-pagination .page-link', function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        loadApprovedRequests(page, $(this));
+    });
+
+    function loadPendingRequests(page, element) {
+        $.ajax({
+            url: 'index.php?action=GetRequestPage&ajax=true&pagePending=' + page,
+            method: 'GET',
+            success: function(response) {
+                var data = JSON.parse(response);
+                $('#pending-requests-table tbody').html(data.pendingHtml);
+                $('#pending-pagination').html(data.pendingPagination);
+
+                // Cập nhật trạng thái active
+                var updatedPagination = $('#pending-pagination .page-link[data-page="' + page + '"]');
+                updatedPagination.parent().addClass('active');
+            },
+            error: function() {
+                console.error('Không thể tải dữ liệu');
+            }
+        });
+    }
+
+    function loadApprovedRequests(page, element) {
+        $.ajax({
+            url: 'index.php?action=GetRequestPage&ajax=true&pageApproved=' + page,
+            method: 'GET',
+            success: function(response) {
+                var data = JSON.parse(response);
+                $('#approved-requests-table tbody').html(data.approvedHtml);
+                $('#approved-pagination').html(data.approvedPagination);
+
+                // Cập nhật trạng thái active
+                var updatedPagination = $('#approved-pagination .page-link[data-page="' + page + '"]');
+                updatedPagination.parent().addClass('active');
+            },
+            error: function() {
+                console.error('Không thể tải dữ liệu');
+            }
+        });
+    }
+
+    $('.write-request').on('click', function(e) {
+            e.preventDefault();
+            var formId = $(this).data('req');
+            var loaiReq = $(this).attr('loai-req');
+            
+            // Ẩn tất cả các form khác
+            $('.request-form').hide();
+            
+            // Hiển thị form tương ứng
+            var formElement = $('#' + formId);
+            formElement.show();
+            formElement[0].scrollIntoView({ behavior: 'smooth' });
+
+            //Lấy loại đơn 
+            formElement.find('#loai').val(loaiReq); 
+
+            //Lấy thời gian
+            function formatDate(date) {
+                var day = ("0" + date.getDate()).slice(-2);
+                var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                var year = date.getFullYear();
+                return day + '/' + month + '/' + year;
+            }
+
+            var today = new Date();
+            var formattedDate = formatDate(today);
+
+            formElement.find('[name="ngayGui"]').val(formattedDate);
+
+            //Lấy ds time-sheet
+            $.ajax({
+            url: 'index.php?action=GetRequestPage&ajax=true',
+            method: 'GET',
+            success: function(response) {
+                var data = JSON.parse(response);
+                if (data.timeSheets) {
+                    var dropdown = $('#timeSheetDropdown');
+                    dropdown.empty();
+                    dropdown.append('<option value="">Chọn Time-sheet</option>');
+                    $.each(data.timeSheets, function(index, timeSheet) {
+                        dropdown.append('<option value="' + timeSheet.Time_sheetID + '">' + timeSheet.ProjectID + ' - ' + timeSheet.Time_sheetID + ' - ' + timeSheet.TenDuAn + '</option>');
+                    });
+                }
+            },
+            error: function() {
+                console.error('Không thể tải dữ liệu');
+            }
+        });
+    });
+
+    $('#timeSheetDropdown').on('change', function() {
+        var timeSheetID = $(this).val();
+        if (timeSheetID) {
+            $.ajax({
+                url: 'index.php?action=GetTimeSheetDetails&timeSheetID=' + timeSheetID,
+                method: 'GET',
+                success: function(response) {
+                    var timeSheet = JSON.parse(response);
+                    if (timeSheet) {
+                        // Hiển thị thông tin dự án
+                        $('#project-info').show();
+                        
+                        // Cập nhật các trường thông tin
+                        $('#projectID').val(timeSheet.ProjectID);
+                        $('#ngayGiao').val(timeSheet.NgayGiao);
+                        $('#hanChot').val(timeSheet.HanChot);
+                        $('#diemThuong').val(timeSheet.DiemThuong);
+                        $('#soGioThucHien').val(timeSheet.SoGioThucHien);
+                        $('#noiDung').val(timeSheet.NoiDung);
+                    }
+                },
+                error: function() {
+                    console.error('Không thể tải dữ liệu');
+                }
+            });
+        } else {
+            // Ẩn thông tin dự án nếu không có gì được chọn
+            $('#project-info').hide();
+        }
+    });
+});
+
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

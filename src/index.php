@@ -70,7 +70,11 @@ switch ($action)
     case "GetRequestPage": 
         $controller = new RequestController();
         $controller->GetRequestPage();
-        break;   
+        break;
+    case "GetTimeSheetDetails":
+        $controller = new RequestController();
+        $controller->GetTimeSheetDetails();
+        break;    
 default:
         $controller = new HomeController();
         $controller->login();
