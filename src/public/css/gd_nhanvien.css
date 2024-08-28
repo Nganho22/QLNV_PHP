@@ -114,29 +114,6 @@ h1, h2, h3 {
     color: #333;
 }
 
-
-.calendar {
-    margin-bottom: 20px;
-    background-color: #ffffff;
-}
-
-.calendar-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 8px;
-}
-
-.calendar-grid .day {
-    background-color: #ccc;
-    text-align: center;
-    padding: 15px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
 .stats-chart img {
     max-width: 100%;
     height: auto;
@@ -152,94 +129,94 @@ h1, h2, h3 {
     border-radius: 5px;
 }
 
+
+.calendar {
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border-radius: 8px; /* Thêm border-radius để đồng nhất với các khối khác */
+}
+
 .calendar .month {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 20px;
     background: #ffffff;
     text-align: center;
-    color: white;
+    color: #333;
 }
 
-.calendar .month ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
+.calendar .month button {
+    background-color: #f0f0f0;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
 }
 
-.calendar .month ul li {
-    display: inline-block;
-    color: rgb(0, 0, 0);
+.calendar .month span {
     font-size: 20px;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-}
-
-.calendar .month .prev {
-    float: left;
-}
-
-.calendar .month .next {
-    float: right;
+    font-weight: bold;
 }
 
 .calendar .weekdays, .calendar .days {
     margin: 0;
     padding: 10px 0;
     list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .calendar .weekdays li, .calendar .days li {
-    display: inline-block;
-    width: 13.6%;
+    width: 14.28%; /* 100% / 7 */
     text-align: center;
     margin-bottom: 5px;
-    margin-right: -2px;
     font-size: 12px;
     color: #666;
 }
 
 .calendar .days li {
     color: #777;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 4px;
 }
 
-.calendar .days li .active {
-    background: #ffffff;
-    color: white !important;
-    padding: 5px;
-}
-
-@media screen and (max-width: 720px) {
-    .calendar .weekdays li, .calendar .days li {
-        width: 13.1%;
-    }
-}
-
-@media screen and (max-width: 420px) {
-    .calendar .weekdays li, .calendar .days li {
-        width: 12.5%;
-    }
-
-    .calendar .days li .active {
-        padding: 2px;
-    }
-}
-
-@media screen and (max-width: 290px) {
-    .calendar .weekdays li, .calendar .days li {
-        width: 12.2%;
-    }
-}
-
-.day-selected {
+.calendar .days li.day-selected {
     background-color: #1abc9c; 
-    border-radius: 10%;
-    color: #333; 
+    color: #ffffff;
+}
+
+.calendar .days li.day-today {
+    background-color: #a6a6a6; 
+    color: #ffffff;
 }
 
 .day-today {
-    background-color: #a6a6a6; 
+    background-color: #74ffa9; 
     border-radius: 0%;
     color: #333;
 }
+
+.days li {
+    position: relative;
+    padding: 10px;
+    list-style: none;
+}
+
+.days li:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 0;
+    top: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px;
+    white-space: nowrap;
+    border-radius: 3px;
+    z-index: 1000; /* Đảm bảo thông tin hiển thị trên các phần tử khác */
+    transform: translateY(5px); /* Thêm khoảng cách giữa thông tin và ô ngày */
+}
+
 
 .notification-wrapper {
     position: fixed;

@@ -342,15 +342,40 @@ class UserModel {
     }
 
     //Phần Home
+    //Lấy Deadline từ Time-sheet
+    public static function getDeadlinesTimesheet($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT Time_sheet.TenDuAn, Time_sheet.HanChot 
+                                FROM Time_sheet
+                                WHERE Time_sheet.EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $deadlines = [];
+        while ($row = $result->fetch_assoc()) {
+            $deadlines[] = [
+                'TenDuAn' => $row['TenDuAn'],
+                'HanChot' => $row['HanChot']
+            ];
+        }
+    
+        $stmt->close();
+        $db->close();
+        return $deadlines;
+    }
+    
     // Lấy danh sách dự án
     public static function getProjects_NV($empID) {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Project.TinhTrang 
+        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Time_sheet.TrangThai
                                 FROM Time_sheet
                                 JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
-                                WHERE Time_sheet.EmpID = ? LIMIT 3" );
+                                WHERE Time_sheet.EmpID = ? AND Time_sheet.TrangThai = 'Chưa hoàn thành' LIMIT 3" );
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -363,6 +388,28 @@ class UserModel {
         $stmt->close();
         $db->close();
         return $projects;
+    }
+
+    public static function getCountProjects_NV($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Time_sheet.TrangThai
+                                FROM Time_sheet
+                                JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
+                                WHERE Time_sheet.EmpID = ? " );
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $cprojects = [];
+        while ($row = $result->fetch_assoc()) {
+            $cprojects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $cprojects;
     }
 
     public static function getProjects_QL($empID) {
@@ -405,7 +452,7 @@ class UserModel {
 
 
     // Lấy danh sách hoạt động
-    public static function getActivities($empID) {
+    public static function getCountActivities($empID) {
         $db = new Database();
         $conn = $db->connect();
 
@@ -413,6 +460,28 @@ class UserModel {
                                 FROM Activity 
                                 JOIN emp_activity ON Activity.ActivityID = emp_activity.ActivityID
                                 WHERE emp_activity.EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $cactivities = [];
+        while ($row = $result->fetch_assoc()) {
+            $cactivities[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $cactivities;
+    }
+
+    public static function getActivities($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT Activity.TenHoatDong, emp_activity.ThoiGianThucHien, emp_activity.ThanhTich
+                                FROM Activity 
+                                JOIN emp_activity ON Activity.ActivityID = emp_activity.ActivityID
+                                WHERE emp_activity.EmpID = ? LIMIT 3");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -446,10 +515,10 @@ class UserModel {
                 $updateStmt->bind_param("i", $row['STT']);
                 $updateStmt->execute();
                 $updateStmt->close();
-                $status = 'checked-out';
+                $statusinout = 'checked-out';
             } else {
                 // Đã check-out, không thể thực hiện lại
-                $status = 'already-checked-out';
+                $statusinout = 'already-checked-out';
             }
         } else {
             // Nếu chưa check-in, tiến hành check-in
@@ -457,13 +526,13 @@ class UserModel {
             $insertStmt->bind_param("i", $empID);
             $insertStmt->execute();
             $insertStmt->close();
-            $status = 'checked-in';
+            $statusinout = 'checked-in';
         }
     
         $stmt->close();
         $db->close();
     
-        return $status;
+        return $statusinout;
     }
     
     // Lấy thông tin chấm công

@@ -28,24 +28,27 @@ class HomeController{
             $empID = $_SESSION['user']['EmpID'];
             // Xử lý check-in/check-out khi nhận được yêu cầu POST
             if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['checkinout'])) {
-                $status = UserModel::UpCheckInOut($empID);
-
-                if ($status === 'checked-in') {
-                    $message = "Bạn đã check-in thành công.";
-                } elseif ($status === 'checked-out') {
-                    $message = "Bạn đã check-out thành công.";
-                } elseif ($status === 'already-checked-out') {
-                    $message = "Bạn đã check-out, không thể thực hiện lại.";
+                $statusinout = UserModel::UpCheckInOut($empID);
+                $messageinout='';
+                if ($statusinout === 'checked-in') {
+                    $messageinout = "Bạn đã check-in thành công.";
+                } elseif ($statusinout === 'checked-out') {
+                    $messageinout = "Bạn đã check-out thành công.";
+                } elseif ($statusinout === 'already-checked-out') {
+                    $messageinout = "Bạn đã check-out, không thể thực hiện lại.";
                 } else {
-                    $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                    $messageinout = "Đã xảy ra lỗi. Vui lòng thử lại.";
                 }
             }
             switch ($Role) {
                 case 'Nhân viên':
                     $projects = UserModel::getProjects_NV($empID);
+                    $cprojects = UserModel::getCountProjects_NV($empID);
+                    $cactivities = UserModel::getActivities($empID);
                     $activities = UserModel::getActivities($empID);
                     $checkInOut = UserModel::getCheckInOut($empID);
                     $points = UserModel::getPoint_Month($empID);
+                    $deadlines = UserModel::getDeadlinesTimesheet($empID);
                     $file = "./views/pages/NV/home_NV.phtml";
                     break;
                 case 'Quản lý':
@@ -53,6 +56,7 @@ class HomeController{
                     $employees = UserModel::getEmployeesList_QL($empID);
                     $timesheets = UserModel::getTimesheetList($empID); 
                     $managedProjects = UserModel::getProjects_QL($empID);
+                    $deadlines = UserModel::getDeadlinesTimesheet($empID);
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 case 'Giám đốc':
