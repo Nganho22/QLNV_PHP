@@ -67,9 +67,24 @@ switch ($action)
         $controller = new HomeController();
         $controller->GetActivity_page();
         break;
-    case "GetRequestPage": 
+    case "GetRequestPage":
         $controller = new RequestController();
-        $controller->GetRequestPage();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (isset($_POST['formType'])) {
+                $formType = $_POST['formType'];
+                if ($formType === 'TimeSheet') {
+                    $controller->submitTimeSheetRequest(); 
+                } elseif ($formType === 'General') {
+                    $controller->submitRequest(); 
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Loại form không hợp lệ.']);
+                }
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Không xác định loại form.']);
+            }
+        } else {
+            $controller->GetRequestPage(); // Xử lý yêu cầu GET
+        }
         break;
     case "GetTimeSheetDetails":
         $controller = new RequestController();

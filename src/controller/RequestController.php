@@ -30,7 +30,8 @@ class RequestController {
                         foreach ($pendingRequests as $request) {
                             $pendingHtml .= '<tr>'
                             . '<td>' . htmlspecialchars($request['TieuDe']) . '</td>'
-                            . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
+                            // . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
+                            . '<td>' . htmlspecialchars($request['Loai']) . '</td>'
                             . '<td>' . htmlspecialchars($request['NgayGui']) . '</td>'
                             . '</tr>';
                         
@@ -40,7 +41,8 @@ class RequestController {
                         foreach ($approvedRequests as $request) {
                             $approvedHtml .= '<tr>'
                                 . '<td>' . htmlspecialchars($request['TieuDe']) . '</td>'
-                                . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
+                                // . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
+                                . '<td>' . htmlspecialchars($request['Loai']) . '</td>'
                                 . '<td>' . htmlspecialchars($request['NgayXuLy']) . '</td>'
                                 . '</tr>';
                         }
@@ -96,5 +98,114 @@ class RequestController {
         }
     }
     
+    public function submitRequest() {
+        if (isset($_SESSION['user']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
+            $user_id = $_SESSION['user']['EmpID'];
+            $nguoiGui = $_SESSION['user']['HoTen'];
+            $loai = $_POST['loai'];
+            $tieuDe = $_POST['tieuDe'];
+            $ngayGui = $_POST['ngayGui'];
+            $noiDung = $_POST['noiDung'];
+
+            if (empty($tieuDe)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Vui lòng cập nhật tiêu đề!'
+                ]);
+                exit();
+            }
+
+            $result = RequestModel::createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung);
+
+            if ($result) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Gửi đơn yêu cầu thành công!'
+                ]);
+                exit();
+
+            } else {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Tạo đơn yêu cầu thất bại !'
+                ]);
+                exit();
+            }
+        }
+        else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+
+    public function submitTimeSheetRequest() {
+        if (isset($_SESSION['user']) && $_SERVER['REQUEST_METHOD'] === 'POST'){
+            // Lấy dữ liệu từ form submission
+            $userId = $_SESSION['user']['EmpID'];
+            $nguoiGui = $_POST['nguoiGui'];
+            $loai = $_POST['loai'];
+            $tieuDe = $_POST['tieuDe'];
+            $ngayGui = $_POST['ngayGui'];
+            $noiDung = $_POST['noiDung'];
+            $timeSheetID = $_POST['controllerTimeSheetID'];
+            $trangThai = $_POST['trangThai'];
+            $soGio = $_POST['soGio'];
+            $customHours = isset($_POST['customHours']) ? $_POST['customHours'] : null;
+
+            if (empty($tieuDe)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Vui lòng cập nhật tiêu đề!'
+                ]);
+                exit();
+            }
+
+            if (empty($trangThai)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Vui lòng cập nhật trạng thái!'
+                ]);
+                exit();
+            }
+
+            // Xử lý số giờ
+            if ($soGio === 'custom') {
+                $soGio = $customHours;
+            }
+
+            if (empty($soGio)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Vui lòng chọn thời gian đã thực hiện!'
+                ]);
+                exit();
+            }
+
+            // Lấy thông tin thời gian từ model
+            $timeSheetDetails = RequestModel::getTimeSheetByID($timeSheetID);
+            
+            if ($timeSheetDetails) {
+                // Tính toán thời gian mới
+                // $upTinhTrangTimesheet = $timeSheetDetails['TrangThai'];
+                $upThoiGianTimesheet = $timeSheetDetails['SoGioThucHien'];
+                $newUpThoiGianTimesheet = $upThoiGianTimesheet + $soGio;
+                
+                // Tạo request mới
+                RequestModel::createTimeSheetRequest($userId, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet);
+                
+                echo json_encode(['success' => true, 'message' => 'Gửi đơn yêu cầu thành công!']);
+                exit();
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Vui lòng chọn Time-sheet để cập nhật!']);
+                exit();
+            }
+
+        }
+        else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+
 }
 ?>

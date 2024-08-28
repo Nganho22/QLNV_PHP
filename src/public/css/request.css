@@ -37,7 +37,6 @@ body {
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border: 1px solid #999999;
 }
 
@@ -187,7 +186,10 @@ textarea {
     display: block;
 }
 
-#timeSheetDropdown {
+#timeSheetDropdown,
+#trangThai,
+#soGio,
+#customHours {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -199,6 +201,77 @@ textarea {
     cursor: pointer;
 }
 
-#timeSheetDropdown option {
+#timeSheetDropdown,
+#trangThai,
+#soGio option,
+#customHours {
     padding: 10px;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+    margin: auto;
+    position: relative;
+    width: 70%;
+}
+
+/* CSS cho overlay */
+.popup-overlay {
+    border-radius: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+}
+
+/* CSS cho button đóng */
+.popup .popup-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    text-align: center;
+    width: 150px;
+    max-width: 100%;
+    display: inline-block;
+}
+
+.popup .popup-button:hover {
+    background-color: #0056b3;
+}
+
+.popup .popup-message {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+/* Hiển thị popup */
+.show-popup .popup,
+.show-popup .popup-overlay {
+    display: block;
 }

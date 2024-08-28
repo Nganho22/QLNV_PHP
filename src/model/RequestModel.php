@@ -48,7 +48,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT * FROM Request WHERE EmpID = ? AND TrangThai = 0 LIMIT ? OFFSET ?";
+        $query = "SELECT * FROM Request WHERE EmpID = ? AND TrangThai = 0 ORDER BY NgayGui DESC LIMIT ? OFFSET ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('iii', $user_id, $limit, $offset);
         $stmt->execute();
@@ -65,7 +65,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT * FROM Request WHERE EmpID = ? AND TrangThai = 1 LIMIT ? OFFSET ?";
+        $query = "SELECT * FROM Request WHERE EmpID = ? AND TrangThai = 1 ORDER BY NgayGui DESC LIMIT ? OFFSET ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('iii', $user_id, $limit, $offset);
         $stmt->execute();
@@ -116,7 +116,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT * FROM Time_sheet WHERE EmpID = ?";
+        $query = "SELECT * FROM Time_sheet WHERE EmpID = ? AND TrangThai = 'Chưa hoàn thành'";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -146,5 +146,33 @@ class RequestModel {
         return $timeSheet;
     }
     
+    public static function createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "INSERT INTO Request (EmpID, NguoiGui, Loai, TieuDe, NgayGui, NoiDung) VALUES (?,?,?,?,?,?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('isssss', $user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung);
+        $result = $stmt->execute();
+        
+        $stmt->close();
+        $db->close();
+        return $result;
+    }
+
+    public static function createTimeSheetRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "INSERT INTO Request (EmpID, NguoiGui, Loai, TieuDe, NgayGui, NoiDung, Time_sheetID, Up_TinhTrang_Timesheet, Up_ThoiGian_Timesheet)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('isssssiss', $user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet);
+        $result = $stmt->execute();
+
+        $stmt->close();
+        $db->close();
+        return $result;
+    }
 }
 ?>
