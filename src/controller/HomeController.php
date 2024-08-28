@@ -31,6 +31,7 @@ class HomeController{
                     $projects = UserModel::getProjects_NV($empID);
                     $activities = UserModel::getActivities($empID);
                     $checkInOut = UserModel::getCheckInOut($empID);
+                    $points = UserModel::getPoint_Month($empID);
                     $file = "./views/pages/NV/home_NV.phtml";
                     break;
                 case 'Quản lý':

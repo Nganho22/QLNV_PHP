@@ -431,23 +431,50 @@ class UserModel {
     public static function getCheckInOut($empID) {
         $db = new Database();
         $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT Date_checkin, Time_checkin, Date_checkout, Time_checkout 
+    
+        // Lấy ngày hiện tại
+        $today = date('Y-m-d');
+    
+        $stmt = $conn->prepare("SELECT Time_checkin, Time_checkout 
                                 FROM Check_inout 
-                                WHERE EmpID = ?");
-        $stmt->bind_param("i", $empID);
+                                WHERE EmpID = ? AND Date_checkin = ?");
+        $stmt->bind_param("is", $empID, $today);
         $stmt->execute();
         $result = $stmt->get_result();
-
-        $checkInOut = [];
-        while ($row = $result->fetch_assoc()) {
-            $checkInOut[] = $row;
-        }
-
+        $checkInOut = $result->fetch_assoc();
+    
         $stmt->close();
         $db->close();
         return $checkInOut;
     }
+    
+    public static function getPoint_Month($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("
+            SELECT MONTH(Date) AS month, SUM(Point) AS total_points
+            FROM Felicitation
+            WHERE NguoiNhan = ?
+            GROUP BY MONTH(Date)
+            ORDER BY MONTH(Date)
+        ");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        // Khởi tạo mảng 12 tháng với giá trị 0
+        $monthlyPoints = array_fill(1, 12, 0);
+        while ($row = $result->fetch_assoc()) {
+            $monthlyPoints[(int)$row['month']] = $row['total_points'];
+        }
+    
+        $stmt->close();
+        $db->close();
+        return $monthlyPoints;
+    }
+     
+    
 
     public static function getPhongBanStatistics() {
         $db = new Database();
