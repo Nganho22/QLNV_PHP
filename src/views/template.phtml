@@ -18,17 +18,30 @@
             position: fixed;
             top: 0;
             left: 0;
-            width: 60px;
             height: 100vh;
+            width: 60px;
             overflow-y: auto;
             z-index: 1000;
+            pointer-events: all;
         }
+        #sidebar-text {
+            z-index: 2000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 250px; 
+            height: 100vh;
+            transition: transform 0.3s ease;
+        }
+
         main {
             margin-left: 65px;
             padding: 20px;
             z-index: 0;
             position: relative;
+            pointer-events: all;
         }
+        
     </style>
 </head>
 <body>
