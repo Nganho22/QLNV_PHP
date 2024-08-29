@@ -86,6 +86,11 @@ switch ($action)
             $controller->GetRequestPage(); // Xử lý yêu cầu GET
         }
         break;
+    case "GetDetailRequestPage":
+        $controller = new RequestController();
+        $requestId = isset($_GET['id']) ? $_GET['id'] : null;
+        $controller->GetDetailPage($requestId);
+        break;
     case "GetTimeSheetDetails":
         $controller = new RequestController();
         $controller->GetTimeSheetDetails();

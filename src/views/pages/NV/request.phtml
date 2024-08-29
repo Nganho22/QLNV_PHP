@@ -76,7 +76,8 @@
                     <tbody>
                         <?php foreach ($pendingRequests as $request): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($request['TieuDe']); ?></td>
+                                <td><a href = "index.php?action=GetDetailRequestPage&id=<?php echo htmlspecialchars($request['RequestID']); ?>"> 
+                                    <?php echo htmlspecialchars($request['TieuDe']); ?> </a></td>
                                 <!-- <td><?php echo $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt'; ?></td> -->
                                 <td><?php echo htmlspecialchars($request['Loai']); ?></td>
                                 <td><?php echo htmlspecialchars($request['NgayGui']); ?></td>
@@ -108,7 +109,8 @@
                     <tbody>
                         <?php foreach ($approvedRequests as $request): ?>
                             <tr>
-                                <td><?php echo htmlspecialchars($request['TieuDe']); ?></td>
+                                <td><a href = "index.php?action=GetDetailRequestPage&id=<?php echo htmlspecialchars($request['RequestID']); ?>">
+                                    <?php echo htmlspecialchars($request['TieuDe']); ?></a></td>
                                 <!-- <td><?php echo $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt'; ?></td> -->
                                 <td><?php echo htmlspecialchars($request['Loai']); ?></td>
                                 <td><?php echo htmlspecialchars($request['NgayXuLy']); ?></td>

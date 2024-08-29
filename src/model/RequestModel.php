@@ -43,7 +43,6 @@ class RequestModel {
         ];
     }
 
-
     public static function getPendingRequestsByEmpID($user_id, $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
@@ -173,6 +172,23 @@ class RequestModel {
         $stmt->close();
         $db->close();
         return $result;
+    }
+
+    public static function getDetailRequest($RequestID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "SELECT * FROM Request WHERE RequestID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $RequestID);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $requests = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+        return $requests;
     }
 }
 ?>

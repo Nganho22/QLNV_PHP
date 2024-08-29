@@ -29,7 +29,8 @@ class RequestController {
                         $pendingHtml = '';
                         foreach ($pendingRequests as $request) {
                             $pendingHtml .= '<tr>'
-                            . '<td>' . htmlspecialchars($request['TieuDe']) . '</td>'
+                            . '<td><a href = "index.php?action=GetDetailRequestPage&id=' . htmlspecialchars($request['RequestID']) . '">' 
+                                . htmlspecialchars($request['TieuDe']) . '</a></td>'
                             // . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
                             . '<td>' . htmlspecialchars($request['Loai']) . '</td>'
                             . '<td>' . htmlspecialchars($request['NgayGui']) . '</td>'
@@ -40,7 +41,8 @@ class RequestController {
                         $approvedHtml = '';
                         foreach ($approvedRequests as $request) {
                             $approvedHtml .= '<tr>'
-                                . '<td>' . htmlspecialchars($request['TieuDe']) . '</td>'
+                                . '<td><a href = "index.php?action=GetDetailRequestPage&id=' . htmlspecialchars($request['RequestID']) . '">' 
+                                . htmlspecialchars($request['TieuDe']) . '</a></td>'
                                 // . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
                                 . '<td>' . htmlspecialchars($request['Loai']) . '</td>'
                                 . '<td>' . htmlspecialchars($request['NgayXuLy']) . '</td>'
@@ -76,6 +78,7 @@ class RequestController {
                     }
                     break;
                 case 'Quản lý':
+                    
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 default:
@@ -205,6 +208,26 @@ class RequestController {
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
             exit();
         }
+    }
+
+    public function GetDetailPage($requestId) {
+        if (isset($_SESSION['user'])) {
+            $title='Chi tiết Request';
+            $user_id = $_SESSION['user']['EmpID'];
+
+            $detail = RequestModel::getDetailRequest($requestId);
+            $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
+            
+            ob_start();
+            require("./views/pages/NV/detail_req.phtml");
+            $content = ob_get_clean();
+            require(__DIR__ . '/../views/template.phtml');
+        }
+        else{
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+     
     }
 
 }
