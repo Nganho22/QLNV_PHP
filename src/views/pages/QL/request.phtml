@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($title); ?></title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/request.css" type="text/css"/> 
+</head>
+<body>
+    <div class="container">
+        <div class="left-column" style="width: 500px; padding-top: 30px;">
+            <div class="filter-section">
+                <h2>Tìm kiếm và lọc:</h2>
+                <div class="search-wrapper">
+                    <input type="text" placeholder="Tên người gửi..." class="search-box">
+                    <button class="search-button">Tìm kiếm</button>
+                </div>
+                <!-- <br> <br> -->
+                <div class="filters">
+                    <div class="filter-group">
+                        <h3>Loại yêu cầu</h3>
+                        <label><input type="checkbox"> Nghỉ phép</label>
+                        <label><input type="checkbox"> Làm việc tại nhà</label>
+                        <label><input type="checkbox"> Time-Sheet</label>
+                        <label><input type="checkbox"> Nghỉ việc</label>
+                        <button class="filter-button">Lọc</button>
+                    </div>
+                    <div class="filter-group">
+                        <h3>Trạng thái</h3>
+                        <label><input type="checkbox"> Chưa duyệt</label>
+                        <label><input type="checkbox"> Đã duyệt</label>
+                        <button class="filter-button" style = "margin-top: 67px;">Lọc</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-column" style="width: 900px">
+            <div class="row">
+                <div class="info-box">
+                    <p><strong>Tổng các đơn yêu cầu</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['total']); ?></h4>
+                </div>
+                <div class="info-box">
+                    <p><strong>Tổng đơn đã duyệt</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['pending']); ?></h4>
+                </div>
+                <div class="info-box">
+                    <p><strong>Tổng đơn chưa duyệt</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['approved']); ?></h4>
+                </div>
+            </div>
+
+            <div class="project-list-section">
+                <h2>Danh sách các đơn yêu cầu:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tiêu đề</th>
+                            <th>Loại</th>
+                            <th>Người gửi</th>
+                            <th>Ngày gửi</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead >
+                    <tbody id="request-table-body">
+                        <?php foreach ($requestsPage as $request): ?>
+                            <tr>
+                                <td><a href="index.php?action=GetDetailRequestPage&id=<?= htmlspecialchars($request['RequestID']) ?>"><?= htmlspecialchars($request['TieuDe']) ?></a></td>
+                                <td><?= htmlspecialchars($request['Loai']) ?></td>
+                                <td><?= htmlspecialchars($request['NgayGui']) ?></td>
+                                <td><?= $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt' ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <div id="pagination" class="pagination pagination-wrapper">
+                    <?php for ($i = 1; $i <= ceil($totalRequests / $qllimit); $i++): ?>
+                        <li class="page-item"><a class="page-link" href="#" data-page="<?= $i ?>"><?= $i ?></a></li>
+                    <?php endfor; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).on('click', '.page-link', function(e) {
+            e.preventDefault();
+            var page = $(this).data('page');
+            $.get('index.php?action=GetRequestPage', { ajax: 1, page: page }, function(response) {
+                var data = JSON.parse(response);
+                $('#requestTable').html(data.requestHtml);
+                $('#pagination').html(data.paginationHtml);
+            });
+        });
+    </script>
+</body>
+</html>

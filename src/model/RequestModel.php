@@ -190,5 +190,135 @@ class RequestModel {
         $db->close();
         return $requests;
     }
+
+//============== Quản lý =====================
+    public static function getRequestCountsByEmpID_QL($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        // 1. Lấy PhongID từ Profile dựa trên EmpID
+        $getPhongIDQuery = "SELECT PhongID FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($getPhongIDQuery);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+
+        if (!$phongID) {
+            // Không tìm thấy PhongID, trả về kết quả mặc định
+            return [
+                'total' => 0,
+                'pending' => 0,
+                'approved' => 0
+            ];
+        }
+
+        // 2. Lấy danh sách EmpID từ Profile dựa trên PhongID
+        $getEmpIDsQuery = "SELECT EmpID FROM Profile WHERE PhongID = ?";
+        $stmt = $conn->prepare($getEmpIDsQuery);
+        $stmt->bind_param('s', $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $empIDs = [];
+        while ($row = $result->fetch_assoc()) {
+            $empIDs[] = $row['EmpID'];
+        }
+
+        if (empty($empIDs)) {
+            // Không tìm thấy EmpID nào, trả về kết quả mặc định
+            return [
+                'total' => 0,
+                'pending' => 0,
+                'approved' => 0
+            ];
+        }
+
+        // 3. Tạo danh sách EmpID dạng chuỗi cho truy vấn IN
+        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
+
+        // 4. Tính tổng số RequestID, RequestID với TrangThai = 0, TrangThai = 1
+        $totalRequestsQuery = "
+            SELECT
+                COUNT(RequestID) as total,
+                SUM(CASE WHEN TrangThai = 0 THEN 1 ELSE 0 END) as pending,
+                SUM(CASE WHEN TrangThai = 1 THEN 1 ELSE 0 END) as approved
+            FROM Request
+            WHERE EmpID IN ($empIDsString)";
+
+        $stmt = $conn->prepare($totalRequestsQuery);
+        $stmt->bind_param(str_repeat('i', count($empIDs)), ...$empIDs);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $counts = $result->fetch_assoc();
+
+        $stmt->close();
+        $db->close();
+
+        return [
+            'total' => $counts['total'],
+            'pending' => $counts['pending'],
+            'approved' => $counts['approved']
+        ];
+    }
+
+    public static function getRequestsByEmpID_QL($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // 1. Lấy PhongID từ Profile dựa trên EmpID
+        $getPhongIDQuery = "SELECT PhongID FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($getPhongIDQuery);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+    
+        if (!$phongID) {
+            // Không tìm thấy PhongID, trả về một mảng rỗng
+            return [];
+        }
+    
+        // 2. Lấy danh sách EmpID từ Profile dựa trên PhongID
+        $getEmpIDsQuery = "SELECT EmpID FROM Profile WHERE PhongID = ?";
+        $stmt = $conn->prepare($getEmpIDsQuery);
+        $stmt->bind_param('s', $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $empIDs = [];
+        while ($row = $result->fetch_assoc()) {
+            $empIDs[] = $row['EmpID'];
+        }
+    
+        if (empty($empIDs)) {
+            // Không tìm thấy EmpID nào, trả về một mảng rỗng
+            return [];
+        }
+    
+        // 3. Tạo danh sách EmpID dạng chuỗi cho truy vấn IN
+        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
+    
+        // 4. Lấy danh sách RequestID, EmpID, và TrangThai với điều kiện EmpID trong danh sách EmpID
+        $getRequestsQuery = "
+            SELECT RequestID, EmpID, TrangThai
+            FROM Request
+            WHERE EmpID IN ($empIDsString)";
+    
+        $stmt = $conn->prepare($getRequestsQuery);
+        $stmt->bind_param(str_repeat('i', count($empIDs)), ...$empIDs);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $requests[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $requests;
+    }    
 }
 ?>

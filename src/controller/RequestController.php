@@ -15,6 +15,10 @@ class RequestController {
             $offsetApproved = ($pageApproved - 1) * $limit;
             $timeSheets = RequestModel::getTimeSheetsByEmpID($user_id);
     
+            $qllimit = 7; 
+            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            $offset = ($page - 1) * $qllimit;
+
             switch ($role) {
                 case 'Nhân viên':
                     $file = "./views/pages/NV/request.phtml";
@@ -78,8 +82,42 @@ class RequestController {
                     }
                     break;
                 case 'Quản lý':
-                    
-                    $file = "./views/pages/QL/home_QL.phtml";
+                    $creq = RequestModel::getRequestCountsByEmpID_QL($user_id);
+                    $requests = RequestModel::getRequestsByEmpID_QL($user_id);
+
+                    $totalRequests = count($requests);
+                    $requestsPage = array_slice($requests, $offset, $qllimit);
+
+                    $file = "./views/pages/QL/request.phtml";
+
+                    if (isset($_GET['ajax'])) {
+                        $requestHtml = '';
+                        foreach ($requestsPage as $request) {
+                            $requestHtml .= '<tr>'
+                                . '<td><a href = "index.php?action=GetDetailRequestPage&id=' . htmlspecialchars($request['RequestID']) . '">' 
+                                . htmlspecialchars($request['TieuDe']) . '</a></td>'
+                                . '<td>' . htmlspecialchars($request['Loai']) . '</td>'
+                                . '<td>' . htmlspecialchars($request['NgayGui']) . '</td>'
+                                . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
+                                . '</tr>';
+                        }
+                        $paginationHtml = '';
+                        if ($totalRequests > $qllimit) {
+                            for ($i = 1; $i <= ceil($totalRequests / $qllimit); $i++) {
+                                $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                            }
+                        }
+    
+                        echo json_encode([
+                            'requestHtml' => $requestHtml,
+                            'paginationHtml' => $paginationHtml
+                        ]);
+                    } else {
+                        ob_start();
+                        require($file);
+                        $content = ob_get_clean();
+                        require(__DIR__ . '/../views/template.phtml');
+                    }
                     break;
                 default:
                     $file = null;
