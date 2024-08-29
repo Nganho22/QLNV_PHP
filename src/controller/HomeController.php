@@ -63,7 +63,6 @@ class HomeController{
                     $file = null;
                     $title = 'Error';
                     break;
-
             }
             
             if ($file && file_exists($file)) {

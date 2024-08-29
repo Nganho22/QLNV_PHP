@@ -15,7 +15,6 @@ class UserController{
         } else {
             $_SESSION['logged_in'] = true;
             $_SESSION['user'] = $user;
-            
             $checkInOut = UserModel::GetTime_checkInOut($user['EmpID']);
             $_SESSION['CheckInOut']= $checkInOut;
             if (isset($_SESSION['redirect_url'])) {
@@ -35,8 +34,8 @@ class UserController{
             if (isset($_SESSION['redirect_url'])) {
 
             }
-           // print_r(is_null($_SESSION['CheckInOut']['Time_checkin']));
-           header('Location: ' . $redirect_url);
+            print_r($_SESSION['CheckInOut']);
+            header('Location: ' . $redirect_url);
             exit();
         }
     }
