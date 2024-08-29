@@ -139,7 +139,9 @@
                                 <span class="menu-text">Dự Án</span>
                             </a>
                         </li>
-                        <?php if (isset($_SESSION['CheckInOut']['Time_checkin']) && $_SESSION['CheckInOut']['Nghi'] ==='0'): ?> 
+                        </li>
+                        <?php if ($_SESSION['user']['Role'] !== "Giám đốc" &&  $_SESSION['CheckInOut']['Nghi'] !== "1"):?>
+                            <?php if (is_null($_SESSION['CheckInOut']['Time_checkin'])): ?> 
                             <li class="nav-item mb-2">
                                 <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
                                 <div class="icon">
@@ -148,7 +150,7 @@
                                     <span class="menu-text">Check-In</span>
                                 </a>
                             </li>
-                            <?php elseif (is_null($_SESSION['CheckInOut']['Time_checkout']) && isset($_SESSION['CheckInOut']['Time_checkin']) && $_SESSION['CheckInOut']['Nghi'] === '0'): ?>
+                            <?php elseif (is_null($_SESSION['CheckInOut']['Time_checkout'])): ?>
                                 <li class="nav-item mb-2">
                                     <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
                                     <div class="icon">
@@ -157,6 +159,7 @@
                                         <span class="menu-text">Check-In</span>
                                     </a>
                                 </li>
+                            <?php endif; ?>
                         <?php endif; ?>
                         <li class="nav-item mb-2">
                             <a href="/QLNV_PHP/src/index.php?action=home" class="nav-link text-dark d-flex align-items-center">
