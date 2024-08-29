@@ -26,20 +26,10 @@ class HomeController{
             $Role= $_SESSION['user']['Role'];
             $title = 'Home'; 
             $empID = $_SESSION['user']['EmpID'];
-            // Xử lý check-in/check-out khi nhận được yêu cầu POST
-            if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['checkinout'])) {
-                $statusinout = UserModel::UpCheckInOut($empID);
-                $messageinout='';
-                if ($statusinout === 'checked-in') {
-                    $messageinout = "Bạn đã check-in thành công.";
-                } elseif ($statusinout === 'checked-out') {
-                    $messageinout = "Bạn đã check-out thành công.";
-                } elseif ($statusinout === 'already-checked-out') {
-                    $messageinout = "Bạn đã check-out, không thể thực hiện lại.";
-                } else {
-                    $messageinout = "Đã xảy ra lỗi. Vui lòng thử lại.";
-                }
-            }
+            $limit = 5;
+            $pagePending = isset($_GET['pagePending']) ? (int)$_GET['pagePending'] : 1;
+            $offsetPending = ($pagePending - 1) * $limit;
+            $timeSheets = FelicitationModel::getTimeSheetsByEmpID($empID);
             switch ($Role) {
                 case 'Nhân viên':
                     $projects = UserModel::getProjects_NV($empID);
@@ -53,6 +43,8 @@ class HomeController{
                     break;
                 case 'Quản lý':
                     $phongBans = UserModel::getPhongBanStatistics();
+                    $hiendien = UserModel::getHienDien();
+                    $checkinout = UserModel::getPhongBan_Checkinout();
                     $employees = UserModel::getEmployeesList_QL($empID);
                     $timesheets = UserModel::getTimesheetList($empID); 
                     $managedProjects = UserModel::getProjects_QL($empID);
@@ -63,6 +55,7 @@ class HomeController{
                     $projects = UserModel::getProjects_GD();
                     $employees = UserModel::getEmployeesList_GD();
                     $phongBans = UserModel::getPhongBan_GD();
+                    $deadlines = UserModel::getDeadlinesTimesheet($empID);
                     $file = "./views/pages/GD/home_GD.phtml";
 
                     break;

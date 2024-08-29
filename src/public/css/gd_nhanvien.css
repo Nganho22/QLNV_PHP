@@ -174,35 +174,16 @@ h1, h2, h3 {
     color: #666;
 }
 
+/* Đảm bảo rằng phần tử li có position: relative */
 .calendar .days li {
-    color: #777;
+    color: #000000;
     background-color: #f0f0f0;
     padding: 10px;
     border-radius: 4px;
+    position: relative; /* Thêm thuộc tính này */
 }
 
-.calendar .days li.day-selected {
-    background-color: #1abc9c; 
-    color: #ffffff;
-}
-
-.calendar .days li.day-today {
-    background-color: #a6a6a6; 
-    color: #ffffff;
-}
-
-.day-today {
-    background-color: #74ffa9; 
-    border-radius: 0%;
-    color: #333;
-}
-
-.days li {
-    position: relative;
-    padding: 10px;
-    list-style: none;
-}
-
+/* Đảm bảo hiển thị thông tin khi hover */
 .days li:hover::after {
     content: attr(title);
     position: absolute;
@@ -215,6 +196,17 @@ h1, h2, h3 {
     border-radius: 3px;
     z-index: 1000; /* Đảm bảo thông tin hiển thị trên các phần tử khác */
     transform: translateY(5px); /* Thêm khoảng cách giữa thông tin và ô ngày */
+    pointer-events: none; /* Đảm bảo không làm cản trở tương tác */
+}
+
+.calendar .days li.day-selected {
+    background-color: #1abc9c; 
+    color: #ffffff;
+}
+
+.calendar .days li.day-today {
+    background-color: #74ffa9; 
+    color: #ffffff;
 }
 
 

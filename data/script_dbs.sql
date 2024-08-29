@@ -113,7 +113,7 @@ CREATE TABLE Request (
 );
 
 CREATE TABLE Voucher (
-    VoucherID INT PRIMARY KEY,
+    VoucherID INT AUTO_INCREMENT PRIMARY KEY,
     TenVoucher VARCHAR(255),
     TriGia INT,
     HanSuDung DATE,
@@ -138,12 +138,16 @@ CREATE TABLE Activity (
 );
 
 CREATE TABLE Felicitation (
-    FelicitationID VARCHAR(10) PRIMARY KEY,
+    FelicitationID INT AUTO_INCREMENT PRIMARY KEY,
     Point INT,
     Date DATE,
     NoiDung VARCHAR(255),
     NguoiNhan INT,
-    FOREIGN KEY (NguoiNhan) REFERENCES Profile(EmpID)
+    NguoiTang INT,
+    VoucherID INT,
+    FOREIGN KEY (NguoiNhan) REFERENCES Profile(EmpID),
+    FOREIGN KEY (NguoiTang) REFERENCES Profile(EmpID),
+    FOREIGN KEY (VoucherID) REFERENCES Voucher(VoucherID)
 );
 
 CREATE TABLE emp_activity (

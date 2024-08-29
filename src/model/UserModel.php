@@ -582,8 +582,6 @@ class UserModel {
         return $monthlyPoints;
     }
      
-    
-
     public static function getPhongBanStatistics() {
         $db = new Database();
         $conn = $db->connect();
@@ -606,7 +604,62 @@ class UserModel {
         return $phongBans;
     }
 
-
+    public static function getHienDien() {
+        $db = new Database();
+        $conn = $db->connect();
+        
+        $stmt = $conn->prepare(
+            "SELECT PhongBan.PhongID, PhongBan.TenPhong, COUNT(DISTINCT Check_inout.EmpID) AS SoHienDien
+            FROM Profile
+            INNER JOIN PhongBan ON Profile.PhongID = PhongBan.PhongID
+            LEFT JOIN Check_inout ON Profile.EmpID = Check_inout.EmpID
+                AND DATE(Check_inout.Date_checkin) = CURDATE()
+            GROUP BY PhongBan.PhongID, PhongBan.TenPhong"
+        );
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $hiendien = [];
+        while ($row = $result->fetch_assoc()) {
+            $hiendien[] = $row;
+        }
+        
+        $stmt->close();
+        $db->close();
+        return $hiendien;
+    }
+    public static function getPhongBan_Checkinout() {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Câu lệnh SQL để đếm số lượt Check-in và Check-out của nhân viên trong ngày hôm nay cho mỗi phòng ban
+        $stmt = $conn->prepare(
+            "SELECT PhongBan.PhongID, PhongBan.TenPhong, 
+                    COALESCE(COUNT(CASE WHEN Check_inout.Time_checkin IS NOT NULL THEN 1 END), 0) AS SoLanCheckin,
+                    COALESCE(COUNT(CASE WHEN Check_inout.Time_checkout IS NOT NULL THEN 1 END), 0) AS SoLanCheckout
+             FROM Profile
+             INNER JOIN PhongBan ON Profile.PhongID = PhongBan.PhongID
+             LEFT JOIN Check_inout ON Profile.EmpID = Check_inout.EmpID
+                AND DATE(Check_inout.Date_checkin) = CURDATE()
+             GROUP BY PhongBan.PhongID, PhongBan.TenPhong"
+        );
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $checkinout = [];
+        while ($row = $result->fetch_assoc()) {
+            $checkinout[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+        return $checkinout;
+    }
+    
+    
+    
     public static function getEmployeesList_QL($empID) {
         $db = new Database();
         $conn = $db->connect();

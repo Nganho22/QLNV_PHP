@@ -5,6 +5,7 @@ require_once './controller/UserController.php';
 require_once './controller/PassController.php';
 require_once './controller/ProjectController.php';
 require_once './controller/RequestController.php';
+require_once './controller/FelicitationController.php';
 
 
 $action = "";
@@ -95,6 +96,10 @@ switch ($action)
         $controller = new RequestController();
         $controller->GetTimeSheetDetails();
         break;    
+    case "GetFelicitationPage":
+        $controller = new FelicitationController();
+        $controller->GetFelicitationPage();
+        break; 
 default:
         $controller = new HomeController();
         $controller->login();
