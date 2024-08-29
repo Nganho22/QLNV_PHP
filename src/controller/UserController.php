@@ -15,6 +15,9 @@ class UserController{
         } else {
             $_SESSION['logged_in'] = true;
             $_SESSION['user'] = $user;
+            
+            $checkInOut = UserModel::GetTime_checkInOut($user['EmpID']);
+            $_SESSION['CheckInOut']= $checkInOut;
             if (isset($_SESSION['redirect_url'])) {
                 $redirect_url = $_SESSION['redirect_url'];
                 unset($_SESSION['redirect_url']);
@@ -32,6 +35,36 @@ class UserController{
             exit();
         }
     }
+
+    public function CheckInOut(){
+        if (isset($_SESSION['user'])) {
+            $empID = $_SESSION['user']['EmpID'];
+            
+            $statusinout = UserModel::UpCheckInOut($empID);
+    
+            $redirect_url = isset($_SESSION['redirect_url']) ? $_SESSION['redirect_url'] : '/QLNV_PHP/src/index.php?action=home';
+    
+            $parsed_url = parse_url($redirect_url);
+    
+            parse_str($parsed_url['query'] ?? '', $query_params);
+    
+            $query_params['status'] = $statusinout;
+    
+            $new_query_string = http_build_query($query_params);
+    
+            $new_url = $parsed_url['path'];
+            if (!empty($new_query_string)) {
+                $new_url .= '?' . $new_query_string;
+            }
+    
+            header('Location: ' . $new_url);
+            exit();
+        } else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+    
 
     public function logout() {
         $_SESSION['logged_in'] = false;

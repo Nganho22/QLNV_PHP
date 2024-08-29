@@ -84,7 +84,7 @@ switch ($action)
                 echo json_encode(['success' => false, 'message' => 'Không xác định loại form.']);
             }
         } else {
-            $controller->GetRequestPage(); // Xử lý yêu cầu GET
+            $controller->GetRequestPage();
         }
         break;
     case "GetDetailRequestPage":
@@ -95,6 +95,11 @@ switch ($action)
     case "GetTimeSheetDetails":
         $controller = new RequestController();
         $controller->GetTimeSheetDetails();
+        break;   
+    case "CheckInOut":
+        $controller = new UserController();
+        $controller->CheckInOut();
+        break;  
         break;    
     case "GetFelicitationPage":
         $controller = new FelicitationController();

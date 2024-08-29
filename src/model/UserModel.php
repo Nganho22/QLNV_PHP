@@ -500,29 +500,25 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
     
-        // Kiểm tra xem đã check-in hôm nay chưa
         $stmt = $conn->prepare("SELECT STT, Time_checkin, Time_checkout FROM Check_inout WHERE EmpID = ? AND Date_checkin = CURDATE()");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-    
+
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             
             if (is_null($row['Time_checkout'])) {
-                // Nếu đã check-in nhưng chưa check-out, tiến hành check-out
                 $updateStmt = $conn->prepare("UPDATE Check_inout SET Time_checkout = CURTIME() WHERE STT = ?");
                 $updateStmt->bind_param("i", $row['STT']);
                 $updateStmt->execute();
                 $updateStmt->close();
                 $statusinout = 'checked-out';
             } else {
-                // Đã check-out, không thể thực hiện lại
                 $statusinout = 'already-checked-out';
             }
         } else {
-            // Nếu chưa check-in, tiến hành check-in
-            $insertStmt = $conn->prepare("INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin) VALUES (?, CURDATE(), CURTIME())");
+            $insertStmt = $conn->prepare("INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin ,Late) VALUES (?, CURTIME());");
             $insertStmt->bind_param("i", $empID);
             $insertStmt->execute();
             $insertStmt->close();
@@ -750,6 +746,34 @@ class UserModel {
         $db->close();
         return $phongBans;
     }
+
+    public static function GetTime_checkInOut($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare("SELECT Time_checkin, Time_checkout, WorkFromHome, Nghi FROM Check_inout WHERE EmpID = ? AND Date_checkin =  CURDATE();");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $CheckInOuts = [
+            'Time_checkin' => null,
+            'Time_checkout' => null,
+            'WorkFromHome' => '0',
+            'Nghi' => '0',
+        ];
+
+        if($result->num_rows > 0){
+            $u = $result->fetch_assoc();
+
+            $CheckInOuts['Time_checkin'] = $u['Time_checkin'];
+            $CheckInOuts['Time_checkout'] = $u['Time_checkout'];
+            $CheckInOuts['WorkFromHome'] = $u['WorkFromHome'];
+            $CheckInOuts['Nghi'] = $u['Nghi'];
+        }
+        $stmt->close();
+        $db->close();
+        return $CheckInOuts;
+    }
+
 
 }
     

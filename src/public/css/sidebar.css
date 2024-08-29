@@ -51,6 +51,7 @@ body {
     transition: transform 0.3s ease;
 }
 
+
 .sidebar-text {
     width: 250px;
     /* Width when expanded */
@@ -141,6 +142,11 @@ body {
     border-radius: 50%;
 
 }
+
+.nav-item.mb-2:hover {
+    background-color: #f1f1f1;
+}
+
 
 #main-content {
     margin-left: 60px;

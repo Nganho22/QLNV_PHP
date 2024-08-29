@@ -1,3 +1,8 @@
+<?php
+    if (!isset($_SESSION['user'])) {
+        $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,13 +52,25 @@
                             </div>
                             </a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link text-dark d-flex align-items-center">
-                            <div class="icon">
-                                <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
-                            </div>
-                            </a>
-                        </li>
+                        <?php if ($_SESSION['user']['Role'] !== "Giám đốc" && $_SESSION['CheckInOut']['Nghi'] === '0'): ?>
+                            <?php if (is_null($_SESSION['CheckInOut']['Time_checkin']) ): ?> 
+                                <li class="nav-item mb-2">
+                                    <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
+                                        <div class="icon">
+                                            <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-Out" class="icon">
+                                        </div>
+                                    </a>
+                                </li>
+                            <?php elseif (is_null($_SESSION['CheckInOut']['Time_checkout']) && isset($_SESSION['CheckInOut']['Time_checkin'])): ?>
+                                <li class="nav-item mb-2">
+                                    <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
+                                        <div class="icon">
+                                            <img src="/QLNV_PHP/src/public/img/logo/user-x-regular-24.png" alt="Check-In" class="icon">
+                                        </div>
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                        <?php endif; ?>
                         <li class="nav-item mb-2">
                             <a href="/QLNV_PHP/src/index.php?action=home" class="nav-link text-dark d-flex align-items-center">
                             <div class="icon">
@@ -65,9 +82,8 @@
                             <a href="/QLNV_PHP/src/index.php?action=logout" class="nav-link text-dark d-flex align-items-center">
                             <div class="icon">
                                 <img src="/QLNV_PHP/src/public/img/logo/logout.png" alt="Logout" class="icon">
-                            
+
                             </div> 
-                            </a> 
                             </a>
                         </li>
                     </ul>
@@ -84,15 +100,18 @@
                     </a>
                     <hr class="w-100">
                     <!-- Menu Items -->
+
                     <ul class="nav nav-pills flex-column w-100">
-                        <li class="nav-item mb-2">
-                            <a href="/QLNV_PHP/src/index.php?action=GetRequestPage" class="nav-link text-dark d-flex align-items-center">
-                            <div class="icon">
-                                <img src="/QLNV_PHP/src/public/img/logo/check_list.png" alt="Danh Sách Yêu Cầu" class="icon">
-                            </div>
-                                <span class="menu-text">Danh Sách Yêu Cầu</span>
-                            </a>
-                        </li>
+                        <?php if ($_SESSION['user']['Role'] !== "Giám đốc"): ?> 
+                            <li class="nav-item mb-2">
+                                <a href="/QLNV_PHP/src/index.php?action=GetRequestPage" class="nav-link text-dark d-flex align-items-center">
+                                <div class="icon">
+                                    <img src="/QLNV_PHP/src/public/img/logo/check_list.png" alt="Danh Sách Yêu Cầu" class="icon">
+                                </div>
+                                    <span class="menu-text">Danh Sách Yêu Cầu</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                         <li class="nav-item mb-2">
                             <a href="/QLNV_PHP/src/index.php?action=GetActivityPage" class="nav-link text-dark d-flex align-items-center">
                             <div class="icon">
@@ -101,14 +120,16 @@
                                 <span class="menu-text">Hoạt Động Chiến Dịch</span>
                             </a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a href="/QLNV_PHP/src/index.php?action=GetFelicitationPage" class="nav-link text-dark d-flex align-items-center">
-                            <div class="icon">
-                                <img src="/QLNV_PHP/src/public/img/logo/bar-chart.png" alt="Khen Thưởng" class="icon">
-                            </div>
-                                <span class="menu-text">Khen Thưởng</span>
-                            </a>
-                        </li>
+                        <?php if ($_SESSION['user']['Role'] !== "Giám đốc"): ?> 
+                            <li class="nav-item mb-2">
+                                <a href="#" class="nav-link text-dark d-flex align-items-center">
+                                <div class="icon">
+                                    <img src="/QLNV_PHP/src/public/img/logo/bar-chart.png" alt="Khen Thưởng" class="icon">
+                                </div>
+                                    <span class="menu-text">Khen Thưởng</span>
+                                </a>
+                            </li>
+                        <?php endif; ?>
                         <li class="nav-item mb-2">
                             <a href="/QLNV_PHP/src/index.php?action=GetProjectPage" class="nav-link text-dark d-flex align-items-center">
                             <div class="icon">
@@ -117,14 +138,25 @@
                                 <span class="menu-text">Dự Án</span>
                             </a>
                         </li>
-                        <li class="nav-item mb-2">
-                            <a href="#" class="nav-link text-dark d-flex align-items-center">
-                            <div class="icon">
-                                <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
-                            </div>
-                                <span class="menu-text">Check-In</span>
-                            </a>
-                        </li>
+                        <?php if (isset($_SESSION['CheckInOut']['Time_checkin']) && $_SESSION['CheckInOut']['Nghi'] ==='0'): ?> 
+                            <li class="nav-item mb-2">
+                                <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
+                                <div class="icon">
+                                    <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
+                                </div>
+                                    <span class="menu-text">Check-In</span>
+                                </a>
+                            </li>
+                            <?php elseif (is_null($_SESSION['CheckInOut']['Time_checkout']) && isset($_SESSION['CheckInOut']['Time_checkin']) && $_SESSION['CheckInOut']['Nghi'] === '0'): ?>
+                                <li class="nav-item mb-2">
+                                    <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
+                                    <div class="icon">
+                                        <img src="/QLNV_PHP/src/public/img/logo/user-x-regular-24.png" alt="Check-In" class="icon">
+                                    </div>
+                                        <span class="menu-text">Check-In</span>
+                                    </a>
+                                </li>
+                        <?php endif; ?>
                         <li class="nav-item mb-2">
                             <a href="/QLNV_PHP/src/index.php?action=home" class="nav-link text-dark d-flex align-items-center">
                             <div class="icon">
