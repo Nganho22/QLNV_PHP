@@ -518,7 +518,7 @@ class UserModel {
                 $statusinout = 'already-checked-out';
             }
         } else {
-            $insertStmt = $conn->prepare("INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin ,Late) VALUES (?, CURTIME());");
+            $insertStmt = $conn->prepare("INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin ,Late) VALUES (?, CURDATE(), CURTIME(),0);");
             $insertStmt->bind_param("i", $empID);
             $insertStmt->execute();
             $insertStmt->close();

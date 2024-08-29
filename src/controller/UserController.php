@@ -31,7 +31,12 @@ class UserController{
                     $redirect_url .= '?status=logged_in';
                 }
             }
-            header('Location: ' . $redirect_url);
+            $_SESSION['CheckInOut']= $checkInOut;
+            if (isset($_SESSION['redirect_url'])) {
+
+            }
+           // print_r(is_null($_SESSION['CheckInOut']['Time_checkin']));
+           header('Location: ' . $redirect_url);
             exit();
         }
     }
@@ -41,6 +46,8 @@ class UserController{
             $empID = $_SESSION['user']['EmpID'];
             
             $statusinout = UserModel::UpCheckInOut($empID);
+            $checkInOut = UserModel::GetTime_checkInOut($_SESSION['user']['EmpID']);
+            $_SESSION['CheckInOut']= $checkInOut;
     
             $redirect_url = isset($_SESSION['redirect_url']) ? $_SESSION['redirect_url'] : '/QLNV_PHP/src/index.php?action=home';
     
@@ -56,7 +63,6 @@ class UserController{
             if (!empty($new_query_string)) {
                 $new_url .= '?' . $new_query_string;
             }
-    
             header('Location: ' . $new_url);
             exit();
         } else {

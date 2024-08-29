@@ -522,6 +522,41 @@ VALUES
 (15, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
 (15, 'HD1', '2024-09-01', '2024-10-01', '2024-09-13', 'Tốt', '2024-11-01');
 
+
+
+INSERT INTO Voucher (VoucherID, TenVoucher, TriGia, HanSuDung, ChiTiet, HuongDanSuDung, TinhTrang) VALUES
+(1, 'GrabFood: Giảm 50K', 50000, '2024-12-31', 'Giảm 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
+(2, 'GrabFood: Giảm 100K', 100000, '2024-11-15', 'Giảm 100K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Đã hết'),
+(3, 'GrabFood: Giảm 200K', 200000, '2024-11-15', 'Giảm 200K cho đơn tối thiếu 300K', 'Nhập mã qua app', 'Còn'),
+(4, 'GrabBike: Giảm 20,000 vnđ', 20000, '2024-11-15', 'Giảm 20K cho đơn tối thiếu 50K', 'Nhập mã qua app', 'Còn'),
+(5, 'GrabCar: Giảm 40,000 vnđ', 40000, '2024-10-10', 'Giảm 40K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Đã hết'),
+(6, 'GrabMart: Giảm 50,000 vnđ', 50000, '2024-10-10', 'Giảm 50K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Còn'),
+(7, 'Jollibee: Giảm 50K', 50000, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 100K', 'Quét mã tại quầy', 'Đã hết'),
+(8, 'ShopeeFoodxJollibee: Giảm 90K', 90000, '2024-09-05', 'Giảm 90K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Đã hết'),
+(9, 'Shopee: Giảm 90K đơn tối thiếu 90K', 90000, '2024-09-05', 'Giảm 90K cho đơn tối thiếu 90K', 'Nhập mã qua app', 'Đã hết'),
+(10, 'Shopee: Giảm 130K đơn tối thiếu 130K', 130000, '2024-09-05', 'Giảm 130K cho đơn tối thiếu 130K', 'Nhập mã qua app', 'Còn'),
+(11, 'Family Mart: Tặng 20,000 vnđ', 20000, '2024-09-05', 'Giảm 20K cho đơn tối thiếu 50K', 'Quét mã tại quầy', 'Còn'),
+(12, 'Family Mart: BELANJA Tặng 50,000 vnđ', 50000, '2024-11-15', 'Tặng 50K khi thanh toán 300K', 'Quét mã tại quầy', 'Còn'),
+(13, 'Gojek: Giảm 25K vận chuyển', 25000, '2024-12-31', 'Giảm 25K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
+(14, 'Gojek: Giảm 50K vận chuyển', 50000, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Còn'),
+(15, 'Gofood: Tặng 50K', 50000, '2024-10-10', 'Tặng 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Đã hết'),
+(16, 'Gofood: Tặng 100K', 100000, '2024-10-10', 'Tặng 100K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Đã hết'),
+(17, 'GoCar: Giảm 50K', 50000, '2024-10-10', 'Giảm 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
+(18, 'GoRide: Giảm 100K', 100000, '2024-10-10', 'Giảm 100K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Đã hết'),
+(19, 'MoMo: Giảm 50,000đ Google Play', 50000, '2024-11-15', 'Giảm 50K khi thanh toán Google Play', 'Nhập mã qua app', 'Còn'),
+(20, 'MoMo: Giảm 200,000đ vé máy bay, tàu lửa', 200000, '2024-09-05', 'Giảm 200K khi thanh toán vé máy bay, tàu lửa qua app', 'Nhập mã qua app', 'Còn'),
+(21, 'MoMo: Giảm 200,000đ nạp điện thoại', 200000, '2024-09-05', 'Giảm 200K khi thanh toán thẻ cào điện thoại qua app', 'Nhập mã qua app', 'Còn'),
+(22, 'MoMo: Hoàn 100K khi thanh toán tiền Điện', 100000, '2024-09-05', 'Hoàn 100K khi thanh toán qua app', 'Nhập mã qua app', 'Còn'),
+(23, 'Hasaki: Tặng 50K đơn 299K', 50000, '2024-09-05', 'Tặng 50K cho đơn tối thiếu 299K khi thanh toán tại quầy', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(24, 'Hasaki: Tặng 100K đơn 499K', 100000, '2024-10-10', 'Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 'Quét mã tại quầy/Nhập mã qua app', 'Đã hết'),
+(25, 'GO TRAVEL: 500,000 VND', 500000, '2024-12-31', 'Tặng 500,000VND khi đặt vé du lịch trên GO TRAVEL', 'Quét mã tại quầy/Nhập mã qua app', 'Đã hết'),
+(26, 'GO TRAVEL: 1,000,000 VND', 1000000, '2024-12-31', 'Tặng 1,000,000VND khi đặt vé du lịch trên GO TRAVEL', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(27, 'Vietjet: Giảm 300,000đ', 300000, '2024-12-31', 'Tặng 300,000VND khi đặt vé máy bay Vietjet', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(28, 'Vietjet: Tặng 1,000,000đ', 1000000, '2024-12-31', 'Tặng 1,000,000VND khi đặt vé máy bay Vietjet', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(29, 'Vietnam Airlines: 300,000đ', 300000, '2024-12-31', 'Tặng 300,000VND khi đặt vé máy bay Vietnam Airlines', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(30, 'Vietnam Airlines: 500,000đ', 500000, '2024-12-31', 'Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 'Quét mã tại quầy/Nhập mã qua app', 'Còn');
+
+
 INSERT INTO Felicitation (FelicitationID, Point, Date, NoiDung, NguoiNhan, NguoiTang, VoucherID) VALUES
 (1, 300, '2024-08-21', 'Nhờ hoàn thành Time-sheet', 1, 2, NULL),
 (2, 100, '2024-08-26', 'Nhờ hoàn thành Time-sheet', 4, NULL, NULL),
@@ -582,37 +617,5 @@ INSERT INTO Felicitation (FelicitationID, Point, Date, NoiDung, NguoiNhan, Nguoi
 (57, -300, '2024-07-31', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 6, 2, 30),
 (58, 350, '2024-07-10', 'Nhờ hoàn thành Time-sheet', 10, NULL, NULL),
 (59, -250, '2024-07-12', 'Đổi Voucher:Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 9, 2, 24),
-(60, 100, '2024-07-29', 'Nhờ hoàn thành Time-sheet', 5, 7, NULL);
-(61, -300, '2024-07-21', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 1, NULL, 30),
-
-INSERT INTO Voucher (VoucherID, TenVoucher, TriGia, HanSuDung, ChiTiet, HuongDanSuDung, TinhTrang) VALUES
-(1, 'GrabFood: Giảm 50K', 50000, '2024-12-31', 'Giảm 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
-(2, 'GrabFood: Giảm 100K', 100000, '2024-11-15', 'Giảm 100K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Đã hết'),
-(3, 'GrabFood: Giảm 200K', 200000, '2024-11-15', 'Giảm 200K cho đơn tối thiếu 300K', 'Nhập mã qua app', 'Còn'),
-(4, 'GrabBike: Giảm 20,000 vnđ', 20000, '2024-11-15', 'Giảm 20K cho đơn tối thiếu 50K', 'Nhập mã qua app', 'Còn'),
-(5, 'GrabCar: Giảm 40,000 vnđ', 40000, '2024-10-10', 'Giảm 40K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Đã hết'),
-(6, 'GrabMart: Giảm 50,000 vnđ', 50000, '2024-10-10', 'Giảm 50K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Còn'),
-(7, 'Jollibee: Giảm 50K', 50000, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 100K', 'Quét mã tại quầy', 'Đã hết'),
-(8, 'ShopeeFoodxJollibee: Giảm 90K', 90000, '2024-09-05', 'Giảm 90K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Đã hết'),
-(9, 'Shopee: Giảm 90K đơn tối thiếu 90K', 90000, '2024-09-05', 'Giảm 90K cho đơn tối thiếu 90K', 'Nhập mã qua app', 'Đã hết'),
-(10, 'Shopee: Giảm 130K đơn tối thiếu 130K', 130000, '2024-09-05', 'Giảm 130K cho đơn tối thiếu 130K', 'Nhập mã qua app', 'Còn'),
-(11, 'Family Mart: Tặng 20,000 vnđ', 20000, '2024-09-05', 'Giảm 20K cho đơn tối thiếu 50K', 'Quét mã tại quầy', 'Còn'),
-(12, 'Family Mart: BELANJA Tặng 50,000 vnđ', 50000, '2024-11-15', 'Tặng 50K khi thanh toán 300K', 'Quét mã tại quầy', 'Còn'),
-(13, 'Gojek: Giảm 25K vận chuyển', 25000, '2024-12-31', 'Giảm 25K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
-(14, 'Gojek: Giảm 50K vận chuyển', 50000, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Còn'),
-(15, 'Gofood: Tặng 50K', 50000, '2024-10-10', 'Tặng 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Đã hết'),
-(16, 'Gofood: Tặng 100K', 100000, '2024-10-10', 'Tặng 100K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Đã hết'),
-(17, 'GoCar: Giảm 50K', 50000, '2024-10-10', 'Giảm 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
-(18, 'GoRide: Giảm 100K', 100000, '2024-10-10', 'Giảm 100K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Đã hết'),
-(19, 'MoMo: Giảm 50,000đ Google Play', 50000, '2024-11-15', 'Giảm 50K khi thanh toán Google Play', 'Nhập mã qua app', 'Còn'),
-(20, 'MoMo: Giảm 200,000đ vé máy bay, tàu lửa', 200000, '2024-09-05', 'Giảm 200K khi thanh toán vé máy bay, tàu lửa qua app', 'Nhập mã qua app', 'Còn'),
-(21, 'MoMo: Giảm 200,000đ nạp điện thoại', 200000, '2024-09-05', 'Giảm 200K khi thanh toán thẻ cào điện thoại qua app', 'Nhập mã qua app', 'Còn'),
-(22, 'MoMo: Hoàn 100K khi thanh toán tiền Điện', 100000, '2024-09-05', 'Hoàn 100K khi thanh toán qua app', 'Nhập mã qua app', 'Còn'),
-(23, 'Hasaki: Tặng 50K đơn 299K', 50000, '2024-09-05', 'Tặng 50K cho đơn tối thiếu 299K khi thanh toán tại quầy', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
-(24, 'Hasaki: Tặng 100K đơn 499K', 100000, '2024-10-10', 'Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 'Quét mã tại quầy/Nhập mã qua app', 'Đã hết'),
-(25, 'GO TRAVEL: 500,000 VND', 500000, '2024-12-31', 'Tặng 500,000VND khi đặt vé du lịch trên GO TRAVEL', 'Quét mã tại quầy/Nhập mã qua app', 'Đã hết'),
-(26, 'GO TRAVEL: 1,000,000 VND', 1000000, '2024-12-31', 'Tặng 1,000,000VND khi đặt vé du lịch trên GO TRAVEL', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
-(27, 'Vietjet: Giảm 300,000đ', 300000, '2024-12-31', 'Tặng 300,000VND khi đặt vé máy bay Vietjet', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
-(28, 'Vietjet: Tặng 1,000,000đ', 1000000, '2024-12-31', 'Tặng 1,000,000VND khi đặt vé máy bay Vietjet', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
-(29, 'Vietnam Airlines: 300,000đ', 300000, '2024-12-31', 'Tặng 300,000VND khi đặt vé máy bay Vietnam Airlines', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
-(30, 'Vietnam Airlines: 500,000đ', 500000, '2024-12-31', 'Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 'Quét mã tại quầy/Nhập mã qua app', 'Còn');
+(60, 100, '2024-07-29', 'Nhờ hoàn thành Time-sheet', 5, 7, NULL),
+(61, -300, '2024-07-21', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 1, NULL, 30);

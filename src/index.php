@@ -99,8 +99,7 @@ switch ($action)
     case "CheckInOut":
         $controller = new UserController();
         $controller->CheckInOut();
-        break;  
-        break;    
+        break;   
     case "GetFelicitationPage":
         $controller = new FelicitationController();
         $controller->GetFelicitationPage();
