@@ -7,14 +7,14 @@ class RequestController {
             $title = 'Yêu cầu';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
-    
+            //NV
             $limit = 3;
             $pagePending = isset($_GET['pagePending']) ? (int)$_GET['pagePending'] : 1;
             $pageApproved = isset($_GET['pageApproved']) ? (int)$_GET['pageApproved'] : 1;
             $offsetPending = ($pagePending - 1) * $limit;
             $offsetApproved = ($pageApproved - 1) * $limit;
             $timeSheets = RequestModel::getTimeSheetsByEmpID($user_id);
-    
+            //QL
             $qllimit = 7; 
             $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
             $offset = ($page - 1) * $qllimit;
@@ -22,6 +22,7 @@ class RequestController {
             $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
             $types = isset($_GET['types']) ? $_GET['types'] : [];
             $statuses = isset($_GET['statuses']) ? $_GET['statuses'] : [];
+  
             switch ($role) {
                 case 'Nhân viên':
                     $file = "./views/pages/NV/request.phtml";
@@ -100,18 +101,24 @@ class RequestController {
                     $creq = RequestModel::getRequestCountsByEmpID_QL($user_id);
                     $requests = RequestModel::getRequestsByEmpID_QL($user_id);
 
-                    if (!empty($searchTerm)) {
+                    if (!empty($searchTerm) && (!empty($types) || !empty($statuses))) {
+                        // Tìm kiếm và lọc cùng lúc
+                        $requests = RequestModel::filterRequestsByEmpID_QL($user_id, $searchTerm, $types, $statuses, $qllimit, $offset);
+                        $totalRequests = RequestModel::countFilterRequests_QL($user_id, $searchTerm, $types, $statuses);
+                    } elseif (!empty($searchTerm)) {
+                        // Chỉ tìm kiếm
                         $requests = RequestModel::searchRequestsByEmpID_QL($user_id, $searchTerm, $qllimit, $offset);
                         $totalRequests = RequestModel::countSearchRequests_QL($user_id, $searchTerm);
                     } elseif (!empty($types) || !empty($statuses)) {
-                        $requests = RequestModel::filterRequestsByEmpID_QL($user_id, $searchTerm, $types, $statuses, $qllimit, $offset);
-                        $totalRequests = RequestModel::countFilterRequests_QL($user_id, $searchTerm, $types, $statuses);
+                        // Chỉ lọc
+                        $requests = RequestModel::filterRequestsByEmpID_QL($user_id, '', $types, $statuses, $qllimit, $offset);
+                        $totalRequests = RequestModel::countFilterRequests_QL($user_id, '', $types, $statuses);
                     } else {
+                        // Không có tìm kiếm và lọc
                         $requests = RequestModel::getRequestsByEmpID_QL($user_id);
                         $totalRequests = count($requests);
                         $requests = array_slice($requests, $offset, $qllimit);
                     }
-
 
                     $file = "./views/pages/QL/request.phtml";
 

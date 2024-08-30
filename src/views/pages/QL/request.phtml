@@ -21,16 +21,18 @@
     <div class="container">
         <div class="left-column" style="width: 400px; padding-top: 30px;">
             <div class="filter-section">
-                <h2>Tìm kiếm và lọc:</h2>
+                <h2>Tìm kiếm:</h2>
                 <div class="search-wrapper">
                     <input type="text" id="search-box" placeholder="Tên người gửi..." class="search-box">
-                    <button class="search-button" id="search-button">Tìm kiếm</button>
+                    <!-- <button class="search-button" id="search-button">Tìm kiếm</button> -->
                 </div>
+                <br>
+                <h2>Bộ lọc:</h2>
                 <div class="filter-group">
                     <h3>Loại yêu cầu</h3>
                     <label><input type="checkbox" class="filter-type" value="Nghỉ phép"> Nghỉ phép</label>
-                    <label><input type="checkbox" class="filter-type" value="Làm việc tại nhà"> Làm việc tại nhà</label>
-                    <label><input type="checkbox" class="filter-type" value="Time-Sheet"> Time-Sheet</label>
+                    <label><input type="checkbox" class="filter-type" value="From home"> From home</label>
+                    <label><input type="checkbox" class="filter-type" value="Time-sheet"> Time-sheet</label>
                     <label><input type="checkbox" class="filter-type" value="Nghỉ việc"> Nghỉ việc</label>
                 </div>
                 <div class="filter-group" style="margin-top: 30px;">
@@ -102,35 +104,13 @@
     <script>
         $(document).ready(function() {
             // Xử lý sự kiện nhấp vào nút tìm kiếm
-            $('.search-button').on('click', function() {
+            // $('.search-button').on('click', function() {
+            //     filterRequests();
+            // });
+
+            $('.search-box, .filter-type, .filter-status').off('input change').on('input change', function() {
                 filterRequests();
             });
-            // $('#search-button').on('click', function() {
-            //     var searchTerm = $('#search-box').val();
-            //     $.get('index.php?action=GetRequestPage', { ajax: 1, search: searchTerm, page: 1 }, function(response) {
-            //         var data = JSON.parse(response);
-            //         $('#request-table-body').html(data.requestHtml);
-            //         $('#pagination').html(data.paginationHtml);
-            //     });
-            // });
-
-            // Xử lý sự kiện nhấp vào phân trang
-            // $(document).on('click', '.page-link', function(e) {
-            //     e.preventDefault();
-            //     var page = $(this).data('page');
-            //     var searchTerm = $('#search-box').val();
-            //     $.get('index.php?action=GetRequestPage', { ajax: 1, search: searchTerm, page: page }, function(response) {
-            //         var data = JSON.parse(response);
-            //         $('#request-table-body').html(data.requestHtml);
-            //         $('#pagination').html(data.paginationHtml);
-
-            //         // Cập nhật lớp active cho phân trang
-            //         $('#pagination .page-item').removeClass('active');
-            //         $('#pagination .page-item').filter(function() {
-            //             return $(this).find('.page-link').data('page') === page;
-            //         }).addClass('active');
-            //     });
-            // });
 
             $(document).on('click', '.page-link', function(e) {
                 e.preventDefault();
@@ -139,13 +119,18 @@
             });
 
             $('#reset-all-button').on('click', function() {
-                $('#search-term').val('');
-                $('input[name="type"]').prop('checked', false);
-                $('input[name="status"]').prop('checked', false);
+                $('#search-box').val('');
+                $('.filter-type').prop('checked', false);
+                $('.filter-status').prop('checked', false);
                 $.get('index.php?action=GetRequestPage', { ajax: 1, search: '', types: [], statuses: [], page: 1 }, function(response) {
                     var data = JSON.parse(response);
                     $('#request-table-body').html(data.requestHtml);
                     $('#pagination').html(data.paginationHtml);
+
+                    $('#pagination .page-item').removeClass('active');
+                        $('#pagination .page-item').filter(function() {
+                            return $(this).find('.page-link').data('page') === 1;
+                        }).addClass('active');
                 });
             });
 
@@ -153,16 +138,24 @@
                 var searchTerm = $('.search-box').val();
                 var types = $('.filter-type:checked').map(function() { return $(this).val(); }).get();
                 var statuses = $('.filter-status:checked').map(function() { return $(this).val(); }).get();
+                
                 $.get('index.php?action=GetRequestPage', { ajax: 1, search: searchTerm, types: types, statuses: statuses, page: page }, function(response) {
-                    var data = JSON.parse(response);
-                    $('#request-table-body').html(data.requestHtml);
-                    $('#pagination').html(data.paginationHtml);
+                    console.log(response);
+                    try {
+                        var data = JSON.parse(response);
+                        $('#request-table-body').html(data.requestHtml);
+                        $('#pagination').html(data.paginationHtml);
 
-                    // Cập nhật lớp active cho phân trang
-                    $('#pagination .page-item').removeClass('active');
-                    $('#pagination .page-item').filter(function() {
-                        return $(this).find('.page-link').data('page') === page;
-                    }).addClass('active');
+                        // Cập nhật lớp active cho phân trang
+                        $('#pagination .page-item').removeClass('active');
+                        $('#pagination .page-item').filter(function() {
+                            return $(this).find('.page-link').data('page') === page;
+                        }).addClass('active');
+                    }
+                    catch (e){
+                        console.error("JSON parse error: ", e);
+                        console.error("Server response: ", response);
+                    }
                 });
             }
         });
