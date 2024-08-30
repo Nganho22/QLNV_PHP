@@ -54,6 +54,20 @@ class FelicitationModel {
         $stmt->execute();
         $result = $stmt->get_result();
         $availableVoucher = $result->fetch_assoc()['cvoucher']?? 0;
+
+        $usedVoucher = "SELECT COUNT(*) AS uvoucher
+                        FROM Voucher
+                        WHERE VoucherID IN (
+                            SELECT VoucherID
+                            FROM Felicitation
+                            WHERE NguoiNhan = ? AND VoucherID IS NOT NULL
+                        ) AND TinhTrang = 'Đã dùng'";
+        $stmt = $conn->prepare($usedVoucher);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usedVoucher = $result->fetch_assoc()['uvoucher']?? 0;
+
         $stmt->close();
         $db->close();
         return [
@@ -61,7 +75,8 @@ class FelicitationModel {
             'existing' => $existingFelicitation,
             'exchange' => $exchangeFelicitation,
             'deducted' => $deductedFelicitation,
-            'cvoucher' => $availableVoucher
+            'cvoucher' => $availableVoucher,
+            'uvoucher' => $usedVoucher
         ];
     }
 
@@ -125,6 +140,19 @@ class FelicitationModel {
         $stmt->execute();
         $result = $stmt->get_result();
         $availableVoucher = $result->fetch_assoc()['cvoucher']?? 0;
+
+        $usedVoucher = "SELECT COUNT(*) AS uvoucher
+                        FROM Voucher
+                        WHERE VoucherID IN (
+                            SELECT VoucherID
+                            FROM Felicitation
+                            WHERE NguoiNhan = ? AND VoucherID IS NOT NULL
+                        ) AND TinhTrang = 'Đã dùng'";
+        $stmt = $conn->prepare($usedVoucher);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usedVoucher = $result->fetch_assoc()['uvoucher']?? 0;
         $stmt->close();
         $db->close();
         return [
@@ -132,7 +160,8 @@ class FelicitationModel {
             'existing' => $existingFelicitation,
             'exchange_ql' => $exchange_QLFelicitation,
             'deducted' => $deductedFelicitation,
-            'cvoucher' => $availableVoucher
+            'cvoucher' => $availableVoucher,
+            'uvoucher' => $usedVoucher
         ];
     }
 
