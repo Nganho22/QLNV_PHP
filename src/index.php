@@ -104,6 +104,10 @@ switch ($action)
         $controller = new FelicitationController();
         $controller->GetFelicitationPage();
         break; 
+    case "GetVoucherPage":
+        $controller = new FelicitationController();
+        $controller->GetVoucher_page();
+        break;
 default:
         $controller = new HomeController();
         $controller->login();

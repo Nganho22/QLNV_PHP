@@ -19,7 +19,7 @@
                 </div>
             </div>
         <?php endif; ?>
-    <div class="container">
+        <div class="container">
         <div class="row">
             <div class="info-box">
                 <p><strong>Tổng điểm đã có </strong></p>
@@ -27,20 +27,20 @@
                 </div>
                 <div class="info-box">
                     <p><strong>Tổng điểm hiện tại</strong></p>
-                    <h4><?php echo htmlspecialchars($creq['pending']); ?></h4>
+                    <h4><?php echo htmlspecialchars($creq['existing']); ?></h4>
                 </div>
                 <div class="info-box">
                     <p><strong>Tổng điểm đã đổi</strong></p>
-                    <h4><?php echo htmlspecialchars($creq['changed']); ?></h4>
+                    <h4><?php echo htmlspecialchars($creq['exchange']); ?></h4>
                 </div>
                 <div class="info-box">
                     <p><strong>Tổng điểm bị trừ</strong></p>
                     <h4><?php echo htmlspecialchars($creq['deducted']); ?></h4>
                 </div>
             <div class="left-column">
-                <div class="pending-requests">
+                <div class="historyfelicitationg-requests">
                     <h2>Lịch sử thay đổi điểm</h2>
-                    <table class="table" id="pending-requests-table">
+                    <table class="table" id="historyfelicitation-requests-table">
                         <thead>
                             <tr>
                                 <th>Số điểm</th>
@@ -50,7 +50,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($pendingRequests as $request): ?>
+                            <?php foreach ($historyRequests as $request): ?>
                                 <tr>
                                     <td>
                                         <?php
@@ -66,10 +66,10 @@
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                    <div id="pending-pagination" class="pagination pagination-wrapper">
-                        <?php if ($totalPending > $limit): ?>
-                            <?php for ($i = 1; $i <= ceil($totalPending / $limit); $i++): ?>
-                                <li class="page-item <?php echo ($i == $pagePending) ? 'active' : ''; ?>">
+                    <div id="historyfelicitation-pagination" class="pagination pagination-wrapper">
+                        <?php if ($totalHistory > $limit): ?>
+                            <?php for ($i = 1; $i <= ceil($totalHistory / $limit); $i++): ?>
+                                <li class="page-item <?php echo ($i == $pageHistory) ? 'active' : ''; ?>">
                                     <a class="page-link" href="#" data-page="<?php echo $i; ?>"><?php echo $i; ?></a>
                                 </li>
                             <?php endfor; ?>
@@ -91,140 +91,28 @@
                             <div class="info-box1">
                                 <div class="row1">
                                 <div class="left-box">
-                                <p><strong>Tổng điểm đã có </strong></p>
-                                    <h4><?php echo htmlspecialchars($creq['total']); ?></h4>
-                                
-                                    <p><strong>Tổng điểm đã có </strong></p>
-                                    <h4><?php echo htmlspecialchars($creq['total']); ?></h4>
+                                    <p><strong>Tổng điểm hiện tại</strong></p>
+                                        <h4><?php echo htmlspecialchars($creq['existing']); ?></h4>      
+                                    <p><strong>Số Voucher hiện có </strong></p>
+                                        <h4><?php echo htmlspecialchars($creq['cvoucher']); ?></h4>
                                 </div>
                                 <div class="right-box">
-                                    <p><strong>Tổng điểm đã có </strong></p>
-                                    <h4><?php echo htmlspecialchars($creq['total']); ?></h4>
+                                    <p><strong>Số Voucher đã dùng </strong></p>
+                                        <h4><?php echo htmlspecialchars($creq['cvoucher']); ?></h4>
                                 </div>
                                 </div>
-                            </div>    
-                            <ul class="text-center"><a class="write-request btn btn-primary btn-block custom-btn" href="#" data-req="Chung" loai-req="Nghỉ phép">Danh sách voucher</a></ul>
-                        </div>
-                                
-                </div>
-        </div>                
-    </div>
-
-    </div>
-
-
-    <div id="Chung" class="request-form" style="display: none;">
-            <h3 class = "text-center">Form điền đơn</h3>
-            <br>
-            <form>
-                <!-- Hàng đầu tiên: Thông tin điền sẵn -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nguoiGui">Người gửi</label>
-                        <input type="text" id="nguoiGui" name="nguoiGui" value="<?php echo htmlspecialchars($_SESSION['user']['HoTen'])?>" readonly>
+                            </div>   
+                            <div class="text-center-btn mt-4">
+                                <a href="index.php?action=GetVoucherPage" class="btn btn-primary btn-block">Danh sách Voucher</a>
+                            </div>
+                        </div>                   
                     </div>
-                    <div class="form-group">
-                        <label for="ngayGui">Ngày gửi</label>
-                        <input type="text" id="ngayGui" name="ngayGui" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="loai">Loại</label>
-                        <input type="text" id="loai" name="loai" readonly>
-                    </div>
-                </div>
-
-                <!-- Hàng thứ hai: Tiêu đề -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="tieuDe">Tiêu đề</label>
-                        <input type="text" id="tieuDe" name="tieuDe" placeholder="Nhập tiêu đề">
-                    </div>
-                </div>
-
-                <!-- Hàng thứ ba: Nội dung -->
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="noiDung">Nội dung</label>
-                        <textarea id="noiDung" name="noiDung" rows="6" placeholder="Nhập nội dung"></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" class = " btn btn-primary btn-block custom-btn text-center">Gửi đơn</button>
-            </form>
-    </div>
-
-    <div id="TimeSheet" class="request-form" style="display: none;">
-            <h3 class = "text-center">Form điền đơn</h3>
-            <br>
-            <form>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nguoiGui">Người gửi</label>
-                        <input type="text" id="nguoiGui" name="nguoiGui" value="<?php echo htmlspecialchars($_SESSION['user']['HoTen'])?>" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="ngayGui">Ngày gửi</label>
-                        <input type="text" id="ngayGui" name="ngayGui" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="loai">Loại</label>
-                        <input type="text" id="loai" name="loai" readonly>
-                    </div>
-                    <div class="form-group">
-                        <label for="timeSheetDropdown">Chọn Time-sheet</label>
-                        <select id="timeSheetDropdown" name="timeSheetDropdown">
-                            <option value="">Chọn Time-sheet</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="project-info" class="form-row" style="display: none;">
-                <div class="form-group">
-                    <label for="projectID">Project ID</label>
-                    <input type="text" id="projectID" name="projectID" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="ngayGiao">Ngày giao</label>
-                    <input type="text" id="ngayGiao" name="ngayGiao" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="hanChot">Hạn chót</label>
-                    <input type="text" id="hanChot" name="hanChot" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="diemThuong">Điểm thưởng</label>
-                    <input type="text" id="diemThuong" name="diemThuong" readonly>
-                </div>
-                <div class="form-group">
-                    <label for="soGioThucHien">Số giờ thực hiện</label>
-                    <input type="text" id="soGioThucHien" name="soGioThucHien" readonly>
-                </div>
+                </div>                
             </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="tieuDe">Tiêu đề</label>
-                        <input type="text" id="tieuDe" name="tieuDe" placeholder="Nhập tiêu đề">
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="noiDung">Nội dung</label>
-                        <textarea id="noiDung" name="noiDung" rows="6" placeholder="Nhập nội dung"></textarea>
-                    </div>
-                </div>
-
-                <button type="submit" class = " btn btn-primary btn-block custom-btn text-center">Gửi đơn</button>
-            </form>
-    </div>
-
-
-
-
+        </div>
     <script>
+    
     const ctx = document.getElementById('rewardChart').getContext('2d');
-
     // Lấy dữ liệu điểm thưởng từ PHP
     const monthlyPoints = [<?php echo implode(",", $monthlyPoints); ?>];
 
@@ -251,33 +139,27 @@
             }
         }
     });
+    
 
         $(document).ready(function() {
     // Xử lý phân trang cho yêu cầu chờ duyệt
-    $(document).on('click', '#pending-pagination .page-link', function(e) {
+    $(document).on('click', '#historyfelicitation-pagination .page-link', function(e) {
         e.preventDefault();
         var page = $(this).data('page');
-        loadPendingRequests(page, $(this));
+        loadHistoryRequests(page, $(this));
     });
 
-    // Xử lý phân trang cho yêu cầu đã duyệt
-    $(document).on('click', '#approved-pagination .page-link', function(e) {
-        e.preventDefault();
-        var page = $(this).data('page');
-        loadApprovedRequests(page, $(this));
-    });
-
-    function loadPendingRequests(page, element) {
+    function loadHistoryRequests(page, element) {
         $.ajax({
-            url: 'index.php?action=GetFelicitationPage&ajax=true&pagePending=' + page,
+            url: 'index.php?action=GetFelicitationPage&ajax=true&pageHistory=' + page,
             method: 'GET',
             success: function(response) {
                 var data = JSON.parse(response);
-                $('#pending-requests-table tbody').html(data.pendingHtml);
-                $('#pending-pagination').html(data.pendingPagination);
+                $('#historyfelicitation-requests-table tbody').html(data.historyHtml);
+                $('#historyfelicitation-pagination').html(data.historyPagination);
 
                 // Cập nhật trạng thái active
-                var updatedPagination = $('#pending-pagination .page-link[data-page="' + page + '"]');
+                var updatedPagination = $('#historyfelicitation-pagination .page-link[data-page="' + page + '"]');
                 updatedPagination.parent().addClass('active');
             },
             error: function() {
@@ -285,90 +167,8 @@
             }
         });
     }
-
-    $('.write-request').on('click', function(e) {
-            e.preventDefault();
-            var formId = $(this).data('req');
-            var loaiReq = $(this).attr('loai-req');
-            
-            // Ẩn tất cả các form khác
-            $('.request-form').hide();
-            
-            // Hiển thị form tương ứng
-            var formElement = $('#' + formId);
-            formElement.show();
-            formElement[0].scrollIntoView({ behavior: 'smooth' });
-
-            //Lấy loại đơn 
-            formElement.find('#loai').val(loaiReq); 
-
-            //Lấy thời gian
-            function formatDate(date) {
-                var day = ("0" + date.getDate()).slice(-2);
-                var month = ("0" + (date.getMonth() + 1)).slice(-2);
-                var year = date.getFullYear();
-                return day + '/' + month + '/' + year;
-            }
-
-            var today = new Date();
-            var formattedDate = formatDate(today);
-
-            formElement.find('[name="ngayGui"]').val(formattedDate);
-
-            //Lấy ds time-sheet
-            $.ajax({
-            url: 'index.php?action=GetRequestPage&ajax=true',
-            method: 'GET',
-            success: function(response) {
-                var data = JSON.parse(response);
-                if (data.timeSheets) {
-                    var dropdown = $('#timeSheetDropdown');
-                    dropdown.empty();
-                    dropdown.append('<option value="">Chọn Time-sheet</option>');
-                    $.each(data.timeSheets, function(index, timeSheet) {
-                        dropdown.append('<option value="' + timeSheet.Time_sheetID + '">' + timeSheet.ProjectID + ' - ' + timeSheet.Time_sheetID + ' - ' + timeSheet.TenDuAn + '</option>');
-                    });
-                }
-            },
-            error: function() {
-                console.error('Không thể tải dữ liệu');
-            }
-        });
-    });
-
-    $('#timeSheetDropdown').on('change', function() {
-        var timeSheetID = $(this).val();
-        if (timeSheetID) {
-            $.ajax({
-                url: 'index.php?action=GetTimeSheetDetails&timeSheetID=' + timeSheetID,
-                method: 'GET',
-                success: function(response) {
-                    var timeSheet = JSON.parse(response);
-                    if (timeSheet) {
-                        // Hiển thị thông tin dự án
-                        $('#project-info').show();
-                        
-                        // Cập nhật các trường thông tin
-                        $('#projectID').val(timeSheet.ProjectID);
-                        $('#ngayGiao').val(timeSheet.NgayGiao);
-                        $('#hanChot').val(timeSheet.HanChot);
-                        $('#diemThuong').val(timeSheet.DiemThuong);
-                        $('#soGioThucHien').val(timeSheet.SoGioThucHien);
-                        $('#noiDung').val(timeSheet.NoiDung);
-                    }
-                },
-                error: function() {
-                    console.error('Không thể tải dữ liệu');
-                }
-            });
-        } else {
-            // Ẩn thông tin dự án nếu không có gì được chọn
-            $('#project-info').hide();
-        }
-    });
 });
 
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

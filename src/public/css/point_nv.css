@@ -140,7 +140,7 @@ table td:last-child {
 }
 
 .calendar,
-.pending-requests,
+.historyfelicitationg-requests,
 .approved-requests {
     margin-top: 20px;
 }
@@ -243,6 +243,18 @@ textarea {
 
 #timeSheetDropdown option {
     padding: 10px;
+}
+
+
+.btn-block {
+    display: block;
+    width: 40%;
+}
+
+.text-center-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .notification-wrapper {

@@ -9,20 +9,22 @@ class FelicitationController {
             $role = $_SESSION['user']['Role'];
     
             $limit = 5;
-            $pagePending = isset($_GET['pagePending']) ? (int)$_GET['pagePending'] : 1;
-            $offsetPending = ($pagePending - 1) * $limit;
+            $pageHistory = isset($_GET['pageHistory']) ? (int)$_GET['pageHistory'] : 1;
+            $pageHistory_QL = isset($_GET['pageHistory_QL']) ? (int)$_GET['pageHistory_QL'] : 1;
+            $offsetHistory = ($pageHistory - 1) * $limit;
+            $offsetHistory_QL = ($pageHistory_QL - 1) * $limit;
             $timeSheets = FelicitationModel::getTimeSheetsByEmpID($user_id);
     
             switch ($role) {
                 case 'Nhân viên':
                     $file = "./views/pages/NV/point_NV.phtml";
                     $creq = FelicitationModel::getFelicitationCountsByEmpID($user_id);
-                    $pendingRequests = FelicitationModel::getPendingRequestsByEmpID($user_id, $limit, $offsetPending);
-                    $totalPending = FelicitationModel::countPendingRequests($user_id);
-                    $points = FelicitationModel::getPoint_Month($user_id);
+                    $historyRequests = FelicitationModel::getHistoryRequestsByEmpID($user_id, $limit, $offsetHistory);
+                    $totalHistory = FelicitationModel::countFelicitationRequests($user_id);
+                    $point = FelicitationModel::getPoint_Month($user_id);
                     
                     // Thêm dấu "+" hoặc "-" vào dữ liệu
-                    foreach ($pendingRequests as &$request) {
+                    foreach ($historyRequests as &$request) {
                         $point = $request['FelicitationPoint'];
                         $request['FormattedPoint'] = ($point > 0 ? '+' : '') . $point;
                     }
@@ -30,34 +32,28 @@ class FelicitationController {
 
                     if (isset($_GET['ajax'])) {
                         // Trả về dữ liệu dưới dạng JSON cho AJAX
-                        $pendingHtml = '';
-                        foreach ($pendingRequests as $request) {
-                            $pendingHtml .= '<tr>'
-                            . '<td>'
-                            . htmlspecialchars($request['FormattedPoint'])
-                            . '</td>'
-                            . '<td>'
-                            . htmlspecialchars($request['FelicitationNoiDung'])
-                            . '</td>'
-                            . '<td>'
-                            . htmlspecialchars($request['FelicitationNguoiTang'])
-                            . '</td>'
+                        $historyHtml = '';
+                        foreach ($historyRequests as $request) {
+                            $historyHtml .= '<tr>'
+                            . '<td>'. htmlspecialchars($request['FormattedPoint']) . '</td>'
+                            . '<td>'. htmlspecialchars($request['FelicitationNoiDung']) . '</td>'
+                            . '<td>'. htmlspecialchars($request['FelicitationNguoiTang']) . '</td>'
                             . '<td>' . htmlspecialchars($request['Date']) . '</td>'
                             . '</tr>';
                         }  
 
     
-                        $pendingPagination = '';
-                        if ($totalPending > $limit) {
-                            for ($i = 1; $i <= ceil($totalPending / $limit); $i++) {
-                                $pendingPagination .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                        $historyPagination = '';
+                        if ($totalHistory > $limit) {
+                            for ($i = 1; $i <= ceil($totalHistory / $limit); $i++) {
+                                $historyPagination .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
                             }
                         }
 
     
                         echo json_encode([
-                            'pendingHtml' => $pendingHtml,
-                            'pendingPagination' => $pendingPagination,
+                            'historyHtml' => $historyHtml,
+                            'historyPagination' => $historyPagination,
                             'timeSheets' => $timeSheets
                         ]);
                     } else {
@@ -81,6 +77,49 @@ class FelicitationController {
                     break;
                 case 'Quản lý':
                     $file = "./views/pages/QL/point_QL.phtml";
+                    $creq = FelicitationModel::getFelicitationCountsByEmpID_QL($user_id);
+                    $history_QLRequests = FelicitationModel::getHistoryRequestsByEmpID_QL($user_id, $limit, $offsetHistory_QL);
+                    $totalHistory_QL = FelicitationModel::countFelicitationRequests_QL($user_id);
+                    $point = FelicitationModel::getPoint_Month($user_id);
+
+                    foreach ($history_QLRequests as &$request) {
+                        $point = $request['FelicitationPoint'];
+                        $request['FormattedPoint'] = ($request['FelicitationRole'] === 'donor' ? '-' : ($point > 0 ? '+' : '')) . $point;
+                    }
+                    unset($request);
+                
+                    if (isset($_GET['ajax'])) {
+                        // Trả về dữ liệu dưới dạng JSON cho AJAX
+                        $history_QLHtml = '';
+                        foreach ($history_QLRequests as $request) {
+                            $history_QLHtml .= '<tr>'
+                                . '<td>' . htmlspecialchars($request['FormattedPoint']) . '</td>'
+                                . '<td>' . htmlspecialchars($request['FelicitationNoiDung']) . '</td>'
+                                . '<td>' . htmlspecialchars($request['FelicitationNguoiNhan']) . '</td>'
+                                . '<td>' . htmlspecialchars($request['Date']) . '</td>'
+                                . '</tr>';
+                        }
+
+    
+                        $history_QLPagination = '';
+                        if ($totalHistory_QL > $limit) {
+                            for ($i = 1; $i <= ceil($totalHistory_QL / $limit); $i++) {
+                                $history_QLPagination .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                            }
+                        }
+
+    
+                        echo json_encode([
+                            'history_QLHtml' => $history_QLHtml,
+                            'history_QLPagination' => $history_QLPagination,
+                            'timeSheets' => $timeSheets
+                        ]);
+                    } else {
+                        ob_start();
+                        require($file);
+                        $content = ob_get_clean();
+                        require(__DIR__ . '/../views/template.phtml');
+                    }
                     break;
                 default:
                     $file = null;
@@ -92,6 +131,24 @@ class FelicitationController {
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
             exit();
         }
+    }
+
+    public function GetVoucher_page() {
+        if (isset($_SESSION['user'])) {
+            $title='Trang danh sách Voucher';
+            $user_id = $_SESSION['user']['EmpID'];
+            $profile = UserModel::getprofile($user_id);
+            
+            ob_start();
+            require("./views/pages/voucher_list.phtml");
+            $content = ob_get_clean();
+            require(__DIR__ . '/../views/template.phtml');
+        }
+        else{
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+     
     }
 
     public function GetTimeSheetDetails() {
