@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/activity.css" type="text/css"/> 
 </head>
     <body>
+    <?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        </div>
+    <?php endif; ?>
     <main>
     <div class="container">
         <h1 class="mb-4">Danh sách hoạt động</h1>

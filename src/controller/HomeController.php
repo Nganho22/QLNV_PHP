@@ -113,6 +113,18 @@ class HomeController{
                 $cPrj_QL= UserModel::getCountPrj_QL($user_id);
                 $listPrj_QL = UserModel::getListPrj_QL($user_id);
             }
+            $message='';
+            if (isset($_GET['status'])) {
+                if ($_GET['status']  === 'checked-in') {
+                    $message = "Bạn đã check-in thành công.";
+                } elseif ($_GET['status']  === 'checked-out') {
+                    $message = "Bạn đã check-out thành công.";
+                } elseif ($_GET['status']  === 'already-checked-out') {
+                    $message = "Bạn đã check-out, không thể thực hiện lại.";
+                } else {
+                    $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                }
+            }
 
             ob_start();
             require("./views/pages/profile.phtml");
@@ -131,6 +143,18 @@ class HomeController{
             $title='Cập nhật Profile';
             $user_id = $_SESSION['user']['EmpID'];
             $profile = UserModel::getprofile($user_id);
+            $message='';
+            if (isset($_GET['status'])) {
+                if ($_GET['status']  === 'checked-in') {
+                    $message = "Bạn đã check-in thành công.";
+                } elseif ($_GET['status']  === 'checked-out') {
+                    $message = "Bạn đã check-out thành công.";
+                } elseif ($_GET['status']  === 'already-checked-out') {
+                    $message = "Bạn đã check-out, không thể thực hiện lại.";
+                } else {
+                    $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                }
+            }
             
             ob_start();
             require("./views/pages/update_profile.phtml");
@@ -229,6 +253,18 @@ class HomeController{
 
     public function Getcheckinout_page() {
         if (isset($_SESSION['user'])) {
+            $message='';
+            if (isset($_GET['status'])) {
+                if ($_GET['status']  === 'checked-in') {
+                    $message = "Bạn đã check-in thành công.";
+                } elseif ($_GET['status']  === 'checked-out') {
+                    $message = "Bạn đã check-out thành công.";
+                } elseif ($_GET['status']  === 'already-checked-out') {
+                    $message = "Bạn đã check-out, không thể thực hiện lại.";
+                } else {
+                    $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                }
+            }
             $title='CheckinOut Page';
             ob_start();
             require("./views/pages/checkin_out.phtml");
@@ -266,6 +302,18 @@ class HomeController{
             }
             
             if ($file && file_exists($file)) {
+                $message='';
+                if (isset($_GET['status'])) {
+                    if ($_GET['status']  === 'checked-in') {
+                        $message = "Bạn đã check-in thành công.";
+                    } elseif ($_GET['status']  === 'checked-out') {
+                        $message = "Bạn đã check-out thành công.";
+                    } elseif ($_GET['status']  === 'already-checked-out') {
+                        $message = "Bạn đã check-out, không thể thực hiện lại.";
+                    } else {
+                        $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                    }
+                }
                 ob_start();
                 require($file);
                 $content = ob_get_clean();

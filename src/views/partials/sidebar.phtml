@@ -1,5 +1,5 @@
 <?php
-    if (!isset($_SESSION['user'])) {
+    if (isset($_SESSION['user']) && !in_array($_GET['action'] ?? '', ['CheckInOut'])) {
         $_SESSION['redirect_url'] = $_SERVER['REQUEST_URI'];
     }
 ?>

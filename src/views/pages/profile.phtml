@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/profile.css" type="text/css"/> 
 </head>
 <body>
+        <?php if (!empty($message)): ?>
+                <div class="notification-wrapper">
+                    <div class="notification">
+                        <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                        <?php echo htmlspecialchars($message); ?>
+                    </div>
+                </div>
+            <?php endif; ?>
     <div class="container my6">
         <div class="profile-container">
                 <div class="profile-header text-center" 
@@ -20,7 +28,6 @@
                         <p class="profile-title"><?php echo htmlspecialchars($profile['Email']); ?></p>
                     <?php endif; ?>
                     <h1 class="profile-name"><?php echo htmlspecialchars($profile['HoTen']); ?></h1>
-
                 </div>
 
                 <div class="profile-details profile-content ">
