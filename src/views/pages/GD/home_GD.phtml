@@ -70,23 +70,25 @@
             <div class="employee-list">
                 <h3>Danh sách nhân viên:</h3>
                 <div class="search-wrapper">
-                    <input type="text" placeholder="Tìm kiếm...">
+                    <input type="text" id="search-box" placeholder="Tên nhân viên..." class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
-                <ul>
+                <ul id="employee-list">
                     <?php foreach ($employees as $employee): ?>
                         <li><?php echo htmlspecialchars($employee['HoTen']); ?><br><span><?php echo htmlspecialchars($employee['Email']); ?></span></li>
                     <?php endforeach; ?>
                 </ul>
-                    <div class="pagination">
-                        <a href="#" class="prev">&#10094;</a>
-                        <a href="#" class="active">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">...</a>
-                        <a href="#">40</a>
-                        <a href="#" class="next"> &#10095;</a>
-                    </div>
+                <div id="pagination" class="pagination">
+                    <?php 
+                        $totalPages = ceil($totalEmployees / $limit);
+                        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        for ($i = 1; $i <= $totalPages; $i++): 
+                        ?>
+                            <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                                <a class="page-link" href="#" data-page="<?= $i ?>"><?= $i ?></a>
+                            </li>
+                    <?php endfor; ?>
+                </div>
             </div>
 
             <div class="room-list">
@@ -206,6 +208,41 @@
 
             renderCalendar(currentDate);
         });
+    
+        $(document).ready(function() {
+
+            $('.search-box').off('input change').on('input change', function() {
+                loadEmployees();
+            });
+
+            $(document).on('click', '.page-link', function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                loadEmployees(page);
+            });
+
+        // Function to load employees with pagination
+        function loadEmployees(page = 1) {
+            var searchTerm = $('.search-box').val();
+            $.get('index.php?action=home', { ajax: 1,  search: searchTerm, page: page }, function(response) {
+                console.log(response);
+                try {
+                    var data = JSON.parse(response);
+                    $('#employee-list').html(data.requestHtml);
+                    $('#pagination').html(data.paginationHtml);
+
+                    // Update the active class for pagination
+                    $('#pagination .page-item').removeClass('active');
+                    $('#pagination .page-item').filter(function() {
+                        return $(this).find('.page-link').data('page') === page;
+                    }).addClass('active');
+                } catch (e) {
+                    console.error("JSON parse error: ", e);
+                    console.error("Server response: ", response);
+                }
+            });
+        }
+    });
     </script>
 </body>
 </html>

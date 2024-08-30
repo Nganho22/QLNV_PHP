@@ -52,12 +52,48 @@ class HomeController{
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 case 'Giám đốc':
+                    $limit = 5;
+                    $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $offset = ($page - 1) * $limit;
+
                     $projects = UserModel::getProjects_GD();
-                    $employees = UserModel::getEmployeesList_GD();
                     $phongBans = UserModel::getPhongBan_GD();
                     $deadlines = UserModel::getDeadlinesTimesheet($empID);
+
+                    if (!empty($searchTerm)) {
+                        $employees = UserModel::searchProfiles($searchTerm, $limit, $offset);
+                        $totalEmployees = UserModel::countSearchProfiles($searchTerm);
+                    } else {
+                        $employees = UserModel::getEmployeesList_GD($limit, $offset);
+                        $totalEmployees = UserModel::countAllEmployees();
+                    }
+
                     $file = "./views/pages/GD/home_GD.phtml";
 
+                    if (isset($_GET['ajax'])) {
+                        $requestHtml = '';
+                        foreach ($employees  as $employee) {
+                            $requestHtml .= '<li>' . htmlspecialchars($employee['HoTen']) . '<br><span>' . htmlspecialchars($employee['Email']) . '</span></li>';
+                        }
+                        $paginationHtml = '';
+                        if ($totalEmployees > $limit) {
+                            for ($i = 1; $i <= ceil($totalEmployees / $limit); $i++) {
+                                $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                            }
+                        }
+    
+                        echo json_encode([
+                            'requestHtml' => $requestHtml,
+                            'paginationHtml' => $paginationHtml
+                        ]);
+                        exit;
+                    } else {
+                        ob_start();
+                        require($file);
+                        $content = ob_get_clean();
+                        require(__DIR__ . '/../views/template.phtml');
+                    }
                     break;
                 default:
                     $file = null;

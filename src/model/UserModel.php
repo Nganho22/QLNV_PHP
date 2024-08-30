@@ -710,20 +710,86 @@ class UserModel {
         return $employees;
     }
 
-    public static function getEmployeesList_GD() {
+    public static function getEmployeesList_GD($limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT EmpID, HoTen, Email FROM Profile LIMIT 5");
+    
+        $stmt = $conn->prepare("SELECT EmpID, HoTen, Email FROM Profile LIMIT ? OFFSET ?");
+        $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
         $employees = $result->fetch_all(MYSQLI_ASSOC);
-
+    
         $stmt->close();
         $db->close();
         return $employees;
     }
 
+    public static function countAllEmployees() {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM Profile");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return $row['total'];
+    }
+
+    public static function searchProfiles($searchTerm, $limit, $offset) {
+        $searchTerm = "%$searchTerm%";
+        $query = "
+            SELECT EmpID, HoTen, Email
+            FROM Profile
+            WHERE HoTen LIKE ?
+            LIMIT ? OFFSET ?";
+
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$searchTerm, $limit, $offset];
+        $stmt->bind_param('sii', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $profiles = [];
+        while ($row = $result->fetch_assoc()) {
+            $profiles[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+
+        return $profiles;
+    }
+
+    public static function countSearchProfiles($searchTerm) {
+        $searchTerm = "%$searchTerm%";
+        $query = "
+            SELECT COUNT(EmpID) as total
+            FROM Profile
+            WHERE HoTen LIKE ?";
+
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$searchTerm];
+        $stmt->bind_param('s', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+
+        $stmt->close();
+        $db->close();
+
+        return $total;
+    }
+
+    
 
     public static function getTimesheetList($empID) {
         $db = new Database();
@@ -798,6 +864,7 @@ class UserModel {
         $db->close();
         return $CheckInOuts;
     }
+
 
 
 }
