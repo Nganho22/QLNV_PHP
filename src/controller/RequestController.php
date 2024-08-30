@@ -19,6 +19,9 @@ class RequestController {
             $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
             $offset = ($page - 1) * $qllimit;
 
+            $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+            $types = isset($_GET['types']) ? $_GET['types'] : [];
+            $statuses = isset($_GET['statuses']) ? $_GET['statuses'] : [];
             switch ($role) {
                 case 'Nhân viên':
                     $file = "./views/pages/NV/request.phtml";
@@ -97,18 +100,29 @@ class RequestController {
                     $creq = RequestModel::getRequestCountsByEmpID_QL($user_id);
                     $requests = RequestModel::getRequestsByEmpID_QL($user_id);
 
-                    $totalRequests = count($requests);
-                    $requestsPage = array_slice($requests, $offset, $qllimit);
+                    if (!empty($searchTerm)) {
+                        $requests = RequestModel::searchRequestsByEmpID_QL($user_id, $searchTerm, $qllimit, $offset);
+                        $totalRequests = RequestModel::countSearchRequests_QL($user_id, $searchTerm);
+                    } elseif (!empty($types) || !empty($statuses)) {
+                        $requests = RequestModel::filterRequestsByEmpID_QL($user_id, $searchTerm, $types, $statuses, $qllimit, $offset);
+                        $totalRequests = RequestModel::countFilterRequests_QL($user_id, $searchTerm, $types, $statuses);
+                    } else {
+                        $requests = RequestModel::getRequestsByEmpID_QL($user_id);
+                        $totalRequests = count($requests);
+                        $requests = array_slice($requests, $offset, $qllimit);
+                    }
+
 
                     $file = "./views/pages/QL/request.phtml";
 
                     if (isset($_GET['ajax'])) {
                         $requestHtml = '';
-                        foreach ($requestsPage as $request) {
+                        foreach ($requests  as $request) {
                             $requestHtml .= '<tr>'
                                 . '<td><a href = "index.php?action=GetDetailRequestPage&id=' . htmlspecialchars($request['RequestID']) . '">' 
                                 . htmlspecialchars($request['TieuDe']) . '</a></td>'
                                 . '<td>' . htmlspecialchars($request['Loai']) . '</td>'
+                                . '<td>' . htmlspecialchars($request['NguoiGui']) . '</td>'
                                 . '<td>' . htmlspecialchars($request['NgayGui']) . '</td>'
                                 . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
                                 . '</tr>';
@@ -277,6 +291,7 @@ class RequestController {
         if (isset($_SESSION['user'])) {
             $title='Chi tiết Request';
             $user_id = $_SESSION['user']['EmpID'];
+            $role = $_SESSION['user']['Role'];
 
             $detail = RequestModel::getDetailRequest($requestId);
             $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
@@ -292,10 +307,30 @@ class RequestController {
                     $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
                 }
             }
-            ob_start();
-            require("./views/pages/NV/detail_req.phtml");
-            $content = ob_get_clean();
-            require(__DIR__ . '/../views/template.phtml');
+            switch ($role) {
+                case 'Nhân viên':
+                    $detail = RequestModel::getDetailRequest($requestId);
+                    $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
+
+                    ob_start();
+                    require("./views/pages/NV/detail_req.phtml");
+                    $content = ob_get_clean();
+                    require(__DIR__ . '/../views/template.phtml');
+                    break;
+                case 'Quản lý':
+                    $detail = RequestModel::getDetailRequest($requestId);
+                    $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
+
+                    ob_start();
+                    require("./views/pages/QL/detail_req.phtml");
+                    $content = ob_get_clean();
+                    require(__DIR__ . '/../views/template.phtml');
+                    break;
+                default:
+                $file = null;
+                $title = 'Error';
+                break;
+            }
         }
         else{
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');

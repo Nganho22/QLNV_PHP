@@ -301,7 +301,7 @@ class RequestModel {
     
         // 4. Lấy danh sách RequestID, EmpID, và TrangThai với điều kiện EmpID trong danh sách EmpID
         $getRequestsQuery = "
-            SELECT RequestID, EmpID, TrangThai
+            SELECT * 
             FROM Request
             WHERE EmpID IN ($empIDsString)";
     
@@ -320,5 +320,250 @@ class RequestModel {
     
         return $requests;
     }    
+
+    public static function searchRequestsByEmpID_QL($user_id, $searchTerm, $limit, $offset) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Lấy PhongID từ Profile dựa trên EmpID
+        $getPhongIDQuery = "SELECT PhongID FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($getPhongIDQuery);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+    
+        if (!$phongID) {
+            return [];
+        }
+    
+        // Lấy danh sách EmpID từ Profile dựa trên PhongID
+        $getEmpIDsQuery = "SELECT EmpID FROM Profile WHERE PhongID = ?";
+        $stmt = $conn->prepare($getEmpIDsQuery);
+        $stmt->bind_param('s', $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $empIDs = [];
+        while ($row = $result->fetch_assoc()) {
+            $empIDs[] = $row['EmpID'];
+        }
+    
+        if (empty($empIDs)) {
+            return [];
+        }
+    
+        // Tạo danh sách EmpID dạng chuỗi cho truy vấn IN
+        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
+    
+        // Tìm kiếm các yêu cầu theo NguoiGui
+        $searchRequestsQuery = "
+            SELECT RequestID, EmpID, TieuDe, Loai, NguoiGui, NgayGui, TrangThai
+            FROM Request
+            WHERE EmpID IN ($empIDsString) AND NguoiGui LIKE ? 
+            LIMIT ? OFFSET ?";
+    
+        $stmt = $conn->prepare($searchRequestsQuery);
+        $searchTerm = "%$searchTerm%";
+        $params = array_merge($empIDs, [$searchTerm, $limit, $offset]);
+        $stmt->bind_param(str_repeat('i', count($empIDs)) . 'sii', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $requests[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $requests;
+    }
+    
+    public static function countSearchRequests_QL($user_id, $searchTerm) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $getPhongIDQuery = "SELECT PhongID FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($getPhongIDQuery);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+    
+        if (!$phongID) {
+            return 0;
+        }
+    
+        $getEmpIDsQuery = "SELECT EmpID FROM Profile WHERE PhongID = ?";
+        $stmt = $conn->prepare($getEmpIDsQuery);
+        $stmt->bind_param('s', $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $empIDs = [];
+        while ($row = $result->fetch_assoc()) {
+            $empIDs[] = $row['EmpID'];
+        }
+    
+        if (empty($empIDs)) {
+            return 0;
+        }
+    
+        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
+    
+        $countQuery = "
+            SELECT COUNT(RequestID) as total
+            FROM Request
+            WHERE EmpID IN ($empIDsString) AND NguoiGui LIKE ?";
+    
+        $stmt = $conn->prepare($countQuery);
+        $searchTerm = "%$searchTerm%";
+        $params = array_merge($empIDs, [$searchTerm]);
+        $stmt->bind_param(str_repeat('i', count($empIDs)) . 's', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+    
+        $stmt->close();
+        $db->close();
+    
+        return $total;
+    }
+    
+    public static function filterRequestsByEmpID_QL($user_id, $searchTerm, $types, $statuses, $limit, $offset) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $getPhongIDQuery = "SELECT PhongID FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($getPhongIDQuery);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+    
+        if (!$phongID) {
+            return [];
+        }
+    
+        $getEmpIDsQuery = "SELECT EmpID FROM Profile WHERE PhongID = ?";
+        $stmt = $conn->prepare($getEmpIDsQuery);
+        $stmt->bind_param('s', $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $empIDs = [];
+        while ($row = $result->fetch_assoc()) {
+            $empIDs[] = $row['EmpID'];
+        }
+    
+        if (empty($empIDs)) {
+            return [];
+        }
+    
+        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
+    
+        // Tạo phần câu truy vấn điều kiện
+        $typesPlaceholders = count($types) > 0 ? implode(',', array_fill(0, count($types), '?')) : 'NULL';
+        $statusesPlaceholders = count($statuses) > 0 ? implode(',', array_fill(0, count($statuses), '?')) : 'NULL';
+    
+        $filterRequestsQuery = "
+            SELECT RequestID, EmpID, TieuDe, Loai, NguoiGui, NgayGui, TrangThai
+            FROM Request
+            WHERE EmpID IN ($empIDsString)
+            AND NguoiGui LIKE ?
+            " . (count($types) > 0 ? "AND Loai IN ($typesPlaceholders)" : "") . "
+            " . (count($statuses) > 0 ? "AND TrangThai IN ($statusesPlaceholders)" : "") . "
+            LIMIT ? OFFSET ?";
+    
+        $stmt = $conn->prepare($filterRequestsQuery);
+        
+        // Tạo tham số và bind
+        $params = array_merge(
+            $empIDs, 
+            [$searchTerm],
+            $types,
+            $statuses,
+            [$limit, $offset]
+        );
+    
+        $typesStr = str_repeat('i', count($empIDs)) . 's';
+        $typesStr .= count($types) > 0 ? str_repeat('s', count($types)) : '';
+        $typesStr .= count($statuses) > 0 ? str_repeat('i', count($statuses)) : '';
+        $typesStr .= 'ii';
+    
+        $stmt->bind_param($typesStr, ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $requests[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $requests;
+    }
+    
+    
+    public static function countFilterRequests_QL($user_id, $searchTerm, $types, $statuses) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $getPhongIDQuery = "SELECT PhongID FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($getPhongIDQuery);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+    
+        if (!$phongID) {
+            return 0;
+        }
+    
+        $getEmpIDsQuery = "SELECT EmpID FROM Profile WHERE PhongID = ?";
+        $stmt = $conn->prepare($getEmpIDsQuery);
+        $stmt->bind_param('s', $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $empIDs = [];
+        while ($row = $result->fetch_assoc()) {
+            $empIDs[] = $row['EmpID'];
+        }
+    
+        if (empty($empIDs)) {
+            return 0;
+        }
+    
+        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
+    
+        $typesString = implode(',', array_fill(0, count($types), '?'));
+        $statusesString = implode(',', array_fill(0, count($statuses), '?'));
+    
+        $countQuery = "
+            SELECT COUNT(RequestID) as total
+            FROM Request
+            WHERE EmpID IN ($empIDsString)
+            AND NguoiGui LIKE ?
+            AND Loai IN ($typesString)
+            AND TrangThai IN ($statusesString)";
+    
+        $stmt = $conn->prepare($countQuery);
+        $params = array_merge($empIDs, [$searchTerm], $types, $statuses);
+        $stmt->bind_param(str_repeat('i', count($empIDs)) . str_repeat('s', count($types)) . str_repeat('i', count($statuses)), ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+    
+        $stmt->close();
+        $db->close();
+    
+        return $total;
+    }
+    
 }
 ?>

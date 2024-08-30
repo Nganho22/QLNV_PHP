@@ -175,3 +175,70 @@ body {
     background-color: #ddd;
     margin: 0 auto;
 }
+
+
+.row {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.info-box {
+    width: 25%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #999999;
+}
+
+.info-box p {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.info-box h4 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 15px;
+}
+
+.form-group:last-child {
+    margin-right: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.custom-btn {
+    border-radius: 10px;
+    width: 200px;
+    justify-content: center;
+    margin: 0 auto;
+    display: block;
+}

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($title); ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/request_detail.css" type="text/css"/> 
+</head>
+<body>
+<div class="container-fluid">
+
+    <div class="back-button" style="position: relative;">
+        <a href="index.php?action=GetRequestPage" class=" btn-link"><i class="fas fa-arrow-left"></i> Quay lại</a>
+    </div>
+
+    <div class="request-detail">
+        <h1>Chi tiết Đơn Yêu Cầu</h1>
+        
+        <div class="info-row">
+            <!-- Left Column: request-info -->
+            <div class="col-md-5">
+                <div class="request-info">
+                    <div class="info-row">
+                        <div class="info-item"><strong>Request ID:</strong> <?php echo htmlspecialchars($detail['RequestID']); ?></div>
+                        <div class="info-item"><strong>Người Gửi:</strong> <?php echo htmlspecialchars($detail['NguoiGui']); ?></div>
+                        <div class="info-item"><strong>Loại:</strong> <?php echo htmlspecialchars($detail['Loai']); ?></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-item"><strong>Ngày Gửi:</strong> <?php echo htmlspecialchars($detail['NgayGui']); ?></div>
+                        <div class="info-item"><strong>Ngày Xử Lý:</strong> <?php echo htmlspecialchars($detail['NgayXuLy']) == null ? '<span style="color: red;">Chưa được xử lý</span>' : htmlspecialchars($detail['NgayXuLy']); ?></div>
+                        <div class="info-item"><strong>Trạng Thái:</strong> <?php echo htmlspecialchars($detail['TrangThai']) == 0 ? '<span style="color: red;">Chưa duyệt</span>' : 'Đã duyệt'; ?></div>
+                    </div>
+
+                    <?php if ($detail['Loai'] === 'Time-sheet'): ?>
+                        <div class="container" style="border: 1px solid #999999; background-color: #f4f4f4; border-radius: 10px; padding:10px;">
+                            <h5>Nội dung Time-Sheet</h5>
+                            <div class="info-row">
+                                <div class="info-item"><strong>Project ID:</strong> <?php echo htmlspecialchars($detail_ts['ProjectID']); ?></div>
+                                <div class="info-item"><strong>Ngày giao:</strong> <?php echo htmlspecialchars($detail_ts['NgayGiao']); ?></div>
+                                <div class="info-item"><strong>Hạn chót:</strong> <?php echo htmlspecialchars($detail_ts['HanChot']); ?></div>
+                                
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-item"><strong>Tên dự án:</strong> <?php echo htmlspecialchars($detail_ts['TenDuAn']); ?></div>
+                                <div class="info-item"><strong>Điểm thưởng:</strong> <?php echo htmlspecialchars($detail_ts['DiemThuong']); ?></div>
+                                <div class="info-item"><strong>Tổng thời gian:</strong> <?php echo htmlspecialchars($detail_ts['SoGioThucHien']); ?></div>
+                            </div>
+
+                            <div class="info-row">
+                                <div class="info-item"><strong>Trạng thái:</strong> <?php echo htmlspecialchars($detail_ts['TrangThai']); ?></div>
+                                <div class="info-item"><strong>Nội dung:</strong> <?php echo htmlspecialchars($detail_ts['NoiDung']); ?></div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="divider"></div>
+            </div>
+            <!-- Right Column: request-details -->
+            <div class="col-md-6">
+                <div class="request-details">
+                    <div class="info-row">
+                        <div class="info-item"><strong>Tiêu Đề:</strong> <?php echo htmlspecialchars($detail['TieuDe']); ?></div>
+                    </div>
+
+                    <div class="info-row">
+                        <div class="info-item"><strong>Nội Dung:</strong><?php echo htmlspecialchars($detail['NoiDung']); ?></div>
+                    </div>
+
+                    <?php if ($detail['TrangThai'] !== 0): ?>
+                        <div class="info-row">
+                            <div class="info-item"><strong>Phản Hồi:</strong><?php echo htmlspecialchars($detail['PhanHoi']) == null ? 'Không có phản hồi' : htmlspecialchars($detail['PhanHoi']); ?></div>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($detail['Loai'] === 'Time-sheet'): ?>
+                        <div class="container" style="border: 1px solid #999999; background-color: #f4f4f4; border-radius: 10px; padding:10px;">
+                            <h5>Nội dung update Time-Sheet</h5>
+                            <div class="info-row">
+                                <div class="info-item"><strong>Time-sheet ID:</strong> <?php echo htmlspecialchars($detail['Time_sheetID']); ?></div>
+                                <div class="info-item"><strong>Tình Trạng Time-sheet:</strong> <?php echo htmlspecialchars($detail['Up_TinhTrang_Timesheet']); ?></div>
+                                <div class="info-item"><strong>Thời gian cập nhật:</strong> <?php echo htmlspecialchars($detail['Up_ThoiGian_Timesheet']); ?></div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php if ($detail['TrangThai'] === 0): ?>
+    <div class="container-fluid">
+        <div class="request-detail">
+            <h1>Phản hồi đơn yêu cầu</h1>
+            <form action="index.php?action=GetRequestPage" method="POST" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nguoiGui">Người phản hồi:</label>
+                        <input type="text" id="nguoiGui" name="nguoiGui" value="<?php echo htmlspecialchars($_SESSION['user']['HoTen'])?>" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="ngayPhanHoi">Ngày phản hồi:</label>
+                        <input type="text" id="ngayPhanHoi" name="ngayPhanHoi" readonly>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="noiDung">Nội dung</label>
+                        <textarea id="noiDung" name="noiDung" rows="6" placeholder="Nhập nội dung"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <button type="submit" class = " btn btn-primary btn-block custom-btn text-center">Xét duyệt</button>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class = " btn btn-primary btn-block custom-btn text-center" style = "background-color: red; border: none;">Từ chối</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+<?php endif; ?>
+
+<script>
+    function formatDate(date) {
+            var day = ("0" + date.getDate()).slice(-2);
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            return day + '/' + month + '/' + year;
+        }
+
+        function setCurrentDate() {
+            var today = new Date();
+            var formattedDate = formatDate(today);
+            document.getElementById('ngayPhanHoi').value = formattedDate;
+        }
+
+        // Gọi hàm khi trang được tải
+        window.onload = function() {
+            setCurrentDate();
+        };
+</script>
+</body>
+</html>

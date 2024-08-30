@@ -19,34 +19,31 @@
             </div>
         <?php endif; ?>
     <div class="container">
-        <div class="left-column" style="width: 500px; padding-top: 30px;">
+        <div class="left-column" style="width: 400px; padding-top: 30px;">
             <div class="filter-section">
                 <h2>Tìm kiếm và lọc:</h2>
                 <div class="search-wrapper">
-                    <input type="text" placeholder="Tên người gửi..." class="search-box">
-                    <button class="search-button">Tìm kiếm</button>
+                    <input type="text" id="search-box" placeholder="Tên người gửi..." class="search-box">
+                    <button class="search-button" id="search-button">Tìm kiếm</button>
                 </div>
-                <!-- <br> <br> -->
-                <div class="filters">
-                    <div class="filter-group">
-                        <h3>Loại yêu cầu</h3>
-                        <label><input type="checkbox"> Nghỉ phép</label>
-                        <label><input type="checkbox"> Làm việc tại nhà</label>
-                        <label><input type="checkbox"> Time-Sheet</label>
-                        <label><input type="checkbox"> Nghỉ việc</label>
-                        <button class="filter-button">Lọc</button>
-                    </div>
-                    <div class="filter-group">
-                        <h3>Trạng thái</h3>
-                        <label><input type="checkbox"> Chưa duyệt</label>
-                        <label><input type="checkbox"> Đã duyệt</label>
-                        <button class="filter-button" style = "margin-top: 67px;">Lọc</button>
-                    </div>
+                <div class="filter-group">
+                    <h3>Loại yêu cầu</h3>
+                    <label><input type="checkbox" class="filter-type" value="Nghỉ phép"> Nghỉ phép</label>
+                    <label><input type="checkbox" class="filter-type" value="Làm việc tại nhà"> Làm việc tại nhà</label>
+                    <label><input type="checkbox" class="filter-type" value="Time-Sheet"> Time-Sheet</label>
+                    <label><input type="checkbox" class="filter-type" value="Nghỉ việc"> Nghỉ việc</label>
+                </div>
+                <div class="filter-group" style="margin-top: 30px;">
+                    <h3>Trạng thái</h3>
+                    <label><input type="checkbox" class="filter-status" value="0"> Chưa duyệt</label>
+                    <label><input type="checkbox" class="filter-status" value="1"> Đã duyệt</label>
                 </div>
             </div>
+            <br>
+            <button class="reset-all-button btn btn-primary btn-block" id="reset-all-button">Reset tìm kiếm và bộ lọc</button>
         </div>
 
-        <div class="right-column" style="width: 900px">
+        <div class="right-column" style="width: 1000px">
             <div class="row">
                 <div class="info-box">
                     <p><strong>Tổng các đơn yêu cầu</strong></p>
@@ -75,19 +72,27 @@
                         </tr>
                     </thead >
                     <tbody id="request-table-body">
-                        <?php foreach ($requestsPage as $request): ?>
+                        <?php foreach ($requests as $request): ?>
                             <tr>
                                 <td><a href="index.php?action=GetDetailRequestPage&id=<?= htmlspecialchars($request['RequestID']) ?>"><?= htmlspecialchars($request['TieuDe']) ?></a></td>
                                 <td><?= htmlspecialchars($request['Loai']) ?></td>
+                                <td><?= htmlspecialchars($request['NguoiGui']) ?></td>
                                 <td><?= htmlspecialchars($request['NgayGui']) ?></td>
-                                <td><?= $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt' ?></td>
+                                <td><?php echo $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt'; ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+
                 <div id="pagination" class="pagination pagination-wrapper">
-                    <?php for ($i = 1; $i <= ceil($totalRequests / $qllimit); $i++): ?>
-                        <li class="page-item"><a class="page-link" href="#" data-page="<?= $i ?>"><?= $i ?></a></li>
+                    <?php 
+                        $totalPages = ceil($totalRequests / $qllimit);
+                        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        for ($i = 1; $i <= $totalPages; $i++): 
+                        ?>
+                            <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                                <a class="page-link" href="#" data-page="<?= $i ?>"><?= $i ?></a>
+                            </li>
                     <?php endfor; ?>
                 </div>
             </div>
@@ -95,15 +100,73 @@
     </div>
 
     <script>
-        $(document).on('click', '.page-link', function(e) {
-            e.preventDefault();
-            var page = $(this).data('page');
-            $.get('index.php?action=GetRequestPage', { ajax: 1, page: page }, function(response) {
-                var data = JSON.parse(response);
-                $('#requestTable').html(data.requestHtml);
-                $('#pagination').html(data.paginationHtml);
+        $(document).ready(function() {
+            // Xử lý sự kiện nhấp vào nút tìm kiếm
+            $('.search-button').on('click', function() {
+                filterRequests();
             });
+            // $('#search-button').on('click', function() {
+            //     var searchTerm = $('#search-box').val();
+            //     $.get('index.php?action=GetRequestPage', { ajax: 1, search: searchTerm, page: 1 }, function(response) {
+            //         var data = JSON.parse(response);
+            //         $('#request-table-body').html(data.requestHtml);
+            //         $('#pagination').html(data.paginationHtml);
+            //     });
+            // });
+
+            // Xử lý sự kiện nhấp vào phân trang
+            // $(document).on('click', '.page-link', function(e) {
+            //     e.preventDefault();
+            //     var page = $(this).data('page');
+            //     var searchTerm = $('#search-box').val();
+            //     $.get('index.php?action=GetRequestPage', { ajax: 1, search: searchTerm, page: page }, function(response) {
+            //         var data = JSON.parse(response);
+            //         $('#request-table-body').html(data.requestHtml);
+            //         $('#pagination').html(data.paginationHtml);
+
+            //         // Cập nhật lớp active cho phân trang
+            //         $('#pagination .page-item').removeClass('active');
+            //         $('#pagination .page-item').filter(function() {
+            //             return $(this).find('.page-link').data('page') === page;
+            //         }).addClass('active');
+            //     });
+            // });
+
+            $(document).on('click', '.page-link', function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                filterRequests(page);
+            });
+
+            $('#reset-all-button').on('click', function() {
+                $('#search-term').val('');
+                $('input[name="type"]').prop('checked', false);
+                $('input[name="status"]').prop('checked', false);
+                $.get('index.php?action=GetRequestPage', { ajax: 1, search: '', types: [], statuses: [], page: 1 }, function(response) {
+                    var data = JSON.parse(response);
+                    $('#request-table-body').html(data.requestHtml);
+                    $('#pagination').html(data.paginationHtml);
+                });
+            });
+
+            function filterRequests(page = 1) {
+                var searchTerm = $('.search-box').val();
+                var types = $('.filter-type:checked').map(function() { return $(this).val(); }).get();
+                var statuses = $('.filter-status:checked').map(function() { return $(this).val(); }).get();
+                $.get('index.php?action=GetRequestPage', { ajax: 1, search: searchTerm, types: types, statuses: statuses, page: page }, function(response) {
+                    var data = JSON.parse(response);
+                    $('#request-table-body').html(data.requestHtml);
+                    $('#pagination').html(data.paginationHtml);
+
+                    // Cập nhật lớp active cho phân trang
+                    $('#pagination .page-item').removeClass('active');
+                    $('#pagination .page-item').filter(function() {
+                        return $(this).find('.page-link').data('page') === page;
+                    }).addClass('active');
+                });
+            }
         });
+
     </script>
 </body>
 </html>
