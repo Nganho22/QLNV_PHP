@@ -127,7 +127,6 @@ CREATE TABLE Activity (
     ActivityID VARCHAR(10) PRIMARY KEY,
     TenHoatDong VARCHAR(255),
     LoaiHoatDong VARCHAR(255),
-    TrangThai VARCHAR(50),
     Point INT,
     NoiDung TEXT,
     ChiTiet TEXT,

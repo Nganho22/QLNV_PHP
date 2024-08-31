@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../config/MySQLconnect.php';
 
-class FelicitationModel {
+class ActivityModel {
     private $db;
 
     public function __construct() {

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../config/connect.php';
+require_once __DIR__ . '/../config/MySQLconnect.php';
 
 class UserModel {
     public $EmpID;
