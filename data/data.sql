@@ -1,4 +1,288 @@
-﻿INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayChon, TrangThai, NoiDung) VALUES ('1', '15', 'Richard L. Anderson', 'From home', 'Đơn xin làm việc tại nhà', '2024-08-24 00:00:00', '2024-08-26 00:00:00', '0', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ');
+USE QLNV_UDPT;
+
+-- PhongBan
+INSERT INTO PhongBan (PhongID, TenPhong, SoThanhVien) VALUES ('P01', 'Alibaba', '4');
+INSERT INTO PhongBan (PhongID, TenPhong, SoThanhVien) VALUES ('P02', 'Umbala', '4');
+INSERT INTO PhongBan (PhongID, TenPhong, SoThanhVien) VALUES ('P03', 'Fire','3');
+
+-- Profile
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('1', 'P01', 'Nhân viên', 'Bông Bông', '20127161@student.hcmus.edu.vn', 'bongbong', '12345', 'Nữ', '123456789', '198803850072', '123456', '54176', '550', '1', 'Pennsylvania', '1.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('2', 'P01', 'Quản lý', 'Bắp Bắp', '20127252@student.hcmus.edu.vn', 'bapbap', '12345', 'Nữ', '631943506', '127631943506', '631943', '58120', '1770', '1', 'Massachusetts', '2.png');
+INSERT INTO Profile (EmpID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('3', 'Giám đốc', 'Ngân Hồ', '20127250@student.hcmus.edu.vn', 'nganho', '12345', 'Nữ', '449199827', '990449199827', '449199', '26135', '7840', '1', 'Washington', '3.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('4', 'P01', 'Nhân viên', 'Tara Applewhite', 'saomai241202@gmail.com', 'taraapplewhite', '12345', 'Nữ', '294073526', '722194073526', '294073', '80274', '425', '0', 'California', '4.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('5', 'P02', 'Nhân viên', 'Devin Lear', 'thanhhoabui323@gmail.com', 'devinlear', '12345', 'Nam', '453542504', '535353661119', '453542', '43532', '742', '1', 'Massachusetts', '5.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('6', 'P01', 'Nhân viên', 'Lucile Sexton', 'tranhoa28082002@gmail.com', 'lucilesexton', '12345', 'Nữ', '426875378', '736303984249', '426875', '68637', '753', '1', 'Washington', '6.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('7', 'P02', 'Quản lý', 'Jarrod Faith', 'alibaba28022002@gmail.com', 'jarrodfaith', '12345', 'Nam', '386352478', '628045126840', '386352', '53478', '1424', '1', 'California', '7.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('8', 'P03', 'Nhân viên', 'Terry Gross', 'btthoa20@clc.fitus.edu.vn', 'terrygross', '12345', 'Nam', '385386834', '224011066412', '385386', '64497', '764', '1', 'Massachusetts', '8.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('9', 'P03', 'Nhân viên', 'Jim Martin', 'abc123@gmail.com', 'jimmartin', '12345', 'Nam', '387532135', '556300455788', '387532', '32433', '124', '1', 'Pennsylvania', '9.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('10', 'P02', 'Nhân viên', 'Kathy Weatherby', 'abc234@gmail.com', 'kathyweatherby', '12345', 'Nữ', '387546786', '138243321759', '387546', '23464', '254', '1', 'California', '10.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('11', 'P03', 'Nhân viên', 'Nancy Garcia', 'abc345@gmail.com', 'nancyharcia', '12345', 'Nữ', '875423965', '210070478788', '875423', '54145', '368', '1', 'Pennsylvania', '11.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('12', 'P01', 'Nhân viên', 'Joel Thomas', 'abc456@gmail.com', 'joelthomas', '12345', 'Nam', '994545357', '131070424097', '994545', '63248', '752', '1', 'New York', '12.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('13', 'P02', 'Nhân viên', 'Alan Ruley', 'abc567@student.hcmus.edu.vn', 'alanruley', '12345', 'Nam', '995253220', '655195906385', '995253', '57445', '465', '1', 'California', '13.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('14', 'P03', 'Quản lý', 'Jose D. Skaggs', 'abc678@student.hcmus.edu.vn', 'josedskaggs', '12345', 'Nam', '786835685', '887510956872', '786835', '54778', '1258', '1', 'Arizona', '14.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('15', 'P02', 'Nhân viên', 'Richard L. Anderson', 'abc789@student.hcmus.edu.vn', 'richardlanderson', '12345', 'Nam', '753874537', '945461160495', '753874', '68548', '912', '1', 'Arizona', '15.png');
+
+
+-- Check_inout
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('1', '4', '2024-08-20 00:00:00', '07:29:01', '17:32:51', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('2', '13', '2024-08-18 00:00:00', '06:46:29', '18:24:25', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('3', '13', '2024-08-13 00:00:00', '06:31:35', '18:42:34', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('4', '15', '2024-07-23 00:00:00', '06:00:21', '18:26:14', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('5', '8', '2024-08-27 00:00:00', '07:28:04', '17:21:47', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('6', '8', '2024-07-03 00:00:00', '06:48:18', '16:08:19', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('7', '7', '2024-08-21 00:00:00', '07:44:13', '17:09:04', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('8', '1', '2024-07-30 00:00:00', '07:09:33', '17:39:52', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('9', '6', '2024-07-21 00:00:00', '06:00:37', '17:46:00', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('10', '2', '2024-08-20 00:00:00', '07:41:11', '16:31:52', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('11', '6', '2024-08-16 00:00:00', '06:15:38', '18:06:14', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Overtime, Late, WorkFromHome, Nghi) VALUES ('12', '2', '2024-07-08 00:00:00', '0', '0', '0', '1');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('13', '2', '2024-07-08 00:00:00', '07:49:38', '18:33:05', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('14', '7', '2024-08-08 00:00:00', '06:47:34', '16:26:48', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('15', '15', '2024-07-04 00:00:00', '06:42:48', '17:26:11', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('16', '14', '2024-08-21 00:00:00', '07:21:58', '16:37:37', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('17', '12', '2024-08-08 00:00:00', '07:01:32', '17:40:47', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('18', '5', '2024-08-16 00:00:00', '07:12:14', '18:36:35', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('19', '4', '2024-07-21 00:00:00', '06:11:36', '16:43:49', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('20', '12', '2024-08-03 00:00:00', '07:18:22', '17:58:56', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('21', '11', '2024-07-12 00:00:00', '06:26:41', '17:19:16', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('22', '11', '2024-07-31 00:00:00', '06:11:39', '17:45:01', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('23', '12', '2024-07-13 00:00:00', '06:03:56', '17:57:34', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('24', '5', '2024-08-17 00:00:00', '07:18:17', '17:08:54', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('25', '11', '2024-08-28 00:00:00', '06:55:20', '17:34:35', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('26', '14', '2024-08-07 00:00:00', '07:01:52', '18:34:11', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('27', '4', '2024-08-17 00:00:00', '07:15:08', '16:04:01', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('28', '9', '2024-08-31 00:00:00', '07:58:31', '17:02:05', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('29', '5', '2024-07-01 00:00:00', '07:03:21', '18:29:08', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('30', '14', '2024-08-13 00:00:00', '07:36:32', '18:02:56', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('31', '14', '2024-07-11 00:00:00', '06:47:38', '18:19:55', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('32', '5', '2024-08-06 00:00:00', '06:50:35', '17:23:30', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('33', '13', '2024-07-14 00:00:00', '07:18:42', '18:18:46', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('34', '15', '2024-07-02 00:00:00', '07:12:12', '17:02:40', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('35', '2', '2024-07-03 00:00:00', '06:45:50', '17:17:07', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('36', '12', '2024-07-18 00:00:00', '07:54:03', '16:34:16', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('37', '8', '2024-07-03 00:00:00', '06:10:28', '17:12:06', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('38', '6', '2024-07-27 00:00:00', '07:25:03', '18:59:39', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('39', '1', '2024-08-02 00:00:00', '07:29:06', '16:02:43', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('40', '5', '2024-08-21 00:00:00', '06:49:01', '18:00:41', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('41', '11', '2024-08-26 00:00:00', '06:26:50', '17:07:52', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('42', '9', '2024-07-15 00:00:00', '07:15:10', '16:54:26', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('43', '2', '2024-07-21 00:00:00', '07:27:03', '18:13:57', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('44', '6', '2024-08-18 00:00:00', '06:41:42', '18:09:40', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('45', '8', '2024-07-23 00:00:00', '06:46:16', '17:38:09', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('46', '1', '2024-08-13 00:00:00', '07:10:05', '16:37:55', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('47', '1', '2024-07-14 00:00:00', '06:20:35', '18:10:16', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('48', '11', '2024-07-15 00:00:00', '06:28:16', '18:43:46', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Overtime, Late, WorkFromHome, Nghi) VALUES ('49', '8', '2024-08-09 00:00:00', '0', '0', '1', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('50', '6', '2024-07-16 00:00:00', '06:58:18', '17:40:45', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('51', '13', '2024-08-02 00:00:00', '07:06:35', '16:49:36', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('52', '1', '2024-08-20 00:00:00', '07:19:03', '18:18:27', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('53', '7', '2024-07-16 00:00:00', '06:00:21', '17:52:48', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('54', '1', '2024-07-19 00:00:00', '07:26:16', '16:38:43', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('55', '15', '2024-07-05 00:00:00', '06:11:24', '16:53:37', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('56', '1', '2024-07-12 00:00:00', '07:44:27', '17:30:32', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('57', '15', '2024-07-23 00:00:00', '07:38:28', '18:03:08', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('58', '11', '2024-07-11 00:00:00', '07:39:32', '17:29:37', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('59', '9', '2024-07-07 00:00:00', '07:40:04', '17:38:30', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('60', '4', '2024-07-17 00:00:00', '07:27:51', '17:52:21', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('61', '5', '2024-07-01 00:00:00', '06:50:38', '17:20:24', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('62', '15', '2024-08-09 00:00:00', '07:18:26', '18:39:09', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('63', '1', '2024-07-28 00:00:00', '07:22:35', '17:31:36', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('64', '15', '2024-07-30 00:00:00', '07:37:40', '17:49:24', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('65', '2', '2024-07-13 00:00:00', '06:51:04', '18:29:18', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('66', '7', '2024-07-31 00:00:00', '07:13:42', '17:03:17', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('67', '2', '2024-07-10 00:00:00', '06:48:33', '18:12:15', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('68', '12', '2024-07-12 00:00:00', '06:22:17', '19:00:00', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('69', '2', '2024-07-29 00:00:00', '07:52:06', '16:33:17', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('70', '8', '2024-08-22 00:00:00', '07:04:34', '16:52:06', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('71', '1', '2024-08-24 00:00:00', '06:02:53', '16:24:52', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('72', '2', '2024-08-14 00:00:00', '06:25:58', '17:15:53', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('73', '8', '2024-07-26 00:00:00', '06:56:36', '17:59:31', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('74', '13', '2024-08-08 00:00:00', '07:04:04', '17:46:14', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('75', '4', '2024-07-18 00:00:00', '07:52:26', '18:17:13', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('76', '7', '2024-07-09 00:00:00', '07:02:31', '17:39:26', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('77', '13', '2024-07-25 00:00:00', '06:06:47', '16:09:55', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('78', '11', '2024-07-05 00:00:00', '06:21:30', '17:11:32', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('79', '12', '2024-08-03 00:00:00', '07:43:19', '18:52:16', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('80', '8', '2024-08-02 00:00:00', '06:06:03', '17:29:20', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('81', '6', '2024-08-13 00:00:00', '07:57:08', '17:02:25', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('82', '6', '2024-07-05 00:00:00', '07:01:25', '18:59:32', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('83', '2', '2024-07-25 00:00:00', '06:12:43', '18:13:15', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('84', '15', '2024-07-10 00:00:00', '06:23:48', '18:40:18', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('85', '7', '2024-08-09 00:00:00', '06:14:13', '16:29:43', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('86', '11', '2024-07-05 00:00:00', '06:10:52', '17:31:28', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('87', '1', '2024-07-14 00:00:00', '06:36:04', '17:03:37', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('88', '2', '2024-07-29 00:00:00', '07:26:06', '18:14:33', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('89', '15', '2024-07-07 00:00:00', '06:36:46', '16:10:25', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('90', '8', '2024-07-13 00:00:00', '07:24:09', '17:02:59', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('91', '4', '2024-07-20 00:00:00', '06:42:21', '18:00:20', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('92', '15', '2024-08-23 00:00:00', '06:21:58', '16:52:24', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('93', '15', '2024-08-18 00:00:00', '07:51:20', '16:57:46', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('94', '9', '2024-07-29 00:00:00', '06:13:51', '18:52:26', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('95', '5', '2024-08-03 00:00:00', '07:35:31', '16:28:08', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('96', '4', '2024-07-23 00:00:00', '07:26:19', '18:58:11', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('97', '2', '2024-07-10 00:00:00', '06:36:45', '18:04:13', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('98', '8', '2024-07-13 00:00:00', '07:21:59', '18:30:42', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('99', '5', '2024-08-26 00:00:00', '07:38:12', '17:44:42', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('100', '5', '2024-07-05 00:00:00', '07:25:26', '17:43:29', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('101', '13', '2024-08-18 00:00:00', '07:21:19', '18:16:52', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('102', '14', '2024-07-07 00:00:00', '06:52:10', '18:34:02', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('103', '14', '2024-07-11 00:00:00', '06:27:14', '17:22:27', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('104', '12', '2024-07-29 00:00:00', '06:32:40', '16:14:32', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('105', '15', '2024-08-24 00:00:00', '06:40:15', '17:18:18', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('106', '8', '2024-08-20 00:00:00', '07:36:18', '17:51:12', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('107', '14', '2024-08-15 00:00:00', '06:36:23', '17:41:07', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('108', '13', '2024-08-15 00:00:00', '06:34:28', '18:33:08', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('109', '1', '2024-08-15 00:00:00', '07:00:35', '16:10:12', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('110', '8', '2024-08-15 00:00:00', '06:03:38', '18:36:44', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('111', '15', '2024-07-01 00:00:00', '06:02:10', '17:27:29', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('112', '14', '2024-07-25 00:00:00', '07:59:17', '16:00:42', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('113', '5', '2024-07-09 00:00:00', '07:31:12', '16:22:46', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('114', '14', '2024-07-09 00:00:00', '07:40:25', '16:28:12', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('115', '1', '2024-07-12 00:00:00', '06:42:05', '16:52:57', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('116', '15', '2024-07-20 00:00:00', '06:18:02', '16:15:11', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('117', '11', '2024-08-09 00:00:00', '06:42:50', '18:02:23', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('118', '1', '2024-08-08 00:00:00', '07:50:09', '17:01:47', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('119', '4', '2024-08-02 00:00:00', '07:02:39', '18:28:26', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('120', '1', '2024-07-14 00:00:00', '06:04:42', '17:25:36', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('121', '14', '2024-07-02 00:00:00', '07:21:05', '17:21:39', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('122', '4', '2024-07-13 00:00:00', '06:52:11', '16:43:03', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('123', '10', '2024-08-04 00:00:00', '07:35:44', '16:16:40', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('124', '8', '2024-08-16 00:00:00', '07:28:37', '18:06:01', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('125', '4', '2024-07-04 00:00:00', '06:09:45', '18:51:34', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('126', '15', '2024-08-19 00:00:00', '07:25:54', '16:42:35', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('127', '9', '2024-08-28 00:00:00', '06:16:42', '17:36:41', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('128', '4', '2024-08-20 00:00:00', '06:38:04', '18:42:51', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('129', '8', '2024-08-03 00:00:00', '07:48:13', '17:13:30', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('130', '7', '2024-07-24 00:00:00', '06:02:27', '18:24:38', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('131', '14', '2024-08-22 00:00:00', '06:47:17', '17:42:24', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('132', '2', '2024-08-13 00:00:00', '07:45:40', '18:00:41', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('133', '2', '2024-08-21 00:00:00', '07:47:23', '17:10:54', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('134', '11', '2024-07-29 00:00:00', '06:44:05', '18:06:03', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('135', '5', '2024-08-16 00:00:00', '07:47:46', '18:58:08', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('136', '2', '2024-07-21 00:00:00', '07:20:00', '18:22:14', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('137', '11', '2024-08-16 00:00:00', '07:03:33', '17:44:17', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('138', '14', '2024-08-17 00:00:00', '06:11:58', '18:58:00', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('139', '2', '2024-08-17 00:00:00', '06:40:28', '17:07:12', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('140', '7', '2024-08-13 00:00:00', '07:28:07', '18:24:27', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('141', '5', '2024-07-20 00:00:00', '07:17:22', '18:01:54', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('142', '4', '2024-07-17 00:00:00', '06:09:56', '16:47:27', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('143', '10', '2024-08-23 00:00:00', '06:56:07', '17:16:54', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('144', '9', '2024-08-07 00:00:00', '06:14:06', '18:39:23', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('145', '4', '2024-07-02 00:00:00', '07:07:15', '16:28:14', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('146', '10', '2024-07-08 00:00:00', '06:19:53', '16:07:41', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('147', '2', '2024-08-02 00:00:00', '07:38:16', '18:02:46', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('148', '8', '2024-07-24 00:00:00', '07:26:15', '16:31:57', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('149', '6', '2024-08-22 00:00:00', '07:02:27', '18:07:44', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('150', '12', '2024-08-14 00:00:00', '07:37:54', '18:47:25', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('151', '4', '2024-07-24 00:00:00', '07:39:14', '17:48:33', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('152', '14', '2024-08-15 00:00:00', '07:14:29', '18:08:36', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('153', '15', '2024-07-14 00:00:00', '06:50:16', '18:16:52', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('154', '4', '2024-08-27 00:00:00', '07:16:48', '18:56:41', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('155', '9', '2024-07-27 00:00:00', '07:51:55', '17:03:57', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('156', '6', '2024-08-31 00:00:00', '07:53:34', '18:51:08', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('157', '4', '2024-07-23 00:00:00', '06:15:14', '17:39:22', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('158', '4', '2024-07-02 00:00:00', '07:41:10', '18:04:22', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('159', '9', '2024-08-11 00:00:00', '06:07:07', '16:01:59', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('160', '7', '2024-07-12 00:00:00', '07:44:38', '16:48:23', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('161', '9', '2024-08-19 00:00:00', '06:45:11', '17:21:38', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('162', '7', '2024-08-17 00:00:00', '07:05:11', '16:26:58', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('163', '6', '2024-07-19 00:00:00', '07:04:46', '18:50:04', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('164', '15', '2024-08-17 00:00:00', '07:49:06', '18:54:10', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('165', '13', '2024-07-26 00:00:00', '06:09:36', '16:32:25', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('166', '10', '2024-08-23 00:00:00', '06:31:26', '16:41:05', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('167', '14', '2024-07-26 00:00:00', '06:00:09', '17:34:15', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('168', '8', '2024-07-04 00:00:00', '06:13:12', '18:54:52', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('169', '13', '2024-07-13 00:00:00', '06:20:30', '17:40:40', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('170', '5', '2024-08-24 00:00:00', '07:40:29', '16:13:03', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('171', '6', '2024-08-28 00:00:00', '07:52:48', '18:55:26', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('172', '11', '2024-08-22 00:00:00', '06:50:36', '18:42:55', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('173', '1', '2024-08-19 00:00:00', '07:03:56', '16:57:29', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('174', '13', '2024-07-10 00:00:00', '06:56:50', '18:28:51', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('175', '11', '2024-08-10 00:00:00', '07:25:17', '17:27:12', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('176', '1', '2024-08-05 00:00:00', '06:02:14', '16:42:08', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('177', '2', '2024-07-11 00:00:00', '06:42:32', '16:24:51', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('178', '10', '2024-08-24 00:00:00', '07:15:21', '16:43:47', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('179', '12', '2024-08-16 00:00:00', '06:53:36', '16:30:48', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('180', '5', '2024-08-30 00:00:00', '06:09:06', '18:40:56', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('181', '1', '2024-08-26 00:00:00', '06:35:13', '18:32:07', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('182', '14', '2024-08-04 00:00:00', '07:55:59', '18:17:40', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('183', '6', '2024-07-09 00:00:00', '07:58:08', '17:40:21', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('184', '14', '2024-08-11 00:00:00', '06:13:08', '16:35:16', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('185', '7', '2024-08-09 00:00:00', '06:19:13', '16:43:44', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('186', '6', '2024-08-20 00:00:00', '07:20:31', '18:14:19', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('187', '14', '2024-08-17 00:00:00', '06:25:28', '17:42:24', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('188', '11', '2024-07-03 00:00:00', '07:25:10', '18:29:24', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('189', '7', '2024-07-20 00:00:00', '06:53:40', '17:27:01', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('190', '4', '2024-08-07 00:00:00', '07:56:15', '18:06:05', '1', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('191', '15', '2024-07-21 00:00:00', '06:47:01', '18:39:00', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('192', '10', '2024-07-27 00:00:00', '06:25:58', '17:24:44', '0', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('193', '14', '2024-07-25 00:00:00', '07:50:05', '16:56:36', '0', '1', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('194', '5', '2024-07-01 00:00:00', '07:44:56', '18:33:35', '1', '0', '0', '0');
+INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, Overtime, Late, WorkFromHome, Nghi) VALUES ('195', '9', '2024-08-15 00:00:00', '07:48:17', '18:00:01', '1', '1', '0', '0');
+
+
+-- update PhongBan
+UPDATE PhongBan SET QuanLyID = '1' WHERE PhongID = 'P01';
+UPDATE PhongBan SET QuanLyID = '2' WHERE PhongID = 'P02';
+UPDATE PhongBan SET QuanLyID = '4' WHERE PhongID = 'P03';
+
+INSERT INTO Project (ProjectID, Ten, NgayGiao, HanChotDuKien, HanChot, TienDo, SoGioThucHanh, PhongID, QuanLy, TinhTrang)
+VALUES 
+('PJ1', 'Nghiên cứu PHP', '2024-08-20', '2024-06-10', '2024-08-15', '100%', 490, 'P01', 2, 'Đã hoàn thành'),
+('PJ2', 'Nghiên cứu API', '2024-08-18', '2024-10-18', '2024-10-20', '30%', 200, 'P02', 7, 'Chưa hoàn thành'),
+('PJ3', 'Nghiên cứu NoSQL', '2024-08-13', '2024-10-25', '2024-10-31', '40%', 210, 'P03', 14, 'Chưa hoàn thành'),
+('PJ4', 'Nghiên cứu ODI', '2024-07-23', '2024-09-23', '2024-09-20', '70%', 400, 'P01', 2, 'Chưa hoàn thành'),
+('PJ5', 'Thiết kế Web', '2024-08-27', '2024-11-27', '2024-11-20', '20%', 150, 'P03', 14, 'Chưa hoàn thành');
+
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('1', 'PJ4', '13', 'Nghiên cứu ODI', 'Alan Ruley', 'P03', '100', 'Hoàn thành', '16', '2024-08-10 00:00:00', '2024-08-17 00:00:00', '10', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('2', 'PJ5', '4', 'Thiết kế Web', 'Tara Applewhite', 'P01', '100', 'Hoàn thành', '21', '2024-08-03 00:00:00', '2024-08-10 00:00:00', '20', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('3', 'PJ2', '6', 'Nghiên cứu API', 'Lucile Sexton', 'P02', '100', 'Hoàn thành', '21', '2024-07-09 00:00:00', '2024-07-16 00:00:00', '10', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('4', 'PJ1', '4', 'Nghiên cứu PHP', 'Tara Applewhite', 'P01', '100', 'Hoàn thành', '24', '2024-06-27 00:00:00', '2024-07-04 00:00:00', '20', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('5', 'PJ4', '9', 'Nghiên cứu ODI', 'Jim Martin', 'P03', '100', 'Hoàn thành', '9', '2024-08-14 00:00:00', '2024-08-21 00:00:00', '5', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('6', 'PJ5', '12', 'Thiết kế Web', 'Joel Thomas', 'P01', '100', 'Hoàn thành', '15', '2024-08-02 00:00:00', '2024-08-09 00:00:00', '5', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('7', 'PJ5', '15', 'Thiết kế Web', 'Richard L. Anderson', 'P01', '65', 'Hoàn thành', '4', '2024-07-03 00:00:00', '2024-07-10 00:00:00', '10', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('8', 'PJ2', '9', 'Nghiên cứu API', 'Jim Martin', 'P02', '80', 'Chưa hoàn thành', '10', '2024-07-28 00:00:00', '2024-08-04 00:00:00', '20', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('9', 'PJ5', '1', 'Thiết kế Web', 'Bông Bông', 'P01', '30', 'Chưa hoàn thành', '11', '2024-07-19 00:00:00', '2024-07-26 00:00:00', '25', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('10', 'PJ5', '10', 'Thiết kế Web', 'Kathy Weatherby', 'P01', '100', 'Chưa hoàn thành', '26', '2024-08-09 00:00:00', '2024-08-16 00:00:00', '15', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('11', 'PJ5', '5', 'Thiết kế Web', 'Devin Lear', 'P01', '100', 'Hoàn thành', '8', '2024-08-26 00:00:00', '2024-09-02 00:00:00', '20', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('12', 'PJ2', '9', 'Nghiên cứu API', 'Jim Martin', 'P02', '100', 'Hoàn thành', '16', '2024-07-18 00:00:00', '2024-07-25 00:00:00', '5', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('13', 'PJ5', '4', 'Thiết kế Web', 'Tara Applewhite', 'P01', '100', 'Hoàn thành', '14', '2024-08-14 00:00:00', '2024-08-21 00:00:00', '5', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('14', 'PJ5', '8', 'Thiết kế Web', 'Terry Gross', 'P01', '55', 'Hoàn thành', '5', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '5', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('15', 'PJ4', '8', 'Nghiên cứu ODI', 'Terry Gross', 'P03', '25', 'Chưa hoàn thành', '12', '2024-07-14 00:00:00', '2024-07-21 00:00:00', '10', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('16', 'PJ5', '1', 'Thiết kế Web', 'Bông Bông', 'P01', '95', 'Chưa hoàn thành', '13', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '20', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('17', 'PJ1', '8', 'Nghiên cứu PHP', 'Terry Gross', 'P01', '70', 'Chưa hoàn thành', '13', '2024-07-21 00:00:00', '2024-07-28 00:00:00', '25', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('18', 'PJ4', '8', 'Nghiên cứu ODI', 'Terry Gross', 'P03', '75', 'Chưa hoàn thành', '9', '2024-07-21 00:00:00', '2024-07-28 00:00:00', '15', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('19', 'PJ4', '12', 'Nghiên cứu ODI', 'Joel Thomas', 'P03', '100', 'Chưa hoàn thành', '8', '2024-07-08 00:00:00', '2024-07-15 00:00:00', '10', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('20', 'PJ3', '9', 'Nghiên cứu NoSQL', 'Jim Martin', 'P02', '80', 'Hoàn thành', '1', '2024-08-23 00:00:00', '2024-08-30 00:00:00', '20', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('21', 'PJ5', '6', 'Thiết kế Web', 'Lucile Sexton', 'P01', '100', 'Chưa hoàn thành', '20', '2024-08-17 00:00:00', '2024-08-24 00:00:00', '5', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('22', 'PJ1', '11', 'Nghiên cứu PHP', 'Nancy Garcia', 'P01', '100', 'Hoàn thành', '20', '2024-08-14 00:00:00', '2024-08-21 00:00:00', '5', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('23', 'PJ5', '5', 'Thiết kế Web', 'Devin Lear', 'P01', '100', 'Hoàn thành', '18', '2024-08-05 00:00:00', '2024-08-12 00:00:00', '10', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('24', 'PJ2', '10', 'Nghiên cứu API', 'Kathy Weatherby', 'P02', '100', 'Hoàn thành', '29', '2024-07-30 00:00:00', '2024-08-06 00:00:00', '20', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('25', 'PJ3', '11', 'Nghiên cứu NoSQL', 'Nancy Garcia', 'P02', '100', 'Hoàn thành', '5', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '25', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('26', 'PJ5', '6', 'Thiết kế Web', 'Lucile Sexton', 'P01', '100', 'Hoàn thành', '27', '2024-06-28 00:00:00', '2024-07-05 00:00:00', '15', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('27', 'PJ4', '5', 'Nghiên cứu ODI', 'Devin Lear', 'P03', '60', 'Hoàn thành', '5', '2024-08-02 00:00:00', '2024-08-09 00:00:00', '20', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('28', 'PJ4', '5', 'Nghiên cứu ODI', 'Devin Lear', 'P03', '100', 'Chưa hoàn thành', '21', '2024-07-16 00:00:00', '2024-07-23 00:00:00', '5', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('29', 'PJ2', '1', 'Nghiên cứu API', 'Bông Bông', 'P02', '45', 'Hoàn thành', '12', '2024-08-10 00:00:00', '2024-08-17 00:00:00', '5', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('30', 'PJ3', '11', 'Nghiên cứu NoSQL', 'Nancy Garcia', 'P02', '100', 'Chưa hoàn thành', '6', '2024-08-13 00:00:00', '2024-08-20 00:00:00', '5', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('31', 'PJ1', '5', 'Nghiên cứu PHP', 'Devin Lear', 'P01', '70', 'Hoàn thành', '6', '2024-08-22 00:00:00', '2024-08-29 00:00:00', '10', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('32', 'PJ5', '8', 'Thiết kế Web', 'Terry Gross', 'P01', '95', 'Chưa hoàn thành', '6', '2024-06-28 00:00:00', '2024-07-05 00:00:00', '20', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('33', 'PJ5', '12', 'Thiết kế Web', 'Joel Thomas', 'P01', '70', 'Chưa hoàn thành', '9', '2024-08-02 00:00:00', '2024-08-09 00:00:00', '20', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('34', 'PJ1', '9', 'Nghiên cứu PHP', 'Jim Martin', 'P01', '45', 'Chưa hoàn thành', '6', '2024-07-03 00:00:00', '2024-07-10 00:00:00', '25', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('35', 'PJ2', '6', 'Nghiên cứu API', 'Lucile Sexton', 'P02', '40', 'Chưa hoàn thành', '13', '2024-07-28 00:00:00', '2024-08-04 00:00:00', '15', '0', 'Tìm hiểu');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('36', 'PJ1', '11', 'Nghiên cứu PHP', 'Nancy Garcia', 'P01', '90', 'Chưa hoàn thành', '10', '2024-07-19 00:00:00', '2024-07-26 00:00:00', '10', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('37', 'PJ5', '5', 'Thiết kế Web', 'Devin Lear', 'P01', '60', 'Chưa hoàn thành', '10', '2024-08-09 00:00:00', '2024-08-16 00:00:00', '20', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('38', 'PJ2', '10', 'Nghiên cứu API', 'Kathy Weatherby', 'P02', '25', 'Chưa hoàn thành', '11', '2024-08-26 00:00:00', '2024-09-02 00:00:00', '5', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('39', 'PJ1', '11', 'Nghiên cứu PHP', 'Nancy Garcia', 'P01', '40', 'Chưa hoàn thành', '5', '2024-07-18 00:00:00', '2024-07-25 00:00:00', '5', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('40', 'PJ1', '6', 'Nghiên cứu PHP', 'Lucile Sexton', 'P01', '95', 'Chưa hoàn thành', '15', '2024-08-14 00:00:00', '2024-08-21 00:00:00', '10', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('41', 'PJ2', '5', 'Nghiên cứu API', 'Devin Lear', 'P02', '90', 'Chưa hoàn thành', '11', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '20', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('42', 'PJ1', '5', 'Nghiên cứu PHP', 'Devin Lear', 'P01', '95', 'Chưa hoàn thành', '10', '2024-07-14 00:00:00', '2024-07-21 00:00:00', '5', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('43', 'PJ5', '1', 'Thiết kế Web', 'Bông Bông', 'P01', '60', 'Chưa hoàn thành', '5', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '5', '0', 'Giao diện');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('44', 'PJ1', '12', 'Nghiên cứu PHP', 'Joel Thomas', 'P01', '60', 'Chưa hoàn thành', '13', '2024-07-21 00:00:00', '2024-07-28 00:00:00', '10', '0', 'Làm web');
+INSERT INTO Time_sheet (Time_sheetID, ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, Tre, NoiDung) VALUES ('45', 'PJ4', '9', 'Nghiên cứu ODI', 'Jim Martin', 'P03', '30', 'Chưa hoàn thành', '10', '2024-07-19 00:00:00', '2024-07-26 00:00:00', '20', '0', 'Giao diện');
+
+
+
+INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayChon, TrangThai, NoiDung) VALUES ('1', '15', 'Richard L. Anderson', 'From home', 'Đơn xin làm việc tại nhà', '2024-08-24 00:00:00', '2024-08-26 00:00:00', '0', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ');
 INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayChon, TrangThai, NoiDung, PhanHoi) VALUES ('2', '1', 'Bông Bông', 'From home', 'Đơn xin làm việc tại nhà', '2024-08-20 00:00:00', '2024-08-22 00:00:00', '2', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ', 'False');
 INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayXuLy, NgayChon, TrangThai, NoiDung, PhanHoi) VALUES ('3', '5', 'Devin Lear', 'Nghỉ phép', 'Đơn xin nghỉ phép', '2024-08-15 00:00:00', '2024-08-15 00:00:00', '2024-08-17 00:00:00', '1', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ');
 INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayXuLy, TrangThai, NoiDung, PhanHoi, Time_sheetID, Up_TinhTrang_Timesheet, Up_ThoiGian_Timesheet) VALUES ('4', '13', 'Alan Ruley', 'Time-sheet', 'Đơn xin cập nhật Time-sheet', '2024-08-15 00:00:00', '2024-08-15 00:00:00', '1', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ', '1.0', 'Hoàn thành', '15.0');
@@ -198,3 +482,145 @@ INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayXuLy
 INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayXuLy, NgayChon, TrangThai, NoiDung, PhanHoi) VALUES ('198', '15', 'Richard L. Anderson', 'From home', 'Đơn xin làm việc tại nhà', '2024-08-15 00:00:00', '2024-08-15 00:00:00', '2024-08-17 00:00:00', '1', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ');
 INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayChon, TrangThai, NoiDung) VALUES ('199', '4', 'Tara Applewhite', 'From home', 'Đơn xin làm việc tại nhà', '2024-08-15 00:00:00', '2024-08-17 00:00:00', '0', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ');
 INSERT INTO Request (RequestID, EmpID, NguoiGui, Loai, TieuDe, NgayGui, TrangThai, NoiDung) VALUES ('200', '4', 'Tara Applewhite', 'Nghỉ việc', 'Khác', '2024-08-15 00:00:00', '0', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ');
+
+
+INSERT INTO Activity (ActivityID, TenHoatDong, LoaiHoatDong, TrangThai, Point, NoiDung, ChiTiet, SoNguoiThamGia, ChiPhi, HanCuoiDangKy, NgayBatDau, NgayKetThuc)
+VALUES 
+('HD1', 'Tuần Lễ Trà sữa', 'Hoạt động gây quỹ', 'Còn chỗ', 5, 'Tuần lễ trà sữa cuối tháng 9', 'Lập team tham gia tuần lễ trà sữa giảm 30%', 30, 100000, '2024-10-01', '2024-11-01', '2024-11-03'),
+('HD2', 'Team Building mùa hè', 'Hoạt động vui chơi', 'Đã hết chỗ', 10, 'Team building do công ty tổ chức', 'Tham gia các hoạt động: Vòng tròn kết nối, Vẽ tiếp sức, Tin tưởng thuyền trưởng,...', 100, 3500000, '2024-11-30', '2024-12-20', '2024-12-25'),
+('HD3', 'Tuần Lễ Tình Nguyện', 'Hoạt động tình nguyện', 'Đã hết chỗ', 5, 'Chiến dịch mùa hè xanh,...', 'Xây nhà tình thương, làm cầu, làm đường,...', 70, 500000, '2024-09-10', '2024-10-01', '2024-10-03');
+
+USE QLNV_UDPT;
+INSERT INTO emp_activity (EmpID, ActivityID, Start_date_join, End_date_join, NgayThamGia, ThanhTich, ThoiGianThucHien)
+VALUES 
+(1, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(1, 'HD3', '2024-09-09', '2024-09-10', '2024-09-11', 'Tốt', '2024-10-01'),
+(2, 'HD3', '2024-09-09', '2024-09-10', '2024-09-11', 'Tốt', '2024-10-01'),
+(2, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(3, 'HD3', '2024-09-09', '2024-09-10', '2024-09-11', 'Tốt', '2024-10-01'),
+(3, 'HD2', '2024-11-01', '2024-11-30', '2024-11-06', 'Tốt', '2024-12-20'),
+(3, 'HD1', '2024-09-01', '2024-10-01', '2024-09-12', 'Tốt', '2024-11-01'),
+(4, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(4, 'HD3', '2024-09-01', '2024-10-01', '2024-09-12', 'Tốt', '2024-11-01'),
+(5, 'HD1', '2024-09-01', '2024-10-01', '2024-09-12', 'Tốt', '2024-11-01'),
+(5, 'HD2', '2024-11-01', '2024-11-30', '2024-11-02', 'Tốt', '2024-12-20'),
+(6, 'HD3', '2024-09-09', '2024-09-10', '2024-09-12', 'Tốt', '2024-10-01'),
+(6, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(7, 'HD2', '2024-11-01', '2024-11-30', '2024-11-23', 'Tốt', '2024-12-20'),
+(8, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(8, 'HD1', '2024-09-01', '2024-10-01', '2024-09-12', 'Tốt', '2024-11-01'),
+(9, 'HD2', '2024-11-01', '2024-11-30', '2024-11-13', 'Tốt', '2024-12-20'),
+(10, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(10, 'HD3', '2024-09-09', '2024-09-10', '2024-09-05', 'Tốt', '2024-10-01'),
+(11, 'HD2', '2024-11-01', '2024-11-30', '2024-11-02', 'Tốt', '2024-12-20'),
+(12, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(12, 'HD3', '2024-09-09', '2024-09-10', '2024-09-08', 'Tốt', '2024-10-01'),
+(13, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(13, 'HD3', '2024-09-09', '2024-09-10', '2024-09-13', 'Tốt', '2024-10-01'),
+(14, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(14, 'HD1', '2024-09-01', '2024-10-01', '2024-09-06', 'Tốt', '2024-11-01'),
+(15, 'HD2', '2024-11-01', '2024-11-30', '2024-11-03', 'Tốt', '2024-12-20'),
+(15, 'HD1', '2024-09-01', '2024-10-01', '2024-09-13', 'Tốt', '2024-11-01');
+
+
+
+INSERT INTO Voucher (VoucherID, TenVoucher, TriGia, HanSuDung, ChiTiet, HuongDanSuDung, TinhTrang) VALUES
+(1, 'GrabFood: Giảm 50K', 50000, '2024-12-31', 'Giảm 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
+(2, 'GrabFood: Giảm 100K', 100000, '2024-11-15', 'Giảm 100K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Đã hết'),
+(3, 'GrabFood: Giảm 200K', 200000, '2024-11-15', 'Giảm 200K cho đơn tối thiếu 300K', 'Nhập mã qua app', 'Còn'),
+(4, 'GrabBike: Giảm 20,000 vnđ', 20000, '2024-11-15', 'Giảm 20K cho đơn tối thiếu 50K', 'Nhập mã qua app', 'Còn'),
+(5, 'GrabCar: Giảm 40,000 vnđ', 40000, '2024-10-10', 'Giảm 40K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Đã hết'),
+(6, 'GrabMart: Giảm 50,000 vnđ', 50000, '2024-10-10', 'Giảm 50K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Còn'),
+(7, 'Jollibee: Giảm 50K', 50000, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 100K', 'Quét mã tại quầy', 'Đã hết'),
+(8, 'ShopeeFoodxJollibee: Giảm 90K', 90000, '2024-09-05', 'Giảm 90K cho đơn tối thiếu 200K', 'Nhập mã qua app', 'Đã hết'),
+(9, 'Shopee: Giảm 90K đơn tối thiếu 90K', 90000, '2024-09-05', 'Giảm 90K cho đơn tối thiếu 90K', 'Nhập mã qua app', 'Đã hết'),
+(10, 'Shopee: Giảm 130K đơn tối thiếu 130K', 130000, '2024-09-05', 'Giảm 130K cho đơn tối thiếu 130K', 'Nhập mã qua app', 'Còn'),
+(11, 'Family Mart: Tặng 20,000 vnđ', 20000, '2024-09-05', 'Giảm 20K cho đơn tối thiếu 50K', 'Quét mã tại quầy', 'Còn'),
+(12, 'Family Mart: BELANJA Tặng 50,000 vnđ', 50000, '2024-11-15', 'Tặng 50K khi thanh toán 300K', 'Quét mã tại quầy', 'Còn'),
+(13, 'Gojek: Giảm 25K vận chuyển', 25000, '2024-12-31', 'Giảm 25K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
+(14, 'Gojek: Giảm 50K vận chuyển', 50000, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Còn'),
+(15, 'Gofood: Tặng 50K', 50000, '2024-10-10', 'Tặng 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Đã hết'),
+(16, 'Gofood: Tặng 100K', 100000, '2024-10-10', 'Tặng 100K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Đã hết'),
+(17, 'GoCar: Giảm 50K', 50000, '2024-10-10', 'Giảm 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', 'Còn'),
+(18, 'GoRide: Giảm 100K', 100000, '2024-10-10', 'Giảm 100K cho đơn tối thiếu 150K', 'Nhập mã qua app', 'Đã hết'),
+(19, 'MoMo: Giảm 50,000đ Google Play', 50000, '2024-11-15', 'Giảm 50K khi thanh toán Google Play', 'Nhập mã qua app', 'Còn'),
+(20, 'MoMo: Giảm 200,000đ vé máy bay, tàu lửa', 200000, '2024-09-05', 'Giảm 200K khi thanh toán vé máy bay, tàu lửa qua app', 'Nhập mã qua app', 'Còn'),
+(21, 'MoMo: Giảm 200,000đ nạp điện thoại', 200000, '2024-09-05', 'Giảm 200K khi thanh toán thẻ cào điện thoại qua app', 'Nhập mã qua app', 'Còn'),
+(22, 'MoMo: Hoàn 100K khi thanh toán tiền Điện', 100000, '2024-09-05', 'Hoàn 100K khi thanh toán qua app', 'Nhập mã qua app', 'Còn'),
+(23, 'Hasaki: Tặng 50K đơn 299K', 50000, '2024-09-05', 'Tặng 50K cho đơn tối thiếu 299K khi thanh toán tại quầy', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(24, 'Hasaki: Tặng 100K đơn 499K', 100000, '2024-10-10', 'Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 'Quét mã tại quầy/Nhập mã qua app', 'Đã hết'),
+(25, 'GO TRAVEL: 500,000 VND', 500000, '2024-12-31', 'Tặng 500,000VND khi đặt vé du lịch trên GO TRAVEL', 'Quét mã tại quầy/Nhập mã qua app', 'Đã hết'),
+(26, 'GO TRAVEL: 1,000,000 VND', 1000000, '2024-12-31', 'Tặng 1,000,000VND khi đặt vé du lịch trên GO TRAVEL', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(27, 'Vietjet: Giảm 300,000đ', 300000, '2024-12-31', 'Tặng 300,000VND khi đặt vé máy bay Vietjet', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(28, 'Vietjet: Tặng 1,000,000đ', 1000000, '2024-12-31', 'Tặng 1,000,000VND khi đặt vé máy bay Vietjet', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(29, 'Vietnam Airlines: 300,000đ', 300000, '2024-12-31', 'Tặng 300,000VND khi đặt vé máy bay Vietnam Airlines', 'Quét mã tại quầy/Nhập mã qua app', 'Còn'),
+(30, 'Vietnam Airlines: 500,000đ', 500000, '2024-12-31', 'Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 'Quét mã tại quầy/Nhập mã qua app', 'Còn');
+
+INSERT INTO Felicitation (FelicitationID, Point, Date, NoiDung, NguoiNhan, NguoiTang, VoucherID)
+VALUES
+(1, 300, '2024-08-21', 'Nhờ hoàn thành Time-sheet', 1, 2, NULL),
+(2, 100, '2024-08-26', 'Nhờ hoàn thành Time-sheet', 4, NULL, NULL),
+(3, 250, '2024-07-15', 'Nhờ hoàn thành Time-sheet', 5, NULL, NULL),
+(4, -300, '2024-07-21', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 10, NULL, 30),
+(5, -250, '2024-08-18', 'Đổi Voucher:Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 12, NULL, 24),
+(6, -150, '2024-07-23', 'Đổi Voucher: Giảm 50K cho đơn tối thiếu 100K', 11, NULL, 7),
+(7, 100, '2024-08-13', 'Nhờ hoàn thành Time-sheet', 9, 14, NULL),
+(8, 50, '2024-07-14', 'Nhờ hoàn thành Time-sheet', 5, 7, NULL),
+(9, -100, '2024-07-15', 'Đổi voucher: Giảm 50K khi thanh toán Google Play', 6, NULL, 19),
+(10, 200, '2024-08-09', 'Nhờ hoàn thành Time-sheet', 1, 2, NULL),
+(11, 250, '2024-07-16', 'Nhờ hoàn thành Time-sheet', 10, 7, NULL),
+(12, 300, '2024-08-02', 'Nhờ hoàn thành Time-sheet', 4, 2, NULL),
+(13, -350, '2024-08-20', 'Đổi voucher:Tặng 1,000,000VND khi đặt vé máy bay Vietjet', 6, NULL, 28),
+(14, 200, '2024-07-16', 'Nhờ hoàn thành Time-sheet', 3, NULL, NULL),
+(15, 100, '2024-07-19', 'Nhờ hoàn thành Time-sheet', 1, NULL, NULL),
+(16, -100, '2024-07-05', 'Đổi voucher: Giảm 50K khi thanh toán Google Play', 15, NULL, 19),
+(17, -50, '2024-07-12', 'Đổi voucher: Giảm 20K cho đơn tối thiếu 50K', 4, NULL, 11),
+(18, 150, '2024-07-23', 'Nhờ hoàn thành Time-sheet', 8, 14, NULL),
+(19, 150, '2024-07-11', 'Nhờ hoàn thành Time-sheet', 5, NULL, NULL),
+(20, 100, '2024-07-07', 'Nhờ hoàn thành Time-sheet', 13, 7, NULL),
+(21, 50, '2024-07-17', 'Nhờ hoàn thành Time-sheet', 1, NULL, NULL),
+(22, 200, '2024-07-01', 'Nhờ hoàn thành Time-sheet', 10, 7, NULL),
+(23, 250, '2024-08-09', 'Nhờ hoàn thành Time-sheet', 3, NULL, NULL),
+(24, -300, '2024-07-28', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 3, NULL, 30),
+(25, -350, '2024-07-30', 'Đổi voucher:Tặng 1,000,000VND khi đặt vé máy bay Vietjet', 4, NULL, 28),
+(26, 100, '2024-07-13', 'Nhờ hoàn thành Time-sheet', 5, NULL, NULL),
+(27, -300, '2024-07-31', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 6, NULL, 30),
+(28, 350, '2024-07-10', 'Nhờ hoàn thành Time-sheet', 10, NULL, NULL),
+(29, -250, '2024-07-12', 'Đổi Voucher:Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 9, NULL, 24),
+(30, 100, '2024-07-29', 'Nhờ hoàn thành Time-sheet', 5, 7, NULL),
+(31, 300, '2024-08-21', 'Nhờ hoàn thành Time-sheet', 10, NULL, NULL),
+(32, 100, '2024-08-26', 'Nhờ hoàn thành Time-sheet', 11, 14, NULL),
+(33, 250, '2024-07-15', 'Nhờ hoàn thành Time-sheet', 12, NULL, NULL),
+(34, -300, '2024-07-21', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 13, NULL, 30),
+(35, -250, '2024-08-18', 'Đổi Voucher:Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 11, NULL, 24),
+(36, -150, '2024-07-23', 'Đổi Voucher: Giảm 50K cho đơn tối thiếu 100K', 15, NULL, 7),
+(37, 100, '2024-08-13', 'Nhờ hoàn thành Time-sheet', 2, NULL, NULL),
+(38, 50, '2024-07-14', 'Nhờ hoàn thành Time-sheet', 3, NULL, NULL),
+(39, -100, '2024-07-15', 'Đổi voucher: Giảm 50K khi thanh toán Google Play', 6, NULL, 19),
+(40, 200, '2024-08-09', 'Nhờ hoàn thành Time-sheet', 1, NULL, NULL),
+(41, 250, '2024-07-16', 'Nhờ hoàn thành Time-sheet', 2, NULL, NULL),
+(42, 300, '2024-08-02', 'Nhờ hoàn thành Time-sheet', 4, NULL, NULL),
+(43, -350, '2024-08-20', 'Đổi voucher:Tặng 1,000,000VND khi đặt vé máy bay Vietjet', 6, NULL, 28),
+(44, 200, '2024-07-16', 'Nhờ hoàn thành Time-sheet', 10, 7, NULL),
+(45, 100, '2024-07-19', 'Nhờ hoàn thành Time-sheet', 1, NULL, NULL),
+(46, -100, '2024-07-05', 'Đổi voucher: Giảm 50K khi thanh toán Google Play', 13, NULL, 19),
+(47, -50, '2024-07-12', 'Đổi voucher: Giảm 20K cho đơn tối thiếu 50K', 4, NULL, 11),
+(48, 150, '2024-07-23', 'Nhờ hoàn thành Time-sheet', 8, 14, NULL),
+(49, 150, '2024-07-11', 'Nhờ hoàn thành Time-sheet', 5, NULL, NULL),
+(50, 100, '2024-07-07', 'Nhờ hoàn thành Time-sheet', 13, 7, NULL),
+(51, 50, '2024-07-17', 'Nhờ hoàn thành Time-sheet', 1, NULL, NULL),
+(52, 200, '2024-07-01', 'Nhờ hoàn thành Time-sheet', 10, 7, NULL),
+(53, 250, '2024-08-09', 'Nhờ hoàn thành Time-sheet', 3, NULL, NULL),
+(54, -300, '2024-07-28', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 3, NULL, 30),
+(55, -350, '2024-07-30', 'Đổi voucher:Tặng 1,000,000VND khi đặt vé máy bay Vietjet', 4, NULL, 28),
+(56, 100, '2024-07-13', 'Nhờ hoàn thành Time-sheet', 5, NULL, NULL),
+(57, -300, '2024-07-31', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 6, NULL, 30),
+(58, 350, '2024-07-10', 'Nhờ hoàn thành Time-sheet', 15, NULL, NULL),
+(59, -250, '2024-07-12', 'Đổi Voucher:Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 9, NULL, 24),
+(60, 100, '2024-07-29', 'Nhờ hoàn thành Time-sheet', 5, 7, NULL),
+(61, -100, '2024-07-05', 'Đổi voucher: Giảm 50K khi thanh toán Google Play', 2, NULL, 19),
+(62, -300, '2024-07-21', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 1, NULL, 30),
+(63, -250, '2024-08-18', 'Đổi Voucher:Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 1, NULL, 24),
+(64, -300, '2024-07-21', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 1, NULL, 30),
+(65, 300, '2024-08-21', 'Nhờ hoàn thành Time-sheet', 2, NULL, NULL),
+(66, 300, '2024-08-21', 'Nhờ hoàn thành Time-sheet', 2, NULL, NULL);
