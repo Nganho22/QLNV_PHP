@@ -53,16 +53,7 @@
                             <span class="status"><?php echo htmlspecialchars($project['TienDo']); ?></span>
                         </li>
                     <?php endforeach; ?>
-                </ul>
-                <div class="pagination">
-                        <a href="#" class="prev">&#10094;</a>
-                        <a href="#" class="active">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">...</a>
-                        <a href="#">40</a>
-                        <a href="#" class="next"> &#10095;</a>
-                    </div>
+                    </ul>
             </div>
         </div>
 
@@ -94,7 +85,7 @@
             <div class="room-list">
                 <h3>Danh sách phòng ban:</h3>
                 <div class="search-wrapper">
-                    <input type="text" placeholder="Tìm kiếm...">
+                    <input type="text" id="searchPhongBan" placeholder="Tìm kiếm..." class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <table>

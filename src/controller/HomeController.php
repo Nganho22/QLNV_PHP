@@ -52,11 +52,11 @@ class HomeController{
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 case 'Giám đốc':
+
                     $limit = 5;
                     $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
                     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                     $offset = ($page - 1) * $limit;
-
                     $projects = UserModel::getProjects_GD();
                     $phongBans = UserModel::getPhongBan_GD();
                     $deadlines = UserModel::getDeadlinesTimesheet($empID);
@@ -82,7 +82,6 @@ class HomeController{
                                 $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
                             }
                         }
-    
                         echo json_encode([
                             'requestHtml' => $requestHtml,
                             'paginationHtml' => $paginationHtml
@@ -157,6 +156,8 @@ class HomeController{
                     $message = "Bạn đã check-out thành công.";
                 } elseif ($_GET['status']  === 'already-checked-out') {
                     $message = "Bạn đã check-out, không thể thực hiện lại.";
+                } elseif ($_GET['status']  === 'success') {
+                    $message = "Cập nhật thành công !";
                 } else {
                     $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
                 }
@@ -187,6 +188,8 @@ class HomeController{
                     $message = "Bạn đã check-out thành công.";
                 } elseif ($_GET['status']  === 'already-checked-out') {
                     $message = "Bạn đã check-out, không thể thực hiện lại.";
+                } elseif ($_GET['status']  === 'success') {
+                    $message = "Cập nhật thành công!.";
                 } else {
                     $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
                 }
