@@ -102,6 +102,7 @@ CREATE TABLE Request (
     TieuDe VARCHAR(50),
     NgayGui DATE,
     NgayXuLy DATE NULL,
+    NgayChon DATE NULL,
     TrangThai INT DEFAULT 0,
     NoiDung TEXT,
     PhanHoi TEXT NULL,

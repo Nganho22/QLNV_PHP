@@ -52,12 +52,42 @@ class HomeController{
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 case 'Giám đốc':
+
+                    $limit = 5;
+                    $searchTerm_NV = isset($_GET['search_nhanvien']) ? $_GET['search_nhanvien'] : '';
+                    $page_NV = isset($_GET['page_nhanvien']) ? (int)$_GET['page_nhanvien'] : 1;
+                    $offset = ($page_NV - 1) * $limit;
                     $projects = UserModel::getProjects_GD();
-                    $employees = UserModel::getEmployeesList_GD();
                     $phongBans = UserModel::getPhongBan_GD();
                     $deadlines = UserModel::getDeadlinesTimesheet($empID);
-                    $file = "./views/pages/GD/home_GD.phtml";
 
+                    if (!empty($searchTerm_NV)) {
+                        $employees = UserModel::searchProfiles($searchTerm_NV, $limit, $offset);
+                        $totalEmployees = UserModel::countSearchProfiles($searchTerm_NV);
+                    } else {
+                        $employees = UserModel::getEmployeesList_GD($limit, $offset);
+                        $totalEmployees = UserModel::countAllEmployees();
+                    }
+
+                    if (isset($_GET['ajax'])) {
+                        $requestHtml = '';
+                        foreach ($employees  as $employee) {
+                            $requestHtml .= '<li>' . htmlspecialchars($employee['HoTen']) . '<br><span>' . htmlspecialchars($employee['Email']) . '</span></li>';
+                        }
+                        $paginationHtml = '';
+                        if ($totalEmployees > $limit) {
+                            for ($i = 1; $i <= ceil($totalEmployees / $limit); $i++) {
+                                $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                            }
+                        }
+                        echo json_encode([
+                            'requestHtml' => $requestHtml,
+                            'paginationHtml' => $paginationHtml
+                        ]);
+                        exit;
+                    } else {
+                        $file = "./views/pages/GD/home_GD.phtml"; 
+                    }
                     break;
                 default:
                     $file = null;
@@ -121,6 +151,8 @@ class HomeController{
                     $message = "Bạn đã check-out thành công.";
                 } elseif ($_GET['status']  === 'already-checked-out') {
                     $message = "Bạn đã check-out, không thể thực hiện lại.";
+                } elseif ($_GET['status']  === 'success') {
+                    $message = "Cập nhật thành công !";
                 } else {
                     $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
                 }
@@ -151,6 +183,8 @@ class HomeController{
                     $message = "Bạn đã check-out thành công.";
                 } elseif ($_GET['status']  === 'already-checked-out') {
                     $message = "Bạn đã check-out, không thể thực hiện lại.";
+                } elseif ($_GET['status']  === 'success') {
+                    $message = "Cập nhật thành công!.";
                 } else {
                     $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
                 }

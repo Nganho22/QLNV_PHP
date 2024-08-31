@@ -30,7 +30,16 @@
                     <div class="info-row">
                         <div class="info-item"><strong>Ngày Gửi:</strong> <?php echo htmlspecialchars($detail['NgayGui']); ?></div>
                         <div class="info-item"><strong>Ngày Xử Lý:</strong> <?php echo htmlspecialchars($detail['NgayXuLy']) == null ? '<span style="color: red;">Chưa được xử lý</span>' : htmlspecialchars($detail['NgayXuLy']); ?></div>
-                        <div class="info-item"><strong>Trạng Thái:</strong> <?php echo htmlspecialchars($detail['TrangThai']) == 0 ? '<span style="color: red;">Chưa duyệt</span>' : 'Đã duyệt'; ?></div>
+                        <div class="info-item"><strong>Trạng Thái:</strong> 
+                            <?php 
+                                $trangThai = htmlspecialchars($detail['TrangThai']);
+                                if ($trangThai == 0 || $trangThai == 2) {
+                                    echo '<span style="color: red;">' . ($trangThai == 0 ? 'Chưa duyệt' : 'Từ chối') . '</span>';
+                                } else {
+                                    echo 'Đã duyệt';
+                                }
+                            ?>
+                        </div>
                     </div>
 
                     <?php if ($detail['Loai'] === 'Time-sheet'): ?>
@@ -128,13 +137,81 @@
     </div>
 <?php endif; ?>
 
+<div id="popup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Thông báo</h2>
+            <p id="popupMessage"></p>
+            <button class="btn btn-primary close-popup-btn popup-button" onclick="closePopup()">Đóng</button>
+        </div>
+    </div>
+
 <script>
-    function formatDate(date) {
+    function showPopup(message, success) {
+        var popup = document.getElementById('popup');
+        var popupMessage = document.getElementById('popupMessage');
+        var popupContent = document.querySelector('.popup-content');
+
+        popupMessage.textContent = message;
+        popup.style.display = 'flex';
+
+        if (success) {
+                const closeButton = document.querySelector('.close-popup-btn');
+                closeButton.onclick = function() {
+                    window.location.reload(); 
+                };
+            }
+    }
+
+    // Đóng popup
+    function closePopup() {
+        document.getElementById('popup').style.display = 'none';; 
+    }
+
+    document.addEventListener('DOMContentLoaded', function() { 
+
+        function formatDate(date) {
             var day = ("0" + date.getDate()).slice(-2);
             var month = ("0" + (date.getMonth() + 1)).slice(-2);
             var year = date.getFullYear();
             return day + '/' + month + '/' + year;
         }
+
+        function formatDateForDatabase(date) {
+            var parts = date.split('/');
+            return parts[2] + '-' + parts[1] + '-' + parts[0];
+        }
+
+        function handleFormSubmit(formElement) {
+            var formattedDate = formatDateForDatabase(formElement.find('[name="ngayGui"]').val());
+            formElement.find('[name="ngayGui"]').val(formattedDate);
+            var formData = new FormData(formElement[0]);
+
+            fetch('index.php?action=GetDetailPage&id=#', { 
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())  // Nhận dữ liệu dưới dạng văn bản
+            .then(text => {
+                console.log(text);  // In ra nội dung phản hồi
+                try {
+                    var data = JSON.parse(text);  // Cố gắng phân tích JSON
+                    console.log(data);  // Xử lý dữ liệu JSON nếu thành công
+                    if (!data.success) {
+                        showPopup(data.message, false);
+                    } else {
+                        showPopup(data.message, true);
+                    }
+                } catch (e) {
+                    console.error('Lỗi phân tích JSON:', e);
+                    showPopup('Đã xảy ra lỗi khi xử lý dữ liệu!', false);
+                }
+            })
+            .catch(error => {
+                console.error('Đã xảy ra lỗi:', error);
+                showPopup('Đã xảy ra lỗi!', false);
+            });
+        }
+
 
         function setCurrentDate() {
             var today = new Date();
@@ -146,6 +223,7 @@
         window.onload = function() {
             setCurrentDate();
         };
+    });
 </script>
 </body>
 </html>

@@ -328,6 +328,20 @@ class RequestController {
                     $detail = RequestModel::getDetailRequest($requestId);
                     $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
 
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST'){ 
+                        $ngayGui = $_POST['ngayGui'];
+                        $noiDung = $_POST['noiDung'];
+
+                        $result = '';
+                        if ($result) {
+                            echo json_encode(['success' => true, 'message' => 'Xử lý đơn thành công']);
+                            exit();
+                        } else {
+                            echo json_encode(['success' => false, 'message' => 'Xử lý đơn thất bại!']);
+                            exit();
+                        }
+                    }
+                    
                     ob_start();
                     require("./views/pages/QL/detail_req.phtml");
                     $content = ob_get_clean();

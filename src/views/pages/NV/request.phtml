@@ -54,7 +54,7 @@
                         </tr>
                         <tr>
                             <td>Đơn xin làm việc tại nhà</td>
-                            <td class="text-center"><a class="write-request btn btn-primary btn-block custom-btn" href="#" data-req="Chung" loai-req="Làm việc tại nhà">Viết đơn</a></td>
+                            <td class="text-center"><a class="write-request btn btn-primary btn-block custom-btn" href="#" data-req="Chung" loai-req="From home">Viết đơn</a></td>
                         </tr>
                         <tr>
                             <td>Đơn xin cập nhật Time-sheet</td>
@@ -72,7 +72,7 @@
         <!-- Cột bên phải -->
         <div class="right-column">
             <div class="pending-requests">
-                <h2>Yêu cầu chờ duyệt</h2>
+                <h2>Yêu cầu chờ xử lý</h2>
                 <table class="table" id="pending-requests-table">
                     <thead>
                         <tr>
@@ -86,7 +86,6 @@
                             <tr>
                                 <td><a href = "index.php?action=GetDetailRequestPage&id=<?php echo htmlspecialchars($request['RequestID']); ?>"> 
                                     <?php echo htmlspecialchars($request['TieuDe']); ?> </a></td>
-                                <!-- <td><?php echo $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt'; ?></td> -->
                                 <td><?php echo htmlspecialchars($request['Loai']); ?></td>
                                 <td><?php echo htmlspecialchars($request['NgayGui']); ?></td>
                             </tr>
@@ -105,7 +104,7 @@
             </div>
 
             <div class="approved-requests">
-                <h2>Yêu cầu đã duyệt</h2>
+                <h2>Yêu cầu đã xử lý</h2>
                 <table class="table" id="approved-requests-table">
                     <thead>
                         <tr>
@@ -119,7 +118,6 @@
                             <tr>
                                 <td><a href = "index.php?action=GetDetailRequestPage&id=<?php echo htmlspecialchars($request['RequestID']); ?>">
                                     <?php echo htmlspecialchars($request['TieuDe']); ?></a></td>
-                                <!-- <td><?php echo $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt'; ?></td> -->
                                 <td><?php echo htmlspecialchars($request['Loai']); ?></td>
                                 <td><?php echo htmlspecialchars($request['NgayXuLy']); ?></td>
                             </tr>
@@ -167,6 +165,12 @@
                         <label for="tieuDe">Tiêu đề <span style="color: red;">(*)</span></label>
                         <input type="text" id="tieuDe" name="tieuDe" placeholder="Nhập tiêu đề">
                     </div>
+                    
+                    <div class="form-group" id="ngayChonGroup" style="display: none;">
+                        <label for="ngayChon">Ngày chọn</label>
+                        <input type="date" id="ngayChon" name="ngayChon">
+                    </div>
+
                 </div>
 
                 <!-- Hàng thứ ba: Nội dung -->
@@ -328,8 +332,12 @@
         function handleFormSubmit(formElement) {
             var formattedDate = formatDateForDatabase(formElement.find('[name="ngayGui"]').val());
             formElement.find('[name="ngayGui"]').val(formattedDate);
-            var formData = new FormData(formElement[0]);
 
+            var ngayChonValue = formElement.find('[name="ngayChon"]').val();
+            var formattedDate = formatDateForDatabase(ngayChonValue);
+            formElement.find('[name="ngayChon"]').val(formattedDate);
+
+            var formData = new FormData(formElement[0]);
             fetch('index.php?action=GetRequestPage', { 
                 method: 'POST',
                 body: formData
@@ -354,6 +362,17 @@
                 console.error('Đã xảy ra lỗi:', error);
                 showPopup('Đã xảy ra lỗi!', false);
             });
+        }
+
+        function formatDateForDatabase(dateString) {
+            var parts = dateString.split('/');
+            if (parts.length === 3) {
+                var day = parts[0];
+                var month = parts[1];
+                var year = parts[2];
+                return `${year}-${month}-${day}`;
+            }
+            return dateString; // Trả về giá trị gốc nếu định dạng không đúng
         }
 
         // Hàm định dạng ngày cho cơ sở dữ liệu
@@ -444,6 +463,14 @@
 
                 // Lấy loại đơn 
                 formElement.querySelector('#loai').value = loaiReq;
+
+                //Hiện ngày chọn 
+                var loaiReq = this.getAttribute('loai-req');
+                if (loaiReq === 'Nghỉ phép' || loaiReq === 'From home') {
+                    document.getElementById('ngayChonGroup').style.display = 'block';
+                } else {
+                    document.getElementById('ngayChonGroup').style.display = 'none';
+                }
 
                 // Lấy thời gian
                 function formatDate(date) {
