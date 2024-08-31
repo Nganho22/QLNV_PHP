@@ -215,7 +215,7 @@
         // Function to load employees with pagination
         function loadEmployees(page = 1) {
             var searchTerm = $('.search-box').val();
-            $.get('index.php?action=home', { ajax: 1,  search: searchTerm, page: page }, function(response) {
+            $.get('index.php?action=home', { ajax: 1,  search_nhanvien: searchTerm, page_nhanvien: page }, function(response) {
                 console.log(response);
                 try {
                     var data = JSON.parse(response);

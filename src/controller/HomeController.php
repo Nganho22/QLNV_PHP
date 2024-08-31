@@ -54,16 +54,16 @@ class HomeController{
                 case 'Giám đốc':
 
                     $limit = 5;
-                    $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-                    $offset = ($page - 1) * $limit;
+                    $searchTerm_NV = isset($_GET['search_nhanvien']) ? $_GET['search_nhanvien'] : '';
+                    $page_NV = isset($_GET['page_nhanvien']) ? (int)$_GET['page_nhanvien'] : 1;
+                    $offset = ($page_NV - 1) * $limit;
                     $projects = UserModel::getProjects_GD();
                     $phongBans = UserModel::getPhongBan_GD();
                     $deadlines = UserModel::getDeadlinesTimesheet($empID);
 
-                    if (!empty($searchTerm)) {
-                        $employees = UserModel::searchProfiles($searchTerm, $limit, $offset);
-                        $totalEmployees = UserModel::countSearchProfiles($searchTerm);
+                    if (!empty($searchTerm_NV)) {
+                        $employees = UserModel::searchProfiles($searchTerm_NV, $limit, $offset);
+                        $totalEmployees = UserModel::countSearchProfiles($searchTerm_NV);
                     } else {
                         $employees = UserModel::getEmployeesList_GD($limit, $offset);
                         $totalEmployees = UserModel::countAllEmployees();
