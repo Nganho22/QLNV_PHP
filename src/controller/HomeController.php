@@ -69,8 +69,6 @@ class HomeController{
                         $totalEmployees = UserModel::countAllEmployees();
                     }
 
-                    $file = "./views/pages/GD/home_GD.phtml";
-
                     if (isset($_GET['ajax'])) {
                         $requestHtml = '';
                         foreach ($employees  as $employee) {
@@ -88,10 +86,7 @@ class HomeController{
                         ]);
                         exit;
                     } else {
-                        ob_start();
-                        require($file);
-                        $content = ob_get_clean();
-                        require(__DIR__ . '/../views/template.phtml');
+                        $file = "./views/pages/GD/home_GD.phtml"; 
                     }
                     break;
                 default:

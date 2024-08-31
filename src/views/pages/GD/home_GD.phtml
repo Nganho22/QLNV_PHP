@@ -200,7 +200,7 @@
             renderCalendar(currentDate);
         });
     
-        $(document).ready(function() {
+    $(document).ready(function() {
 
             $('.search-box').off('input change').on('input change', function() {
                 loadEmployees();
@@ -212,28 +212,28 @@
                 loadEmployees(page);
             });
 
-        // Function to load employees with pagination
-        function loadEmployees(page = 1) {
-            var searchTerm = $('.search-box').val();
-            $.get('index.php?action=home', { ajax: 1,  search_nhanvien: searchTerm, page_nhanvien: page }, function(response) {
-                console.log(response);
-                try {
-                    var data = JSON.parse(response);
-                    $('#employee-list').html(data.requestHtml);
-                    $('#pagination').html(data.paginationHtml);
+            // Function to load employees with pagination
+            function loadEmployees(page = 1) {
+                var searchTerm = $('.search-box').val();
+                $.get('index.php?action=home', { ajax: 1,  search_nhanvien: searchTerm, page_nhanvien: page }, function(response) {
+                    console.log(response);
+                    try {
+                        var data = JSON.parse(response);
+                        $('#employee-list').html(data.requestHtml);
+                        $('#pagination').html(data.paginationHtml);
 
-                    // Update the active class for pagination
-                    $('#pagination .page-item').removeClass('active');
-                    $('#pagination .page-item').filter(function() {
-                        return $(this).find('.page-link').data('page') === page;
-                    }).addClass('active');
-                } catch (e) {
-                    console.error("JSON parse error: ", e);
-                    console.error("Server response: ", response);
-                }
-            });
-        }
-    });
+                        // Update the active class for pagination
+                        $('#pagination .page-item').removeClass('active');
+                        $('#pagination .page-item').filter(function() {
+                            return $(this).find('.page-link').data('page') === page;
+                        }).addClass('active');
+                    } catch (e) {
+                        console.error("JSON parse error: ", e);
+                        console.error("Server response: ", response);
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>
