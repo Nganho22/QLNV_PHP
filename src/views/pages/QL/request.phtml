@@ -81,7 +81,14 @@
                                 <td><?= htmlspecialchars($request['Loai']) ?></td>
                                 <td><?= htmlspecialchars($request['NguoiGui']) ?></td>
                                 <td><?= htmlspecialchars($request['NgayGui']) ?></td>
-                                <td><?php echo $request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt'; ?></td>
+                                <td><?php 
+                                    $trangThai = htmlspecialchars($request['TrangThai']);
+                                    if ($trangThai == 0 || $trangThai == 2) {
+                                        echo '<span style="color: red;">' . ($trangThai == 0 ? 'Chưa duyệt' : 'Từ chối') . '</span>';
+                                    } else {
+                                        echo 'Đã duyệt';
+                                    }
+                                ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

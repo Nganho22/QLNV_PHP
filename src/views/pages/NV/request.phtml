@@ -167,7 +167,7 @@
                     </div>
                     
                     <div class="form-group" id="ngayChonGroup" style="display: none;">
-                        <label for="ngayChon">Ngày chọn</label>
+                        <label for="ngayChon">Thời gian xin phép <span style="color: red;">(*)</span></label>
                         <input type="date" id="ngayChon" name="ngayChon">
                     </div>
 
@@ -330,12 +330,22 @@
     document.addEventListener('DOMContentLoaded', function() {
         // Hàm xử lý submit form
         function handleFormSubmit(formElement) {
-            var formattedDate = formatDateForDatabase(formElement.find('[name="ngayGui"]').val());
-            formElement.find('[name="ngayGui"]').val(formattedDate);
+            var ngayGuiValue = formElement.find('[name="ngayGui"]').val();
+            var formattedNgayGui = formatDateForDatabase(ngayGuiValue);
+            formElement.find('[name="ngayGui"]').val(formattedNgayGui);
 
-            var ngayChonValue = formElement.find('[name="ngayChon"]').val();
-            var formattedDate = formatDateForDatabase(ngayChonValue);
-            formElement.find('[name="ngayChon"]').val(formattedDate);
+            var ngayChonValue = formElement.find('[name="ngayChon"]').val() || ''; // Đặt giá trị mặc định là rỗng
+            var formattedNgayChon = formatDateForDatabase_NgayChon(ngayChonValue);
+            formElement.find('[name="ngayChon"]').val(formattedNgayChon);
+
+            var dateNgayGui = new Date(formattedNgayGui);
+            var dateNgayChon = ngayChonValue ? new Date(formattedNgayChon) : null; // Chỉ tạo đối tượng Date nếu có giá trị ngayChon
+
+            // Chỉ so sánh ngày nếu ngayChon có giá trị
+            if (dateNgayChon && dateNgayChon < dateNgayGui) {
+                showPopup('Ngày xin phép không hợp lệ!', false);
+                return; 
+            }
 
             var formData = new FormData(formElement[0]);
             fetch('index.php?action=GetRequestPage', { 
@@ -362,9 +372,9 @@
                 console.error('Đã xảy ra lỗi:', error);
                 showPopup('Đã xảy ra lỗi!', false);
             });
-        }
+        }       
 
-        function formatDateForDatabase(dateString) {
+        function formatDateForDatabase_NgayChon(dateString) {
             var parts = dateString.split('/');
             if (parts.length === 3) {
                 var day = parts[0];
@@ -372,12 +382,11 @@
                 var year = parts[2];
                 return `${year}-${month}-${day}`;
             }
-            return dateString; // Trả về giá trị gốc nếu định dạng không đúng
+            return dateString; 
         }
 
-        // Hàm định dạng ngày cho cơ sở dữ liệu
-        function formatDateForDatabase(date) {
-            var parts = date.split('/');
+        function formatDateForDatabase(dateString) {
+            var parts = dateString.split('/');
             return parts[2] + '-' + parts[1] + '-' + parts[0];
         }
 

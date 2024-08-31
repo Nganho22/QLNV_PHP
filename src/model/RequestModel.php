@@ -98,7 +98,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT COUNT(RequestID) as total FROM Request WHERE EmpID = ? AND TrangThai != 1";
+        $query = "SELECT COUNT(RequestID) as total FROM Request WHERE EmpID = ? AND TrangThai != 0";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -145,13 +145,13 @@ class RequestModel {
         return $timeSheet;
     }
     
-    public static function createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung) {
+    public static function createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung) {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "INSERT INTO Request (EmpID, NguoiGui, Loai, TieuDe, NgayGui, NoiDung) VALUES (?,?,?,?,?,?)";
+        $query = "INSERT INTO Request (EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayChon ,NoiDung) VALUES (?,?,?,?,?,?,?)";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param('isssss', $user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung);
+        $stmt->bind_param('issssss', $user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung);
         $result = $stmt->execute();
         
         $stmt->close();
@@ -243,7 +243,7 @@ class RequestModel {
             SELECT
                 COUNT(RequestID) as total,
                 SUM(CASE WHEN TrangThai = 0 THEN 1 ELSE 0 END) as pending,
-                SUM(CASE WHEN TrangThai = 1 THEN 1 ELSE 0 END) as approved
+                SUM(CASE WHEN TrangThai IN (1, 2) THEN 1 ELSE 0 END) as approved
             FROM Request
             WHERE EmpID IN ($empIDsString)";
 
@@ -440,7 +440,6 @@ class RequestModel {
         return $requests;
     }
     
-
     public static function countFilterRequests_QL($user_id, $searchTerm, $types, $statuses) {
         $data = self::getEmpIDsAndPhongID($user_id);
         $phongID = $data['phongID'];
@@ -495,6 +494,60 @@ class RequestModel {
         return $total;
     }
     
+    public static function updateRequest($requestID, $ngayXuLy, $trangThai, $noiDung) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "UPDATE Request SET NgayXuLy = ?, TrangThai = ?, PhanHoi = ? WHERE RequestID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('sssi', $ngayXuLy, $trangThai, $noiDung, $requestID);
+        $result = $stmt->execute();
+        
+        $stmt->close();
+        $db->close();
+        return $result;
+    }
 
+    public static function insertCheckOK($empID, $ngayChon, $opt_WFH, $opt_Nghi) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "INSERT INTO Check_inout (EmpID, Date_checkin, WorkFromHome, Nghi) VALUES (?,?,?,?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('isii', $empID, $ngayChon, $opt_WFH, $opt_Nghi);
+        $result = $stmt->execute();
+        
+        $stmt->close();
+        $db->close();
+        return $result;
+    }
+
+    public static function  updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "UPDATE Time_sheet SET TrangThai = ?, SoGioThucHien = ? WHERE Time_sheetID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('sii', $Up_TinhTrang_TS, $up_ThoiGian_TS, $timeSheetID);
+        $result = $stmt->execute();
+        
+        $stmt->close();
+        $db->close();
+        return $result;
+    }
+
+    public static function  updateProfile($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "UPDATE Profile SET TinhTrang = 0 WHERE EmpID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $user_id);
+        $result = $stmt->execute();
+        
+        $stmt->close();
+        $db->close();
+        return $result;
+    }
 }
 ?>
