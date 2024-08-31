@@ -5,6 +5,7 @@ body {
     background-color: #f4f4f4;
     color: #333;
 }
+
 .notification-wrapper {
     position: fixed;
     top: 50%;
@@ -213,6 +214,7 @@ label {
 }
 
 input[type="text"],
+input[type="date"],
 textarea {
     width: 100%;
     padding: 8px;

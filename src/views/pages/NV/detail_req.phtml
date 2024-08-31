@@ -38,7 +38,16 @@
                     <div class="info-row">
                         <div class="info-item"><strong>Ngày Gửi:</strong> <?php echo htmlspecialchars($detail['NgayGui']); ?></div>
                         <div class="info-item"><strong>Ngày Xử Lý:</strong> <?php echo htmlspecialchars($detail['NgayXuLy']) == null ? '<span style="color: red;">Chưa được xử lý</span>' : htmlspecialchars($detail['NgayXuLy']); ?></div>
-                        <div class="info-item"><strong>Trạng Thái:</strong> <?php echo htmlspecialchars($detail['TrangThai']) == 0 ? '<span style="color: red;">Chưa duyệt</span>' : 'Đã duyệt'; ?></div>
+                        <div class="info-item"><strong>Trạng Thái:</strong> 
+                            <?php 
+                            $trangThai = htmlspecialchars($detail['TrangThai']);
+                            if ($trangThai == 0 || $trangThai == 2) {
+                                echo '<span style="color: red;">' . ($trangThai == 0 ? 'Chưa duyệt' : 'Từ chối') . '</span>';
+                            } else {
+                                echo 'Đã duyệt';
+                            }
+                            ?>
+                        </div>
                     </div>
 
                     <?php if ($detail['Loai'] === 'Time-sheet'): ?>

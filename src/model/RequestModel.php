@@ -27,7 +27,7 @@ class RequestModel {
         $result = $stmt->get_result();
         $pendingRequests = $result->fetch_assoc()['pending'];
     
-        $approvedRequestsQuery = "SELECT COUNT(RequestID) as approved FROM Request WHERE EmpID = ? AND TrangThai = 1";
+        $approvedRequestsQuery = "SELECT COUNT(RequestID) as approved FROM Request WHERE EmpID = ? AND TrangThai != 0";
         $stmt = $conn->prepare($approvedRequestsQuery);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -64,7 +64,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT * FROM Request WHERE EmpID = ? AND TrangThai = 1 ORDER BY NgayGui DESC LIMIT ? OFFSET ?";
+        $query = "SELECT * FROM Request WHERE EmpID = ? AND TrangThai != 0 ORDER BY NgayGui DESC LIMIT ? OFFSET ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('iii', $user_id, $limit, $offset);
         $stmt->execute();
@@ -98,7 +98,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT COUNT(RequestID) as total FROM Request WHERE EmpID = ? AND TrangThai = 1";
+        $query = "SELECT COUNT(RequestID) as total FROM Request WHERE EmpID = ? AND TrangThai != 1";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
