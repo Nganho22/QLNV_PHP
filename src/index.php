@@ -60,6 +60,11 @@ switch ($action)
         $controller = new ProjectController();
         $controller->GetProjectPage();
         break;
+    case "GetDetailProjectPage": 
+        $controller = new ProjectController();
+        $projectId = isset($_GET['id']) ? $_GET['id'] : null;
+        $controller->GetDetailProjectPage($projectId);
+        break;
     case "GetCheckinoutPage":
         $controller = new HomeController();
         $controller->Getcheckinout_page();

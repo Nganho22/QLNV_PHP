@@ -6,104 +6,180 @@
     <title><?php echo htmlspecialchars($title); ?></title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/project.css" type="text/css"/> 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
 </head>
 <body>
     <?php if (!empty($message)): ?>
-            <div class="notification-wrapper">
-                <div class="notification">
-                    <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
-                    <?php echo htmlspecialchars($message); ?>
-                </div>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
             </div>
-        <?php endif; ?>
+        </div>
+    <?php endif; ?>
+
     <div class="container">
-        <div class="filter-section">
-            <h2>Tìm kiếm và lọc:</h2>
-            <div class="search-wrapper">
-                <input type="text" placeholder="Tên dự án, Người phụ trách..." class="search-box">
-                <button class="search-button">Tìm kiếm</button>
-            </div>
-            <div class="filters">
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <h3>Phòng ban phụ trách</h3>
-                        <label><input type="checkbox" checked> A01</label>
-                        <label><input type="checkbox"> A02</label>
-                        <label><input type="checkbox"> B01</label>
-                        <label><input type="checkbox"> B02</label>
-                        <button class="filter-button">Lọc</button>
-                    </div>
-                    <div class="filter-group">
-                        <h3>Trạng thái</h3>
-                        <label><input type="checkbox" checked> Đã hoàn thành</label>
-                        <label><input type="checkbox" checked> Trong quá trình</label>
-                        <label><input type="checkbox"> Đã huỷ</label>
-                        <label><input type="checkbox"> Tạm dừng</label>
-                        <button class="filter-button">Lọc</button>
-                    </div>
+        <div class="left-column" style="width: 500px; padding-top: 30px;">
+            <div class="filter-section">
+                <h2>Tìm kiếm:</h2>
+                <div class="search-wrapper">
+                    <input type="text" id="search-box" placeholder="Tên dự án" class="search-box">
                 </div>
+                <h2>Bộ lọc:</h2>
                 <div class="filter-row">
                     <div class="filter-group">
                         <h3>Tiến độ</h3>
-                        <label><input type="checkbox" checked> 100%</label>
-                        <label><input type="checkbox"> 75%</label>
-                        <label><input type="checkbox" checked> 50%</label>
-                        <label><input type="checkbox"> 25%</label>
-                        <button class="filter-button">Lọc</button>
+                        <label><input type="checkbox" class="filter-process" value="100%"> 100%</label>
+                        <label><input type="checkbox" class="filter-process" value="75%"> 75%</label>
+                        <label><input type="checkbox" class="filter-process" value="50%"> 50%</label>
+                        <label><input type="checkbox" class="filter-process" value="25%"> 25%</label>
                     </div>
                     <div class="filter-group">
-                        <h3>Thời gian</h3>
-                        <label> Từ </label>
-                        <input type="date" >
-                        <label> Đến </label>
-                        <input type="date">
-                        <button class="filter-button">Lọc</button>
+                        <h3>Trạng thái</h3>
+                        <label><input type="checkbox" class="filter-type" value="Đã hoàn thành"> Đã hoàn thành</label>
+                        <label><input type="checkbox" class="filter-type" value="Trong quá trình"> Trong quá trình</label>
+                        <label><input type="checkbox" class="filter-type" value="Đã huỷ"> Đã huỷ</label>
+                        <label><input type="checkbox" class="filter-type" value="Tạm dừng"> Tạm dừng</label>
                     </div>
                 </div>
+                <?php if ($role !== 'Nhân viên'): ?>
+                    <div class="filter-row" style="justify-content: center;">
+                        <div class="filter-group">
+                            <h3>Phòng ban phụ trách</h3>
+                            <label><input type="checkbox" class="filter-class" value="P01"> P01</label>
+                            <label><input type="checkbox" class="filter-class" value="P02"> P02</label>
+                            <label><input type="checkbox" class="filter-class" value="P03"> P03</label>
+                        </div>
+                        <!-- <div class="filter-group">
+                            <h3>Thời gian</h3>
+                            <label> Từ </label>
+                            <input type="date" >
+                            <label> Đến </label>
+                            <input type="date">
+                            <button class="filter-button">Lọc</button>
+                        </div> -->
+                    </div>
+                <?php endif; ?>
+                <button class="reset-all-button btn btn-primary btn-block" id="reset-all-button">Reset tìm kiếm và bộ lọc</button>
             </div>
         </div>
 
-        <div class="project-list-section">
-            <div class="project-summary">
-                <h3>Tổng dự án</h3>
-                <div class="project-count">70</div>
-            </div>
-            <h2>Danh sách dự án:</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Dự án</th>
-                        <th>Tên dự án</th>
-                        <th>Trạng thái</th>
-                        <th>Hạn chót</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    for($i = 0; $i < 5; $i++) {
-                        echo "<tr>
-                                <td>A01</td>
-                                <td>Lorem ipsum dolor sit amet</td>
-                                <td>Trong quá trình</td>
-                                <td>01/01/2024</td>
-                              </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
-            <div class="pagination-wrapper">
-                <div class="pagination">
-                    <a href="#">&lt;</a>
-                    <a href="#" class="active">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#">4</a>
-                    <span>...</span>
-                    <a href="#">20</a>
-                    <a href="#">&gt;</a>
+        <div class="right-column" style="width: 900px">
+            <div class="filter-row">
+                <div class="info-box">
+                    <p><strong>Tổng dự án</strong></p>
+                    <h4><?php echo htmlspecialchars($cProject['total']); ?></h4>
                 </div>
+                <div class="info-box">
+                    <p><strong>Dự án đã hoàn thành</strong></p>
+                    <h4><?php echo htmlspecialchars($cProject['completed']); ?></h4>
+                </div>
+                <div class="info-box">
+                    <p><strong>Dự án chưa hoàn thành</strong></p>
+                    <h4><?php echo htmlspecialchars($cProject['not_completed']); ?></h4>
+                </div>
+            </div>
+            <div class = "project-list-section">
+                <h2>Danh sách dự án:</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dự án</th>
+                            <th>Tên dự án</th>
+                            <th>Phòng ban</th>
+                            <th>Tiến độ</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="request-table-body">
+                        <?php foreach ($listProject as $project): ?>
+                            <tr>
+                                <td><a href = "index.php?action=GetDetailProjectPage&id=<?php echo htmlspecialchars($project['ProjectID']); ?>"> 
+                                    <?php echo htmlspecialchars($project['ProjectID']); ?> </a></td>
+                                <td><?php echo htmlspecialchars($project['Ten']); ?></td>
+                                <td><?php echo htmlspecialchars($project['PhongID']); ?></td>
+                                <td><?php echo htmlspecialchars($project['TienDo']); ?></td>
+                                <td><?php echo htmlspecialchars($project['TinhTrang']); ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                </table>
+
+                <div id="pagination" class="pagination pagination-wrapper">
+                    <?php 
+                        $totalPages = ceil($cProject['total'] / $limit);
+                        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        for ($i = 1; $i <= $totalPages; $i++): 
+                        ?>
+                            <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                                <a class="page-link" href="#" data-page="<?= $i ?>"><?= $i ?></a>
+                            </li>
+                    <?php endfor; ?>
+                </div>
+                
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.search-box, .filter-type, .filter-process, .filter-class').off('input change').on('input change', function() {
+                filterRequests();
+            });
+
+            $(document).on('click', '.page-link', function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                filterRequests(page);
+            });
+
+            $('#reset-all-button').on('click', function() {
+                $('#search-box').val('');
+                $('.filter-type').prop('checked', false);
+                $('.filter-process').prop('checked', false);
+                $('.filter-class').prop('checked', false);
+
+                $.get('index.php?action=GetProjectPage', { ajax: 1, search: '', types: [], processes: [], classes: [], page: 1 }, function(response) {
+                    var data = JSON.parse(response);
+                    $('#request-table-body').html(data.requestHtml);
+                    $('#pagination').html(data.paginationHtml);
+
+                    $('#pagination .page-item').removeClass('active');
+                        $('#pagination .page-item').filter(function() {
+                            return $(this).find('.page-link').data('page') === 1;
+                        }).addClass('active');
+                });
+            });
+
+            function filterRequests(page = 1) {
+                var searchTerm = $('.search-box').val();
+                var types = $('.filter-type:checked').map(function() { return $(this).val(); }).get();
+                var processes = $('.filter-process:checked').map(function() { return $(this).val(); }).get();
+                var classes = $('.filter-class:checked').map(function() { return $(this).val(); }).get();
+                
+                $.get('index.php?action=GetProjectPage', { ajax: 1, search: searchTerm, types: types, processes: processes, classes: classes, page: page }, function(response) {
+                    console.log(response);
+                    try {
+                        var data = JSON.parse(response);
+                        $('#request-table-body').html(data.requestHtml);
+                        $('#pagination').html(data.paginationHtml);
+
+                        // Cập nhật lớp active cho phân trang
+                        $('#pagination .page-item').removeClass('active');
+                        $('#pagination .page-item').filter(function() {
+                            return $(this).find('.page-link').data('page') === page;
+                        }).addClass('active');
+                    }
+                    catch (e){
+                        console.error("JSON parse error: ", e);
+                        console.error("Server response: ", response);
+                    }
+                });
+            }
+        });
+
+    </script>
+    
 </body>
 </html>
