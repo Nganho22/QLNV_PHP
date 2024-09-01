@@ -25,42 +25,65 @@ class ProjectController {
                     $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
                 }
             }
-            $profile = UserModel::getprofile($user_id);
-            $cProject = ProjectModel::getProjectCountsByEmpID($user_id);
+
+            switch ($role) {
+                case 'Quản lý':
+                case 'Giám đốc':
+                $profile = UserModel::getprofile($user_id);
+                $cProject = ProjectModel::getProjectCountsByEmpID($user_id);
+                $listProject = ProjectModel::getListProject($user_id, $limit, $offset);
+                
+                $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+                $progressFilters = isset($_GET['processes']) ? $_GET['processes'] : [];
+                $statusFilters = isset($_GET['types']) ? $_GET['types'] : [];
+                $classFilters = isset($_GET['classes']) ? $_GET['classes'] : [];
             
-            $listProject = ProjectModel::getListProject($user_id, $limit, $offset);
+                $projectData = ProjectModel::getProjectsAndCount($user_id, $searchTerm, $progressFilters, $statusFilters, $classFilters, $limit, $offset);
+                $projects = $projectData['projects'];
+                $totalProjects = $projectData['total'];
+                
+                $file = "./views/pages/project_list.phtml";
 
-            if (isset($_GET['ajax'])) {
-                $requestHtml = '';
-                foreach ($listProject as $project) {
-                    $requestHtml .= '<tr>'
-                        . '<td><a href="index.php?action=GetDetailProjectPage&id=' . htmlspecialchars($project['ProjectID']) . '">' 
-                        . htmlspecialchars($project['ProjectID']) . '</a></td>'
-                        . '<td>' . htmlspecialchars($project['Ten']) . '</td>'
-                        . '<td>' . htmlspecialchars($project['PhongID']) . '</td>'
-                        . '<td>' . htmlspecialchars($project['TienDo']) . '</td>'
-                        . '<td>' . htmlspecialchars($project['TinhTrang']) . '</td>'
-                        . '</tr>';
-                }
-
-                $paginationHtml = '';
-                if ($cProject > $limit) {
-                    for ($i = 1; $i <= ceil($cProject['total'] / $limit); $i++) {
-                        $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                if (isset($_GET['ajax'])) {
+                    $requestHtml = '';
+                    foreach ($projects as $project) {
+                        $requestHtml .= '<tr>'
+                            . '<td><a href="index.php?action=GetDetailProjectPage&id=' . htmlspecialchars($project['ProjectID']) . '">' 
+                            . htmlspecialchars($project['ProjectID']) . '</a></td>'
+                            . '<td>' . htmlspecialchars($project['Ten']) . '</td>'
+                            . '<td>' . htmlspecialchars($project['PhongID']) . '</td>'
+                            . '<td>' . htmlspecialchars($project['TienDo']) . '</td>'
+                            . '<td>' . htmlspecialchars($project['TinhTrang']) . '</td>'
+                            . '</tr>';
                     }
-                }
 
-                echo json_encode([
-                    'requestHtml' => $requestHtml,
-                    'paginationHtml' => $paginationHtml
-                ]);
-            } else {
-                ob_start();
-                require("./views/pages/project_list.phtml");
-                $content = ob_get_clean();
-                require(__DIR__ . '/../views/template.phtml');
+                    $paginationHtml = '';
+                    if ($totalProjects > $limit) {
+                        for ($i = 1; $i <= ceil($totalProjects / $limit); $i++) {
+                            $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                        }
+                    }
+
+                    echo json_encode([
+                        'requestHtml' => $requestHtml,
+                        'paginationHtml' => $paginationHtml
+                    ]);
+                } else {
+                    ob_start();
+                    require($file);
+                    $content = ob_get_clean();
+                    require(__DIR__ . '/../views/template.phtml');
+                }
+                break;
+
+                case 'Nhân viên':
+                    break;
+                default:
+                    $file = null;
+                    $title = 'Error';
+                    break;
+                }
             }
-        }
         else{
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
             exit();

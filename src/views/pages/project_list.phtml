@@ -38,7 +38,7 @@
                     <div class="filter-group">
                         <h3>Trạng thái</h3>
                         <label><input type="checkbox" class="filter-type" value="Đã hoàn thành"> Đã hoàn thành</label>
-                        <label><input type="checkbox" class="filter-type" value="Trong quá trình"> Trong quá trình</label>
+                        <label><input type="checkbox" class="filter-type" value="Chưa hoàn thành"> Chưa hoàn thành</label>
                         <label><input type="checkbox" class="filter-type" value="Đã huỷ"> Đã huỷ</label>
                         <label><input type="checkbox" class="filter-type" value="Tạm dừng"> Tạm dừng</label>
                     </div>
@@ -72,11 +72,11 @@
                     <h4><?php echo htmlspecialchars($cProject['total']); ?></h4>
                 </div>
                 <div class="info-box">
-                    <p><strong>Dự án đã hoàn thành</strong></p>
+                    <p><strong>Tổng đã hoàn thành</strong></p>
                     <h4><?php echo htmlspecialchars($cProject['completed']); ?></h4>
                 </div>
                 <div class="info-box">
-                    <p><strong>Dự án chưa hoàn thành</strong></p>
+                    <p><strong>Tổng chưa hoàn thành</strong></p>
                     <h4><?php echo htmlspecialchars($cProject['not_completed']); ?></h4>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                         </tr>
                     </thead>
                     <tbody id="request-table-body">
-                        <?php foreach ($listProject as $project): ?>
+                        <?php foreach ($projects as $project): ?>
                             <tr>
                                 <td><a href = "index.php?action=GetDetailProjectPage&id=<?php echo htmlspecialchars($project['ProjectID']); ?>"> 
                                     <?php echo htmlspecialchars($project['ProjectID']); ?> </a></td>
@@ -108,7 +108,7 @@
 
                 <div id="pagination" class="pagination pagination-wrapper">
                     <?php 
-                        $totalPages = ceil($cProject['total'] / $limit);
+                        $totalPages = ceil($totalProjects / $limit);
                         $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                         for ($i = 1; $i <= $totalPages; $i++): 
                         ?>
