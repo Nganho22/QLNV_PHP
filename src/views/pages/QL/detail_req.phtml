@@ -10,7 +10,6 @@
 </head>
 <body>
 <div class="container-fluid">
-
     <div class="back-button" style="position: relative;">
         <a href="index.php?action=GetRequestPage" class=" btn-link"><i class="fas fa-arrow-left"></i> Quay lại</a>
     </div>
@@ -72,9 +71,16 @@
             <!-- Right Column: request-details -->
             <div class="col-md-6">
                 <div class="request-details">
-                    <div class="info-row">
-                        <div class="info-item"><strong>Tiêu Đề:</strong> <?php echo htmlspecialchars($detail['TieuDe']); ?></div>
-                    </div>
+                    <?php if ($detail['Loai'] === "Time-sheet"): ?>
+                        <div class="info-row">
+                            <div class="info-item"><strong>Tiêu Đề:</strong> <?php echo htmlspecialchars($detail['TieuDe']); ?></div>
+                        </div>
+                    <?php else: ?>
+                        <div class="info-row">
+                            <div class="info-item"><strong>Tiêu Đề:</strong> <?php echo htmlspecialchars($detail['TieuDe']); ?></div>
+                            <div class="info-item"><strong>Tiêu Đề:</strong> <?php echo htmlspecialchars($detail['NgayChon']); ?></div>
+                        </div>
+                    <?php endif; ?>
 
                     <div class="info-row">
                         <div class="info-item"><strong>Nội Dung:</strong><?php echo htmlspecialchars($detail['NoiDung']); ?></div>
@@ -100,12 +106,14 @@
         </div>
     </div>
 </div>
-
+    
 <?php if ($detail['TrangThai'] === 0): ?>
     <div class="container-fluid">
         <div class="request-detail">
             <h1>Phản hồi đơn yêu cầu</h1>
-            <form action="index.php?action=GetRequestPage" method="POST" enctype="multipart/form-data">
+            <form id="phanHoiForm" action="index.php?action=GetDetailRequestPage&id=<?php echo htmlspecialchars($detail['RequestID']); ?>" 
+                method="POST" enctype="multipart/form-data">
+                <input type="hidden" id="trangThai" name="trangThai" value="">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nguoiGui">Người phản hồi:</label>
@@ -116,114 +124,111 @@
                         <input type="text" id="ngayPhanHoi" name="ngayPhanHoi" readonly>
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
                         <label for="noiDung">Nội dung</label>
                         <textarea id="noiDung" name="noiDung" rows="6" placeholder="Nhập nội dung"></textarea>
                     </div>
                 </div>
-
                 <div class="form-row">
                     <div class="form-group">
-                        <button type="submit" class = " btn btn-primary btn-block custom-btn text-center">Xét duyệt</button>
+                        <button type="button" class="btn btn-primary btn-block custom-btn text-center" onclick="setTrangThai(1)">Xét duyệt</button>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class = " btn btn-primary btn-block custom-btn text-center" style = "background-color: red; border: none;">Từ chối</button>
+                        <button type="button" class="btn btn-primary btn-block custom-btn text-center" style="background-color: red; border: none;" onclick="setTrangThai(2)">Từ chối</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 <?php endif; ?>
-
-<div id="popup" class="popup">
+    <!-- Popup HTML -->
+    <div id="popup" class="popup">
         <div class="popup-content">
             <h2 class="popup-title">Thông báo</h2>
             <p id="popupMessage"></p>
             <button class="btn btn-primary close-popup-btn popup-button" onclick="closePopup()">Đóng</button>
         </div>
     </div>
-
-<script>
+    <script>
     function showPopup(message, success) {
         var popup = document.getElementById('popup');
         var popupMessage = document.getElementById('popupMessage');
-        var popupContent = document.querySelector('.popup-content');
+        var closeButton = document.querySelector('.close-popup-btn');
 
         popupMessage.textContent = message;
         popup.style.display = 'flex';
 
-        if (success) {
-                const closeButton = document.querySelector('.close-popup-btn');
-                closeButton.onclick = function() {
-                    window.location.reload(); 
-                };
-            }
+        if (success && closeButton) {
+            closeButton.onclick = function() {
+                window.location.reload(); 
+            };
+        }
     }
 
-    // Đóng popup
     function closePopup() {
-        document.getElementById('popup').style.display = 'none';; 
+        document.getElementById('popup').style.display = 'none'; 
+    }
+
+    function setTrangThai(trangThai) {
+        document.getElementById('trangThai').value = trangThai;
+        handleFormSubmit(document.getElementById('phanHoiForm'));
+    }
+
+    function handleFormSubmit(formElement) {
+        var ngayPhanHoiElement = formElement.querySelector('[name="ngayPhanHoi"]');
+        ngayPhanHoiElement.value = formatDateForDatabase(ngayPhanHoiElement.value);
+        
+        var formData = new FormData(formElement);
+
+        fetch(formElement.action, { 
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(text => {
+            console.log(text);
+            try {
+                var data = JSON.parse(text);
+                console.log(data);
+                if (!data.success) {
+                    showPopup(data.message, false);
+                } else {
+                    showPopup(data.message, true);
+                }
+            } catch (e) {
+                console.error('Lỗi phân tích JSON:', e);
+                showPopup('Đã xảy ra lỗi khi xử lý dữ liệu!', false);
+            }
+        })
+        .catch(error => {
+            console.error('Đã xảy ra lỗi:', error);
+            showPopup('Đã xảy ra lỗi khi gửi form!', false);
+        });
+    }
+
+    function setCurrentDate() {
+        var today = new Date();
+        var formattedDate = formatDate(today);
+        document.getElementById('ngayPhanHoi').value = formattedDate;
+    }
+
+    function formatDate(date) {
+        var day = ("0" + date.getDate()).slice(-2);
+        var month = ("0" + (date.getMonth() + 1)).slice(-2);
+        var year = date.getFullYear();
+        return day + '/' + month + '/' + year;
+    }
+
+    function formatDateForDatabase(date) {
+        var parts = date.split('/'); 
+        return parts[2] + '-' + parts[1] + '-' + parts[0]; 
     }
 
     document.addEventListener('DOMContentLoaded', function() { 
-
-        function formatDate(date) {
-            var day = ("0" + date.getDate()).slice(-2);
-            var month = ("0" + (date.getMonth() + 1)).slice(-2);
-            var year = date.getFullYear();
-            return day + '/' + month + '/' + year;
-        }
-
-        function formatDateForDatabase(date) {
-            var parts = date.split('/');
-            return parts[2] + '-' + parts[1] + '-' + parts[0];
-        }
-
-        function handleFormSubmit(formElement) {
-            var formattedDate = formatDateForDatabase(formElement.find('[name="ngayGui"]').val());
-            formElement.find('[name="ngayGui"]').val(formattedDate);
-            var formData = new FormData(formElement[0]);
-
-            fetch('index.php?action=GetDetailPage&id=#', { 
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())  // Nhận dữ liệu dưới dạng văn bản
-            .then(text => {
-                console.log(text);  // In ra nội dung phản hồi
-                try {
-                    var data = JSON.parse(text);  // Cố gắng phân tích JSON
-                    console.log(data);  // Xử lý dữ liệu JSON nếu thành công
-                    if (!data.success) {
-                        showPopup(data.message, false);
-                    } else {
-                        showPopup(data.message, true);
-                    }
-                } catch (e) {
-                    console.error('Lỗi phân tích JSON:', e);
-                    showPopup('Đã xảy ra lỗi khi xử lý dữ liệu!', false);
-                }
-            })
-            .catch(error => {
-                console.error('Đã xảy ra lỗi:', error);
-                showPopup('Đã xảy ra lỗi!', false);
-            });
-        }
-
-
-        function setCurrentDate() {
-            var today = new Date();
-            var formattedDate = formatDate(today);
-            document.getElementById('ngayPhanHoi').value = formattedDate;
-        }
-
-        // Gọi hàm khi trang được tải
-        window.onload = function() {
-            setCurrentDate();
-        };
+        setCurrentDate();
     });
 </script>
+
 </body>
 </html>

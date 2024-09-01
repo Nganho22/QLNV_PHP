@@ -53,18 +53,18 @@ body {
     display: flex;
     padding: 20px;
     max-width: 1400px;
-    /* Tăng độ rộng của container */
     margin: auto;
-    /* Căn giữa container */
+    gap: 40px;
+    /* Khoảng cách giữa hai cột */
 }
 
-.filter-section {
-    width: 40%;
-    padding-right: 20px;
-}
-
-.filter-section h2 {
-    font-size: 1.5em;
+.left-column,
+.right-column {
+    width: 50%;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .search-wrapper {
@@ -76,16 +76,7 @@ body {
     flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 5px 0 0 5px;
-}
-
-.search-button {
-    padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 0 5px 5px 0;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
+    border-radius: 10px;
 }
 
 .filters {
@@ -100,11 +91,12 @@ body {
 }
 
 .filter-group {
-    width: 48%;
+    width: 80%;
+    margin: 10px;
     background-color: #fff;
     padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
 
@@ -129,36 +121,13 @@ body {
     margin-right: 10px;
 }
 
-.filter-button {
-    width: 50px;
-    margin-top: 10px;
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    justify-content: center;
-    align-self: center;
-}
-
-.project-summary {
-    margin-top: 20px;
-}
-
-.project-summary h3 {
-    font-size: 1.3em;
-    margin-bottom: 10px;
-}
-
-.project-count {
-    font-size: 2.5em;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
 .project-list-section {
-    width: 60%;
+    width: 100%;
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    margin-top: 65px;
 }
 
 .project-list-section h2 {
@@ -166,46 +135,70 @@ body {
     margin-bottom: 20px;
 }
 
+.info-box {
+    width: 25%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #999999;
+}
+
+.info-box p {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.info-box h4 {
+    font-size: 2em;
+    margin: 0;
+}
+
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
-}
-
-table th,
-table td {
-    padding: 15px;
-    text-align: left;
-    border: 1px solid #ddd;
+    /* margin-bottom: 20px; */
 }
 
 table th {
     background-color: #f0f0f0;
 }
 
+table th,
+table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+/*================ pagination ========================*/
 .pagination-wrapper {
     display: flex;
     justify-content: center;
     margin-top: 20px;
 }
 
-.pagination {
-    display: inline-block;
-}
-
 .pagination a {
-    padding: 10px 15px;
-    margin: 0 5px;
-    background-color: #f0f0f0;
-    color: #333;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     text-decoration: none;
-    border-radius: 5px;
+    color: #007bff;
 }
 
 .pagination a.active {
     background-color: #007bff;
-    color: #fff;
+    color: white;
 }
 
-.pagination span {
-    padding: 10px 15px;
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
 }

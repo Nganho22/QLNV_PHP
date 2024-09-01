@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management</title>
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/project_detail.css" type="text/css"/> 
+    <link rel="stylesheet" href="https://unpkg.com/boxicons/css/boxicons.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <button class="back-button">&lt;</button>
+            <h1>Dự án: Nghiên cứu PHP</h1>
+        </header>
+
+        <div class="info-sections">
+            <section class="project-overview">
+                <div class="card">
+                    <div class="icon"><i class='bx bx-user'></i></div>
+                    <div class="details">
+                        <p>Quản lý Phụ trách</p>
+                        <h3>Ngân Hồ</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon"><i class='bx bx-time'></i></div>
+                    <div class="details">
+                        <p>Số giờ thực hiện</p>
+                        <h3>165 giờ</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon"><i class='bx bx-buildings'></i></div>
+                    <div class="details">
+                        <p>Trạng thái</p>
+                        <h3>Trong quá trình</h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon"><i class='bx bx-timer'></i></div>
+                    <div class="details">
+                        <p>Tiến độ</p>
+                        <h3>82%</h3>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dates">
+                <div class="date">
+                    <p>Ngày giao</p>
+                    <h3>01/01/2024</h3>
+                </div>
+                <div class="date">
+                    <p>Hạn chót dự kiến</p>
+                    <h3>01/01/2024</h3>
+                </div>
+                <div class="date">
+                    <p>Ngày hoàn thành</p>
+                    <h3>01/01/2024</h3>
+                </div>
+                <div class="date">
+                    <p>Phòng ban</p>
+                    <h3>A01</h3>
+                </div>
+            </section>
+        </div>
+
+        <div class="main-content">
+            <section class="task-list">
+                <div class="task-header">
+                    <h2>Danh sách công việc:</h2>
+                    <input type="text" placeholder="Tìm kiếm...">
+                </div>
+                <div class="task">
+                    <div class="icon"><i class='bx bxs-edit'></i></div>
+                    <!-- <div class="avatar">📷</div> -->
+                    <div class="task-details">
+                        <h3>Tìm hiểu PHP</h3>
+                        <p>Người phụ trách: Bông Bông</p>
+                    </div>
+                    <div class="status">Trong quá trình</div>
+                </div>
+                <!-- Repeat .task block for more tasks -->
+                <div class="pagination">
+                    <span>&lt;</span>
+                    <span>1</span>
+                    <span>2</span>
+                    <!-- Pagination links -->
+                    <span>&gt;</span>
+                </div>
+            </section>
+
+            <section class="task-creation">
+                <h2>Tạo nhiệm vụ:</h2>
+                <form>
+                    <label for="task-name">Tên nhiệm vụ:</label>
+                    <input type="text" id="task-name">
+
+                    <label for="assignee">Người phụ trách:</label>
+                    <select id="assignee">
+                        <option>Bông Bông</option>
+                        <!-- More options -->
+                    </select>
+
+                    <label for="deadline">Hạn chót:</label>
+                    <input type="date" id="deadline">
+
+                    <label for="reward">Điểm thưởng:</label>
+                    <input type="number" id="reward" value="10">
+
+                    <label for="description">Nội dung:</label>
+                    <textarea id="description"></textarea>
+
+                    <label for="file">Tài liệu:</label>
+                    <input type="file" id="file">
+
+                    <button type="submit">Xác Nhận</button>
+                </form>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

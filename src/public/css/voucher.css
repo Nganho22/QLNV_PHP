@@ -1,3 +1,284 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    padding: 20px;
+    max-width: 1400px;
+    margin: auto;
+    gap: 40px;
+    /* Khoảng cách giữa hai cột */
+}
+.up-panel{
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.left-column,
+.right-column {
+    width: 49%;
+    /* Mỗi cột chiếm 50% chiều rộng */
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+
+.info-box {
+    width: 25%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #999999;
+}
+
+.info-box p {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.info-box h4 {
+    font-size: 2em;
+    margin: 0;
+}
+
+.row1 {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+.info-box1 {
+    width: 90%;
+    background-color: #fff;
+    margin-left: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #999999;
+    margin-bottom: 20px;
+}
+
+.info-box1 p {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.info-box1 h4 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+.info-box2 {
+    width: 90%;
+    background-color: #fff;
+    margin-left: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #999999;
+    margin-bottom: 20px;
+}
+
+.info-box2 p {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.info-box2 h4 {
+    font-size: 2em;
+    margin-bottom: 20px;
+}
+
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+
+table th,
+table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/* Điều chỉnh chiều rộng của cột "Yêu cầu" */
+table th:first-child,
+table td:first-child {
+    width: 15%;
+    /* Điều chỉnh tỷ lệ theo nhu cầu */
+}
+
+table th:last-child,
+table td:last-child {
+    width: 20%;
+    /* Điều chỉnh tỷ lệ theo nhu cầu */
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+.write-request {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block;
+}
+
+.write-request:hover {
+    background-color: #0056b3;
+}
+
+.calendar,
+.available_voucher,
+.exchange_voucher {
+    margin-top: 20px;
+}
+
+.calendar p {
+    font-size: 1.2em;
+    color: #555;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+}
+
+/* ===================== CÁC LOẠI FORM  ================= */
+.request-form {
+    margin: auto;
+    padding: 20px;
+    max-width: 1360px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.form-row {
+    display: flex;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-group {
+    flex: 1;
+    margin-right: 15px;
+}
+
+.form-group:last-child {
+    margin-right: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.custom-btn {
+    border-radius: 10px;
+    width: 200px;
+    justify-content: center;
+    margin: 0 auto;
+    display: block;
+}
+
+#timeSheetDropdown {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    outline: none;
+    cursor: pointer;
+}
+
+#timeSheetDropdown option {
+    padding: 10px;
+}
+
+
+.btn-block {
+    display: block;
+    width: 40%;
+}
+
+.text-center-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .notification-wrapper {
     position: fixed;
     top: 50%;
@@ -39,4 +320,51 @@
 
 .notification .close:hover {
     color: #333;
+}
+
+.search-wrapper1 {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px;
+    margin-left: 350px;
+}
+
+.search-wrapper1 input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    padding-right: 30px; 
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-wrapper1 i {
+    position: absolute;
+    right: 10px; 
+    color: #a6a6a6; 
+    font-size: 18px; 
+    top: 15px;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.search-wrapper input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    padding-right: 30px; 
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-wrapper i {
+    position: absolute;
+    right: 10px; 
+    color: #a6a6a6; 
+    font-size: 18px; 
+    top: 15px;
 }

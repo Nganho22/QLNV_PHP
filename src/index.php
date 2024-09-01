@@ -6,7 +6,7 @@ require_once './controller/PassController.php';
 require_once './controller/ProjectController.php';
 require_once './controller/RequestController.php';
 require_once './controller/FelicitationController.php';
-
+require_once './controller/VoucherController.php';
 
 $action = "";
 if (isset($_REQUEST["action"]))
@@ -60,6 +60,11 @@ switch ($action)
         $controller = new ProjectController();
         $controller->GetProjectPage();
         break;
+    case "GetDetailProjectPage": 
+        $controller = new ProjectController();
+        $projectId = isset($_GET['id']) ? $_GET['id'] : null;
+        $controller->GetDetailProjectPage($projectId);
+        break;
     case "GetCheckinoutPage":
         $controller = new HomeController();
         $controller->Getcheckinout_page();
@@ -105,7 +110,7 @@ switch ($action)
         $controller->GetFelicitationPage();
         break; 
     case "GetVoucherPage":
-        $controller = new FelicitationController();
+        $controller = new VoucherController();
         $controller->GetVoucher_page();
         break;
 default:

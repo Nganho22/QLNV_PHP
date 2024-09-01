@@ -124,16 +124,28 @@ class RequestController {
 
                     if (isset($_GET['ajax'])) {
                         $requestHtml = '';
-                        foreach ($requests  as $request) {
+                        foreach ($requests as $request) {
+                            $trangThai = htmlspecialchars($request['TrangThai']);
+                            $trangThaiText = '';
+                        
+                            if ($trangThai == 0) {
+                                $trangThaiText = '<span style="color: red;">Chưa duyệt</span>';
+                            } elseif ($trangThai == 2) {
+                                $trangThaiText = '<span style="color: red;">Từ chối</span>';
+                            } else {
+                                $trangThaiText = 'Đã duyệt';
+                            }
+                        
                             $requestHtml .= '<tr>'
-                                . '<td><a href = "index.php?action=GetDetailRequestPage&id=' . htmlspecialchars($request['RequestID']) . '">' 
+                                . '<td><a href="index.php?action=GetDetailRequestPage&id=' . htmlspecialchars($request['RequestID']) . '">' 
                                 . htmlspecialchars($request['TieuDe']) . '</a></td>'
                                 . '<td>' . htmlspecialchars($request['Loai']) . '</td>'
                                 . '<td>' . htmlspecialchars($request['NguoiGui']) . '</td>'
                                 . '<td>' . htmlspecialchars($request['NgayGui']) . '</td>'
-                                . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
+                                . '<td>' . $trangThaiText . '</td>'
                                 . '</tr>';
                         }
+
                         $paginationHtml = '';
                         if ($totalRequests > $qllimit) {
                             for ($i = 1; $i <= ceil($totalRequests / $qllimit); $i++) {
@@ -192,6 +204,7 @@ class RequestController {
             $loai = $_POST['loai'];
             $tieuDe = $_POST['tieuDe'];
             $ngayGui = $_POST['ngayGui'];
+            $ngayChon = $_POST['ngayChon'];
             $noiDung = $_POST['noiDung'];
 
             if (empty($tieuDe)) {
@@ -202,7 +215,15 @@ class RequestController {
                 exit();
             }
 
-            $result = RequestModel::createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung);
+            if (empty($ngayChon)) {
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Vui lòng chọn ngày!'
+                ]);
+                exit();
+            }
+
+            $result = RequestModel::createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung);
 
             if ($result) {
                 echo json_encode([
@@ -328,18 +349,54 @@ class RequestController {
                     $detail = RequestModel::getDetailRequest($requestId);
                     $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
 
-                    if ($_SERVER['REQUEST_METHOD'] === 'POST'){ 
-                        $ngayGui = $_POST['ngayGui'];
+                    if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
+                        $ngayPhanHoi = $_POST['ngayPhanHoi'];
+                        $trangThai = $_POST['trangThai'];
                         $noiDung = $_POST['noiDung'];
+                    
+                        $loai = $detail['Loai'];
+                        $empID = $detail['EmpID'];
+                        $responseMessage = 'Xử lý đơn thành công';
+                        $responseSuccess = true;
 
-                        $result = '';
+                        $result = RequestModel::updateRequest($requestId, $ngayPhanHoi, $trangThai, $noiDung);
+                        
                         if ($result) {
-                            echo json_encode(['success' => true, 'message' => 'Xử lý đơn thành công']);
-                            exit();
+                            if ($trangThai == 1) {
+                                if ($loai == 'From home' || $loai == 'Nghỉ phép') {
+                                    $ngayChon = $detail['NgayChon'];
+                                    $opt_WFH = ($loai == 'From home') ? 1 : 0;
+                                    $opt_Nghi = ($loai == 'Nghỉ phép') ? 1 : 0;
+                                    
+                                    $insertCheckOKResult = RequestModel::insertCheckOK($empID, $ngayChon, $opt_WFH, $opt_Nghi);
+                                    if (!$insertCheckOKResult) {
+                                        $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật check in-out.';
+                                        $responseSuccess = false;
+                                    }
+                                } elseif ($loai == 'Time-sheet') {
+                                    $timeSheetID = $detail['Time_sheetID'];
+                                    $Up_TinhTrang_TS = $detail['Up_TinhTrang_Timesheet']; 
+                                    $up_ThoiGian_TS = $detail['Up_TinhTrang_Timesheet']; 
+                                    $updateTimeSheetResult = RequestModel::updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS);
+                                    if (!$updateTimeSheetResult) {
+                                        $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật Time-sheet.';
+                                        $responseSuccess = false;
+                                    }
+                                } elseif ($loai == 'Nghỉ việc') {
+                                    $updateProfileResult = RequestModel::updateProfile($empID);
+                                    if (!$updateProfileResult) {
+                                        $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật Profile.';
+                                        $responseSuccess = false;
+                                    }
+                                }
+                            }
                         } else {
-                            echo json_encode(['success' => false, 'message' => 'Xử lý đơn thất bại!']);
-                            exit();
+                            $responseMessage = 'Xử lý đơn thất bại!';
+                            $responseSuccess = false;
                         }
+                    
+                        echo json_encode(['success' => $responseSuccess, 'message' => $responseMessage]);
+                        exit();
                     }
                     
                     ob_start();
@@ -359,6 +416,7 @@ class RequestController {
         }
      
     }
+    
 
 }
 ?>
