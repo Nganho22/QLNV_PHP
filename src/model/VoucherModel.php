@@ -12,8 +12,15 @@ class VoucherModel {
     public static function getVoucherCountsByEmpID($user_id) {
         $db = new Database();
         $conn = $db->connect();
-        
-        $totalFelicitationQuery = "SELECT COUNT(*) AS total FROM Voucher";
+
+        $totalPointQuery = "SELECT DiemThuong as totalPoint FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($totalPointQuery);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $totalPoint = $result->fetch_assoc()['totalPoint']?? 0;
+
+        $totalFelicitationQuery = "SELECT COUNT(*) AS total FROM Voucher WHERE TinhTrang IS NOT NULL";
         $stmt = $conn->prepare($totalFelicitationQuery);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -41,40 +48,26 @@ class VoucherModel {
         $result = $stmt->get_result();
         $expiredVoucher = $result->fetch_assoc()['expired'] ?? 0;
 
-        $availableVoucherQuery = "SELECT COUNT(*) AS cvoucher FROM Voucher";
-        $stmt = $conn->prepare($availableVoucherQuery);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $availableVoucher = $result->fetch_assoc()['cvoucher'] ?? 0;
-
-        $usedVoucher = "SELECT COUNT(*) AS uvoucher
-                        FROM Voucher
-                        WHERE VoucherID AND TinhTrang = 'Đã dùng'";
-        $stmt = $conn->prepare($usedVoucher);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $usedVoucher = $result->fetch_assoc()['uvoucher']?? 0;
-
         $stmt->close();
         $db->close();
         return [
+            'totalPoint' => $totalPoint,
             'total' => $totalFelicitation,
             'existing' => $existingFelicitation,
             'exchange' => $exchangeFelicitation,
-            'cvoucher' => $availableVoucher,
-            'uvoucher' => $usedVoucher,
             'expired' => $expiredVoucher
+
         ];
     }
 
-    public static function getHistoryRequestsByEmpID( $limit, $offset) {
+    public static function getAvailableVoucherRequestsByEmpID( $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
     
         $query = "SELECT VoucherID, 
                         TenVoucher AS TenVoucher, 
                         HanSuDung AS HanSuDung,
-                        TriGia AS Diem
+                        TriGia AS TriGia
                     FROM Voucher 
                     WHERE TinhTrang <> 'Đã dùng'
                     LIMIT ? OFFSET ?";
@@ -90,14 +83,14 @@ class VoucherModel {
         return $requests;
     }
     
-    public static function getHistoryRequestsByEmpID_QL( $limit, $offset) {
+    public static function getAvailableVoucherRequestsByEmpID_QL( $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
     
         $query = "SELECT VoucherID, 
                         TenVoucher AS TenVoucher, 
                         HanSuDung AS HanSuDung,
-                        TriGia AS Diem
+                        TriGia AS TriGia
                     FROM Voucher 
                     WHERE TinhTrang IS NULL
                     LIMIT ? OFFSET ?";
@@ -132,7 +125,7 @@ class VoucherModel {
         return $total;
     }
 
-    public static function countFelicitationRequests_QL() {
+    public static function countExchangeVoucherRequests() {
         $db = new Database();
         $conn = $db->connect();
 
@@ -195,6 +188,23 @@ class VoucherModel {
         return $monthlyPoints;
     }
     
-    
+    public static function getVoucherDetails($voucherID) {
+    $db = new Database();
+    $conn = $db->connect();
+
+    $query = "SELECT TenVoucher, TriGia, HanSuDung, TinhTrang, ChiTiet, HuongDanSuDung
+              FROM Voucher
+              WHERE VoucherID = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $voucherID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $voucherDetails = $result->fetch_assoc();
+
+    $stmt->close();
+    $db->close();
+    return $voucherDetails;
+}
+
 }
 ?>

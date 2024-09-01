@@ -74,11 +74,28 @@
         </div>
         <!-- Cột bên phải -->
         <div class="right-column">
-            <?php $monthlyPoints = FelicitationModel::getPoint_Month($_SESSION['user']['EmpID']); ?>
-            <div class="stats-chart">
-                <h3>Thống kê điểm thưởng theo tháng:</h3>
-                <canvas id="rewardChart"></canvas>
-            </div>
+            <div class="gift-box">
+                        <h2>Voucher</h2>
+                            <div class="Voucher_List">
+                                <div class="info-box1">
+                                    <div class="row1">
+                                    <div class="left-box">
+                                        <p><strong>Nhân Viên</strong></p>
+                                            <input type="text" id="empName" name="empName" placeholder="Nhập tên nhân viên">    
+                                        <p><strong>Tổng điểm hiện có </strong></p>
+                                            <h4></h4>  
+                                    </div>
+                                    <div class="right-box">
+                                        <p><strong>Tặng điểm </strong></p>
+                                            <input type="text" id="giftPoint" name="giftPoint" placeholder="Nhập điểm">    
+                                    </div>
+                                    </div>
+                                </div>   
+                                <div class="text-center-btn mt-4">
+                                    <a href="index.php?action=GetFelicitationPage" class="btn btn-primary btn-block">Xác nhận</a>
+                                </div>
+                            </div>                   
+                        </div>
                 <div class="request-list">
                     <h2>Voucher</h2>
                         <div class="Voucher_List">
@@ -106,34 +123,6 @@
         </div>
 
     <script>
-        const ctx = document.getElementById('rewardChart').getContext('2d');
-
-        // Lấy dữ liệu điểm thưởng từ PHP
-        const monthlyPoints = [<?php echo implode(",", $monthlyPoints); ?>];
-
-        // Xác định màu nền dựa trên giá trị của điểm
-        const backgroundColors = monthlyPoints.map(point => point < 0 ? 'rgba(255, 99, 132, 0.2)' : 'rgba(75, 192, 192, 0.2)');
-
-        const rewardChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-                datasets: [{
-                    label: 'Điểm thưởng',
-                    data: monthlyPoints,
-                    backgroundColor: backgroundColors, // Sử dụng màu nền tùy thuộc vào giá trị điểm
-                    borderColor: '#a6a6a6',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
 
 
             $(document).ready(function() {

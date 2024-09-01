@@ -48,25 +48,25 @@
                     <table class="table" id="available_voucher-table">
                         <thead>
                             <tr>
-                                <th>Số điểm</th>
+                                <th>Trị giá</th>
                                 <th>Tên Voucher</th>
                                 <th>Hạn sử dụng</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($historyRequests as $request): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($request['Diem']); ?></td>
-                                    <td><?php echo htmlspecialchars($request['TenVoucher']); ?></td>
+                            <?php foreach ($availableVoucherRequests as $request): ?>
+                                <tr data-id="<?php echo htmlspecialchars($request['VoucherID']); ?>">
+                                    <td><?php echo htmlspecialchars($request['TriGia']); ?></td>
+                                    <td><a href="#" class="voucher-link" data-id="<?php echo htmlspecialchars($request['VoucherID']); ?>"><?php echo htmlspecialchars($request['TenVoucher']); ?></a></td>
                                     <td><?php echo htmlspecialchars($request['HanSuDung']); ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                     <div id="available_voucher-pagination" class="pagination pagination-wrapper">
-                        <?php if ($totalHistory > $limit): ?>
-                            <?php for ($i = 1; $i <= ceil($totalHistory / $limit); $i++): ?>
-                                <li class="page-item <?php echo ($i == $pageHistory) ? 'active' : ''; ?>">
+                        <?php if ($totalAvailableVoucher > $limit): ?>
+                            <?php for ($i = 1; $i <= ceil($totalAvailableVoucher / $limit); $i++): ?>
+                                <li class="page-item <?php echo ($i == $pageAvailableVoucher) ? 'active' : ''; ?>">
                                     <a class="page-link" href="#" data-page="<?php echo $i; ?>"><?php echo $i; ?></a>
                                 </li>
                             <?php endfor; ?>
@@ -82,26 +82,26 @@
                         <table class="table" id="exchange_voucher-table">
                             <thead>
                                 <tr>
-                                    <th>Số điểm</th>
+                                    <th>Trị giá</th>
                                     <th>Tên Voucher</th>
                                     <th>Hạn sử dụng</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            <?php foreach ($history_QLRequests as $request): ?>
-                                    <tr>
+                            <?php foreach ($exchangeVoucherRequests as $request): ?>
+                                    <tr data-id="<?php echo htmlspecialchars($request['VoucherID']); ?>">
                                         <td>
-                                            <?php echo htmlspecialchars($request['Diem']); ?></td>
-                                        <td><?php echo htmlspecialchars($request['TenVoucher']); ?></td>
+                                            <?php echo htmlspecialchars($request['TriGia']); ?></td>
+                                            <td><a href="#" class="voucher-link" data-id="<?php echo htmlspecialchars($request['VoucherID']); ?>"><?php echo htmlspecialchars($request['TenVoucher']); ?></a></td>
                                         <td><?php echo htmlspecialchars($request['HanSuDung']); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
                         <div id="exchange_voucher-pagination" class="pagination pagination-wrapper">
-                            <?php if ($totalHistory_QL > $limit): ?>
-                                <?php for ($i = 1; $i <= ceil($totalHistory_QL / $limit); $i++): ?>
-                                    <li class="page-item <?php echo ($i == $pageHistory_QL) ? 'active' : ''; ?>">
+                            <?php if ($totalExchangeVoucher > $limit): ?>
+                                <?php for ($i = 1; $i <= ceil($totalExchangeVoucher / $limit); $i++): ?>
+                                    <li class="page-item <?php echo ($i == $pageExchangeVoucher) ? 'active' : ''; ?>">
                                         <a class="page-link" href="#" data-page="<?php echo $i; ?>"><?php echo $i; ?></a>
                                     </li>
                                 <?php endfor; ?>
@@ -113,34 +113,36 @@
         <!-- Cột bên phải -->
         <div class="right-column">
             <div class="info-box1">
-                <p><strong>Trị giá của Voucher </strong></p>
-                    <h4><?php echo htmlspecialchars($creq['total']); ?></h4>
+            <p><strong>Tổng điểm </strong></p>
+                <h4><?php echo htmlspecialchars($creq['totalPoint']); ?></h4> 
+
             </div>
                 <div class="request-list">
                     <h2>Chi tiết Voucher</h2>
                         <div class="Voucher_List">
                             <div class="info-box2">
                                 <div class="row1">
-                                <div class="left-box">
-                                    <p><strong>Tên Voucher</strong></p>
-                                        <h4><?php echo htmlspecialchars($creq['existing']); ?></h4>      
-                                    <p><strong>Trị Giá </strong></p>
-                                        <h4><?php echo htmlspecialchars($creq['cvoucher']); ?></h4>
-                                    <p><strong>Hạn sử dụng </strong></p>
-                                        <h4><?php echo htmlspecialchars($creq['cvoucher']); ?></h4>
-                                    <p><strong>Tình trạng </strong></p>
-                                        <h4><?php echo htmlspecialchars($creq['cvoucher']); ?></h4>
-                                </div>
+                                    <div class="left-box">
+                                        <p><strong>Tên Voucher</strong></p>
+                                            <ul id= "voucher-name"></ul>       
+                                        <p><strong>Hạn sử dụng </strong></p>
+                                            <ul id= "voucher-expiry"></ul>
+                                        <p><strong>Chi tiết </strong></p>
+                                            <ul id ="voucher-detail"></ul>
+                                        <p><strong>Hướng dẫn sử dụng</strong></p>
+                                            <ul id = "voucher-guide"></ul>
+                                    </div>
                                 <div class="right-box">
-                                    <p><strong>Chi tiết </strong></p>
-                                        <h4><?php echo htmlspecialchars($creq['uvoucher']); ?></h4>
-                                    <p><strong>Hướng dẫn sử dụng</strong></p>
-                                        <h4><?php echo htmlspecialchars($creq['uvoucher']); ?></h4>
+                                    <p><strong>Trị Giá </strong></p>
+                                        <ul id ="valueBox"></ul>
+                                    <p><strong>Tình trạng </strong></p>
+                                        <ul id ="voucher-status"></ul>
+
                                     </div>
                                 </div>
                             </div>   
                             <div class="text-center-btn mt-4">
-                                <button type="submit" class="btn btn-primary">Dùng voucher</button>
+                                <a href="index.php?action=GetCheck_inoutPage" class="btn btn-primary btn-block">Dùng Voucher</a>
                             </div>
                         </div>                   
                     </div>
@@ -160,12 +162,12 @@
 
     function loadAvailableVoucher(page, element) {
         $.ajax({
-            url: 'index.php?action=GetVoucherPage&ajax=true&pageHistory=' + page,
+            url: 'index.php?action=GetVoucherPage&ajax=true&pageAvailableVoucher=' + page,
             method: 'GET',
             success: function(response) {
                 var data = JSON.parse(response);
-                $('#available_voucher-table tbody').html(data.historyHtml);
-                $('#available_voucher-pagination').html(data.historyPagination);
+                $('#available_voucher-table tbody').html(data.availableVoucherHtml);
+                $('#available_voucher-pagination').html(data.availableVoucherPagination);
 
                 // Cập nhật trạng thái active
                 var updatedPagination = $('#available_voucher-pagination .page-link[data-page="' + page + '"]');
@@ -188,12 +190,12 @@
 
         function loadExchangeVoucher(page, element) {
             $.ajax({
-                url: 'index.php?action=GetVoucherPage&ajax=true&pageHistory_QL=' + page,
+                url: 'index.php?action=GetVoucherPage&ajax=true&pageExchangeVoucher=' + page,
                 method: 'GET',
                 success: function(response) {
                     var data = JSON.parse(response);
-                    $('#exchange_voucher-table tbody').html(data.history_QLHtml);
-                    $('#exchange_voucher-pagination').html(data.history_QLPagination);
+                    $('#exchange_voucher-table tbody').html(data.exchangeVoucherHtml);
+                    $('#exchange_voucher-pagination').html(data.exchangeVoucherPagination);
 
                     // Cập nhật trạng thái active
                     var updatedPagination = $('#exchange_voucher-pagination .page-link[data-page="' + page + '"]');
@@ -205,7 +207,37 @@
             });
         }
     });
+    $(document).ready(function() {
+    // Xử lý sự kiện nhấn vào liên kết voucher-link
+    $(document).on('click', '.voucher-link', function(e) {
+        e.preventDefault(); // Ngăn không cho liên kết thực hiện hành động mặc định
+        var voucherID = $(this).data('id'); // Lấy VoucherID từ thuộc tính data-id
+        loadVoucherDetails(voucherID);
+    });
 
+    function loadVoucherDetails(voucherID) {
+        $.ajax({
+            url: 'index.php?action=GetVoucherDetails&voucherID=' + voucherID,
+            method: 'GET',
+            success: function(response) {
+                var data = JSON.parse(response);
+
+                // Cập nhật thông tin vào các phần tử chi tiết voucher
+                $('#valueBox').text(data.TriGia); // Hiển thị trị giá voucher
+                $('#voucher-name').text(data.TenVoucher);
+                $('#voucher-expiry').text(data.HanSuDung);
+                $('#voucher-status').text(data.TinhTrang);
+                $('#voucher-detail').text(data.ChiTiet);
+                $('#voucher-guide').text(data.HuongDanSuDung);
+            },
+            error: function() {
+                console.error('Không thể tải dữ liệu chi tiết voucher');
+            }
+        });
+    }
+});
+
+    
     </script>
 </body>
 </html>

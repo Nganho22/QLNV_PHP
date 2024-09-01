@@ -1,0 +1,209 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+}
+
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center; /* Căn giữa nội dung */
+    width: 1000vw; /* Đảm bảo container chiếm toàn bộ chiều rộng của màn hình */
+    box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+}
+
+.calendar {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-sizing: border-box; /* Đảm bảo padding và border không ảnh hưởng đến kích thước */
+    font-size: 1.2rem; /* Tăng kích thước font của các phần tử trong lịch */
+}
+
+.cadays {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.cadays button {
+    background-color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.cadays button.prev {
+    left: -12%;
+}
+
+.cadays button.next {
+    right: -12%;
+}
+
+.cadays ul#calendarDays {
+    margin-right: -70px;
+    margin-left: -70px;
+    list-style: none;
+    display: flex;
+}
+
+.calendar .weekdays, .calendar .days {
+    margin: 0;
+    padding: 5px 0;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: -100px;
+    margin-left: -50px;
+    list-style: none;
+    
+}
+
+.calendar .days li {
+    width: 14.28%; 
+    padding-left: 50px;
+    margin-bottom: 10px; 
+    font-size: 18px; 
+    color: #666;
+    text-align: left;
+    background-color: #f0f0f0;
+    padding: 40px 20px; 
+    border-radius: 8px;
+    position: relative;
+}
+
+.calendar .weekdays li{
+    width: 14.28%; 
+    padding-left: 50px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #666;
+    text-align: center;
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+
+.calendar .days li {
+    position: relative;
+}
+
+/* Thông tin Check-in */
+.calendar .days li::before {
+    content: attr(data-info-checkin);
+    position: absolute;
+    top:20px; /* Đặt thông tin Check-in ở phần dưới cùng */
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    font-size: 15px;
+    white-space: nowrap;
+    text-align: center;
+    box-sizing: border-box;
+    display: none; /* Mặc định không hiển thị */
+}
+
+/* Thông tin Check-out */
+.calendar .days li::after {
+    content: attr(data-info-checkout);
+    position: absolute;
+    bottom: 20px; /* Đặt thông tin Check-out ở dưới thông tin Check-in */
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 5px;
+    font-size: 15px;
+    white-space: nowrap;
+    text-align: center; 
+    box-sizing: border-box;
+    display: none; /* Mặc định không hiển thị */
+}
+
+/* Hiển thị thông tin khi có dữ liệu */
+.calendar .days li[data-info-checkin]:not([data-info-checkin=""])::before {
+    display: block;
+}
+
+.calendar .days li[data-info-checkout]:not([data-info-checkout=""])::after {
+    display: block;
+}
+
+.calendar .month {
+    margin: 0 auto; /* Căn giữa phần tử */
+    display: flex;
+    justify-content: center; /* Căn giữa nội dung trong phần tử */
+    padding: 20px;
+    background: #ffffff;
+    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.calendar .month span {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+.calendar .days li.day-today {
+    background-color: #74ffa9; 
+    color: #ffffff;
+}
+
+.info-box {
+    width: 25%;
+    background-color: #fff;
+    padding: 20px;
+    margin: 10px;
+    margin-left: 60px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #999999;
+}
+
+.info-box1 {
+    width: 25%;
+    background-color: #fff;
+    padding: 10px;
+    margin: 10px;
+    margin-left: 60px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #999999;
+}
+
+.info-box p {
+    text-align: center;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.info-box h4 {
+    text-align: center;
+    font-size: 2em;
+    margin: 0;
+}
+
+.btn-primary {
+    margin-bottom: 10px;
+    background-color: #ffffff; 
+    border-color: #ffffff; 
+    color: #000000; 
+}
+
+.btn-primary:hover {
+    background-color: #0056b3; 
+    border-color: #004085; 
+}

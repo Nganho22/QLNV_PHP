@@ -99,12 +99,16 @@ body {
 
 .info-box2 p {
     font-size: 15px;
-    margin-bottom: 10px;
+    margin-right: 150px; /* Điều chỉnh khoảng cách bên phải */
+    margin-bottom: 10px; /* Điều chỉnh khoảng cách dưới */
+    text-align: left; /* Căn chỉnh văn bản bên trái nếu cần */
 }
 
-.info-box2 h4 {
-    font-size: 2em;
-    margin-bottom: 20px;
+.info-box2 ul {
+    font-size: 15px;
+    margin-right: 100px; /* Điều chỉnh khoảng cách bên phải */
+    margin-bottom: 20px; /* Điều chỉnh khoảng cách dưới */
+    text-align: left; /* Căn chỉnh văn bản bên trái nếu cần */
 }
 
 
@@ -367,4 +371,8 @@ textarea {
     color: #a6a6a6; 
     font-size: 18px; 
     top: 15px;
+}
+
+table tr {
+    cursor: pointer; /* Đảm bảo con trỏ chuột thay đổi khi di chuột qua hàng */
 }

@@ -7,6 +7,7 @@ require_once './controller/ProjectController.php';
 require_once './controller/RequestController.php';
 require_once './controller/FelicitationController.php';
 require_once './controller/VoucherController.php';
+require_once './controller/Check_inoutController.php';
 
 $action = "";
 if (isset($_REQUEST["action"]))
@@ -112,6 +113,14 @@ switch ($action)
     case "GetVoucherPage":
         $controller = new VoucherController();
         $controller->GetVoucher_page();
+        break;
+    case 'GetVoucherDetails':
+        $controller = new VoucherController();
+        $controller->GetVoucherDetails();
+        break;
+    case "GetCheck_inoutPage":
+        $controller = new Check_inoutController();
+        $controller->GetCheck_inoutPage();
         break;
 default:
         $controller = new HomeController();
