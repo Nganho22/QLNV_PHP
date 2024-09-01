@@ -8,7 +8,7 @@ require_once './controller/RequestController.php';
 require_once './controller/FelicitationController.php';
 require_once './controller/VoucherController.php';
 require_once './controller/Check_inoutController.php';
-
+require_once './controller/ActivityController.php';
 $action = "";
 if (isset($_REQUEST["action"]))
 {    
@@ -71,7 +71,7 @@ switch ($action)
         $controller->Getcheckinout_page();
         break;
     case "GetActivityPage":
-        $controller = new HomeController();
+        $controller = new ActivityController();
         $controller->GetActivity_page();
         break;
     case "GetRequestPage":

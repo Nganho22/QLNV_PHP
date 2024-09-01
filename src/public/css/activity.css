@@ -144,9 +144,9 @@ body {
     color: #333;
 }
 
-.activity-item{
+.activity-item {
     position: relative;
-    margin-left: 650px;
+    background-color: white;
 }
 
 .activity-item li .status {
@@ -167,7 +167,7 @@ body {
     margin: 0;
 }
 
-.activity-item li{
+.activity-item li {
     background-color: #f9f9f9;
     border-radius: 8px;
     margin-bottom: 10px;
