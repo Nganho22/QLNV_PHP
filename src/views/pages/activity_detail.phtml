@@ -122,21 +122,23 @@
 </main>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        function getRandomColor() {
-            var letters = '0123456789ABCDEF';
-            var color = '#';
+       function getRandomColor(existingColors) {
+        var letters = '0123456789ABCDEF';
+        var color;
+        do {
+            color = '#';
             for (var i = 0; i < 6; i++) {
                 color += letters[Math.floor(Math.random() * 16)];
             }
-            return color;
-        }
-        var labels = ['Ban A', 'Ban B', 'Ban C'];
+        } while (existingColors.includes(color)); // Check if color already exists
+        return color;
+    }
+    var labels = ['Ban A', 'Ban B', 'Ban C'];
     var data = [45, 45, 10];
     var backgroundColors = [];
 
-    // Generate a random color for each label
     for (var i = 0; i < labels.length; i++) {
-        backgroundColors.push(getRandomColor());
+        backgroundColors.push(getRandomColor(backgroundColors));
     }
 
     var ctx = document.getElementById('participationRateChart').getContext('2d');
@@ -152,6 +154,6 @@
         options: {
             responsive: true
         }
-            });
+    });
     </script>
 </body>

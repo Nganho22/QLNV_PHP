@@ -98,7 +98,7 @@
                         </form>
                         <?php if (!empty($pagedActivitiesCB)): ?>
                             <?php foreach ($pagedActivitiesCB as $activity): ?>
-                                <div class="activity-item">
+                                <div class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
                                 <?php
                                     $statusColor = '#bdbdbd';
 
@@ -153,7 +153,7 @@
                         </form>
                         <?php if (!empty($pagedActivitiesLK)): ?>
                             <?php foreach ($pagedActivitiesLK as $activity): ?>
-                                <div class="activity-item">
+                                <div class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
                                 <?php
                                     $statusColor = '#bdbdbd';
 
