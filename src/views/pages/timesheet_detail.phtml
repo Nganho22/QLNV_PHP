@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time-sheet</title>
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/timesheet.css" type="text/css"/> 
+    <link rel="stylesheet" href="https://unpkg.com/boxicons/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <div class="back-button" id ="back-button" style="position: relative;">
+        <button style=" border: none; "><i class="fas fa-arrow-left"></i> Quay lại</button>
+    </div>
+
+    <div class="container">
+        <header class="header">
+            <h1><strong>Nhiệm vụ:</strong> <?php echo htmlspecialchars($detail['Time_sheetID']); ?></h1>
+        </header>
+
+        <div class="info-sections">
+            <section class="project-overview">
+                <div class="card">
+                    <div class="icon"><i class='bx bx-user'></i></div>
+                    <div class="details">
+                        <p>Nhân viên</p>
+                        <h3><?php echo htmlspecialchars($detail['NguoiGui']); ?></h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon"><i class='bx bx-time'></i></div>
+                    <div class="details">
+                        <p>Số giờ thực hiện</p>
+                        <h3><?php echo htmlspecialchars($detail['SoGioThucHien']); ?></h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon"><i class='bx bx-buildings'></i></div>
+                    <div class="details">
+                        <p>Trạng thái</p>
+                        <h3><?php echo htmlspecialchars($detail['TrangThai']); ?></h3>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="icon"><i class='bx bx-timer'></i></div>
+                    <div class="details">
+                        <p>Tiến độ</p>
+                        <h3><?php echo htmlspecialchars($detail['TienDo']); ?></h3>
+                    </div>
+                </div>
+            </section>
+
+            <section class="dates">
+                <div class="date">
+                    <p>Ngày giao</p>
+                    <h3><?php echo htmlspecialchars($detail['NgayGiao']); ?></h3>
+                </div>
+                <div class="date">
+                    <p>Hạn chót</p>
+                    <h3><?php echo htmlspecialchars($detail['HanChot']); ?></h3>
+                </div>
+                <div class="date">
+                    <p>Điểm thưởng</p>
+                    <h3><?php echo htmlspecialchars($detail['DiemThuong']); ?></h3>
+                </div>
+                <div class="date">
+                    <p>Trễ</p>
+                    <h3><?php echo htmlspecialchars($detail['Tre']); ?></h3>
+                </div>
+            </section>
+        </div>
+        
+        <div class="main-content">
+            <section class = "task-list">
+                <div class="info-row">
+                    <div class="info-item"><strong>Nội dung:</strong> <?php echo htmlspecialchars($detail['NoiDung']); ?></div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('back-button').addEventListener('click', function() {
+        window.history.back();
+    });
+</script>
+</body>
+</html>

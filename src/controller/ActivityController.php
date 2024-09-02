@@ -17,7 +17,7 @@ class ActivityController{
             $currentPageCB = isset($_GET['pageCB']) ? (int)$_GET['pageCB'] : 1;
             $searchLK = isset($_GET['searchlk']) ? $_GET['searchlk'] : '';
             $currentPageLK = isset($_GET['pageLK']) ? (int)$_GET['pageLK'] : 1;
-            $itemsPerPage = 3;
+            $itemsPerPage = 1;
 
                 $countActivityByMonth = $model->CountActivityByMonth(date('m'));
                 $countAllActivity = $model->CountActivity();

@@ -10,6 +10,14 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
+    <?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        </div>
+    <?php endif; ?>
     <div class="back-button" style="position: relative;">
         <a href="index.php?action=GetProjectPage" class=" btn-link"><i class="fas fa-arrow-left"></i> Quay lại</a>
     </div>
@@ -91,7 +99,8 @@
                         <tbody id="request-table-body">
                             <?php foreach ($timeSheets as $timeSheet): ?>
                                 <tr>
-                                    <td><?= htmlspecialchars($timeSheet['Time_sheetID']) ?></td>
+                                    <td><a href = "index.php?action=GetDetailTimeSheet&timesheetID=<?php echo htmlspecialchars($timeSheet['Time_sheetID']); ?>"> 
+                                        <?= htmlspecialchars($timeSheet['Time_sheetID']) ?></a></td>
                                     <td><?= htmlspecialchars($timeSheet['ProjectID']) ?></td>
                                     <td><?= htmlspecialchars($timeSheet['NoiDung']) ?></td>
                                     <td><?= htmlspecialchars($timeSheet['NguoiGui']) ?></td>
@@ -119,8 +128,9 @@
             <section class="task-creation">
                 <h2>Tạo nhiệm vụ:</h2>
                 <form id="task-creation-form">
-                    <label for="task-name">Tên nhiệm vụ:</label>
-                    <input type="text" id="task-name" name="task_name" required>
+                    <input type="hidden" name="projectID" id="projectID" value="<?= htmlspecialchars($projectId) ?>">
+                    <input type="hidden" name="today" id="today" value="">
+                    <input type="hidden" name="phongID" id="phongID" value="<?= htmlspecialchars($detail['PhongID']) ?>">
 
                     <label for="assignee">Người phụ trách:</label>
                     <select id="assignee" name="assignee" required>
@@ -141,9 +151,6 @@
                     <label for="description">Nội dung:</label>
                     <textarea id="description" name="description" required></textarea>
 
-                    <label for="file">Tài liệu:</label>
-                    <input type="file" id="file" name="file">
-
                     <button type="submit">Xác Nhận</button>
                 </form>
             </section>
@@ -160,7 +167,33 @@
     </div>
 
     <script>
+        var projectId = <?php echo json_encode($detail['ProjectID']); ?>;
+
+        function closePopup() {
+            console.log("Popup closing...");
+            document.getElementById('popup').style.display = 'none';; 
+        }
+
+        function showPopup(message, success) {
+            var popup = document.getElementById('popup');
+            var popupMessage = document.getElementById('popupMessage');
+            var popupContent = document.querySelector('.popup-content');
+
+            popupMessage.textContent = message;
+            popup.style.display = 'flex';
+            if (success) {
+                    const closeButton = document.querySelector('.close-popup-btn');
+                    closeButton.onclick = function() {
+                        window.location.reload(); 
+                    };
+                }
+        }
+
         $(document).ready(function() {
+            $('.close-popup-btn').on('click', function() {
+                closePopup();
+            });
+
             $('.search-box').off('input change').on('input change', function() {
                 filterRequests();
             });
@@ -171,25 +204,54 @@
                 filterRequests(page);
             });
 
-            $('#reset-all-button').on('click', function() {
-                $('#search-box').val('');
+            if ($('#task-creation-form').length > 0) {
+                var today = new Date();
+                var day = ("0" + today.getDate()).slice(-2); // Lấy ngày và thêm số 0 vào trước nếu cần
+                var month = ("0" + (today.getMonth() + 1)).slice(-2); // Lấy tháng và thêm số 0 vào trước nếu cần
+                var year = today.getFullYear();
+                var todayFormatted = year + '-' + month + '-' + day;
 
-                $.get('index.php?action=GetProjectPage', { ajax: 1, search: '', page: 1 }, function(response) {
-                    var data = JSON.parse(response);
-                    $('#request-table-body').html(data.requestHtml);
-                    $('#pagination').html(data.paginationHtml);
+                $('input[name="today"]').val(todayFormatted);
+            }
 
-                    $('#pagination .page-item').removeClass('active');
-                        $('#pagination .page-item').filter(function() {
-                            return $(this).find('.page-link').data('page') === 1;
-                        }).addClass('active');
+            $('#task-creation-form').on('submit', function(e) {
+                e.preventDefault();
+                var deadline = new Date($('#deadline').val());
+                var today = new Date($('input[name="today"]').val());
+
+                if (deadline < today) {
+                    showPopup('Vui lòng chọn ngày phù hợp.', false);
+                    return; // Dừng việc gửi form nếu ngày deadline nhỏ hơn ngày hôm nay
+                }
+                var formData = new FormData(this); 
+
+                $.ajax({
+                    url: 'index.php?action=GetDetailProjectPage', 
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        console.log("response: ", response);
+                        var data = JSON.parse(response);
+                        if (data.success) {
+                            showPopup('Nhiệm vụ đã được tạo thành công.', true);
+                        } else {
+                            showPopup('Đã xảy ra lỗi: ' + data.message, false);
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        showPopup('Đã xảy ra lỗi: ' + error, false);
+                    }
                 });
             });
 
             function filterRequests(page = 1) {
                 var searchTerm = $('.search-box').val();
+                var projectID = projectId;
+                // var timesheetID = timesheetID;
                 
-                $.get('index.php?action=GetDetailProjectPage', { ajax: 1, search: searchTerm, page: page }, function(response) {
+                $.get('index.php?action=GetDetailProjectPage', { ajax: 1, search: searchTerm, page: page, projectID: projectID}, function(response) {
                     console.log("Search term: ", searchTerm);
                     console.log("response: ", response);
                     try {

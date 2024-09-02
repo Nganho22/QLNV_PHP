@@ -95,7 +95,7 @@
                     <tbody id="request-table-body">
                         <?php foreach ($projects as $project): ?>
                             <tr>
-                                <td><a href = "index.php?action=GetDetailProjectPage&id=<?php echo htmlspecialchars($project['ProjectID']); ?>"> 
+                                <td><a href = "index.php?action=GetDetailProjectPage&projectID=<?php echo htmlspecialchars($project['ProjectID']); ?>"> 
                                     <?php echo htmlspecialchars($project['ProjectID']); ?> </a></td>
                                 <td><?php echo htmlspecialchars($project['Ten']); ?></td>
                                 <td><?php echo htmlspecialchars($project['PhongID']); ?></td>

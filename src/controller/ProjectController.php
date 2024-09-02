@@ -14,17 +14,22 @@ class ProjectController {
             $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
             $offset = ($page - 1) * $limit;
             $message='';
-            if (isset($_GET['status'])) {
-                if ($_GET['status']  === 'checked-in') {
-                    $message = "Bạn đã check-in thành công.";
-                } elseif ($_GET['status']  === 'checked-out') {
-                    $message = "Bạn đã check-out thành công.";
-                } elseif ($_GET['status']  === 'already-checked-out') {
-                    $message = "Bạn đã check-out, không thể thực hiện lại.";
-                } else {
-                    $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                if (isset($_GET['status'])) {
+                    if ($_GET['status'] === 'logged_in') {
+                        $message = 'Chúc mừng đăng nhập thành công!';
+                    }
+                    elseif ($_GET['status']  === 'checked-in') {
+                        $message = "Bạn đã check-in thành công.";
+                    } elseif ($_GET['status']  === 'checked-out') {
+                        $message = "Bạn đã check-out thành công.";
+                    } elseif ($_GET['status']  === 'already-checked-out') {
+                        $message = "Bạn đã check-out, không thể thực hiện lại.";
+                    } elseif ($_GET['status']  === 'Nghi') {
+                        $message = "Bạn đã xin nghỉ hôm nay.";
+                    } else {
+                        $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                    }
                 }
-            }
 
             switch ($role) {
                 case 'Quản lý':
@@ -48,7 +53,7 @@ class ProjectController {
                     $requestHtml = '';
                     foreach ($projects as $project) {
                         $requestHtml .= '<tr>'
-                            . '<td><a href="index.php?action=GetDetailProjectPage&id=' . htmlspecialchars($project['ProjectID']) . '">' 
+                            . '<td><a href="index.php?action=GetDetailProjectPage&projectID=' . htmlspecialchars($project['ProjectID']) . '">' 
                             . htmlspecialchars($project['ProjectID']) . '</a></td>'
                             . '<td>' . htmlspecialchars($project['Ten']) . '</td>'
                             . '<td>' . htmlspecialchars($project['PhongID']) . '</td>'
@@ -80,37 +85,41 @@ class ProjectController {
                     $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
                     $progressFilters = isset($_GET['processes']) ? $_GET['processes'] : [];
                     $statusFilters = isset($_GET['types']) ? $_GET['types'] : [];
-                    $classFilters = isset($_GET['classes']) ? $_GET['classes'] : [];
                     $profile = UserModel::getprofile($user_id);
-                    $file = "./views/pages/project_list.phtml";
-
-                    $projectData = ProjectModel::getProjectsAndCount($user_id, $searchTerm, $progressFilters, $statusFilters, $classFilters, $limit, $offset);
+                    $cProject = ProjectModel::getProjectCountsByEmpID_NV($user_id);
+                    $listProject = ProjectModel::getListProject_NV($user_id, $limit, $offset);
+                    
+                    $projectData = ProjectModel::getProjectsAndCount_NV($user_id, $searchTerm, $progressFilters, $statusFilters, $limit, $offset);
                     $projects = $projectData['projects'];
                     $totalProjects = $projectData['total'];
+
+                    $file = "./views/pages/project_list.phtml";
+
                     if (isset($_GET['ajax'])) {
                         $requestHtml = '';
-                        foreach ($projects as $project) {
-                            $requestHtml .= '<tr>'
-                                . '<td><a href="index.php?action=GetDetailProjectPage&id=' . htmlspecialchars($project['ProjectID']) . '">' 
-                                . htmlspecialchars($project['ProjectID']) . '</a></td>'
-                                . '<td>' . htmlspecialchars($project['Ten']) . '</td>'
-                                . '<td>' . htmlspecialchars($project['PhongID']) . '</td>'
-                                . '<td>' . htmlspecialchars($project['TienDo']) . '</td>'
-                                . '<td>' . htmlspecialchars($project['TinhTrang']) . '</td>'
-                                . '</tr>';
+                    foreach ($projects as $project) {
+                        $requestHtml .= '<tr>'
+                            . '<td><a href="index.php?action=GetDetailProjectPage&projectID=' . htmlspecialchars($project['ProjectID']) . '">' 
+                            . htmlspecialchars($project['ProjectID']) . '</a></td>'
+                            . '<td>' . htmlspecialchars($project['Ten']) . '</td>'
+                            . '<td>' . htmlspecialchars($project['PhongID']) . '</td>'
+                            . '<td>' . htmlspecialchars($project['TienDo']) . '</td>'
+                            . '<td>' . htmlspecialchars($project['TinhTrang']) . '</td>'
+                            . '</tr>';
+                    }
+
+                    $paginationHtml = '';
+                    if ($totalProjects > $limit) {
+                        for ($i = 1; $i <= ceil($totalProjects / $limit); $i++) {
+                            $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
                         }
-    
-                        $paginationHtml = '';
-                        if ($totalProjects > $limit) {
-                            for ($i = 1; $i <= ceil($totalProjects / $limit); $i++) {
-                                $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
-                            }
-                        }
-    
-                        echo json_encode([
-                            'requestHtml' => $requestHtml,
-                            'paginationHtml' => $paginationHtml
-                        ]);
+                    }
+
+                    echo json_encode([
+                        'requestHtml' => $requestHtml,
+                        'paginationHtml' => $paginationHtml
+                    ]);
+                        
                     } else {
                         ob_start();
                         require($file);
@@ -131,38 +140,44 @@ class ProjectController {
      
     }
 
-    public function GetDetailProjectPage($projectId) {
+    public function GetDetailProjectPage() {
         if (isset($_SESSION['user'])) {
             $title='Project';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
-            // $projectId = $_SESSION['projectId'];
-            
+
             $message='';
-            if (isset($_GET['status'])) {
-                if ($_GET['status']  === 'checked-in') {
-                    $message = "Bạn đã check-in thành công.";
-                } elseif ($_GET['status']  === 'checked-out') {
-                    $message = "Bạn đã check-out thành công.";
-                } elseif ($_GET['status']  === 'already-checked-out') {
-                    $message = "Bạn đã check-out, không thể thực hiện lại.";
-                } else {
-                    $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                if (isset($_GET['status'])) {
+                    if ($_GET['status'] === 'logged_in') {
+                        $message = 'Chúc mừng đăng nhập thành công!';
+                    }
+                    elseif ($_GET['status']  === 'checked-in') {
+                        $message = "Bạn đã check-in thành công.";
+                    } elseif ($_GET['status']  === 'checked-out') {
+                        $message = "Bạn đã check-out thành công.";
+                    } elseif ($_GET['status']  === 'already-checked-out') {
+                        $message = "Bạn đã check-out, không thể thực hiện lại.";
+                    } elseif ($_GET['status']  === 'Nghi') {
+                        $message = "Bạn đã xin nghỉ hôm nay.";
+                    } else {
+                        $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                    }
                 }
-            }
 
             $limit = 3;
             $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
             $offset = ($page - 1) * $limit;
+            $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
 
+            $projectId = isset($_GET['projectID']) ? $_GET['projectID'] : null;
             $detail = ProjectModel::getDetailProject($projectId);
             $employees = ProjectModel::getEmployeesByUserDepartment($user_id);
             $employeeIDs = array_column($employees, 'EmpID');
-
-            $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
             $result = ProjectModel::getTimeSheetsAndCount($user_id, $employeeIDs, $projectId, $searchTerm, $limit, $offset );
+
             $timeSheets = $result['timeSheets'];
             $totalTimeSheets = $result['total'];
+            //print_r($timeSheets);
                         
             $file = "./views/pages/project_detail.phtml";
 
@@ -170,7 +185,8 @@ class ProjectController {
                 $taskHtml = '';
                 foreach ($timeSheets as $timeSheet) {
                     $taskHtml .= '<tr>'
-                        . '<td>' . htmlspecialchars($timeSheet['Time_sheetID']) . '</td>'
+                        . '<td><a href="index.php?action=GetDetailTimeSheet&timesheetID=' . htmlspecialchars($timeSheet['Time_sheetID']) . '">' 
+                            . htmlspecialchars($timeSheet['Time_sheetID']) . '</a></td>'
                         . '<td>' . htmlspecialchars($timeSheet['ProjectID']) . '</td>'
                         . '<td>' . htmlspecialchars($timeSheet['NoiDung']) . '</td>'
                         . '<td>' . htmlspecialchars($timeSheet['NguoiGui']) . '</td>'
@@ -198,6 +214,72 @@ class ProjectController {
                 $content = ob_get_clean();
                 require(__DIR__ . '/../views/template.phtml');
             }
+        } else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+
+    public function CreateTimeSheet() {
+        if (isset($_SESSION['user'])) {
+            $title='Project';
+            $user_id = $_SESSION['user']['EmpID'];
+            $role = $_SESSION['user']['Role'];
+
+            $PhongBan = $_POST['phongID'];
+            $projectID = $_POST['projectID'];
+            $assignee = $_POST['assignee'];
+            $today = $_POST['today'];
+            $deadline = $_POST['deadline'];
+            $reward = $_POST['reward'];
+            $description = $_POST['description'];
+
+            $result = ProjectModel::createTimeSheet($user_id, $projectID, $assignee, $PhongBan, $today, $deadline, $reward, $description);
+
+            echo json_encode([
+                'success' => $result, 
+                'message' => $result ? 'Nhiệm vụ đã được tạo thành công.' : 'Đã xảy ra lỗi khi tạo nhiệm vụ. Vui lòng thử lại.'
+            ]);
+        } else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+
+    public function GetDetailTimeSheet() {
+        if (isset($_SESSION['user'])) {
+            $title='TimeSheet';
+            $user_id = $_SESSION['user']['EmpID'];
+            $role = $_SESSION['user']['Role'];
+
+            $message='';
+                if (isset($_GET['status'])) {
+                    if ($_GET['status'] === 'logged_in') {
+                        $message = 'Chúc mừng đăng nhập thành công!';
+                    }
+                    elseif ($_GET['status']  === 'checked-in') {
+                        $message = "Bạn đã check-in thành công.";
+                    } elseif ($_GET['status']  === 'checked-out') {
+                        $message = "Bạn đã check-out thành công.";
+                    } elseif ($_GET['status']  === 'already-checked-out') {
+                        $message = "Bạn đã check-out, không thể thực hiện lại.";
+                    } elseif ($_GET['status']  === 'Nghi') {
+                        $message = "Bạn đã xin nghỉ hôm nay.";
+                    } else {
+                        $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                    }
+                }
+            
+            $timesheetID = isset($_GET['timesheetID']) ? $_GET['timesheetID'] : null;
+            $detail = ProjectModel::getDetailTimeSheet($timesheetID);
+                        
+            $file = "./views/pages/timesheet_detail.phtml";
+
+            ob_start();
+            require($file);
+            $content = ob_get_clean();
+            require(__DIR__ . '/../views/template.phtml');
+
         } else {
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
             exit();

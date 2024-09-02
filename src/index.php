@@ -61,14 +61,17 @@ switch ($action)
         $controller = new ProjectController();
         $controller->GetProjectPage();
         break;
-    case "GetDetailProjectPage": 
+    case "GetDetailProjectPage":
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller = new ProjectController();
+            $controller->CreateTimeSheet();
+        } else { 
         $controller = new ProjectController();
-        $projectId_get = isset($_GET['id']) ? $_GET['id'] : null;
-        if ($projectId_get !== null && (!isset($_SESSION['projectId']) || $_SESSION['projectId'] !== $projectId_get)) {
-            $_SESSION['projectId'] = $projectId_get;
-        }
-        $projectId = isset($_SESSION['projectId']) ? $_SESSION['projectId'] : null;
-        $controller->GetDetailProjectPage($projectId);
+        $controller->GetDetailProjectPage();}
+        break;
+    case "GetDetailTimeSheet":
+        $controller = new ProjectController();
+        $controller->GetDetailTimeSheet();
         break;
     case "GetCheckinoutPage":
         $controller = new HomeController();

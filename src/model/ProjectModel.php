@@ -136,7 +136,152 @@ class ProjectModel {
     }
     
     //================ Nhân viên ===================
+    private static function getProjectIDsByEmpID($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $projectQuery = "
+            SELECT DISTINCT ProjectID
+            FROM Time_sheet
+            WHERE EmpID = ?
+        ";
+        $projectStmt = $conn->prepare($projectQuery);
+        $projectStmt->bind_param('i', $user_id);
+        $projectStmt->execute();
+        $projectResult = $projectStmt->get_result();
+    
+        $projectIDs = [];
+        while ($row = $projectResult->fetch_assoc()) {
+            $projectIDs[] = $row['ProjectID'];
+        }
+    
+        $projectStmt->close();
+        $db->close();
+    
+        return $projectIDs;
+    }
+    
+    public static function getProjectCountsByEmpID_NV($user_id) {
+        $projectIDs = self::getProjectIDsByEmpID($user_id);
+    
+        if (empty($projectIDs)) {
+            return [
+                'total' => 0,
+                'completed' => 0,
+                'not_completed' => 0
+            ];
+        }
+    
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "
+            SELECT 
+                COUNT(ProjectID) as total, 
+                SUM(CASE WHEN TinhTrang = 'Đã hoàn thành' THEN 1 ELSE 0 END) as completed,
+                SUM(CASE WHEN TinhTrang = 'Chưa hoàn thành' THEN 1 ELSE 0 END) as not_completed
+            FROM Project
+            WHERE ProjectID IN (" . implode(',', array_fill(0, count($projectIDs), '?')) . ")
+        ";
+    
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param(str_repeat('s', count($projectIDs)), ...$projectIDs);
+    
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $counts = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return [
+            'total' => $counts['total'],
+            'completed' => $counts['completed'],
+            'not_completed' => $counts['not_completed']
+        ];
+    }
 
+    public static function getListProject_NV($user_id, $limit, $offset) {
+        $projectIDs = self::getProjectIDsByEmpID($user_id);
+        $db = new Database();
+        $conn = $db->connect();
+    
+        if (empty($projectIDs)) {
+            return []; 
+        }
+        $placeholders = implode(',', array_fill(0, count($projectIDs), '?'));
+    
+        $listPrj = "
+            SELECT * FROM Project 
+            WHERE ProjectID IN ($placeholders)
+            LIMIT ? OFFSET ?
+        ";
+    
+        $stmt = $conn->prepare($listPrj);
+        $params = array_merge($projectIDs, [$limit, $offset]);
+        $types = str_repeat('s', count($projectIDs)) . 'ii';
+        $stmt->bind_param($types, ...$params);
+    
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $list = $result->fetch_all(MYSQLI_ASSOC);
+    
+        $stmt->close();
+        $db->close();
+        return $list;
+    }
+    
+    public static function getProjectsAndCount_NV($user_id, $searchTerm = '', $types = [], $statuses = [], $limit, $offset) {
+        $projectIDs = self::getProjectIDsByEmpID($user_id);
+        
+        if (empty($projectIDs)) {
+            return ['projects' => [], 'total' => 0];
+        }
+    
+        $db = new Database();
+        $conn = $db->connect();
+        
+        $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM Project WHERE ProjectID IN (" . implode(',', array_fill(0, count($projectIDs), '?')) . ")";
+        
+        if (!empty($searchTerm)) {
+            $sql .= " AND Ten LIKE ?";
+            $searchTerm = '%' . $searchTerm . '%';
+        }
+        
+        if (!empty($types)) {
+            $typePlaceholders = implode(',', array_fill(0, count($types), '?'));
+            $sql .= " AND TienDo IN ($typePlaceholders)";
+        }
+        
+        if (!empty($statuses)) {
+            $statusPlaceholders = implode(',', array_fill(0, count($statuses), '?'));
+            $sql .= " AND TinhTrang IN ($statusPlaceholders)";
+        }
+    
+        $sql .= " LIMIT ? OFFSET ?";
+        $stmt = $conn->prepare($sql);
+    
+        $params = $projectIDs;
+        if (!empty($searchTerm)) {
+            $params[] = $searchTerm;
+        }
+        $params = array_merge($params, $types, $statuses, [$limit, $offset]);
+    
+        $stmt->bind_param(str_repeat('s', count($projectIDs)) . str_repeat('s', !empty($searchTerm)) . str_repeat('s', count($types)) . str_repeat('s', count($statuses)) . 'ii', ...$params);
+        $stmt->execute();
+    
+        $result = $stmt->get_result();
+        $projects = $result->fetch_all(MYSQLI_ASSOC);
+    
+        $stmt = $conn->query("SELECT FOUND_ROWS() as total");
+        $totalResult = $stmt->fetch_assoc()['total'];
+    
+        $stmt->close();
+        $db->close();
+    
+        return ['projects' => $projects, 'total' => $totalResult];
+    }
+    
     //================ Detail ======================
 
     public static function getDetailProject($ProjectID) {
@@ -253,18 +398,63 @@ class ProjectModel {
         return ['timeSheets' => $timeSheets, 'total' => $total];
     }
     
-    public static function createTimeSheet($ProjectID, $EmpID, $HanChot, $DiemThuong, $NoiDung, $TaiLieu) {
+    public static function createTimeSheet($user_id, $projectID, $assignee, $PhongBan, $today, $deadline, $reward, $description) {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "INSERT INTO Request (EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayChon ,NoiDung) VALUES (?,?,?,?,?,?,?)";
+        $TenDuAn = '';
+        $NguoiGui = '';
+
+        $queryTenDuAn = "SELECT Ten FROM Project WHERE ProjectID = ?";
+        $stmtTenDuAn = $conn->prepare($queryTenDuAn);
+        $stmtTenDuAn->bind_param('s', $projectID);
+        $stmtTenDuAn->execute();
+        $stmtTenDuAn->bind_result($TenDuAn);
+        $stmtTenDuAn->fetch();
+        $stmtTenDuAn->close();
+    
+        // Truy vấn lấy NguoiGui từ bảng Profile
+        $queryNguoiGui = "SELECT HoTen FROM Profile WHERE EmpID = ?";
+        $stmtNguoiGui = $conn->prepare($queryNguoiGui);
+        $stmtNguoiGui->bind_param('i', $assignee);
+        $stmtNguoiGui->execute();
+        $stmtNguoiGui->bind_result($NguoiGui);
+        $stmtNguoiGui->fetch();
+        $stmtNguoiGui->close();
+        $TienDo = 0;
+        $TrangThai = 'Chưa hoàn thành';
+        $SoGio = 0;
+
+        $query = "INSERT INTO Time_sheet (ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, NoiDung)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
         $stmt = $conn->prepare($query);
-        $stmt->bind_param('i','i');
+        $stmt->bind_param('sisssisissis', $projectID, $assignee, $TenDuAn, $NguoiGui, $PhongBan, $TienDo, $TrangThai, $SoGio, $today, $deadline, $reward, $description);
+        
         $result = $stmt->execute();
         
         $stmt->close();
         $db->close();
+        
         return $result;
+    }
+
+    //================ Time Sheet ======================
+    public static function getDetailTimeSheet($timeSheetID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "SELECT * FROM Time_sheet WHERE Time_sheetID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $timeSheetID);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $timeSheet = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+        return $timeSheet;
     }
 }
 ?>

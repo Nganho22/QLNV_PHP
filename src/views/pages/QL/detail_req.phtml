@@ -9,6 +9,14 @@
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/request_detail.css" type="text/css"/> 
 </head>
 <body>
+    <?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        </div>
+    <?php endif; ?>
 <div class="container-fluid">
     <div class="back-button" style="position: relative;">
         <a href="index.php?action=GetRequestPage" class=" btn-link"><i class="fas fa-arrow-left"></i> Quay lại</a>

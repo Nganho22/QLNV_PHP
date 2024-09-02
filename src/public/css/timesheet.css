@@ -212,160 +212,46 @@ body {
     font-weight: bold;
 }
 
-.pagination {
+
+.info-row {
     display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
 }
 
-.pagination span {
-    margin: 0 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.task-creation {
+.info-item {
     flex: 1;
+    padding: 10px;
+    margin: 5px;
+    margin-bottom: 20px;
+    width: 100%
+}
+
+.info-item strong {
+    display: block;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.info-item::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #cfcfcf;
+    margin-top: 8px;
+}
+
+.main-content {
+    display: flex;
+    gap: 20px;
+}
+
+.task-list {
+    flex: 2;
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.task-creation form {
-    display: flex;
-    flex-direction: column;
-}
-
-.task-creation label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-.task-creation input,
-.task-creation select,
-.task-creation textarea,
-.task-creation button {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.task-creation button {
-    background-color: #333;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-/* General table styling */
-.task-table {
-    width: 100%;
-    border-collapse: separate;
-    margin-top: 20px;
-    font-size: 16px;
-    border-spacing: 0 15px;
-}
-
-.task-table th,
-.task-table td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-/* Header styling */
-.task-table th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-}
-
-/* Row hover effect */
-.task-table tr:hover {
-    background-color: #f5f5f5;
-}
-
-@media (max-width: 768px) {
-
-    .task-table th,
-    .task-table td {
-        padding: 8px;
-    }
-
-    .task-table .bx {
-        font-size: 16px;
-    }
-}
-
-
-/*================== POP UP ====================*/
-
-.popup {
-    display: none;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-    /* display: flex; */
-}
-
-.popup-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    max-width: 400px;
-    margin: auto;
-    position: relative;
-    width: 70%;
-}
-
-/* CSS cho overlay */
-.popup-overlay {
-    border-radius: 10px;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    display: none;
-}
-
-/* CSS cho button đóng */
-.popup .popup-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    text-align: center;
-    width: 150px;
-    max-width: 100%;
-    display: inline-block;
-}
-
-.popup .popup-button:hover {
-    background-color: #0056b3;
-}
-
-.popup .popup-message {
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-/* Hiển thị popup */
-.show-popup .popup,
-.show-popup .popup-overlay {
-    display: block;
 }
