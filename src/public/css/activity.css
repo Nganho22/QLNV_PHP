@@ -91,6 +91,7 @@ body {
     padding: 5px 10px;
     background-color: #bdbdbd;
     color: #ffffff;
+    margin-left: 100px;
 }
 
 .search-bar {
@@ -147,6 +148,7 @@ body {
 .activity-item {
     position: relative;
     background-color: white;
+    border-radius: 8px;
 }
 
 .activity-item li .status {
@@ -175,4 +177,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.activity-item:hover {
+    transform: scale(1.05);
+    cursor: pointer;
 }

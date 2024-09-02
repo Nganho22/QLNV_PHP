@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,118 +9,251 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/activity.css" type="text/css"/> 
 </head>
-    <body>
-        <?php if (!empty($message)): ?>
-            <div class="notification-wrapper">
-                <div class="notification">
-                    <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
-                    <?php echo htmlspecialchars($message); ?>
-                </div>
+<body>
+    <?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
             </div>
-        <?php endif; ?>
+        </div>
+    <?php endif; ?>
     <main>
-    <div class="container">
-        <h1 class="mb-4">Danh sách hoạt động</h1>
-        <div class="row">
-            <div class="col-md-8">
-                <div class="activity-summary" style=" z-index: 0;">
-                    <div class="total-activities">
-                        <div><img src="/QLNV_php/src/public/img/logo/activity_in_month.png" alt="icon"> Tổng hoạt động trong tháng</div>
-                        <div><h2>12</h2></div>
-                    </div>
-                    <div class="ongoing-activities">
-                        <div><img src="/QLNV_php/src/public/img/logo/activity_now.png" alt="icon"> Số hoạt động đang diễn ra</div>
-                        <div><h2>10</h2></div>
-                    </div>
-                    <div class="btn-group">
-                        <button class="btn btn-secondary">Tạo hoạt động cơ bản</button>
-                        <button class="btn btn-secondary">Tạo hoạt động liên kết</button>
-                    </div>
-                    <div class="activity-list">
-                        <h4>Danh sách các hoạt động, chiến dịch đang diễn ra</h4>
-                        <div class="activity-item">
-                            <div>Chạy bộ xuyên việt<br><small>Hạn chót: 07/01/2024</small></div>
-                            <div class="status">Trong Quá Trình</div>
+        <div class="container">
+            <h1 class="mb-4">Danh sách hoạt động</h1>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="activity-summary" style="z-index: 0;">
+                        <div class="total-activities">
+                            <div><img src="/QLNV_php/src/public/img/logo/activity_in_month.png" alt="icon"> Tổng hoạt động</div>
+                            <div><h2><?php echo htmlspecialchars($countAllActivity); ?></h2></div>
                         </div>
-                        <div class="activity-item">
-                            <div>Đi vùng tàu<br><small>Hạn chót: 07/01/2024</small></div>
-                            <div class="status">Chờ đăng ký</div>
+                        <div class="ongoing-activities">
+                            <div><img src="/QLNV_php/src/public/img/logo/activity_now.png" alt="icon"> Số hoạt động đang diễn ra</div>
+                            <div><h2><?php echo htmlspecialchars($countActivityByMonth); ?></h2></div>
                         </div>
-                        <div class="activity-item">
-                            <div>Đi vùng tàu<br><small>Hạn chót: 07/01/2024</small></div>
-                            <div class="status">Chờ đăng ký</div>
-                        </div>
-                        <!-- Pagination -->
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">...</a></li>
-                                <li class="page-item"><a class="page-link" href="#">20</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="activity-list" style="width: 600px;">
-                    <h4>Hoạt động cơ bản:</h4>
-                    <input type="text" class="form-control search-bar" placeholder="Tìm kiếm...">
-                    <div class="activity-item">
-                        <div>Đi vùng tàu<br><small>Hạn chót: 07/01/2024</small></div>
-                        <div class="status">Trong Quá Trình</div>
-                    </div>
-                    <div class="activity-item">
-                        <div>Đi Đà Lạt<br><small>Hạn chót: 07/01/2024</small></div>
-                        <div class="status">Trong Quá Trình</div>
-                    </div>
-                    <div class="activity-item">
-                        <div>Tuần lễ trà sữa<br><small>Hạn chót: 07/01/2024</small></div>
-                        <div class="status">Trong Quá Trình</div>
-                    </div>
-                    <br>
-                    <!-- Pagination -->
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">20</a></li>
-                        </ul>
-                    </nav>
-                </div>
+                        <div class="activity-list">
+                            <h4>Danh sách các hoạt động, chiến dịch bạn đã tham gia:</h4>
+                            <ul>
+                                <?php if (!empty($pagedActivities)): ?>
+                                    <?php foreach ($pagedActivities as $activity): ?>
+                                        <div class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                            <?php
+                                            $statusColor = '#bdbdbd';
 
-                <div class="activity-list mt-4" style="width: 600px;">
-                    <h4>Hoạt động liên kết:</h4>
-                    <input type="text" class="form-control search-bar" placeholder="Tìm kiếm...">
-                    <div class="activity-item">
-                        <div>Chạy bộ xuyên việt<br><small>Hạn chót: 07/01/2024</small></div>
-                        <div class="status">Trong Quá Trình</div>
+                                            switch ($activity['TinhTrang']) {
+                                                case 'Chờ Đăng ký':
+                                                    $statusColor = '#ff9900';
+                                                    break;
+                                                case 'Sắp diễn ra':
+                                                    $statusColor = '#00bfff';
+                                                    break;
+                                                case 'Đang diễn ra':
+                                                    $statusColor = '#32cd32';
+                                                    break;
+                                                case 'Kết Thúc':
+                                                    $statusColor = '#ff6347';
+                                                    break;
+                                                case 'Chưa xác định':
+                                                    $statusColor = '#bdbdbd';
+                                                    break;
+                                            }
+                                            ?>
+                                            <div><?php echo htmlspecialchars($activity['tenHoatDong']); ?><br>
+                                            <small>Hạn chót đăng ký: <?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?></small><br>
+                                            <small>Ngày bắt đầu: <?php echo htmlspecialchars($activity['ngayBatDau']); ?> - Ngày kết thúc: <?php echo htmlspecialchars($activity['ngayKetThuc']); ?></small></div>
+                                            <div class="status" style="background-color: <?php echo $statusColor; ?>;">
+                                                <?php echo htmlspecialchars($activity['TinhTrang']); ?>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else:?>
+                                    <div>Không có<br>
+                                <?php endif; ?>
+                            </ul>
+                            <?php if ($totalPages > 1): ?>
+                                <ul class="pagination">
+                                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                        <li class="page-item <?php echo ($i === $currentPage) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&page=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageCB=<?php echo $currentPageCB; ?>&pageLK=<?php echo $currentPageLK; ?>">
+                                                <?php echo $i; ?>
+                                            </a>
+                                        </li>
+                                    <?php endfor; ?>
+                                </ul>
+                            <?php endif; ?>
+                        </div>
+                        <br>
+                        <div class="activity-list">
+                            <h4>Danh sách các hoạt động, chiến dịch trong tháng:</h4>
+                            <ul>
+                                <?php if (!empty($pagedActivities)): ?>
+                                    <?php foreach ($pagedActivities as $activity): ?>
+                                        <div class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                            <?php
+                                            $statusColor = '#bdbdbd';
+
+                                            switch ($activity['TinhTrang']) {
+                                                case 'Chờ Đăng ký':
+                                                    $statusColor = '#ff9900';
+                                                    break;
+                                                case 'Sắp diễn ra':
+                                                    $statusColor = '#00bfff';
+                                                    break;
+                                                case 'Đang diễn ra':
+                                                    $statusColor = '#32cd32';
+                                                    break;
+                                                case 'Kết Thúc':
+                                                    $statusColor = '#ff6347';
+                                                    break;
+                                                case 'Chưa xác định':
+                                                    $statusColor = '#bdbdbd';
+                                                    break;
+                                            }
+                                            ?>
+                                            <div><?php echo htmlspecialchars($activity['tenHoatDong']); ?><br>
+                                            <small>Hạn chót đăng ký: <?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?></small><br>
+                                            <small>Ngày bắt đầu: <?php echo htmlspecialchars($activity['ngayBatDau']); ?> - Ngày kết thúc: <?php echo htmlspecialchars($activity['ngayKetThuc']); ?></small></div>
+                                            <div class="status" style="background-color: <?php echo $statusColor; ?>;">
+                                                <?php echo htmlspecialchars($activity['TinhTrang']); ?>
+                                            </div>
+                                            <br>
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php else:?>
+                                    <div>Không có<br>
+                                <?php endif; ?>
+                            </ul>
+                            <?php if ($totalPages > 1): ?>
+                                <ul class="pagination">
+                                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                        <li class="page-item <?php echo ($i === $currentPage) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&page=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageCB=<?php echo $currentPageCB; ?>&pageLK=<?php echo $currentPageLK; ?>">
+                                                <?php echo $i; ?>
+                                            </a>
+                                        </li>
+                                    <?php endfor; ?>
+                                </ul>
+                            <?php endif; ?>
+                        </div>
                     </div>
-                    <div class="activity-item">
-                        <div>Chạy bộ xuyên việt<br><small>Hạn chót: 07/01/2024</small></div>
-                        <div class="status">Trong Quá Trình</div>
+                </div>
+                <div class="col-md-4">
+                    <div class="activity-list" style="width: 600px;">
+                        <h4>Hoạt động cơ bản:</h4>
+                        <form method="get" action="">
+                            <input type="text" id="searchcb" name="searchcb" class="form-control search-bar" placeholder="Tên hoạt động cơ bản..." value="<?php echo htmlspecialchars($searchCB); ?>">
+                        </form>
+                        <?php if (!empty($pagedActivitiesCB)): ?>
+                            <?php foreach ($pagedActivitiesCB as $activity): ?>
+                                <div class="activity-item">
+                                <?php
+                                    $statusColor = '#bdbdbd';
+
+                                    switch ($activity['TinhTrang']) {
+                                        case 'Chờ Đăng ký':
+                                            $statusColor = '#ff9900';
+                                            break;
+                                        case 'Sắp diễn ra':
+                                            $statusColor = '#00bfff';
+                                            break;
+                                        case 'Đang diễn ra':
+                                            $statusColor = '#32cd32';
+                                            break;
+                                        case 'Kết Thúc':
+                                            $statusColor = '#ff6347';
+                                            break;
+                                        case 'Chưa xác định':
+                                            $statusColor = '#bdbdbd';
+                                            break;
+                                    }
+                                    ?>
+                                    <div><?php echo htmlspecialchars($activity['tenHoatDong']); ?><br>
+                                    <small>Hạn chót đăng ký: <?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?></small><br>
+                                    <small>Ngày bắt đầu: <?php echo htmlspecialchars($activity['ngayBatDau']); ?> - Ngày kết thúc: <?php echo htmlspecialchars($activity['ngayKetThuc']); ?></small></div>
+                                    <div class="status" style="background-color: <?php echo $statusColor; ?>;">
+                                        <?php echo htmlspecialchars($activity['TinhTrang']); ?>
+                                    </div>
+                                    <br>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else:?>
+                            <div>Không có<br>
+                        <?php endif; ?>
+                        <br>
+                        <?php if ($totalPagesCB > 1): ?>
+                            <ul class="pagination">
+                                <?php for ($i = 1; $i <= $totalPagesCB; $i++): ?>
+                                    <li class="page-item <?php echo ($i === $currentPageCB) ? 'active' : ''; ?>">
+                                        <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&pageCB=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&page=<?php echo $currentPage; ?>&pageLK=<?php echo $currentPageLK; ?>">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+                            </ul>
+                        <?php endif; ?>
                     </div>
-                    <div class="activity-item">
-                        <div>Chạy bộ xuyên việt<br><small>Hạn chót: 07/01/2024</small></div>
-                        <div class="status">Trong Quá Trình</div>
+
+                    <div class="activity-list mt-4" style="width: 600px;">
+                        <h4>Hoạt động liên kết:</h4>
+                        <form method="get" action="">
+                            <input type="text" id="searchlk" name="searchlk" class="form-control search-bar" placeholder="Tên hoạt động liên kết..." value="<?php echo htmlspecialchars($searchLK); ?>">
+                        </form>
+                        <?php if (!empty($pagedActivitiesLK)): ?>
+                            <?php foreach ($pagedActivitiesLK as $activity): ?>
+                                <div class="activity-item">
+                                <?php
+                                    $statusColor = '#bdbdbd';
+
+                                    switch ($activity['TinhTrang']) {
+                                        case 'Chờ Đăng ký':
+                                            $statusColor = '#ff9900';
+                                            break;
+                                        case 'Sắp diễn ra':
+                                            $statusColor = '#00bfff';
+                                            break;
+                                        case 'Đang diễn ra':
+                                            $statusColor = '#32cd32';
+                                            break;
+                                        case 'Kết Thúc':
+                                            $statusColor = '#ff6347';
+                                            break;
+                                        case 'Chưa xác định':
+                                            $statusColor = '#bdbdbd';
+                                            break;
+                                    }
+                                    ?>
+                                    <div><?php echo htmlspecialchars($activity['tenHoatDong']); ?><br>
+                                    <small>Hạn chót đăng ký: <?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?></small><br>
+                                    <small>Ngày bắt đầu: <?php echo htmlspecialchars($activity['ngayBatDau']); ?> - Ngày kết thúc: <?php echo htmlspecialchars($activity['ngayKetThuc']); ?></small></div>
+                                    <div class="status" style="background-color: <?php echo $statusColor; ?>;">
+                                        <?php echo htmlspecialchars($activity['TinhTrang']); ?>
+                                    </div>
+                                    <br>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else:?>
+                            <div>Không có<br>
+                        <?php endif; ?>
+                        <br>
+                        <?php if ($totalPagesLK > 1): ?>
+                            <ul class="pagination">
+                                <?php for ($i = 1; $i <= $totalPagesLK; $i++): ?>
+                                    <li class="page-item <?php echo ($i === $currentPageLK) ? 'active' : ''; ?>">
+                                        <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&pageLK=<?php echo $i; ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&page=<?php echo $currentPage; ?>&pageCB=<?php echo $currentPageCB; ?>">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
+                                <?php endfor; ?>
+                            </ul>
+                        <?php endif; ?>
                     </div>
-                    <br>
-                    <!-- Pagination -->
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">...</a></li>
-                            <li class="page-item"><a class="page-link" href="#">20</a></li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
         </div>
-    </div>
     </main>
 </body>
+</html>
+
+

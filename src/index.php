@@ -74,6 +74,10 @@ switch ($action)
         $controller = new ActivityController();
         $controller->GetActivity_page();
         break;
+    case "GetActivityDetail":
+        $controller = new ActivityController();
+        $controller->GetActivityDetail_page();
+        break;
     case "GetRequestPage":
         $controller = new RequestController();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -8,6 +8,7 @@ class ActivityModel {
     }
 
     private function formatDate($date) {
+        // Chuyển đổi ngày thành định dạng 'd-m-Y'
         $dateTime = DateTime::createFromFormat('Y-m-d', $date);
         return $dateTime ? $dateTime->format('d-m-Y') : $date;
     }
@@ -33,16 +34,17 @@ class ActivityModel {
     public function getActivitiesByMonth($month) {
 
         $url = $this->apiUrl . '/month/' . $month;
-
+    
         if (!$this->isApiAvailable($url)) {
             return null;
         }
-
+    
         $response = file_get_contents($url);
         $activities = json_decode($response, true);
-
-        if (is_array($activities)) { 
+    
+        if (is_array($activities)) {
             $currentDate = date('d-m-Y');
+            $currentDateObj = DateTime::createFromFormat('d-m-Y', $currentDate);
             foreach ($activities as &$activity) {
                 
                 if (isset($activity['hanCuoiDangKy'])) {
@@ -54,20 +56,33 @@ class ActivityModel {
                 if (isset($activity['ngayKetThuc'])) {
                     $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
                 }
-                if ($currentDate < $activity['hanCuoiDangKy']) {
+    
+                // Chuyển đổi các ngày thành đối tượng DateTime
+                $hanCuoiDangKyDate = DateTime::createFromFormat('d-m-Y', $activity['hanCuoiDangKy']);
+                $ngayBatDauDate = DateTime::createFromFormat('d-m-Y', $activity['ngayBatDau']);
+                $ngayKetThucDate = DateTime::createFromFormat('d-m-Y', $activity['ngayKetThuc']);
+                $activity['TinhTrang'] = 'Chưa xác định';
+                if ($currentDateObj <= $hanCuoiDangKyDate) {
                     $activity['TinhTrang'] = 'Chờ Đăng ký';
-                } elseif ($currentDate >= $activity['ngayBatDau'] && $currentDate <= $activity['ngayKetThuc']) {
+                }
+                if ($currentDateObj > $hanCuoiDangKyDate && $currentDateObj < $ngayBatDauDate) {
+                    $activity['TinhTrang'] = 'Sắp diễn ra';
+                } 
+                if ($currentDateObj >= $ngayBatDauDate && $currentDateObj <= $ngayKetThucDate) {
                     $activity['TinhTrang'] = 'Đang diễn ra';
-                } else {
+                }
+                if ($currentDateObj > $ngayKetThucDate) {
                     $activity['TinhTrang'] = 'Kết Thúc';
                 }
             }
         } else {
             return null;
         }
-
+    
         return $activities;
     }
+    
+    
 
     public function SearchActivitiesCoBan($ten) {
 
@@ -82,7 +97,9 @@ class ActivityModel {
 
         if (is_array($activities)) {
             $currentDate = date('d-m-Y');
+            $currentDateObj = DateTime::createFromFormat('d-m-Y', $currentDate);
             foreach ($activities as &$activity) {
+                
                 if (isset($activity['hanCuoiDangKy'])) {
                     $activity['hanCuoiDangKy'] = $this->formatDate($activity['hanCuoiDangKy']);
                 }
@@ -92,11 +109,22 @@ class ActivityModel {
                 if (isset($activity['ngayKetThuc'])) {
                     $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
                 }
-                if ($currentDate < $activity['hanCuoiDangKy']) {
+    
+                // Chuyển đổi các ngày thành đối tượng DateTime
+                $hanCuoiDangKyDate = DateTime::createFromFormat('d-m-Y', $activity['hanCuoiDangKy']);
+                $ngayBatDauDate = DateTime::createFromFormat('d-m-Y', $activity['ngayBatDau']);
+                $ngayKetThucDate = DateTime::createFromFormat('d-m-Y', $activity['ngayKetThuc']);
+                $activity['TinhTrang'] = 'Chưa xác định';
+                if ($currentDateObj <= $hanCuoiDangKyDate) {
                     $activity['TinhTrang'] = 'Chờ Đăng ký';
-                } elseif ($currentDate >= $activity['ngayBatDau'] && $currentDate <= $activity['ngayKetThuc']) {
+                }
+                if ($currentDateObj > $hanCuoiDangKyDate && $currentDateObj < $ngayBatDauDate) {
+                    $activity['TinhTrang'] = 'Sắp diễn ra';
+                } 
+                if ($currentDateObj >= $ngayBatDauDate && $currentDateObj <= $ngayKetThucDate) {
                     $activity['TinhTrang'] = 'Đang diễn ra';
-                } else {
+                }
+                if ($currentDateObj > $ngayKetThucDate) {
                     $activity['TinhTrang'] = 'Kết Thúc';
                 }
             }
@@ -120,7 +148,9 @@ class ActivityModel {
 
         if (is_array($activities)) {
             $currentDate = date('d-m-Y');
+            $currentDateObj = DateTime::createFromFormat('d-m-Y', $currentDate);
             foreach ($activities as &$activity) {
+                
                 if (isset($activity['hanCuoiDangKy'])) {
                     $activity['hanCuoiDangKy'] = $this->formatDate($activity['hanCuoiDangKy']);
                 }
@@ -130,11 +160,22 @@ class ActivityModel {
                 if (isset($activity['ngayKetThuc'])) {
                     $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
                 }
-                if ($currentDate < $activity['hanCuoiDangKy']) {
+    
+                // Chuyển đổi các ngày thành đối tượng DateTime
+                $hanCuoiDangKyDate = DateTime::createFromFormat('d-m-Y', $activity['hanCuoiDangKy']);
+                $ngayBatDauDate = DateTime::createFromFormat('d-m-Y', $activity['ngayBatDau']);
+                $ngayKetThucDate = DateTime::createFromFormat('d-m-Y', $activity['ngayKetThuc']);
+                $activity['TinhTrang'] = 'Chưa xác định';
+                if ($currentDateObj <= $hanCuoiDangKyDate) {
                     $activity['TinhTrang'] = 'Chờ Đăng ký';
-                } elseif ($currentDate >= $activity['ngayBatDau'] && $currentDate <= $activity['ngayKetThuc']) {
+                }
+                elseif ($currentDateObj > $hanCuoiDangKyDate && $currentDateObj < $ngayBatDauDate) {
+                    $activity['TinhTrang'] = 'Sắp diễn ra';
+                } 
+                elseif ($currentDateObj >= $ngayBatDauDate && $currentDateObj <= $ngayKetThucDate) {
                     $activity['TinhTrang'] = 'Đang diễn ra';
-                } else {
+                }
+                elseif ($currentDateObj > $ngayKetThucDate) {
                     $activity['TinhTrang'] = 'Kết Thúc';
                 }
             }
@@ -143,6 +184,60 @@ class ActivityModel {
         }
 
         return $activities;
+    }
+
+    public function CountActivityByMonth($month) {
+
+        $url = $this->apiUrl . '/countByMonth/' . $month;
+
+        if (!$this->isApiAvailable($url)) {
+            return 0;
+        }
+        $response = @file_get_contents($url);
+        if ($response === FALSE) {
+            return 0;
+        }
+    
+       
+        $countactivities = json_decode($response, true);
+    
+       
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return 0;
+        }
+    
+        
+        if (isset($countactivities) && is_numeric($countactivities)) {
+            return (int)$countactivities;
+        }
+        return 0;
+    }
+
+    public function CountActivity() {
+
+        $url = $this->apiUrl . '/countall';
+
+        if (!$this->isApiAvailable($url)) {
+            return 0;
+        }
+        $response = @file_get_contents($url);
+        if ($response === FALSE) {
+            return 0;
+        }
+    
+       
+        $countactivities = json_decode($response, true);
+    
+       
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return 0;
+        }
+    
+        
+        if (isset($countactivities) && is_numeric($countactivities)) {
+            return (int)$countactivities;
+        }
+        return 0;
     }
     
 }

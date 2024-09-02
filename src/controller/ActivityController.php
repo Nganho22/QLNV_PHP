@@ -13,8 +13,9 @@ class ActivityController{
             $model = new ActivityModel($apiUrl);
             
             $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            $itemsPerPage = 1;
-        
+            $itemsPerPage = 3;
+            $countActivityByMonth = $model->CountActivityByMonth(date('m'));
+            $countAllActivity = $model->CountActivity();
             $activities = $model->getActivitiesByMonth(date('m'));
             if ($activities !== null) {
                 $totalItems = count($activities);
@@ -25,7 +26,6 @@ class ActivityController{
                 $pagedActivities = [];
                 $totalPages = 1;
             }
-    
             $searchCB = isset($_GET['searchcb']) ? $_GET['searchcb'] : '';
             $allActivitiesCB = $model->SearchActivitiesCoBan($searchCB);
             $currentPageCB = isset($_GET['pageCB']) ? (int)$_GET['pageCB'] : 1;
@@ -54,6 +54,7 @@ class ActivityController{
                 $totalPagesLK = 1;
             }
             
+            
             switch ($Role) {
                 case 'Nhân viên':
                     $file = "./views/pages/NV/activity_NV.phtml";
@@ -63,6 +64,100 @@ class ActivityController{
                     break;
                 case 'Giám đốc':
                     $file = "./views/pages/GD/activity_GD.phtml";
+                    break;
+                default:
+                    $file = null;
+                    $title = 'Error';
+                    break;
+            }
+            
+            if ($file && file_exists($file)) {
+                $message = '';
+                if (isset($_GET['status'])) {
+                    if ($_GET['status'] === 'checked-in') {
+                        $message = "Bạn đã check-in thành công.";
+                    } elseif ($_GET['status'] === 'checked-out') {
+                        $message = "Bạn đã check-out thành công.";
+                    } elseif ($_GET['status'] === 'already-checked-out') {
+                        $message = "Bạn đã check-out, không thể thực hiện lại.";
+                    } else {
+                        $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                    }
+                }
+                ob_start();
+                require($file);
+                $content = ob_get_clean();
+                require(__DIR__ . '/../views/template.phtml');
+            } else {
+                echo "Vai trò không hợp lệ.";
+            }
+        } else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+
+    public function GetActivityDetail_page() {
+        if (isset($_SESSION['user'])) {
+            $Role = $_SESSION['user']['Role'];
+            $title = 'Activity Detail'; 
+            $empID = $_SESSION['user']['EmpID'];
+            $apiUrl = 'http://localhost:9002/apiActivity';
+            $model = new ActivityModel($apiUrl);
+            $post_id = intval($_GET['activityId']);
+            
+            $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            $itemsPerPage = 3;
+            $countActivityByMonth = $model->CountActivityByMonth(date('m'));
+            $countAllActivity = $model->CountActivity();
+            $activities = $model->getActivitiesByMonth(date('m'));
+            if ($activities !== null) {
+                $totalItems = count($activities);
+                $totalPages = ceil($totalItems / $itemsPerPage);
+                $offset = ($currentPage - 1) * $itemsPerPage;
+                $pagedActivities = array_slice($activities, $offset, $itemsPerPage);
+            } else {
+                $pagedActivities = [];
+                $totalPages = 1;
+            }
+            $searchCB = isset($_GET['searchcb']) ? $_GET['searchcb'] : '';
+            $allActivitiesCB = $model->SearchActivitiesCoBan($searchCB);
+            $currentPageCB = isset($_GET['pageCB']) ? (int)$_GET['pageCB'] : 1;
+    
+            if ($allActivitiesCB !== null) {
+                $totalItemsCB = count($allActivitiesCB);
+                $totalPagesCB = ceil($totalItemsCB / $itemsPerPage);
+                $offsetCB = ($currentPageCB - 1) * $itemsPerPage;
+                $pagedActivitiesCB = array_slice($allActivitiesCB, $offsetCB, $itemsPerPage);
+            } else {
+                $pagedActivitiesCB = [];
+                $totalPagesCB = 1;
+            }
+        
+            $searchLK = isset($_GET['searchlk']) ? $_GET['searchlk'] : '';
+            $allActivitiesLK = $model->SearchActivitiesLienKet($searchLK);
+            $currentPageLK = isset($_GET['pageLK']) ? (int)$_GET['pageLK'] : 1;
+    
+            if ($allActivitiesLK !== null) {
+                $totalItemsLK = count($allActivitiesLK);
+                $totalPagesLK = ceil($totalItemsLK / $itemsPerPage);
+                $offsetLK = ($currentPageLK - 1) * $itemsPerPage;
+                $pagedActivitiesLK = array_slice($allActivitiesLK, $offsetLK, $itemsPerPage);
+            } else {
+                $pagedActivitiesLK = [];
+                $totalPagesLK = 1;
+            }
+            
+            
+            switch ($Role) {
+                case 'Nhân viên':
+                    $file = "./views/pages/activity_detail.phtml";
+                    break;
+                case 'Quản lý':
+                    $file = "./views/pages/activity_detail.phtml";
+                    break;
+                case 'Giám đốc':
+                    $file = "./views/pages/activity_detail.phtml";
                     break;
                 default:
                     $file = null;
