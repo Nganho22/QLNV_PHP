@@ -134,6 +134,10 @@ switch ($action)
         $controller = new FelicitationController();
         $controller->GetEmployeePoints();
         break;
+    case 'GivePoints':
+        $controller = new FelicitationController();
+        $controller->GivePoints();
+        break;
 default:
         $controller = new HomeController();
         $controller->login();

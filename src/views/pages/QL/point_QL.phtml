@@ -75,7 +75,8 @@
         <!-- Cột bên phải -->
         <div class="right-column">
             <div class="gift-box">
-                <h2>Voucher</h2>
+                <h2>Tặng điểm</h2>
+                <form id="GivePoint-form" action="index.php?action=GivePoints" method="POST" enctype="multipart/form-data">
                     <div class="Voucher_List">
                         <div class="info-box1">
                         <div class="row1">
@@ -85,25 +86,26 @@
                                     <select id="employee-select" class="form-control">
                                         <?php foreach ($employees as $employee): ?>
                                             <option value="<?php echo htmlspecialchars($employee['EmpID']); ?>">
+                                                <!-- <input type id="empID" value ="<?php echo $employees['empID']; ?>"> -->
                                                 <?php echo htmlspecialchars($employee['HoTen']); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
                                 </div>                               
-                                <p><strong>Tổng điểm hiện có </strong></p>
-                                    <h4 id="employee-points"></h4>
+                                    <p><strong>Tổng điểm hiện có </strong></p>
+                                        <h4 id="employee-points"></h4>
                             </div>
                             <div class="right-box">
-                                    <p><strong>Tặng điểm </strong></p>
-                                    <input type="text" id="points-to-gift" class="form-control" placeholder="Nhập số điểm" pattern="\d*">
-                                </div>
-
+                                <p><strong>Tặng điểm </strong></p>
+                                <input type="text" id="pointGive" class="form-control" placeholder="Nhập số điểm" pattern="\d*">
+                            </div>
                         </div>
-                                </div>   
-                                <div class="text-center-btn mt-4">
-                                    <a href="index.php?action=GetFelicitationPage" class="btn btn-primary btn-block">Xác nhận</a>
-                                </div>
-                            </div>                   
+                        </div>   
+                            <div class="text-center-btn mt-4">
+                                <button type ="submit"  class="btn btn-primary btn-block">Xác nhận</button>
+                            </div>
+                            </div>
+                    </form>                   
                         </div>
                 <div class="request-list">
                     <h2>Voucher</h2>

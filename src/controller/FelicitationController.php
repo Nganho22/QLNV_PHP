@@ -166,6 +166,14 @@ class FelicitationController {
             echo json_encode(['points' => $points]);
         }
     }
+    public function GivePoints() {
+            $empID = $_POST['empID'];
+            // $ManageID = $_POST['ManagerID'];
+            $pointGive = $_POST['PointGive'];
+            // $pointHave = $_POST['PointHave'];
+            print_r($empID, $pointGive);
+        
+    }
     
 }
 ?>
