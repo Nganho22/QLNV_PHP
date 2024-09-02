@@ -79,33 +79,33 @@
                 <form id="GivePoint-form" action="index.php?action=GivePoints" method="POST" enctype="multipart/form-data">
                     <div class="Voucher_List">
                         <div class="info-box1">
-                        <div class="row1">
-                            <div class="left-box">
-                            <p><strong>Nhân Viên</strong></p>
-                                <div id="employee-list-container" class="employee-list-container">
-                                    <select id="employee-select" class="form-control">
-                                        <?php foreach ($employees as $employee): ?>
-                                            <option value="<?php echo htmlspecialchars($employee['EmpID']); ?>">
-                                                <!-- <input type id="empID" value ="<?php echo $employees['empID']; ?>"> -->
-                                                <?php echo htmlspecialchars($employee['HoTen']); ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </div>                               
+                            <div class="row1">
+                                <div class="left-box">
+                                    <p><strong>Nhân Viên</strong></p>
+                                    <div id="employee-list-container" class="employee-list-container">
+                                        <select id="employee-select" name="empID" class="form-control">
+                                            <?php foreach ($employees as $employee): ?>
+                                                <option value="<?php echo htmlspecialchars($employee['EmpID']); ?>">
+                                                    <?php echo htmlspecialchars($employee['HoTen']); ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>                               
                                     <p><strong>Tổng điểm hiện có </strong></p>
-                                        <h4 id="employee-points"></h4>
+                                    <h4 id="employee-points"></h4>
+                                </div>
+                                <div class="right-box">
+                                    <p><strong>Tặng điểm </strong></p>
+                                    <input type="text" id="PointGive" name="PointGive" class="form-control" placeholder="Nhập số điểm" pattern="\d*" required>
+                                </div>
                             </div>
-                            <div class="right-box">
-                                <p><strong>Tặng điểm </strong></p>
-                                <input type="text" id="pointGive" class="form-control" placeholder="Nhập số điểm" pattern="\d*">
-                            </div>
-                        </div>
                         </div>   
-                            <div class="text-center-btn mt-4">
-                                <button type ="submit"  class="btn btn-primary btn-block">Xác nhận</button>
-                            </div>
-                            </div>
-                    </form>                   
+                        <div class="text-center-btn mt-4">
+                            <button type="submit" class="btn btn-primary btn-block">Xác nhận</button>
+                        </div>
+                    </div>
+                </form> 
+               
                         </div>
                 <div class="request-list">
                     <h2>Voucher</h2>

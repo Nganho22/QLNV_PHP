@@ -167,11 +167,17 @@ class FelicitationController {
         }
     }
     public function GivePoints() {
-            $empID = $_POST['empID'];
-            // $ManageID = $_POST['ManagerID'];
-            $pointGive = $_POST['PointGive'];
-            // $pointHave = $_POST['PointHave'];
-            print_r($empID, $pointGive);
+        $empID = isset($_POST['empID']) ? $_POST['empID'] : null;
+        $pointGive = isset($_POST['PointGive']) ? $_POST['PointGive'] : null;
+    
+        // Kiểm tra xem giá trị có tồn tại không
+        if ($empID && $pointGive) {
+            // Xử lý dữ liệu, ví dụ: in ra hoặc lưu vào cơ sở dữ liệu
+            echo "Employee ID: " . htmlspecialchars($empID) . "<br>";
+            echo "Points to give: " . htmlspecialchars($pointGive);
+        } else {
+            echo "Dữ liệu không hợp lệ.";
+        }
         
     }
     
