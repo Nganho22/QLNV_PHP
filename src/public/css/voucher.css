@@ -87,9 +87,8 @@ body {
 }
 
 .info-box2 {
-    width: 90%;
+    width: 100%; /* Đảm bảo box chiếm toàn bộ chiều rộng của cột */
     background-color: #fff;
-    margin-left: 30px;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -99,14 +98,14 @@ body {
 
 .info-box2 p {
     font-size: 15px;
-    margin-right: 150px; /* Điều chỉnh khoảng cách bên phải */
+    margin-right: 100px; /* Điều chỉnh khoảng cách bên phải */
     margin-bottom: 10px; /* Điều chỉnh khoảng cách dưới */
     text-align: left; /* Căn chỉnh văn bản bên trái nếu cần */
 }
 
 .info-box2 ul {
     font-size: 15px;
-    margin-right: 100px; /* Điều chỉnh khoảng cách bên phải */
+    margin-left: 10px; /* Điều chỉnh khoảng cách bên phải */
     margin-bottom: 20px; /* Điều chỉnh khoảng cách dưới */
     text-align: left; /* Căn chỉnh văn bản bên trái nếu cần */
 }
