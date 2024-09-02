@@ -77,87 +77,6 @@ class ProjectModel {
         $db->close();
         return $list;
     }
-    
-    public static function searchProjectByName($searchTerm, $limit, $offset) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $searchTerm = "%$searchTerm%";
-
-        $query = "SELECT * FROM Project WHERE Ten LIKE ? LIMIT ? OFFSET ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('sii', $searchTerm, $limit, $offset);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $projects = $result->fetch_all(MYSQLI_ASSOC);
-
-        $stmt->close();
-        $db->close();
-
-        return $projects;
-    }
-
-    public static function countSearchProjectByName($searchTerm) {
-        $db = new Database();
-        $conn = $db->connect();
-    
-        $countQuery = "SELECT COUNT(*) as total FROM Project WHERE Ten LIKE ?";
-        $stmt = $conn->prepare($countQuery);
-        $likeName = '%' . $searchTerm . '%';
-        $stmt->bind_param('s', $likeName);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $total = $result->fetch_assoc()['total'];
-    
-        $stmt->close();
-        $db->close();
-        return $total;
-    }
-    
-    public static function filterProjects($user_id, $progressFilters, $statusFilters, $classFilters, $limit, $offset) {
-        $db = new Database();
-        $conn = $db->connect();
-        
-        $query = "SELECT * FROM Project WHERE 1=1";
-    
-        if (!empty($progressFilters)) {
-            $placeholders = implode(',', array_fill(0, count($progressFilters), '?'));
-            $query .= " AND TienDo IN ($placeholders)";
-        }
-    
-        if (!empty($statusFilters)) {
-            $placeholders = implode(',', array_fill(0, count($statusFilters), '?'));
-            $query .= " AND TinhTrang IN ($placeholders)";
-        }
-    
-        if (!empty($classFilters)) {
-            $placeholders = implode(',', array_fill(0, count($classFilters), '?'));
-            $query .= " AND PhongID IN ($placeholders)";
-        }
-    
-        if ($user_id != 3) {
-            $query .= " AND QuanLy = ?";
-        }
-    
-        $query .= " LIMIT ? OFFSET ?";
-        $stmt = $conn->prepare($query);
-        $params = array_merge($progressFilters, $statusFilters, $classFilters);
-        if ($user_id != 3) {
-            $params[] = $user_id;
-        }
-        $params[] = $limit;
-        $params[] = $offset;
-    
-        $stmt->bind_param(str_repeat('s', count($params)), ...$params);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $projects = $result->fetch_all(MYSQLI_ASSOC);
-    
-        $stmt->close();
-        $db->close();
-    
-        return $projects;
-    }
 
     public static function getProjectsAndCount($user_id, $searchTerm = '', $types = [], $statuses = [], $departments = [], $limit, $offset) {
         $db = new Database();
@@ -217,5 +136,135 @@ class ProjectModel {
     }
     
     //================ Nhân viên ===================
+
+    //================ Detail ======================
+
+    public static function getDetailProject($ProjectID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = " 
+            SELECT 
+                p.*, 
+                pr.HoTen, 
+                pb.TenPhong 
+            FROM 
+                Project p
+            LEFT JOIN 
+                Profile pr ON p.QuanLy = pr.EmpID
+            LEFT JOIN 
+                PhongBan pb ON p.PhongID = pb.PhongID
+            WHERE 
+                p.ProjectID = ?";
+
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('s', $ProjectID);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $requests = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+        return $requests;
+    }
+
+    public static function getEmployeesByUserDepartment($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "SELECT p2.EmpID, p2.HoTen 
+                  FROM Profile p1
+                  LEFT JOIN Profile p2 ON p1.PhongID = p2.PhongID
+                  WHERE p1.EmpID = ?";
+                  
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $employees = $result->fetch_all(MYSQLI_ASSOC);
+    
+        $stmt->close();
+        $db->close();
+        return $employees;
+    }
+
+    public static function getTimeSheetsAndCount($user_id, $employeeIDs, $ProjectID, $searchTerm = '', $limit, $offset) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+        if ($user_id == 3) {
+            $sql = "
+                SELECT SQL_CALC_FOUND_ROWS t.*, p.HoTen as AssigneeName, p2.TenPhong 
+                FROM Time_sheet t
+                LEFT JOIN Profile p ON t.EmpID = p.EmpID
+                LEFT JOIN PhongBan p2 ON t.PhongBan = p2.PhongID
+                WHERE t.ProjectID = ?
+            ";
+        } else {
+            $sql = "
+                SELECT SQL_CALC_FOUND_ROWS t.*, p.HoTen as AssigneeName, p2.TenPhong 
+                FROM Time_sheet t
+                LEFT JOIN Profile p ON t.EmpID = p.EmpID
+                LEFT JOIN PhongBan p2 ON t.PhongBan = p2.PhongID
+                WHERE t.EmpID IN (" . implode(',', array_fill(0, count($employeeIDs), '?')) . ")
+                AND t.ProjectID = ?
+            ";
+        }
+    
+        if (!empty($searchTerm)) {
+            $sql .= " AND t.NguoiGui LIKE ?";
+            $searchTerm = '%' . $searchTerm . '%';
+        }
+    
+        $sql .= " LIMIT ? OFFSET ?";
+        $stmt = $conn->prepare($sql);
+    
+        if ($user_id == 3) {
+            $params = [$ProjectID];
+            $types = 's';
+        } else {
+            $params = array_merge($employeeIDs, [$ProjectID]);
+            $types = str_repeat('i', count($employeeIDs)) . 's';
+        }
+    
+        if (!empty($searchTerm)) {
+            $params[] = $searchTerm;
+            $types .= 's';
+        }
+        $params[] = $limit;
+        $params[] = $offset;
+        $types .= 'ii';
+    
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+    
+        $result = $stmt->get_result();
+        $timeSheets = $result->fetch_all(MYSQLI_ASSOC);
+    
+        // Lấy tổng số lượng bản ghi
+        $totalResult = $conn->query("SELECT FOUND_ROWS() as total");
+        $total = $totalResult->fetch_assoc()['total'];
+    
+        $stmt->close();
+        $db->close();
+    
+        return ['timeSheets' => $timeSheets, 'total' => $total];
+    }
+    
+    public static function createTimeSheet($ProjectID, $EmpID, $HanChot, $DiemThuong, $NoiDung, $TaiLieu) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "INSERT INTO Request (EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayChon ,NoiDung) VALUES (?,?,?,?,?,?,?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i','i');
+        $result = $stmt->execute();
+        
+        $stmt->close();
+        $db->close();
+        return $result;
+    }
 }
 ?>

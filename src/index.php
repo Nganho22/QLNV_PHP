@@ -63,7 +63,11 @@ switch ($action)
         break;
     case "GetDetailProjectPage": 
         $controller = new ProjectController();
-        $projectId = isset($_GET['id']) ? $_GET['id'] : null;
+        $projectId_get = isset($_GET['id']) ? $_GET['id'] : null;
+        if ($projectId_get !== null && (!isset($_SESSION['projectId']) || $_SESSION['projectId'] !== $projectId_get)) {
+            $_SESSION['projectId'] = $projectId_get;
+        }
+        $projectId = isset($_SESSION['projectId']) ? $_SESSION['projectId'] : null;
         $controller->GetDetailProjectPage($projectId);
         break;
     case "GetCheckinoutPage":

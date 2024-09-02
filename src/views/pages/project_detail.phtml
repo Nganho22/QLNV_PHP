@@ -6,12 +6,16 @@
     <title>Project Management</title>
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/project_detail.css" type="text/css"/> 
     <link rel="stylesheet" href="https://unpkg.com/boxicons/css/boxicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 </head>
 <body>
+    <div class="back-button" style="position: relative;">
+        <a href="index.php?action=GetProjectPage" class=" btn-link"><i class="fas fa-arrow-left"></i> Quay lại</a>
+    </div>
     <div class="container">
         <header class="header">
-            <button class="back-button">&lt;</button>
-            <h1>Dự án: Nghiên cứu PHP</h1>
+            <h1><strong>Dự án:</strong> <?php echo htmlspecialchars($detail['Ten']); ?></h1>
         </header>
 
         <div class="info-sections">
@@ -20,28 +24,28 @@
                     <div class="icon"><i class='bx bx-user'></i></div>
                     <div class="details">
                         <p>Quản lý Phụ trách</p>
-                        <h3>Ngân Hồ</h3>
+                        <h3><?php echo htmlspecialchars($detail['HoTen']); ?></h3>
                     </div>
                 </div>
                 <div class="card">
                     <div class="icon"><i class='bx bx-time'></i></div>
                     <div class="details">
                         <p>Số giờ thực hiện</p>
-                        <h3>165 giờ</h3>
+                        <h3><?php echo htmlspecialchars($detail['SoGioThucHanh']); ?></h3>
                     </div>
                 </div>
                 <div class="card">
                     <div class="icon"><i class='bx bx-buildings'></i></div>
                     <div class="details">
                         <p>Trạng thái</p>
-                        <h3>Trong quá trình</h3>
+                        <h3><?php echo htmlspecialchars($detail['TinhTrang']); ?></h3>
                     </div>
                 </div>
                 <div class="card">
                     <div class="icon"><i class='bx bx-timer'></i></div>
                     <div class="details">
                         <p>Tiến độ</p>
-                        <h3>82%</h3>
+                        <h3><?php echo htmlspecialchars($detail['TienDo']); ?></h3>
                     </div>
                 </div>
             </section>
@@ -49,19 +53,19 @@
             <section class="dates">
                 <div class="date">
                     <p>Ngày giao</p>
-                    <h3>01/01/2024</h3>
+                    <h3><?php echo htmlspecialchars($detail['NgayGiao']); ?></h3>
                 </div>
                 <div class="date">
                     <p>Hạn chót dự kiến</p>
-                    <h3>01/01/2024</h3>
+                    <h3><?php echo htmlspecialchars($detail['HanChotDuKien']); ?></h3>
                 </div>
                 <div class="date">
-                    <p>Ngày hoàn thành</p>
-                    <h3>01/01/2024</h3>
+                    <p>Hạn chót</p>
+                    <h3><?php echo htmlspecialchars($detail['HanChot']); ?></h3>
                 </div>
                 <div class="date">
                     <p>Phòng ban</p>
-                    <h3>A01</h3>
+                    <h3><?php echo htmlspecialchars($detail['TenPhong']); ?></h3>
                 </div>
             </section>
         </div>
@@ -70,55 +74,143 @@
             <section class="task-list">
                 <div class="task-header">
                     <h2>Danh sách công việc:</h2>
-                    <input type="text" placeholder="Tìm kiếm...">
+                    <input type="text" id="search-box" placeholder="Nhân viên phụ trách..." class="search-box">
                 </div>
-                <div class="task">
-                    <div class="icon"><i class='bx bxs-edit'></i></div>
-                    <!-- <div class="avatar">📷</div> -->
-                    <div class="task-details">
-                        <h3>Tìm hiểu PHP</h3>
-                        <p>Người phụ trách: Bông Bông</p>
-                    </div>
-                    <div class="status">Trong quá trình</div>
+
+                <div id="task-container">
+                    <table class="task-table">
+                        <thead>
+                            <tr>
+                                <th>TimeSheet ID</th>
+                                <th>Project ID</th>
+                                <th>Nội Dung</th>
+                                <th>Người Phụ Trách</th>
+                                <th>Trạng Thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="request-table-body">
+                            <?php foreach ($timeSheets as $timeSheet): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($timeSheet['Time_sheetID']) ?></td>
+                                    <td><?= htmlspecialchars($timeSheet['ProjectID']) ?></td>
+                                    <td><?= htmlspecialchars($timeSheet['NoiDung']) ?></td>
+                                    <td><?= htmlspecialchars($timeSheet['NguoiGui']) ?></td>
+                                    <td><?= htmlspecialchars($timeSheet['TrangThai']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
-                <!-- Repeat .task block for more tasks -->
-                <div class="pagination">
-                    <span>&lt;</span>
-                    <span>1</span>
-                    <span>2</span>
-                    <!-- Pagination links -->
-                    <span>&gt;</span>
+
+                <div id="pagination" class="pagination pagination-wrapper">
+                    <?php 
+                        $totalPages = ceil($totalTimeSheets / $limit);
+                        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        for ($i = 1; $i <= $totalPages; $i++): 
+                        ?>
+                            <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                                <a class="page-link" href="#" data-page="<?= $i ?>"><?= $i ?></a>
+                            </li>
+                    <?php endfor; ?>
                 </div>
             </section>
 
+            <?php if ($role === 'Quản lý' && $detail['TinhTrang'] === 'Chưa hoàn thành'): ?>
             <section class="task-creation">
                 <h2>Tạo nhiệm vụ:</h2>
-                <form>
+                <form id="task-creation-form">
                     <label for="task-name">Tên nhiệm vụ:</label>
-                    <input type="text" id="task-name">
+                    <input type="text" id="task-name" name="task_name" required>
 
                     <label for="assignee">Người phụ trách:</label>
-                    <select id="assignee">
-                        <option>Bông Bông</option>
-                        <!-- More options -->
+                    <select id="assignee" name="assignee" required>
+                        <option value="">Chọn nhân viên</option>
+                        <?php foreach ($employees as $employee): ?>
+                            <option value="<?= htmlspecialchars($employee['EmpID']) ?>">
+                                <?= htmlspecialchars($employee['HoTen']) ?>
+                            </option>
+                        <?php endforeach; ?>
                     </select>
 
                     <label for="deadline">Hạn chót:</label>
-                    <input type="date" id="deadline">
+                    <input type="date" id="deadline" name="deadline" required>
 
                     <label for="reward">Điểm thưởng:</label>
-                    <input type="number" id="reward" value="10">
+                    <input type="number" id="reward" name="reward" value="10" required>
 
                     <label for="description">Nội dung:</label>
-                    <textarea id="description"></textarea>
+                    <textarea id="description" name="description" required></textarea>
 
                     <label for="file">Tài liệu:</label>
-                    <input type="file" id="file">
+                    <input type="file" id="file" name="file">
 
                     <button type="submit">Xác Nhận</button>
                 </form>
             </section>
+            <?php endif; ?>
         </div>
     </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Thông báo</h2>
+            <p id="popupMessage"></p>
+            <button class="btn btn-primary close-popup-btn popup-button" onclick="closePopup()">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('.search-box').off('input change').on('input change', function() {
+                filterRequests();
+            });
+
+            $(document).on('click', '.page-link', function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                filterRequests(page);
+            });
+
+            $('#reset-all-button').on('click', function() {
+                $('#search-box').val('');
+
+                $.get('index.php?action=GetProjectPage', { ajax: 1, search: '', page: 1 }, function(response) {
+                    var data = JSON.parse(response);
+                    $('#request-table-body').html(data.requestHtml);
+                    $('#pagination').html(data.paginationHtml);
+
+                    $('#pagination .page-item').removeClass('active');
+                        $('#pagination .page-item').filter(function() {
+                            return $(this).find('.page-link').data('page') === 1;
+                        }).addClass('active');
+                });
+            });
+
+            function filterRequests(page = 1) {
+                var searchTerm = $('.search-box').val();
+                
+                $.get('index.php?action=GetDetailProjectPage', { ajax: 1, search: searchTerm, page: page }, function(response) {
+                    console.log("Search term: ", searchTerm);
+                    console.log("response: ", response);
+                    try {
+                        var data = JSON.parse(response);
+                        $('#request-table-body').html(data.taskHtml);
+                        $('#pagination').html(data.paginationHtml);
+
+                        // Cập nhật lớp active cho phân trang
+                        $('#pagination .page-item').removeClass('active');
+                        $('#pagination .page-item').filter(function() {
+                            return $(this).find('.page-link').data('page') === page;
+                        }).addClass('active');
+                    }
+                    catch (e){
+                        console.error("JSON parse error: ", e);
+                        console.error("Server response: ", response);
+                    }
+                });
+            }
+        });
+
+    </script>
 </body>
 </html>
