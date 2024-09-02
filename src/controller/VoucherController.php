@@ -102,6 +102,21 @@ class VoucherController {
         }
     }
 
+    public function GetExVoucherDetails() {
+        if (isset($_SESSION['user'])) {
+            if (isset($_GET['voucherID'])) {
+                $voucherID = (int)$_GET['voucherID'];
+                $voucherDetails = VoucherModel::getExVoucherDetails($voucherID);
+                echo json_encode($voucherDetails);
+                exit();
+            }
+        } else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+
+
     public function GetCheck_inoutPage() {
         if (isset($_SESSION['user'])) {
             $title='Trang danh sách Voucher';

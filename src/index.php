@@ -126,6 +126,10 @@ switch ($action)
         $controller = new VoucherController();
         $controller->GetVoucherDetails();
         break;
+    case 'GetExVoucherDetails':
+        $controller = new VoucherController();
+        $controller->GetExVoucherDetails();
+        break;
     case "GetCheck_inoutPage":
         $controller = new Check_inoutController();
         $controller->GetCheck_inoutPage();

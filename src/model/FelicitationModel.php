@@ -9,6 +9,79 @@ class FelicitationModel {
         $this->db = $database->connect();   
     }
 
+    //UpdatePoint cho Quản lý
+    public static function updateManagerPoints($manager_id, $pointGive) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+        // Truy vấn để lấy điểm thưởng hiện tại của quản lý
+        $query = "SELECT DiemThuong FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $manager_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $currentPoints = $result->fetch_assoc()['DiemThuong'] ?? 0;
+        
+        // Tính điểm thưởng mới
+        $newPoints = $currentPoints - $pointGive;
+
+        // Cập nhật điểm thưởng của quản lý
+        $updateQuery = "UPDATE Profile SET DiemThuong = ? WHERE EmpID = ?";
+        $updateStmt = $conn->prepare($updateQuery);
+        $updateStmt->bind_param('ii', $newPoints, $manager_id);
+        $updateStmt->execute();
+
+        $stmt->close();
+        $updateStmt->close();
+        $db->close();
+    }
+
+    //UpdatePoint cho nhân viên
+    public static function updateEmpGivePoints($emp_id, $pointGive) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+        // Truy vấn để lấy điểm thưởng hiện tại của quản lý
+        $query = "SELECT DiemThuong FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $emp_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $currentPoints = $result->fetch_assoc()['DiemThuong'] ?? 0;
+        
+        // Tính điểm thưởng mới
+        $newPoints = $currentPoints + $pointGive;
+
+        // Cập nhật điểm thưởng của quản lý
+        $updateQuery = "UPDATE Profile SET DiemThuong = ? WHERE EmpID = ?";
+        $updateStmt = $conn->prepare($updateQuery);
+        $updateStmt->bind_param('ii', $newPoints, $emp_id);
+        $updateStmt->execute();
+
+        $stmt->close();
+        $updateStmt->close();
+        $db->close();
+    }
+
+    //UpdatePoint cho Felicitation
+    public static function addFelicitation($point, $nguoiNhan, $nguoiTang) {
+        $noiDung = "Nhờ hoàn thành time-sheet";
+    
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "INSERT INTO Felicitation (Point, Date, NoiDung, NguoiNhan, NguoiTang) 
+                  VALUES (?, CURDATE(), ?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('isii', $point, $noiDung, $nguoiNhan, $nguoiTang);
+    
+        $stmt->execute();
+        $stmt->close();
+        $db->close();
+    }
+
     // Trong FelicitationModel
     public static function getEmployeesByManagerID($user_id) {
         $db = new Database();

@@ -8,13 +8,22 @@ class FelicitationController {
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
     
-            $limit = 5;
+            $limit = 12;
             $pageHistory = isset($_GET['pageHistory']) ? (int)$_GET['pageHistory'] : 1;
             $pageHistory_QL = isset($_GET['pageHistory_QL']) ? (int)$_GET['pageHistory_QL'] : 1;
             $offsetHistory = ($pageHistory - 1) * $limit;
             $offsetHistory_QL = ($pageHistory_QL - 1) * $limit;
             $timeSheets = FelicitationModel::getTimeSheetsByEmpID($user_id);
     
+            $message = '';
+            if (isset($_GET['status'])) {
+                if ($_GET['status'] === 'success') {
+                    $message = "Điểm đã được tặng thành công.";
+                } elseif ($_GET['status'] === 'error') {
+                    $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                }
+            }
+
             switch ($role) {
                 case 'Nhân viên':
                     $file = "./views/pages/NV/point_NV.phtml";
@@ -167,19 +176,25 @@ class FelicitationController {
         }
     }
     public function GivePoints() {
+        $manager_id = $_SESSION['user']['EmpID'];
         $empID = isset($_POST['empID']) ? $_POST['empID'] : null;
         $pointGive = isset($_POST['PointGive']) ? $_POST['PointGive'] : null;
-    
+        $pointHave = FelicitationModel::getEmployeePointsByID($manager_id);
+        $message='';
+
         // Kiểm tra xem giá trị có tồn tại không
-        if ($empID && $pointGive) {
-            // Xử lý dữ liệu, ví dụ: in ra hoặc lưu vào cơ sở dữ liệu
-            echo "Employee ID: " . htmlspecialchars($empID) . "<br>";
-            echo "Points to give: " . htmlspecialchars($pointGive);
+        if ($pointGive < $pointHave) {
+            $result = FelicitationModel::addFelicitation($pointGive, $empID, $manager_id);  
+            FelicitationModel::updateManagerPoints($manager_id, $pointGive);
+            FelicitationModel::updateEmpGivePoints($empID, $pointGive);
+            header('Location: /QLNV_PHP/src/index.php?action=GetFelicitationPage&status=success');
+            exit();       
+        
         } else {
-            echo "Dữ liệu không hợp lệ.";
+            header('Location: /QLNV_PHP/src/index.php?action=GetFelicitationPage&status=error');
+            exit();
         }
         
     }
-    
 }
 ?>

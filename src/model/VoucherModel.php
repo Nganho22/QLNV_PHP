@@ -194,7 +194,7 @@ class VoucherModel {
 
     $query = "SELECT TenVoucher, TriGia, HanSuDung, TinhTrang, ChiTiet, HuongDanSuDung
               FROM Voucher
-              WHERE VoucherID = ?";
+              WHERE VoucherID = ? AND TinhTrang is not NULL";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $voucherID);
     $stmt->execute();
@@ -205,6 +205,22 @@ class VoucherModel {
     $db->close();
     return $voucherDetails;
 }
+public static function getExVoucherDetails($voucherID) {
+    $db = new Database();
+    $conn = $db->connect();
 
+    $query = "SELECT TenVoucher, TriGia, HanSuDung, TinhTrang, ChiTiet, HuongDanSuDung
+              FROM Voucher
+              WHERE VoucherID = ? AND TinhTrang IS NULL";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $voucherID);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $voucherDetails = $result->fetch_assoc();
+
+    $stmt->close();
+    $db->close();
+    return $voucherDetails;
+}
 }
 ?>
