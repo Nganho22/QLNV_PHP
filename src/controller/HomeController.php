@@ -107,6 +107,8 @@ class HomeController{
                         $message = "Bạn đã check-out thành công.";
                     } elseif ($_GET['status']  === 'already-checked-out') {
                         $message = "Bạn đã check-out, không thể thực hiện lại.";
+                    } elseif ($_GET['status']  === 'Nghi') {
+                        $message = "Bạn đã xin nghỉ hôm nay.";
                     } else {
                         $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
                     }

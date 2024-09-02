@@ -17,6 +17,7 @@ class UserController{
             $_SESSION['user'] = $user;
             $checkInOut = UserModel::GetTime_checkInOut($user['EmpID']);
             $_SESSION['CheckInOut']= $checkInOut;
+            
             if (isset($_SESSION['redirect_url'])) {
                 $redirect_url = $_SESSION['redirect_url'];
                 unset($_SESSION['redirect_url']);
@@ -43,7 +44,8 @@ class UserController{
             $statusinout = UserModel::UpCheckInOut($empID);
             $checkInOut = UserModel::GetTime_checkInOut($_SESSION['user']['EmpID']);
             $_SESSION['CheckInOut']= $checkInOut;
-
+           
+            
             $redirect_url = isset($_SESSION['redirect_url']) ? $_SESSION['redirect_url'] : '/QLNV_PHP/src/index.php?action=home';
     
             $parsed_url = parse_url($redirect_url);

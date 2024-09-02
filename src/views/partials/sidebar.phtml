@@ -52,7 +52,7 @@
                             </div>
                             </a>
                         </li>
-                        <?php if ($_SESSION['user']['Role'] !== "Giám đốc" &&  $_SESSION['CheckInOut']['Nghi'] !== "1"):?>
+                        <?php if ($_SESSION['user']['Role'] !== "Giám đốc" &&  $_SESSION['CheckInOut']['Nghi'] !== 1):?>
                             <?php if (is_null($_SESSION['CheckInOut']['Time_checkin'])): ?> 
                                 <li class="nav-item mb-2">
                                     <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
@@ -140,25 +140,27 @@
                             </a>
                         </li>
                         </li>
-                        <?php if ($_SESSION['user']['Role'] !== "Giám đốc" &&  $_SESSION['CheckInOut']['Nghi'] !== "1"):?>
-                            <?php if (is_null($_SESSION['CheckInOut']['Time_checkin'])): ?> 
-                            <li class="nav-item mb-2">
-                                <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
-                                <div class="icon">
-                                    <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
-                                </div>
-                                    <span class="menu-text">Check-In</span>
-                                </a>
-                            </li>
-                            <?php elseif (is_null($_SESSION['CheckInOut']['Time_checkout'])): ?>
+                        <?php if ((int)$_SESSION['CheckInOut']['Nghi'] !== 1):?>
+                            <?php if ($_SESSION['user']['Role'] !== "Giám đốc"):?>
+                                <?php if (is_null($_SESSION['CheckInOut']['Time_checkin'])): ?> 
                                 <li class="nav-item mb-2">
                                     <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
                                     <div class="icon">
-                                        <img src="/QLNV_PHP/src/public/img/logo/user-x-regular-24.png" alt="Check-In" class="icon">
+                                        <img src="/QLNV_PHP/src/public/img/logo/user-check-regular-24.png" alt="Check-In" class="icon">
                                     </div>
                                         <span class="menu-text">Check-In</span>
                                     </a>
                                 </li>
+                                <?php elseif (is_null($_SESSION['CheckInOut']['Time_checkout'])): ?>
+                                    <li class="nav-item mb-2">
+                                        <a href="/QLNV_PHP/src/index.php?action=CheckInOut" class="nav-link text-dark d-flex align-items-center">
+                                        <div class="icon">
+                                            <img src="/QLNV_PHP/src/public/img/logo/user-x-regular-24.png" alt="Check-In" class="icon">
+                                        </div>
+                                            <span class="menu-text">Check-In</span>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
                             <?php endif; ?>
                         <?php endif; ?>
                         <li class="nav-item mb-2">
