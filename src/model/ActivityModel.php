@@ -13,11 +13,11 @@ class ActivityModel {
         return $dateTime ? $dateTime->format('d-m-Y') : $date;
     }
 
-    public function isApiAvailable($url) {
+    private function isApiAvailable($url) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5); // Timeout sau 5 giây
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
     
         $result = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -34,7 +34,9 @@ class ActivityModel {
     public function getActivitiesByMonth($month) {
 
         $url = $this->apiUrl . '/month/' . $month;
-    
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
         $response = file_get_contents($url);
         $activities = json_decode($response, true);
     
@@ -83,10 +85,11 @@ class ActivityModel {
     public function SearchActivitiesCoBan($ten) {
 
         $url = $this->apiUrl . '/searchCoBan?Ten=' . $ten;
-
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
         $response = file_get_contents($url);
         $activities = json_decode($response, true);
-
         if (is_array($activities)) {
             $currentDate = date('d-m-Y');
             $currentDateObj = DateTime::createFromFormat('d-m-Y', $currentDate);
@@ -130,7 +133,9 @@ class ActivityModel {
     public function SearchActivitiesLienKet($ten) {
 
         $url = $this->apiUrl . '/searchLienKet?Ten=' . $ten;
-
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
         $response = file_get_contents($url);
         $activities = json_decode($response, true);
 
@@ -177,7 +182,9 @@ class ActivityModel {
     public function CountActivityByMonth($month) {
 
         $url = $this->apiUrl . '/countByMonth/' . $month;
-
+        if (!$this->isApiAvailable($url)) {
+            return 0;
+        }
         $response = @file_get_contents($url);
         if ($response === FALSE) {
             return 0;
@@ -201,7 +208,9 @@ class ActivityModel {
     public function CountActivity() {
 
         $url = $this->apiUrl . '/countall';
-
+        if (!$this->isApiAvailable($url)) {
+            return 0;
+        }
         $response = @file_get_contents($url);
         if ($response === FALSE) {
             return 0;
