@@ -109,50 +109,8 @@ class ActivityController{
             $empID = $_SESSION['user']['EmpID'];
             $apiUrl = 'http://localhost:9002/apiActivity';
             $model = new ActivityModel($apiUrl);
-            $post_id = intval($_GET['activityId']);
-            
-            $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-            $itemsPerPage = 3;
-            $countActivityByMonth = $model->CountActivityByMonth(date('m'));
-            $countAllActivity = $model->CountActivity();
-            $activities = $model->getActivitiesByMonth(date('m'));
-            if ($activities !== null) {
-                $totalItems = count($activities);
-                $totalPages = ceil($totalItems / $itemsPerPage);
-                $offset = ($currentPage - 1) * $itemsPerPage;
-                $pagedActivities = array_slice($activities, $offset, $itemsPerPage);
-            } else {
-                $pagedActivities = [];
-                $totalPages = 1;
-            }
-            $searchCB = isset($_GET['searchcb']) ? $_GET['searchcb'] : '';
-            $allActivitiesCB = $model->SearchActivitiesCoBan($searchCB);
-            $currentPageCB = isset($_GET['pageCB']) ? (int)$_GET['pageCB'] : 1;
-    
-            if ($allActivitiesCB !== null) {
-                $totalItemsCB = count($allActivitiesCB);
-                $totalPagesCB = ceil($totalItemsCB / $itemsPerPage);
-                $offsetCB = ($currentPageCB - 1) * $itemsPerPage;
-                $pagedActivitiesCB = array_slice($allActivitiesCB, $offsetCB, $itemsPerPage);
-            } else {
-                $pagedActivitiesCB = [];
-                $totalPagesCB = 1;
-            }
-        
-            $searchLK = isset($_GET['searchlk']) ? $_GET['searchlk'] : '';
-            $allActivitiesLK = $model->SearchActivitiesLienKet($searchLK);
-            $currentPageLK = isset($_GET['pageLK']) ? (int)$_GET['pageLK'] : 1;
-    
-            if ($allActivitiesLK !== null) {
-                $totalItemsLK = count($allActivitiesLK);
-                $totalPagesLK = ceil($totalItemsLK / $itemsPerPage);
-                $offsetLK = ($currentPageLK - 1) * $itemsPerPage;
-                $pagedActivitiesLK = array_slice($allActivitiesLK, $offsetLK, $itemsPerPage);
-            } else {
-                $pagedActivitiesLK = [];
-                $totalPagesLK = 1;
-            }
-            
+            $ActivityID = intval($_GET['activityId']);
+            $Activity = $model->GetActivityDetail($ActivityID);
             
             switch ($Role) {
                 case 'Nhân viên':

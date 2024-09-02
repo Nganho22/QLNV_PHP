@@ -1,1 +1,124 @@
-hihi
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($title); ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/activity_detail.css" type="text/css"/> 
+</head>
+<body>
+    <?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        </div>
+    <?php endif; ?>
+<main>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 main-content">
+            <h2>Hoạt động: Đi vũng tàu</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="info-box">
+                        <i class="fas fa-users"></i>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Số người tham gia</span>
+                            <span class="info-box-number">15</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-box">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Chi phí</span>
+                            <span class="info-box-number">50 triệu</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-box">
+                        <i class="fas fa-clock"></i>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Trạng thái</span>
+                            <span class="info-box-number">Trong quá trình</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-box">
+                        <i class="fas fa-percentage"></i>
+                        <div class="info-box-content">
+                            <span class="info-box-text">Tỷ lệ tham gia</span>
+                            <span class="info-box-number">82%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dates -->
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <div class="date-box">
+                        <label for="hanCuoiDangKy">Hạn chót đăng ký:</label>
+                        <input type="text" id="hanCuoiDangKy" value="01/01/2024" readonly />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="date-box">
+                        <label for="ngayBatDau">Ngày bắt đầu:</label>
+                        <input type="text" id="ngayBatDau" value="01/01/2024" readonly />
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="date-box">
+                        <label for="ngayKetThuc">Ngày kết thúc:</label>
+                        <input type="text" id="ngayKetThuc" value="01/01/2024" readonly />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="description mt-4">
+                <h4>Mô tả:</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lobortis maximus nunc, ac rhoncus odio congue quis. Sed ac semper orci, eu porttitor lacus.</p>
+            </div>
+
+            <!-- Participation Rate Pie Chart -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <h4>Tỷ lệ tham gia theo phòng ban:</h4>
+                    <canvas id="participationRateChart"></canvas>
+                </div>
+
+                <!-- Participants List -->
+                <div class="col-md-6">
+                    <h4>Danh sách nhân viên tham gia:</h4>
+                    <input type="text" class="form-control" placeholder="Tìm kiếm...">
+                    <ul class="list-group mt-2">
+                        <li class="list-group-item">Deanna Annis - <a href="mailto:deannaannis@gmail.com">deannaannis@gmail.com</a></li>
+                        <li class="list-group-item">Andrea Willis - <a href="mailto:andreawillis@gmail.com">andreawillis@gmail.com</a></li>
+                        <li class="list-group-item">Brent Rodrigues - <a href="mailto:brodrigues@gmail.com">brodrigues@gmail.com</a></li>
+                        <!-- Add more participants as needed -->
+                    </ul>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination mt-2">
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</main>
+</body>
