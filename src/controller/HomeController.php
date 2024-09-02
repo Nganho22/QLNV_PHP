@@ -32,6 +32,7 @@ class HomeController{
             $timeSheets = FelicitationModel::getTimeSheetsByEmpID($empID);
             switch ($Role) {
                 case 'Nhân viên':
+                    $phongID = UserModel::getPhongIDByEmpID($empID);
                     $projects = UserModel::getProjects_NV($empID);
                     $cprojects = UserModel::getCountProjects_NV($empID);
                     $cactivities = UserModel::getActivities($empID);
@@ -42,13 +43,16 @@ class HomeController{
                     $file = "./views/pages/NV/home_NV.phtml";
                     break;
                 case 'Quản lý':
-                    $phongBans = UserModel::getPhongBanStatistics();
-                    $hiendien = UserModel::getHienDien();
-                    $checkinout = UserModel::getPhongBan_Checkinout();
+                    $phongID = UserModel::getPhongIDByEmpID($empID);
+                    $countWFH = UserModel::getWorkFromHomeCountByEmpID($empID);
+                    $absence = UserModel::getAbsence($empID);
+                    $phongBans = UserModel::getPhongBanStatistics($empID);
+                    $hiendien = UserModel::getHienDien($empID);
+                    $checkinout = UserModel::getPhongBan_Checkinout($empID);
                     $employees = UserModel::getEmployeesList_QL($empID);
                     $timesheets = UserModel::getTimesheetList($empID); 
                     $managedProjects = UserModel::getProjects_QL($empID);
-                    $deadlines = UserModel::getDeadlinesTimesheet($empID);
+                    $deadlines = UserModel::getDeadlinesTimesheet_QL($empID);
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 case 'Giám đốc':
@@ -60,6 +64,7 @@ class HomeController{
                     $projects = UserModel::getProjects_GD();
                     $phongBans = UserModel::getPhongBan_GD();
                     $deadlines = UserModel::getDeadlinesTimesheet($empID);
+                    $deadlines = UserModel::getDeadlinesTimesheet_GD($empID);
 
                     if (!empty($searchTerm_NV)) {
                         $employees = UserModel::searchProfiles($searchTerm_NV, $limit, $offset);

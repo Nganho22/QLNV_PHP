@@ -9,7 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/point_nv.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/point_ql.css">
 </head>
 <body>
     <div class="container">
@@ -75,21 +75,30 @@
         <!-- Cột bên phải -->
         <div class="right-column">
             <div class="gift-box">
-                        <h2>Voucher</h2>
-                            <div class="Voucher_List">
-                                <div class="info-box1">
-                                    <div class="row1">
-                                    <div class="left-box">
-                                        <p><strong>Nhân Viên</strong></p>
-                                            <input type="text" id="empName" name="empName" placeholder="Nhập tên nhân viên">    
-                                        <p><strong>Tổng điểm hiện có </strong></p>
-                                            <h4></h4>  
-                                    </div>
-                                    <div class="right-box">
-                                        <p><strong>Tặng điểm </strong></p>
-                                            <input type="text" id="giftPoint" name="giftPoint" placeholder="Nhập điểm">    
-                                    </div>
-                                    </div>
+                <h2>Voucher</h2>
+                    <div class="Voucher_List">
+                        <div class="info-box1">
+                        <div class="row1">
+                            <div class="left-box">
+                            <p><strong>Nhân Viên</strong></p>
+                                <div id="employee-list-container" class="employee-list-container">
+                                    <select id="employee-select" class="form-control">
+                                        <?php foreach ($employees as $employee): ?>
+                                            <option value="<?php echo htmlspecialchars($employee['EmpID']); ?>">
+                                                <?php echo htmlspecialchars($employee['HoTen']); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>                               
+                                <p><strong>Tổng điểm hiện có </strong></p>
+                                    <h4 id="employee-points"></h4>
+                            </div>
+                            <div class="right-box">
+                                    <p><strong>Tặng điểm </strong></p>
+                                    <input type="text" id="points-to-gift" class="form-control" placeholder="Nhập số điểm" pattern="\d*">
+                                </div>
+
+                        </div>
                                 </div>   
                                 <div class="text-center-btn mt-4">
                                     <a href="index.php?action=GetFelicitationPage" class="btn btn-primary btn-block">Xác nhận</a>
@@ -123,35 +132,62 @@
         </div>
 
     <script>
+    $(document).ready(function() {
+            // Toggle employee list visibility
+            $('#toggle-employee-list').click(function() {
+                $('#employee-list-container').toggle();
+                var isVisible = $('#employee-list-container').is(':visible');
+                $(this).text(isVisible ? 'Ẩn danh sách nhân viên' : 'Xem danh sách nhân viên');
+            });
 
+            // Xử lý phân trang cho yêu cầu chờ duyệt
+            $(document).on('click', '#historyfelicitation-pagination .page-link', function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                loadHistory_QLRequests(page, $(this));
+            });
 
-            $(document).ready(function() {
-        // Xử lý phân trang cho yêu cầu chờ duyệt
-        $(document).on('click', '#historyfelicitation-pagination .page-link', function(e) {
-            e.preventDefault();
-            var page = $(this).data('page');
-            loadHistory_QLRequests(page, $(this));
+            function loadHistory_QLRequests(page, element) {
+                $.ajax({
+                    url: 'index.php?action=GetFelicitationPage&ajax=true&pageHistory_QL=' + page,
+                    method: 'GET',
+                    success: function(response) {
+                        var data = JSON.parse(response);
+                        $('#historyfelicitation-requests-table tbody').html(data.history_QLHtml);
+                        $('#historyfelicitation-pagination').html(data.history_QLPagination);
+
+                        // Cập nhật trạng thái active
+                        var updatedPagination = $('#historyfelicitation-pagination .page-link[data-page="' + page + '"]');
+                        updatedPagination.parent().addClass('active');
+                    },
+                    error: function() {
+                        console.error('Không thể tải dữ liệu');
+                    }
+                });
+            }
         });
-
-        function loadHistory_QLRequests(page, element) {
+        $(document).ready(function() {
+    $('#employee-select').change(function() {
+        var empID = $(this).val();
+        
+        if (empID) {
             $.ajax({
-                url: 'index.php?action=GetFelicitationPage&ajax=true&pageHistory_QL=' + page,
+                url: 'index.php?action=GetEmployeePoints',
                 method: 'GET',
+                data: { empID: empID },
                 success: function(response) {
                     var data = JSON.parse(response);
-                    $('#historyfelicitation-requests-table tbody').html(data.history_QLHtml);
-                    $('#historyfelicitation-pagination').html(data.history_QLPagination);
-
-                    // Cập nhật trạng thái active
-                    var updatedPagination = $('#historyfelicitation-pagination .page-link[data-page="' + page + '"]');
-                    updatedPagination.parent().addClass('active');
+                    $('#employee-points').text(data.points);
                 },
                 error: function() {
-                    console.error('Không thể tải dữ liệu');
+                    console.error('Không thể tải điểm của nhân viên');
                 }
             });
+        } else {
+            $('#employee-points').text('0');
         }
-        });
+    });
+});
 
     </script>
 

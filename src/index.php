@@ -130,6 +130,10 @@ switch ($action)
         $controller = new Check_inoutController();
         $controller->GetCheck_inoutPage();
         break;
+    case 'GetEmployeePoints':
+        $controller = new FelicitationController();
+        $controller->GetEmployeePoints();
+        break;
 default:
         $controller = new HomeController();
         $controller->login();

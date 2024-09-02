@@ -120,85 +120,96 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const daysElement = document.getElementById('calendarDays');
-            const monthYearElement = document.getElementById('monthYear');
-            const prevButton = document.querySelector('.prev');
-            const nextButton = document.querySelector('.next');
-            let currentDate = new Date();
+        const daysElement = document.getElementById('calendarDays');
+        const monthYearElement = document.getElementById('monthYear');
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+        let currentDate = new Date();
 
-            // Dữ liệu hạn chót từ PHP
-            const deadlines = <?php echo json_encode($deadlines); ?>;
-            const deadlinesMap = {};
+        // Dữ liệu hạn chót từ PHP
+        const deadlines = <?php echo json_encode($deadlines); ?>;
+        const deadlinesMap = {};
 
-            deadlines.forEach(deadline => {
-                const date = new Date(deadline.HanChot);
-                const key = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
-                if (!deadlinesMap[key]) {
-                    deadlinesMap[key] = [];
-                }
-                deadlinesMap[key].push(deadline.TenDuAn);
+        deadlines.forEach(deadline => {
+            const date = new Date(deadline.HanChot);
+            const key = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+            if (!deadlinesMap[key]) {
+                deadlinesMap[key] = [];
+            }
+            deadlinesMap[key].push({
+                TenDuAn: deadline.TenDuAn,
+                TenQuanLy: deadline.TenQuanLy,
+                PhongID: deadline.PhongID
             });
-            
-            function renderCalendar(date) {
-                const year = date.getFullYear();
-                const month = date.getMonth();
-                const firstDay = new Date(year, month, 1);
-                const lastDay = new Date(year, month + 1, 0);
-                const daysInMonth = lastDay.getDate();
-                const startDay = (firstDay.getDay()+6)%7;
+        });
+        
+        function renderCalendar(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDay = (firstDay.getDay()+6)%7;
 
-                daysElement.innerHTML = '';
+            daysElement.innerHTML = '';
 
-                monthYearElement.textContent = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
+            monthYearElement.textContent = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
 
-                // Add empty cells for the days before the first day of the month
-                for (let i = 0; i < startDay; i++) {
-                    const emptyCell = document.createElement('li');
-                    daysElement.appendChild(emptyCell);
-                }
-
-                // Add cells for the days in the month
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const dayCell = document.createElement('li');
-                    const dateString = `${year}-${month + 1}-${day}`;
-                    dayCell.textContent = day;
-
-                    // Default styles for the day
-                    dayCell.style.backgroundColor = ''; // Reset background color
-                    dayCell.classList.remove('day-today');
-
-                    if (deadlinesMap[dateString]) {
-                        dayCell.title = deadlinesMap[dateString];
-                        const today = new Date();
-                        const deadlineDate = new Date(dateString);
-
-                        if (dateString === `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`) {
-                            dayCell.style.backgroundColor = '#fe7272'; // Đỏ cho hôm nay nếu là hạn chót
-                        } else if (deadlineDate < today) {
-                            dayCell.style.backgroundColor = '#a6a6a6'; // Xám cho quá khứ
-                        } else {
-                            dayCell.style.border = '2px solid  #fe7272'; // Xanh cho tương lai
-                        }
-                    } else if (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) {
-                        dayCell.classList.add('day-today'); // Thêm lớp cho ngày hôm nay không phải hạn chót
-                    }
-
-                    daysElement.appendChild(dayCell);
-                }
+            // Add empty cells for the days before the first day of the month
+            for (let i = 0; i < startDay; i++) {
+                const emptyCell = document.createElement('li');
+                daysElement.appendChild(emptyCell);
             }
 
-            prevButton.addEventListener('click', function() {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                renderCalendar(currentDate);
-            });
+            // Add cells for the days in the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayCell = document.createElement('li');
+                const dateString = `${year}-${month + 1}-${day}`;
+                dayCell.textContent = day;
 
-            nextButton.addEventListener('click', function() {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                renderCalendar(currentDate);
-            });
+                // Default styles for the day
+                dayCell.style.backgroundColor = ''; // Reset background color
+                dayCell.classList.remove('day-today');
 
+                if (deadlinesMap[dateString]) {
+                    const today = new Date();
+                    const deadlineDate = new Date(dateString);
+
+                    // Generate title for the cell
+                    let titleText = '';
+                    deadlinesMap[dateString].forEach(deadline => {
+                        titleText += `Project: ${deadline.TenDuAn}\n Quản lý: ${deadline.TenQuanLy}\n Phòng: ${deadline.PhongID}\n\n`;
+                    });
+                    dayCell.title = titleText.trim();
+
+                    if (dateString === `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`) {
+                        dayCell.style.backgroundColor = '#fe7272'; // Đỏ cho hôm nay nếu là hạn chót
+                    } else if (deadlineDate < today) {
+                        dayCell.style.backgroundColor = '#a6a6a6'; // Xám cho quá khứ
+                    } else {
+                        dayCell.style.border = '2px solid  #fe7272'; // Xanh cho tương lai
+                    }
+                } else if (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) {
+                    dayCell.classList.add('day-today'); // Thêm lớp cho ngày hôm nay không phải hạn chót
+                }
+
+                daysElement.appendChild(dayCell);
+            }
+        }
+
+        prevButton.addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
             renderCalendar(currentDate);
         });
+
+        nextButton.addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar(currentDate);
+        });
+
+        renderCalendar(currentDate);
+    });
+
     
     $(document).ready(function() {
 

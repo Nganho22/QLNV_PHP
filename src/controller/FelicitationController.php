@@ -77,6 +77,7 @@ class FelicitationController {
                     break;
                 case 'Quản lý':
                     $file = "./views/pages/QL/point_QL.phtml";
+                    $employees = FelicitationModel::getEmployeesByManagerID($user_id);
                     $creq = FelicitationModel::getFelicitationCountsByEmpID_QL($user_id);
                     $history_QLRequests = FelicitationModel::getHistoryRequestsByEmpID_QL($user_id, $limit, $offsetHistory_QL);
                     $totalHistory_QL = FelicitationModel::countFelicitationRequests_QL($user_id);
@@ -156,6 +157,13 @@ class FelicitationController {
             $timeSheetID = $_GET['timeSheetID'];
             $timeSheet = RequestModel::getTimeSheetByID($timeSheetID);
             echo json_encode($timeSheet);
+        }
+    }
+    public function GetEmployeePoints() {
+        if (isset($_GET['empID'])) {
+            $empID = (int)$_GET['empID'];
+            $points = FelicitationModel::getEmployeePointsByID($empID);
+            echo json_encode(['points' => $points]);
         }
     }
     

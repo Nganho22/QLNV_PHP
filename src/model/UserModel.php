@@ -342,29 +342,53 @@ class UserModel {
     }
 
     //Phần Home
-    //Lấy Deadline từ Time-sheet
-    public static function getDeadlinesTimesheet($empID) {
+
+    // Hàm để lấy PhongID của nhân viên dựa trên EmpID
+    public static function getPhongIDByEmpID($empID) {
         $db = new Database();
         $conn = $db->connect();
-    
-        $stmt = $conn->prepare("SELECT Time_sheet.TenDuAn, Time_sheet.HanChot 
-                                FROM Time_sheet
-                                WHERE Time_sheet.EmpID = ?");
+
+        $stmt = $conn->prepare(
+            "SELECT PhongID 
+            FROM Profile 
+            WHERE EmpID = ?"
+        );
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-    
-        $deadlines = [];
-        while ($row = $result->fetch_assoc()) {
-            $deadlines[] = [
-                'TenDuAn' => $row['TenDuAn'],
-                'HanChot' => $row['HanChot']
-            ];
-        }
-    
+
+        $phongID = $result->fetch_assoc()['PhongID'];
+
         $stmt->close();
         $db->close();
-        return $deadlines;
+
+        return $phongID;
+    }
+
+    //=================================Nhân viên=================================
+        //Lấy Deadline từ Time-sheet
+    public static function getDeadlinesTimesheet($empID) {
+            $db = new Database();
+            $conn = $db->connect();
+        
+            $stmt = $conn->prepare("SELECT Time_sheet.TenDuAn, Time_sheet.HanChot 
+                                    FROM Time_sheet
+                                    WHERE Time_sheet.EmpID = ?");
+            $stmt->bind_param("i", $empID);
+            $stmt->execute();
+            $result = $stmt->get_result();
+        
+            $deadlines = [];
+            while ($row = $result->fetch_assoc()) {
+                $deadlines[] = [
+                    'TenDuAn' => $row['TenDuAn'],
+                    'HanChot' => $row['HanChot']
+                ];
+            }
+        
+            $stmt->close();
+            $db->close();
+            return $deadlines;
     }
     
     // Lấy danh sách dự án
@@ -411,69 +435,7 @@ class UserModel {
         $db->close();
         return $cprojects;
     }
-
-    public static function getProjects_QL($empID) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT p.Ten AS ProjectName, 
-                                       p.TienDo, p.TinhTrang
-                                FROM Project p
-                                JOIN Profile prof ON p.QuanLy = prof.EmpID
-                                WHERE prof.EmpID = ? AND p.TinhTrang <> 'Đã hoàn thành'
-                                ORDER BY p.NgayGiao DESC");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $projects = [];
-        while ($row = $result->fetch_assoc()) {
-            $projects[] = $row;
-        }
-
-        $stmt->close();
-        $db->close();
-        return $projects;
-    }
-    
-    public static function getProjects_GD() {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT * FROM Project LIMIT 3");
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $projects = $result->fetch_all(MYSQLI_ASSOC);
-
-        $stmt->close();
-        $db->close();
-        return $projects;
-    }
-
-
-    // Lấy danh sách hoạt động
-    public static function getCountActivities($empID) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT Activity.TenHoatDong, emp_activity.ThoiGianThucHien, emp_activity.ThanhTich
-                                FROM Activity 
-                                JOIN emp_activity ON Activity.ActivityID = emp_activity.ActivityID
-                                WHERE emp_activity.EmpID = ?");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $cactivities = [];
-        while ($row = $result->fetch_assoc()) {
-            $cactivities[] = $row;
-        }
-
-        $stmt->close();
-        $db->close();
-        return $cactivities;
-    }
-
+    // Lấy danh sách hoạt động   
     public static function getActivities($empID) {
         $db = new Database();
         $conn = $db->connect();
@@ -496,72 +458,27 @@ class UserModel {
         return $activities;
     }
 
-    public static function UpCheckInOut($empID) {
+    public static function getCountActivities($empID) {
         $db = new Database();
         $conn = $db->connect();
-        
 
-        $stmt = $conn->prepare("SELECT STT, Time_checkin, Time_checkout,Nghi FROM Check_inout WHERE EmpID = ? AND Date_checkin = CURDATE();");
+        $stmt = $conn->prepare("SELECT Activity.TenHoatDong, emp_activity.ThoiGianThucHien, emp_activity.ThanhTich
+                                FROM Activity 
+                                JOIN emp_activity ON Activity.ActivityID = emp_activity.ActivityID
+                                WHERE emp_activity.EmpID = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-    
-        $statusinout = '';
-        
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            if($row['Nghi'] === 1)
-            {
-                $statusinout = 'Nghi';
-            }
-            else{
-                if (is_null($row['Time_checkin'])) {
-                    $updateStmt = $conn->prepare("
-                        UPDATE Check_inout 
-                        SET Time_checkin = CURTIME(), 
-                            Late = CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END 
-                        WHERE STT = ?
-                    ");
-                    $updateStmt->bind_param("i", $row['STT']);
-                    $updateStmt->execute();
-                    $updateStmt->close();
-                    $statusinout = 'checked-in';
-                } 
-                else if (is_null($row['Time_checkout'])) {
-                    $updateStmt = $conn->prepare("
-                        UPDATE Check_inout 
-                        SET Time_checkout = CURTIME(), 
-                            Overtime = CASE WHEN CURTIME() > '17:00:00' THEN 1 ELSE 0 END 
-                        WHERE STT = ?
-                    ");
-                    $updateStmt->bind_param("i", $row['STT']);
-                    $updateStmt->execute();
-                    $updateStmt->close();
-                    $statusinout = 'checked-out';
-                } else {
-                    $statusinout = 'already-checked-out';
-                }
-            }
-           
-        } else {
-            $insertStmt = $conn->prepare("
-                INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin, Late) 
-                VALUES (?, CURDATE(), CURTIME(), CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END)
-            ");
-            $insertStmt->bind_param("i", $empID);
-            $insertStmt->execute();
-            $insertStmt->close();
-            $statusinout = 'checked-in';
+
+        $cactivities = [];
+        while ($row = $result->fetch_assoc()) {
+            $cactivities[] = $row;
         }
-    
+
         $stmt->close();
         $db->close();
-    
-        return $statusinout;
+        return $cactivities;
     }
-    
-    
-    
     // Lấy thông tin chấm công
     public static function getCheckInOut($empID) {
         $db = new Database();
@@ -582,7 +499,7 @@ class UserModel {
         $db->close();
         return $checkInOut;
     }
-    
+
     public static function getPoint_Month($empID) {
         $db = new Database();
         $conn = $db->connect();
@@ -608,42 +525,251 @@ class UserModel {
         $db->close();
         return $monthlyPoints;
     }
-     
-    public static function getPhongBanStatistics() {
+
+    public static function UpCheckInOut($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+        // Lấy thông tin check-in/check-out hiện tại
+        $stmt = $conn->prepare("SELECT STT, Time_checkin, Time_checkout FROM Check_inout WHERE EmpID = ? AND Date_checkin = CURDATE() AND Nghi != '1';");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $statusinout = '';
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+    
+            if (is_null($row['Time_checkin'])) {
+                $updateStmt = $conn->prepare("
+                    UPDATE Check_inout 
+                    SET Time_checkin = CURTIME(), 
+                        Late = CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END 
+                    WHERE STT = ?
+                ");
+                $updateStmt->bind_param("i", $row['STT']);
+                $updateStmt->execute();
+                $updateStmt->close();
+                $statusinout = 'checked-in';
+            } 
+            else if (is_null($row['Time_checkout'])) {
+                $updateStmt = $conn->prepare("
+                    UPDATE Check_inout 
+                    SET Time_checkout = CURTIME(), 
+                        Overtime = CASE WHEN CURTIME() > '17:00:00' THEN 1 ELSE 0 END 
+                    WHERE STT = ?
+                ");
+                $updateStmt->bind_param("i", $row['STT']);
+                $updateStmt->execute();
+                $updateStmt->close();
+                $statusinout = 'checked-out';
+            } else {
+                $statusinout = 'already-checked-out';
+            }
+        } else {
+            $insertStmt = $conn->prepare("
+                INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin, Late) 
+                VALUES (?, CURDATE(), CURTIME(), CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END)
+            ");
+            $insertStmt->bind_param("i", $empID);
+            $insertStmt->execute();
+            $insertStmt->close();
+            $statusinout = 'checked-in';
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $statusinout;
+    }
+    
+     //===================================Quản lý========================================
+     public static function getDeadlinesTimesheet_QL($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChot 
+                                FROM Project
+                                WHERE Project.QuanLy = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $deadlines = [];
+        while ($row = $result->fetch_assoc()) {
+            $deadlines[] = [
+                'TenDuAn' => $row['Ten'],
+                'HanChot' => $row['HanChot']
+            ];
+        }
+    
+        $stmt->close();
+        $db->close();
+        return $deadlines;
+    }
+
+     public static function getProjects_QL($empID) {
         $db = new Database();
         $conn = $db->connect();
 
-        // Cập nhật câu lệnh SQL để chỉ rõ bảng
-        $stmt = $conn->prepare("SELECT PhongBan.PhongID, PhongBan.TenPhong, COUNT(Profile.EmpID) AS SoThanhVien
-                                FROM Profile 
-                                LEFT JOIN PhongBan ON Profile.PhongID = PhongBan.PhongID
-                                GROUP BY PhongBan.PhongID, PhongBan.TenPhong");
+        $stmt = $conn->prepare("SELECT p.Ten AS ProjectName, 
+                                       p.TienDo, p.TinhTrang
+                                FROM Project p
+                                JOIN Profile prof ON p.QuanLy = prof.EmpID
+                                WHERE prof.EmpID = ? AND p.TinhTrang <> 'Đã hoàn thành'
+                                ORDER BY p.NgayGiao DESC");
+        $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-        
-        $phongBans = [];
+
+        $projects = [];
         while ($row = $result->fetch_assoc()) {
-            $phongBans[] = $row;
+            $projects[] = $row;
         }
 
         $stmt->close();
         $db->close();
-        return $phongBans;
+        return $projects;
     }
-
-    public static function getHienDien() {
+    
+     public static function getPhongBanStatistics($empID) {
         $db = new Database();
         $conn = $db->connect();
         
+        // Lấy PhongID của quản lý
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+        $stmt->close();
+    
+        if (!$phongID) {
+            $db->close();
+            return [];
+        }
+    
+        $stmt = $conn->prepare("SELECT Profile.EmpID, Profile.HoTen
+                                FROM Profile
+                                WHERE Profile.PhongID = ?");
+        $stmt->bind_param("s", $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        $employees = [];
+        while ($row = $result->fetch_assoc()) {
+            $employees[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+        return $employees;
+    }
+
+    public static function getWorkFromHomeCountByEmpID($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+        $stmt->close();
+        
+        if (!$phongID) {
+            $db->close();
+            return 0;
+        }
+    
         $stmt = $conn->prepare(
-            "SELECT PhongBan.PhongID, PhongBan.TenPhong, COUNT(DISTINCT Check_inout.EmpID) AS SoHienDien
-            FROM Profile
-            INNER JOIN PhongBan ON Profile.PhongID = PhongBan.PhongID
+            "SELECT COUNT(DISTINCT Check_inout.EmpID) AS countWFH
+            FROM Check_inout
+            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
+            WHERE Profile.PhongID = ? 
+            AND Check_inout.WorkFromHome = 1
+            AND DATE(Check_inout.Date_checkin) = CURDATE()"
+        );
+        $stmt->bind_param("s", $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $countWFH = $result->fetch_assoc()['countWFH'] ?? 0;
+    
+        $stmt->close();
+        $db->close();
+        return $countWFH;
+    }
+    
+    public static function getAbsence($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+        $stmt->close();
+        
+        if (!$phongID) {
+            $db->close();
+            return 0;
+        }
+    
+        $stmt = $conn->prepare(
+            "SELECT COUNT(DISTINCT Check_inout.EmpID) AS absence
+            FROM Check_inout
+            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
+            WHERE Profile.PhongID = ? 
+            AND Check_inout.Nghi = 1
+            AND DATE(Check_inout.Date_checkin) = CURDATE()"
+        );
+        $stmt->bind_param("s", $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $absence = $result->fetch_assoc()['absence'] ?? 0;
+    
+        $stmt->close();
+        $db->close();
+        return $absence;
+    }
+
+    public static function getHienDien($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+
+        $stmt = $conn->prepare(
+            "SELECT PhongID 
+             FROM Profile 
+             WHERE EmpID = ?"
+        );
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $phongID = $result->fetch_assoc()['PhongID'];
+        $stmt->close();
+        
+        if (!$phongID) {
+            $db->close();
+            return []; 
+        }  
+       
+        $stmt = $conn->prepare(
+            "SELECT 
+                PhongBan.PhongID, 
+                PhongBan.TenPhong, 
+                COUNT(DISTINCT Check_inout.EmpID) AS SoHienDien
+            FROM PhongBan
+            LEFT JOIN Profile ON PhongBan.PhongID = Profile.PhongID
             LEFT JOIN Check_inout ON Profile.EmpID = Check_inout.EmpID
                 AND DATE(Check_inout.Date_checkin) = CURDATE()
+                AND Check_inout.Time_checkout IS NULL
+            WHERE PhongBan.PhongID = ?
             GROUP BY PhongBan.PhongID, PhongBan.TenPhong"
         );
-        
+        $stmt->bind_param("s", $phongID);
         $stmt->execute();
         $result = $stmt->get_result();
         
@@ -656,11 +782,27 @@ class UserModel {
         $db->close();
         return $hiendien;
     }
-    public static function getPhongBan_Checkinout() {
+
+    public static function getPhongBan_Checkinout($empID) {
         $db = new Database();
         $conn = $db->connect();
     
-        // Câu lệnh SQL để đếm số lượt Check-in và Check-out của nhân viên trong ngày hôm nay cho mỗi phòng ban
+        $stmtPhongID = $conn->prepare(
+            "SELECT PhongID 
+             FROM Profile 
+             WHERE EmpID = ?"
+        );
+        $stmtPhongID->bind_param("i", $empID);
+        $stmtPhongID->execute();
+        $resultPhongID = $stmtPhongID->get_result();
+        $phongID = $resultPhongID->fetch_assoc()['PhongID'];
+        $stmtPhongID->close();
+        
+        if (!$phongID) {
+            $db->close();
+            return [];
+        }
+    
         $stmt = $conn->prepare(
             "SELECT PhongBan.PhongID, PhongBan.TenPhong, 
                     COALESCE(COUNT(CASE WHEN Check_inout.Time_checkin IS NOT NULL THEN 1 END), 0) AS SoLanCheckin,
@@ -669,12 +811,13 @@ class UserModel {
              INNER JOIN PhongBan ON Profile.PhongID = PhongBan.PhongID
              LEFT JOIN Check_inout ON Profile.EmpID = Check_inout.EmpID
                 AND DATE(Check_inout.Date_checkin) = CURDATE()
+             WHERE PhongBan.PhongID = ?
              GROUP BY PhongBan.PhongID, PhongBan.TenPhong"
         );
-        
+        $stmt->bind_param("s", $phongID);
         $stmt->execute();
         $result = $stmt->get_result();
-        
+    
         $checkinout = [];
         while ($row = $result->fetch_assoc()) {
             $checkinout[] = $row;
@@ -684,9 +827,7 @@ class UserModel {
         $db->close();
         return $checkinout;
     }
-    
-    
-    
+
     public static function getEmployeesList_QL($empID) {
         $db = new Database();
         $conn = $db->connect();
@@ -714,6 +855,90 @@ class UserModel {
         $stmt->close();
         $db->close();
         return $employees;
+    }
+
+    public static function getTimesheetList($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Lấy PhongID của người dùng hiện tại
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $phongID = $row['PhongID'];
+        $stmt->close();
+    
+        // Lấy danh sách time-sheet của nhân viên cùng PhongID, chỉ lấy 3 người đầu tiên
+        $stmt = $conn->prepare("SELECT NgayGiao, NoiDung, NguoiGui 
+                                FROM Time_sheet 
+                                WHERE EmpID IN (
+                                    SELECT EmpID FROM Profile WHERE PhongID = ?
+                                ) LIMIT 3");
+        $stmt->bind_param("i", $phongID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $timesheets = [];
+        while ($row = $result->fetch_assoc()) {
+            $timesheets[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+        return $timesheets;
+    }
+
+    //=================================Giam doc==============================
+    public static function getDeadlinesTimesheet_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare(
+            "SELECT 
+                Project.Ten AS TenDuAn, 
+                Project.HanChot AS HanChot,
+                Profile.HoTen AS TenQuanLy, 
+                Project.PhongID AS PhongID
+            FROM 
+                Project
+            INNER JOIN 
+                Profile ON Project.QuanLy = Profile.EmpID
+            INNER JOIN 
+                PhongBan ON Project.PhongID = PhongBan.PhongID"
+        );
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $deadlines = [];
+        while ($row = $result->fetch_assoc()) {
+            $deadlines[] = [
+                'TenDuAn' => $row['TenDuAn'],
+                'HanChot' => $row['HanChot'],
+                'TenQuanLy' => $row['TenQuanLy'],
+                'PhongID' => $row['PhongID']
+            ];
+        }
+    
+        $stmt->close();
+        $db->close();
+        return $deadlines;
+    }
+    
+
+    public static function getProjects_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT * FROM Project LIMIT 3");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $projects = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+        $db->close();
+        return $projects;
     }
 
     public static function getEmployeesList_GD($limit, $offset) {
@@ -795,41 +1020,6 @@ class UserModel {
         return $total;
     }
 
-    
-
-    public static function getTimesheetList($empID) {
-        $db = new Database();
-        $conn = $db->connect();
-    
-        // Lấy PhongID của người dùng hiện tại
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $phongID = $row['PhongID'];
-        $stmt->close();
-    
-        // Lấy danh sách time-sheet của nhân viên cùng PhongID, chỉ lấy 3 người đầu tiên
-        $stmt = $conn->prepare("SELECT NgayGiao, NoiDung, NguoiGui 
-                                FROM Time_sheet 
-                                WHERE EmpID IN (
-                                    SELECT EmpID FROM Profile WHERE PhongID = ?
-                                ) LIMIT 3");
-        $stmt->bind_param("i", $phongID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        $timesheets = [];
-        while ($row = $result->fetch_assoc()) {
-            $timesheets[] = $row;
-        }
-    
-        $stmt->close();
-        $db->close();
-        return $timesheets;
-    }
-
     public static function getPhongBan_GD() {
         $db = new Database();
         $conn = $db->connect();
@@ -854,8 +1044,8 @@ class UserModel {
         $CheckInOuts = [
             'Time_checkin' => null,
             'Time_checkout' => null,
-            'WorkFromHome' => 0,
-            'Nghi' => 0,
+            'WorkFromHome' => '0',
+            'Nghi' => '0',
         ];
 
         if($result->num_rows > 0){
@@ -870,9 +1060,6 @@ class UserModel {
         $db->close();
         return $CheckInOuts;
     }
-
-
-
 }
     
 

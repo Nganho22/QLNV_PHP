@@ -9,6 +9,45 @@ class FelicitationModel {
         $this->db = $database->connect();   
     }
 
+    // Trong FelicitationModel
+    public static function getEmployeesByManagerID($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        // Truy vấn danh sách nhân viên thuộc phòng ban của người quản lý
+        $query = "SELECT EmpID, HoTen FROM Profile WHERE PhongID = (
+                    SELECT PhongID FROM Profile WHERE EmpID = ?
+                )AND EmpID != ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('ii', $user_id,$user_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $employees = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+        $db->close();
+        return $employees;
+    }
+    // Trong FelicitationModel
+    public static function getEmployeePointsByID($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        // Truy vấn điểm hiện có của nhân viên
+        $query = "SELECT DiemThuong FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $points = $result->fetch_assoc()['DiemThuong'] ?? 0;
+
+        $stmt->close();
+        $db->close();
+        return $points;
+    }
+
     public static function getFelicitationCountsByEmpID($user_id) {
         $db = new Database();
         $conn = $db->connect();

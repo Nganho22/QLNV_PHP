@@ -299,3 +299,15 @@ textarea {
 .notification .close:hover {
     color: #333;
 }
+
+#employee-list-container {
+    margin-bottom: 10px; /* Add margin to create space */
+}
+
+#toggle-employee-list {
+    margin-bottom: 10px;
+}
+
+.text-center-btn {
+    text-align: center;
+}
