@@ -21,14 +21,14 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-10 main-content">
-            <h2>Hoạt động: Đi vũng tàu</h2>
+            <h2 style=" text-align: center;">Hoạt động: <?php echo htmlspecialchars($activity['tenHoatDong']); ?></h2>
             <div class="row">
                 <div class="col-md-3">
                     <div class="info-box">
                         <i class="fas fa-users"></i>
                         <div class="info-box-content">
-                            <span class="info-box-text">Số người tham gia</span>
-                            <span class="info-box-number">15</span>
+                            <span class="info-box-text">Số người tham gia</span><br>
+                            <span class="info-box-number"><?php echo htmlspecialchars($activity['soNguoiThamGia']); ?></span>
                         </div>
                     </div>
                 </div>
@@ -36,8 +36,8 @@
                     <div class="info-box">
                         <i class="fas fa-money-bill-wave"></i>
                         <div class="info-box-content">
-                            <span class="info-box-text">Chi phí</span>
-                            <span class="info-box-number">50 triệu</span>
+                            <span class="info-box-text">Chi phí</span><br>
+                            <span class="info-box-number"><?php echo htmlspecialchars($activity['chiPhi']); ?></span>
                         </div>
                     </div>
                 </div>
@@ -45,8 +45,8 @@
                     <div class="info-box">
                         <i class="fas fa-clock"></i>
                         <div class="info-box-content">
-                            <span class="info-box-text">Trạng thái</span>
-                            <span class="info-box-number">Trong quá trình</span>
+                            <span class="info-box-text">Trạng thái</span><br>
+                            <span class="info-box-number"><?php echo htmlspecialchars($activity['TinhTrang']); ?></span>
                         </div>
                     </div>
                 </div>
@@ -54,7 +54,7 @@
                     <div class="info-box">
                         <i class="fas fa-percentage"></i>
                         <div class="info-box-content">
-                            <span class="info-box-text">Tỷ lệ tham gia</span>
+                            <span class="info-box-text">Tỷ lệ tham gia</span><br>
                             <span class="info-box-number">82%</span>
                         </div>
                     </div>
@@ -65,38 +65,37 @@
             <div class="row mt-4">
                 <div class="col-md-4">
                     <div class="date-box">
-                        <label for="hanCuoiDangKy">Hạn chót đăng ký:</label>
-                        <input type="text" id="hanCuoiDangKy" value="01/01/2024" readonly />
+                        <label for="hanCuoiDangKy">Hạn chót đăng ký:</label><br>
+                        <input type="text" id="hanCuoiDangKy" value=<?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?> readonly />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="date-box">
-                        <label for="ngayBatDau">Ngày bắt đầu:</label>
-                        <input type="text" id="ngayBatDau" value="01/01/2024" readonly />
+                        <label for="ngayBatDau">Ngày bắt đầu:</label><br>
+                        <input type="text" id="ngayBatDau" value=<?php echo htmlspecialchars($activity['ngayBatDau']); ?> readonly />
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="date-box">
-                        <label for="ngayKetThuc">Ngày kết thúc:</label>
-                        <input type="text" id="ngayKetThuc" value="01/01/2024" readonly />
+                        <label for="ngayKetThuc">Ngày kết thúc:</label><br>
+                        <input type="text" id="ngayKetThuc" value=<?php echo htmlspecialchars($activity['ngayKetThuc']); ?> readonly />
                     </div>
                 </div>
             </div>
 
-            <!-- Description -->
+
             <div class="description mt-4">
                 <h4>Mô tả:</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lobortis maximus nunc, ac rhoncus odio congue quis. Sed ac semper orci, eu porttitor lacus.</p>
+                <p><?php echo htmlspecialchars($activity['noiDung']); ?></p>
+                <p><?php echo htmlspecialchars($activity['chiTiet']); ?></p>
             </div>
-
-            <!-- Participation Rate Pie Chart -->
+            <?php if ($_SESSION['user']['Role'] === "Giám đốc"): ?> 
             <div class="row mt-4">
                 <div class="col-md-6">
                     <h4>Tỷ lệ tham gia theo phòng ban:</h4>
                     <canvas id="participationRateChart"></canvas>
                 </div>
 
-                <!-- Participants List -->
                 <div class="col-md-6">
                     <h4>Danh sách nhân viên tham gia:</h4>
                     <input type="text" class="form-control" placeholder="Tìm kiếm...">
@@ -116,9 +115,43 @@
                     </nav>
                 </div>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
-
 </main>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+        var labels = ['Ban A', 'Ban B', 'Ban C'];
+    var data = [45, 45, 10];
+    var backgroundColors = [];
+
+    // Generate a random color for each label
+    for (var i = 0; i < labels.length; i++) {
+        backgroundColors.push(getRandomColor());
+    }
+
+    var ctx = document.getElementById('participationRateChart').getContext('2d');
+    var myPieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: backgroundColors
+            }]
+        },
+        options: {
+            responsive: true
+        }
+            });
+    </script>
 </body>

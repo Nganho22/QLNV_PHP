@@ -110,7 +110,7 @@ class ActivityController{
             $apiUrl = 'http://localhost:9002/apiActivity';
             $model = new ActivityModel($apiUrl);
             $ActivityID = intval($_GET['activityId']);
-            $Activity = $model->GetActivityDetail($ActivityID);
+            $activity = $model->GetActivityDetail($ActivityID);
             
             switch ($Role) {
                 case 'Nhân viên':
