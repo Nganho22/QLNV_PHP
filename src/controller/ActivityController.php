@@ -13,10 +13,28 @@ class ActivityController{
             $model = new ActivityModel($apiUrl);
             
             $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+
+            $searchCB = isset($_GET['searchcb']) ? $_GET['searchcb'] : '';
+            $currentPageCB = isset($_GET['pageCB']) ? (int)$_GET['pageCB'] : 1;
+
+            $searchLK = isset($_GET['searchlk']) ? $_GET['searchlk'] : '';
+            $currentPageLK = isset($_GET['pageLK']) ? (int)$_GET['pageLK'] : 1;
             $itemsPerPage = 3;
-            $countActivityByMonth = $model->CountActivityByMonth(date('m'));
-            $countAllActivity = $model->CountActivity();
-            $activities = $model->getActivitiesByMonth(date('m'));
+            if (!$model->isApiAvailable($apiUrl)) {
+                $countActivityByMonth = 0;
+                $countAllActivity = 0;
+                $activities = null;
+                $allActivitiesCB = null;
+                $allActivitiesLK = null;
+            }
+            else{
+                $countActivityByMonth = $model->CountActivityByMonth(date('m'));
+                $countAllActivity = $model->CountActivity();
+                $activities = $model->getActivitiesByMonth(date('m'));
+                $allActivitiesCB = $model->SearchActivitiesCoBan($searchCB);
+                $allActivitiesLK = $model->SearchActivitiesLienKet($searchLK);
+            }
+           
             if ($activities !== null) {
                 $totalItems = count($activities);
                 $totalPages = ceil($totalItems / $itemsPerPage);
@@ -26,9 +44,7 @@ class ActivityController{
                 $pagedActivities = [];
                 $totalPages = 1;
             }
-            $searchCB = isset($_GET['searchcb']) ? $_GET['searchcb'] : '';
-            $allActivitiesCB = $model->SearchActivitiesCoBan($searchCB);
-            $currentPageCB = isset($_GET['pageCB']) ? (int)$_GET['pageCB'] : 1;
+          
     
             if ($allActivitiesCB !== null) {
                 $totalItemsCB = count($allActivitiesCB);
@@ -40,10 +56,6 @@ class ActivityController{
                 $totalPagesCB = 1;
             }
         
-            $searchLK = isset($_GET['searchlk']) ? $_GET['searchlk'] : '';
-            $allActivitiesLK = $model->SearchActivitiesLienKet($searchLK);
-            $currentPageLK = isset($_GET['pageLK']) ? (int)$_GET['pageLK'] : 1;
-    
             if ($allActivitiesLK !== null) {
                 $totalItemsLK = count($allActivitiesLK);
                 $totalPagesLK = ceil($totalItemsLK / $itemsPerPage);
