@@ -13,57 +13,75 @@ class UserModel {
     public $Checkout;
     public $workcheck;
 
+    private $apiUrl;
 
-    function __construct() {
-        $this->EmpID = "";
-        $this->Role = "";
-        $this->HoTen = "";
-        $this->Email = "";
-        $this->TenTaiKhoan = "";
-        $this->TinhTrang = "";
-        $this->Phong = "";
-        $this->Checkin = "";
-        $this->Checkout = "";
-        $this->workcheck = "";
+    public function __construct($apiUrl) {
+        $this->apiUrl = $apiUrl;
     }
 
-    public static function clogin($username, $password) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT EmpID, HoTen, Role, PhongID, Image FROM Profile WHERE TenTaiKhoan = ? AND MatKhau = ? AND TinhTrang = '1'");
-        
-        $stmt->bind_param("ss", $username, $password);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $user = [
-            'EmpID' => null,
-            'TenPhong' => null,
-            'HoTen' => null,
-            'Role' => null,
-            'Image' => null
-        ];
-        if($result->num_rows > 0){
-            $u = $result->fetch_assoc();
-
-            $user['EmpID'] = $u['EmpID'];
-            $user['HoTen'] = $u['HoTen'];
-            $user['Role'] = $u['Role'];
-            $user['Image'] = 'public/img/avatar/'.$u['Image'];
-
-            $phong_stmt = $conn->prepare("SELECT TenPhong FROM PhongBan WHERE PhongID = ?");
-            $phong_stmt->bind_param("i", $u['PhongID']);
-            $phong_stmt->execute();
-            $phong_result = $phong_stmt->get_result();
-            $phong_row = $phong_result->fetch_assoc();
-            $user['TenPhong'] = $phong_row['TenPhong'];
-            $phong_stmt->close();
+    private function isApiAvailable($url) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    
+        $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        if ($result !== false && $httpCode == 200) {
+            return true;
+        } else {
+            return false;
         }
-        $stmt->close();
-        $db->close();
-        return $user;
+    }
+    public function clogin2($username, $password) {
+        $url = $this->apiUrl . '/getActiveProfile?tenTaiKhoan=' . urlencode($username) . '&matKhau=' . urlencode($password);
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
+
+        $response = file_get_contents($url);
+        $userData = json_decode($response, true);
+
+        if ($userData) {
+            $user = [
+                'EmpID' => $userData['empID'],
+                'PhongID' => $userData['phongID'],
+                'HoTen' => $userData['hoTen'],
+                'Role' => $userData['role'],
+                'Image' => 'public/img/avatar/' . $userData['image']
+            ];
+            return $user;
+        }
+        return null;
+    }
+
+    public function clogin($username, $password) {
+
+        $url = $this->apiUrl . '/getActiveProfile?tenTaiKhoan=' . urlencode($username) . '&matKhau=' . urlencode($password);
+
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
+
+        $response = file_get_contents($url);
+        $userData = json_decode($response, true);
+
+        if ($userData) {
+            $user = [
+                'EmpID' => $userData['empID'],
+                'PhongID' => $userData['phongID'],
+                'HoTen' => $userData['hoTen'],
+                'Role' => $userData['role'],
+                'Image' => 'public/img/avatar/' . $userData['image'],
+                'TenPhong' => $userData['tenPhong']
+            ];
+            return $user;
+        }
 
     }
+
 
     public static function getprofile($user_id){
         $db = new Database();
@@ -1169,7 +1187,7 @@ class UserModel {
         $conn = $db->connect();
         $stmt = $conn->prepare($query);
     
-        // Truyền các giá trị trực tiếp vào bind_param
+        
         $stmt->bind_param('ss', $searchTerm, $searchTerm);
         
         $stmt->execute();

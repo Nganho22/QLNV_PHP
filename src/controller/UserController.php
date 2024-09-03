@@ -6,9 +6,11 @@ class UserController{
     public function checklogin(){
         $username = isset($_POST['username']) ? $_POST['username'] : '';
         $password = isset($_POST['password']) ? $_POST['password'] : '';
-        $user = UserModel::clogin($username, $password);
+        $apiUrl = 'http://localhost:9003/apiProfile';
+        $model = new UserModel($apiUrl);
+        $user =  $model->clogin($username, $password);
         $str = 'Wrong username or password, please check again';
-        if (is_null($user['EmpID'])) {
+        if ($user['EmpID'] === null) {
             $title = 'Login';
             $error_message = "Thông tin đăng nhập sai, vui lòng thử lại";
             require("./views/pages/login.phtml");

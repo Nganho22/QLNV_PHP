@@ -1,26 +1,26 @@
 USE QLNV_UDPT;
 
 -- PhongBan
-INSERT INTO PhongBan (PHONGID, TENPHONG, SOTHANHVIEN) VALUES ('P01', 'Alibaba', '4');
-INSERT INTO PhongBan (PHONGID, TENPHONG, SOTHANHVIEN) VALUES ('P02', 'Umbala', '4');
-INSERT INTO PhongBan (PHONGID, TENPHONG, SOTHANHVIEN) VALUES ('P03', 'Fire','3');
+INSERT INTO PhongBan (PhongID, TenPhong, SoThanhVien) VALUES ('P01', 'Alibaba', '4');
+INSERT INTO PhongBan (PhongID, TenPhong, SoThanhVien) VALUES ('P02', 'Umbala', '4');
+INSERT INTO PhongBan (PhongID, TenPhong, SoThanhVien) VALUES ('P03', 'Fire','3');
 
 -- Profile
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('1', 'P01', 'Nhân viên', 'Bông Bông', '20127161@student.hcmus.edu.vn', 'bongbong', '12345', 'Nữ', '123456789', '198803850072', '123456', '54176', '550', '1', 'Pennsylvania', '1.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('2', 'P01', 'Quản lý', 'Bắp Bắp', '20127252@student.hcmus.edu.vn', 'bapbap', '12345', 'Nữ', '631943506', '127631943506', '631943', '58120', '1770', '1', 'Massachusetts', '2.png');
-INSERT INTO Profile (EmpID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('3', 'Giám đốc', 'Ngân Hồ', '20127250@student.hcmus.edu.vn', 'nganho', '12345', 'Nữ', '449199827', '990449199827', '449199', '26135', '7840', '1', 'Washington', '3.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('4', 'P01', 'Nhân viên', 'Tara Applewhite', 'saomai241202@gmail.com', 'taraapplewhite', '12345', 'Nữ', '294073526', '722194073526', '294073', '80274', '425', '0', 'California', '4.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('5', 'P02', 'Nhân viên', 'Devin Lear', 'thanhhoabui323@gmail.com', 'devinlear', '12345', 'Nam', '453542504', '535353661119', '453542', '43532', '742', '1', 'Massachusetts', '5.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('6', 'P01', 'Nhân viên', 'Lucile Sexton', 'tranhoa28082002@gmail.com', 'lucilesexton', '12345', 'Nữ', '426875378', '736303984249', '426875', '68637', '753', '1', 'Washington', '6.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('7', 'P02', 'Quản lý', 'Jarrod Faith', 'alibaba28022002@gmail.com', 'jarrodfaith', '12345', 'Nam', '386352478', '628045126840', '386352', '53478', '1424', '1', 'California', '7.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('8', 'P03', 'Nhân viên', 'Terry Gross', 'btthoa20@clc.fitus.edu.vn', 'terrygross', '12345', 'Nam', '385386834', '224011066412', '385386', '64497', '764', '1', 'Massachusetts', '8.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('9', 'P03', 'Nhân viên', 'Jim Martin', 'abc123@gmail.com', 'jimmartin', '12345', 'Nam', '387532135', '556300455788', '387532', '32433', '124', '1', 'Pennsylvania', '9.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('10', 'P02', 'Nhân viên', 'Kathy Weatherby', 'abc234@gmail.com', 'kathyweatherby', '12345', 'Nữ', '387546786', '138243321759', '387546', '23464', '254', '1', 'California', '10.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('11', 'P03', 'Nhân viên', 'Nancy Garcia', 'abc345@gmail.com', 'nancyharcia', '12345', 'Nữ', '875423965', '210070478788', '875423', '54145', '368', '1', 'Pennsylvania', '11.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('12', 'P01', 'Nhân viên', 'Joel Thomas', 'abc456@gmail.com', 'joelthomas', '12345', 'Nam', '994545357', '131070424097', '994545', '63248', '752', '1', 'New York', '12.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('13', 'P02', 'Nhân viên', 'Alan Ruley', 'abc567@student.hcmus.edu.vn', 'alanruley', '12345', 'Nam', '995253220', '655195906385', '995253', '57445', '465', '1', 'California', '13.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('14', 'P03', 'Quản lý', 'Jose D. Skaggs', 'abc678@student.hcmus.edu.vn', 'josedskaggs', '12345', 'Nam', '786835685', '887510956872', '786835', '54778', '1258', '1', 'Arizona', '14.png');
-INSERT INTO Profile (EmpID, PHONGID, ROLE, HOTEN, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('15', 'P02', 'Nhân viên', 'Richard L. Anderson', 'abc789@student.hcmus.edu.vn', 'richardlanderson', '12345', 'Nam', '753874537', '945461160495', '753874', '68548', '912', '1', 'Arizona', '15.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('1', 'P01', 'Nhân viên', 'Bông Bông', '20127161@student.hcmus.edu.vn', 'bongbong', '12345', 'Nữ', '123456789', '198803850072', '123456', '54176', '550', '1', 'Pennsylvania', '1.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('2', 'P01', 'Quản lý', 'Bắp Bắp', '20127252@student.hcmus.edu.vn', 'bapbap', '12345', 'Nữ', '631943506', '127631943506', '631943', '58120', '1770', '1', 'Massachusetts', '2.png');
+INSERT INTO Profile (EmpID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('3', 'Giám đốc', 'Ngân Hồ', '20127250@student.hcmus.edu.vn', 'nganho', '12345', 'Nữ', '449199827', '990449199827', '449199', '26135', '7840', '1', 'Washington', '3.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('4', 'P01', 'Nhân viên', 'Tara Applewhite', 'saomai241202@gmail.com', 'taraapplewhite', '12345', 'Nữ', '294073526', '722194073526', '294073', '80274', '425', '0', 'California', '4.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('5', 'P02', 'Nhân viên', 'Devin Lear', 'thanhhoabui323@gmail.com', 'devinlear', '12345', 'Nam', '453542504', '535353661119', '453542', '43532', '742', '1', 'Massachusetts', '5.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('6', 'P01', 'Nhân viên', 'Lucile Sexton', 'tranhoa28082002@gmail.com', 'lucilesexton', '12345', 'Nữ', '426875378', '736303984249', '426875', '68637', '753', '1', 'Washington', '6.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('7', 'P02', 'Quản lý', 'Jarrod Faith', 'alibaba28022002@gmail.com', 'jarrodfaith', '12345', 'Nam', '386352478', '628045126840', '386352', '53478', '1424', '1', 'California', '7.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('8', 'P03', 'Nhân viên', 'Terry Gross', 'btthoa20@clc.fitus.edu.vn', 'terrygross', '12345', 'Nam', '385386834', '224011066412', '385386', '64497', '764', '1', 'Massachusetts', '8.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('9', 'P03', 'Nhân viên', 'Jim Martin', 'abc123@gmail.com', 'jimmartin', '12345', 'Nam', '387532135', '556300455788', '387532', '32433', '124', '1', 'Pennsylvania', '9.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('10', 'P02', 'Nhân viên', 'Kathy Weatherby', 'abc234@gmail.com', 'kathyweatherby', '12345', 'Nữ', '387546786', '138243321759', '387546', '23464', '254', '1', 'California', '10.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('11', 'P03', 'Nhân viên', 'Nancy Garcia', 'abc345@gmail.com', 'nancyharcia', '12345', 'Nữ', '875423965', '210070478788', '875423', '54145', '368', '1', 'Pennsylvania', '11.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('12', 'P01', 'Nhân viên', 'Joel Thomas', 'abc456@gmail.com', 'joelthomas', '12345', 'Nam', '994545357', '131070424097', '994545', '63248', '752', '1', 'New York', '12.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('13', 'P02', 'Nhân viên', 'Alan Ruley', 'abc567@student.hcmus.edu.vn', 'alanruley', '12345', 'Nam', '995253220', '655195906385', '995253', '57445', '465', '1', 'California', '13.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('14', 'P03', 'Quản lý', 'Jose D. Skaggs', 'abc678@student.hcmus.edu.vn', 'josedskaggs', '12345', 'Nam', '786835685', '887510956872', '786835', '54778', '1258', '1', 'Arizona', '14.png');
+INSERT INTO Profile (EmpID, PhongID, Role, HoTen, Email, TenTaiKhoan, MatKhau, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, TinhTrang, DiaChi, Image) VALUES ('15', 'P02', 'Nhân viên', 'Richard L. Anderson', 'abc789@student.hcmus.edu.vn', 'richardlanderson', '12345', 'Nam', '753874537', '945461160495', '753874', '68548', '912', '1', 'Arizona', '15.png');
 
 
 -- Check_inout
@@ -222,11 +222,11 @@ INSERT INTO Check_inout (STT, EmpID, Date_checkin, Time_checkin, Time_checkout, 
 
 
 -- update PhongBan
-UPDATE PhongBan SET QuanLyID = '1' WHERE PHONGID = 'P01';
-UPDATE PhongBan SET QuanLyID = '2' WHERE PHONGID = 'P02';
-UPDATE PhongBan SET QuanLyID = '4' WHERE PHONGID = 'P03';
+UPDATE PhongBan SET QuanLyID = '1' WHERE PhongID = 'P01';
+UPDATE PhongBan SET QuanLyID = '2' WHERE PhongID = 'P02';
+UPDATE PhongBan SET QuanLyID = '4' WHERE PhongID = 'P03';
 
-INSERT INTO Project (ProjectID, Ten, NgayGiao, HanChotDuKien, HanChot, TienDo, SoGioThucHanh, PHONGID, QuanLy, TinhTrang)
+INSERT INTO Project (ProjectID, Ten, NgayGiao, HanChotDuKien, HanChot, TienDo, SoGioThucHanh, PhongID, QuanLy, TinhTrang)
 VALUES 
 ('PJ1', 'Nghiên cứu PHP', '2024-08-20', '2024-06-10', '2024-08-15', '100%', 490, 'P01', 2, 'Đã hoàn thành'),
 ('PJ2', 'Nghiên cứu API', '2024-08-18', '2024-10-18', '2024-10-20', '30%', 200, 'P02', 7, 'Chưa hoàn thành'),
