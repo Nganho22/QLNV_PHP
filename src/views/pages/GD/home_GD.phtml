@@ -39,13 +39,15 @@
                 </ul>
                 <ul class="days" id="calendarDays"></ul>
             </div>
+
             <div class="project-list">
-                <h3>Danh sách dự án:</h3>
-                <div class="search-wrapper1">
-                    <input type="text" placeholder="Tìm kiếm...">
+                <h3 style="margin-top:30px">Danh sách dự án:</h3>
+                <div class="search-wrapper">
+                    <input type="text" id="search-box-project" placeholder="Tên dự án..." class="search-box-project">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
-                <ul>
+
+                <ul id="project-list">
                     <?php foreach ($projects as $project): ?>
                         <li>
                             <p><?php echo htmlspecialchars($project['Ten']); ?></p>
@@ -53,7 +55,20 @@
                             <span class="status"><?php echo htmlspecialchars($project['TienDo']); ?></span>
                         </li>
                     <?php endforeach; ?>
-                    </ul>
+                </ul>
+
+                <div id="pagination-project" class="pagination pagination-wrapper" style="margin-top:45px">
+                    <?php 
+                        $totalPagesPj = ceil($totalProjects / $limit_PJ);
+                        $currentPagePj = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        for ($i = 1; $i <= $totalPagesPj; $i++): 
+                        ?>
+                            <li class="page-item <?php echo $i == $currentPagePj ? 'active' : ''; ?>">
+                                <a class="page-link-project" href="#" data-page="<?= $i ?>"><?= $i ?></a>
+                            </li>
+                    <?php endfor; ?>
+                </div>
+
             </div>
         </div>
 
@@ -69,7 +84,7 @@
                         <li><?php echo htmlspecialchars($employee['HoTen']); ?><br><span><?php echo htmlspecialchars($employee['Email']); ?></span></li>
                     <?php endforeach; ?>
                 </ul>
-                <div id="pagination" class="pagination">
+                <div id="pagination" class="pagination pagination-wrapper">
                     <?php 
                         $totalPages = ceil($totalEmployees / $limit);
                         $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -83,9 +98,9 @@
             </div>
 
             <div class="room-list">
-                <h3>Danh sách phòng ban:</h3>
+                <h3 style="margin-top:10px">Danh sách phòng ban:</h3>
                 <div class="search-wrapper">
-                    <input type="text" id="searchPhongBan" placeholder="Tìm kiếm..." class="search-box">
+                    <input type="text" id="searchPhongBan" placeholder="Tên phòng ban, tên quản lý..." class="search-box-phongban">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
                 <table>
@@ -96,25 +111,28 @@
                             <th>Quản lý</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="room-list-content">
                     <?php foreach ($phongBans as $phongBan): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($phongBan['PhongID']); ?></td>
                                 <td><?php echo htmlspecialchars($phongBan['TenPhong']); ?></td>
-                                <td><?php // Query to get manager name by EmpID ?></td>
+                                <td><?php echo htmlspecialchars($phongBan['HoTen']); ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
-                <div class="pagination">
-                        <a href="#" class="prev">&#10094;</a>
-                        <a href="#" class="active">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#">...</a>
-                        <a href="#">40</a>
-                        <a href="#" class="next"> &#10095;</a>
-                    </div>
+                <div id="pagination-phongban" class="pagination pagination-wrapper">
+                    <?php 
+                        $totalPagesP = ceil($totalRooms / $limit_PB);
+                        $currentPageP = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        for ($i = 1; $i <= $totalPagesP; $i++): 
+                        ?>
+                            <li class="page-item <?php echo $i == $currentPageP ? 'active' : ''; ?>">
+                                <a class="page-link-phongban" href="#" data-page="<?= $i ?>"><?= $i ?></a>
+                            </li>
+                    <?php endfor; ?>
+                </div>
+
             </div>
         </div>
     </div>
@@ -212,39 +230,122 @@
 
     
     $(document).ready(function() {
-
-            $('.search-box').off('input change').on('input change', function() {
-                loadEmployees();
-            });
-
-            $(document).on('click', '.page-link', function(e) {
-                e.preventDefault();
-                var page = $(this).data('page');
-                loadEmployees(page);
-            });
-
-            // Function to load employees with pagination
-            function loadEmployees(page = 1) {
-                var searchTerm = $('.search-box').val();
-                $.get('index.php?action=home', { ajax: 1,  search_nhanvien: searchTerm, page_nhanvien: page }, function(response) {
-                    console.log(response);
-                    try {
-                        var data = JSON.parse(response);
-                        $('#employee-list').html(data.requestHtml);
-                        $('#pagination').html(data.paginationHtml);
-
-                        // Update the active class for pagination
-                        $('#pagination .page-item').removeClass('active');
-                        $('#pagination .page-item').filter(function() {
-                            return $(this).find('.page-link').data('page') === page;
-                        }).addClass('active');
-                    } catch (e) {
-                        console.error("JSON parse error: ", e);
-                        console.error("Server response: ", response);
-                    }
-                });
-            }
+        // Handle search input for employee list
+        $('.search-box').off('input change').on('input change', function() {
+            loadEmployees();
         });
-    </script>
+
+        // Handle search input for room list
+        $('.search-box-phongban').off('input change').on('input change', function() {
+            loadRooms();
+        });
+
+        // Handle search input for project list
+        $('.search-box-project').off('input change').on('input change', function() {
+            loadProjects();
+        });
+
+        // Handle pagination click for employee list
+        $(document).on('click', '.page-link', function(e) {
+            e.preventDefault();
+            var page = $(this).data('page');
+            loadEmployees(page);
+        });
+
+        // Handle pagination click for room list
+        $(document).on('click', '.page-link-phongban', function(e) {
+            e.preventDefault();
+            var pagePB = $(this).data('page');
+            loadRooms(pagePB);
+        });
+
+        // Handle pagination click for project list
+        $(document).on('click', '.page-link-project', function(e) {
+            e.preventDefault();
+            var pagePJ = $(this).data('page');
+            loadProjects(pagePJ);
+        });
+
+        // Function to load employees with pagination
+        function loadEmployees(page = 1) {
+            var searchTerm = $('.search-box').val();
+            $.get('index.php?action=home', { ajax: 1, search_nhanvien: searchTerm, page_nhanvien: page }, function(response) {
+                console.log(response);
+                try {
+                    var data = JSON.parse(response);
+                    $('#employee-list').html(data.requestHtml);
+                    $('#pagination').html(data.paginationHtml);
+
+                    // Update the active class for pagination
+                    $('#pagination .page-item').removeClass('active');
+                    $('#pagination .page-item').filter(function() {
+                        return $(this).find('.page-link').data('page') == page;
+                    }).addClass('active');
+                    console.log('Pagination HTML:', data.paginationHtml);
+
+                } catch (e) {
+                    console.error("JSON parse error: ", e);
+                    console.error("Server response: ", response);
+                }
+            });
+        }
+        
+        // Function to load rooms with pagination
+        function loadRooms(pagePB = 1) {
+            var searchTerm = $('.search-box-phongban').val();
+            $.get('index.php?action=home', { ajax: 1, search_phongban: searchTerm, page_phongban: pagePB }, function(response) {
+                console.log(response);
+                
+                try {
+                    var data = JSON.parse(response);
+                    $('#room-list-content').html(data.roomHtml_PB);
+                    $('#pagination-phongban').html(data.paginationHtml_PB);
+
+                    // Update the active class for pagination
+                    $('#pagination-phongban .page-item').removeClass('active');
+                    $('#pagination-phongban .page-item').filter(function() {
+                        return $(this).find('.page-link-phongban').data('page') == pagePB;
+                    }).addClass('active');
+
+                    console.log('Current pagePB:', pagePB);
+                    console.log('Pagination HTML:', data.paginationHtml_PB);
+                    console.log('Active page item:', $('#pagination-phongban .page-item.active'));
+                } catch (e) {
+                    console.error("JSON parse error: ", e);
+                    console.error("Server response: ", response);
+                }
+            });
+        }
+
+        // Function to load projects with pagination
+        function loadProjects(pagePJ = 1) {
+            var searchTerm = $('.search-box-project').val();
+            $.get('index.php?action=home', { ajax: 1, search_project: searchTerm, page_project: pagePJ }, function(response) {
+                console.log(response);
+                
+                try {
+                    var data = JSON.parse(response);
+                    $('#project-list').html(data.projectHtml_PJ);
+                    $('#pagination-project').html(data.paginationHtml_PJ);
+
+                    // Update the active class for pagination
+                    $('#pagination-project .page-item').removeClass('active');
+                    $('#pagination-project .page-item').filter(function() {
+                        return $(this).find('.page-link-project').data('page') == pagePJ;
+                    }).addClass('active');
+
+                    console.log('Current pagePJ:', pagePJ);
+                    console.log('Pagination HTML:', data.paginationHtml_PJ);
+                    console.log('Active page item:', $('#pagination-project .page-item.active'));
+                } catch (e) {
+                    console.error("JSON parse error: ", e);
+                    console.error("Server response: ", response);
+                }
+            });
+        }
+        
+    });
+
+</script>
 </body>
 </html>

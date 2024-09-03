@@ -57,47 +57,115 @@ class HomeController{
                     break;
                 case 'Giám đốc':
 
-                    $limit = 5;
+                    $limit = 6;
                     $searchTerm_NV = isset($_GET['search_nhanvien']) ? $_GET['search_nhanvien'] : '';
                     $page_NV = isset($_GET['page_nhanvien']) ? (int)$_GET['page_nhanvien'] : 1;
-                    $offset = ($page_NV - 1) * $limit;
-                    $projects = UserModel::getProjects_GD();
-                    $phongBans = UserModel::getPhongBan_GD();
-                    $deadlines = UserModel::getDeadlinesTimesheet($empID);
-                    $deadlines = UserModel::getDeadlinesTimesheet_GD($empID);
+                    $offset_NV = ($page_NV - 1) * $limit;
 
                     if (!empty($searchTerm_NV)) {
-                        $employees = UserModel::searchProfiles($searchTerm_NV, $limit, $offset);
-                        $totalEmployees = UserModel::countSearchProfiles($searchTerm_NV);
+                        $employees = UserModel::searchProfiles_GD($searchTerm_NV, $limit, $offset_NV);
+                        $totalEmployees = UserModel::countSearchProfiles_GD($searchTerm_NV);
                     } else {
-                        $employees = UserModel::getEmployeesList_GD($limit, $offset);
-                        $totalEmployees = UserModel::countAllEmployees();
+                        $employees = UserModel::getEmployeesList_GD($limit, $offset_NV);
+                        $totalEmployees = UserModel::countAllEmployees_GD();
                     }
 
-                    if (isset($_GET['ajax'])) {
-                        $requestHtml = '';
-                        foreach ($employees  as $employee) {
-                            $requestHtml .= '<li>' . htmlspecialchars($employee['HoTen']) . '<br><span>' . htmlspecialchars($employee['Email']) . '</span></li>';
-                        }
-                        $paginationHtml = '';
-                        if ($totalEmployees > $limit) {
-                            for ($i = 1; $i <= ceil($totalEmployees / $limit); $i++) {
-                                $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                    $limit_PB = 3;
+                    $searchTerm_PB = isset($_GET['search_phongban']) ? $_GET['search_phongban'] : '';
+                    $page_PB = isset($_GET['page_phongban']) ? (int)$_GET['page_phongban'] : 1;
+                    $offset_PB = ($page_PB - 1) * $limit_PB;
+
+                    if (!empty($searchTerm_PB)) {
+                        $phongBans = UserModel::searchPhongBan_GD($searchTerm_PB, $limit_PB, $offset_PB);
+                        $totalRooms = UserModel::countSearchPhongBan_GD($searchTerm_PB);
+                    } else {
+                        $phongBans = UserModel::getPhongBan_GD($limit_PB, $offset_PB);
+                        $totalRooms = UserModel::countAllPhongBan_GD();
+                    }
+
+                    $limit_PJ = 3;
+                    $searchTerm_PJ = isset($_GET['search_project']) ? $_GET['search_project'] : '';
+                    $page_PJ = isset($_GET['page_project']) ? (int)$_GET['page_project'] : 1;
+                    $offset_PJ = ($page_PJ - 1) * $limit_PJ;
+
+                    if (!empty($searchTerm_PJ)) {
+                        $projects = UserModel::searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ);
+                        $totalProjects = UserModel::countSearchProject_GD($searchTerm_PJ);
+                    } else {
+                        $projects = UserModel::getProjects_GD($limit_PJ, $offset_PJ);
+                        $totalProjects = UserModel::countAllProject_GD();
+                    }
+
+                    $deadlines = UserModel::getDeadlinesTimesheet_GD();
+
+                    if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
+                        $response = [];
+
+                        if (isset($_GET['search_nhanvien']) || isset($_GET['page_nhanvien'])) {
+                            $requestHtml = '';
+                            foreach ($employees as $employee) {
+                                $requestHtml .= '<li>' . htmlspecialchars($employee['HoTen']) . '<br><span>' . htmlspecialchars($employee['Email']) . '</span></li>';
                             }
+
+                            $paginationHtml = '';
+                            if ($totalEmployees > $limit) {
+                                for ($i = 1; $i <= ceil($totalEmployees / $limit); $i++) {
+                                    $paginationHtml .= '<li class="page-item"><a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                                }
+                            }
+
+                            $response['requestHtml'] = $requestHtml;
+                            $response['paginationHtml'] = $paginationHtml;
                         }
-                        echo json_encode([
-                            'requestHtml' => $requestHtml,
-                            'paginationHtml' => $paginationHtml
-                        ]);
+
+                        if (isset($_GET['search_phongban']) || isset($_GET['page_phongban'])) {
+                            $requestHtml_PB = '';
+                            foreach ($phongBans as $phongBan) {
+                                $requestHtml_PB .= '<tr>' . '<td>' . htmlspecialchars($phongBan['PhongID']) . '</td>' .
+                                                    '<td>' . htmlspecialchars($phongBan['TenPhong']) . '</td>' .
+                                                    '<td>' . htmlspecialchars($phongBan['HoTen']) . '</td>' . '</tr>';
+                            }
+
+                            $paginationHtml_PB = '';
+                            if ($totalRooms > $limit_PB) {
+                                for ($i = 1; $i <= ceil($totalRooms / $limit_PB); $i++) {
+                                    $paginationHtml_PB .= '<li class="page-item"><a class="page-link-phongban" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                                }
+                            }
+
+                            $response['roomHtml_PB'] = $requestHtml_PB;
+                            $response['paginationHtml_PB'] = $paginationHtml_PB;
+                        }
+
+                        if (isset($_GET['search_project']) || isset($_GET['page_project'])) {
+                            $requestHtml_PJ = '';
+                            foreach ($projects as $project) {
+                                $requestHtml_PJ .= '<li>' .
+                                                        '<p>' . htmlspecialchars($project['Ten']) . '</p>' .
+                                                        '<span>' . htmlspecialchars($project['NgayGiao']) . '</span>' .
+                                                        '<span class="status">' . htmlspecialchars($project['TienDo']) . '</span>' .
+                                                    '</li>';
+                            }
+
+                            $paginationHtml_PJ = '';
+                            if ($totalProjects > $limit_PJ) {
+                                for ($i = 1; $i <= ceil($totalProjects / $limit_PJ); $i++) {
+                                    $paginationHtml_PJ .= '<li class="page-item"><a class="page-link-project" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                                }
+                            }
+
+                            $response['projectHtml_PJ'] = $requestHtml_PJ;
+                            $response['paginationHtml_PJ'] = $paginationHtml_PJ;
+                        }
+
+                        echo json_encode($response);
                         exit;
                     } else {
                         $file = "./views/pages/GD/home_GD.phtml"; 
                     }
+
                     break;
-                default:
-                    $file = null;
-                    $title = 'Error';
-                    break;
+
             }
             
             if ($file && file_exists($file)) {

@@ -344,6 +344,7 @@ class UserModel {
     //Phần Home
 
     // Hàm để lấy PhongID của nhân viên dựa trên EmpID
+
     public static function getPhongIDByEmpID($empID) {
         $db = new Database();
         $conn = $db->connect();
@@ -927,11 +928,12 @@ class UserModel {
     }
     
 
-    public static function getProjects_GD() {
+    public static function getProjects_GD($limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT * FROM Project LIMIT 3");
+        $stmt = $conn->prepare("SELECT * FROM Project LIMIT ? OFFSET ?");
+        $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
         $projects = $result->fetch_all(MYSQLI_ASSOC);
@@ -939,6 +941,70 @@ class UserModel {
         $stmt->close();
         $db->close();
         return $projects;
+    }
+
+    public static function countAllProject_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM Project");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return $row['total'];
+    }
+
+    public static function searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ) {
+        $searchTerm = "%$searchTerm_PJ%";
+        $query = "
+            SELECT Ten, NgayGiao, TienDo
+            FROM Project
+            WHERE Ten LIKE ?
+            LIMIT ? OFFSET ?";
+
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$searchTerm, $limit_PJ, $offset_PJ];
+        $stmt->bind_param('sii', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $projects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+
+        return $projects;
+    }
+
+    public static function countSearchProject_GD($searchTerm_PJ) {
+        $searchTerm = "%$searchTerm_PJ%";
+        $query = "
+            SELECT COUNT(ProjectID) as total
+            FROM Project
+            WHERE Ten LIKE ?";
+
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$searchTerm];
+        $stmt->bind_param('s', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+
+        $stmt->close();
+        $db->close();
+
+        return $total;
     }
 
     public static function getEmployeesList_GD($limit, $offset) {
@@ -956,7 +1022,7 @@ class UserModel {
         return $employees;
     }
 
-    public static function countAllEmployees() {
+    public static function countAllEmployees_GD() {
         $db = new Database();
         $conn = $db->connect();
     
@@ -971,7 +1037,7 @@ class UserModel {
         return $row['total'];
     }
 
-    public static function searchProfiles($searchTerm, $limit, $offset) {
+    public static function searchProfiles_GD($searchTerm, $limit, $offset) {
         $searchTerm = "%$searchTerm%";
         $query = "
             SELECT EmpID, HoTen, Email
@@ -998,7 +1064,7 @@ class UserModel {
         return $profiles;
     }
 
-    public static function countSearchProfiles($searchTerm) {
+    public static function countSearchProfiles_GD($searchTerm) {
         $searchTerm = "%$searchTerm%";
         $query = "
             SELECT COUNT(EmpID) as total
@@ -1020,20 +1086,105 @@ class UserModel {
         return $total;
     }
 
-    public static function getPhongBan_GD() {
+    public static function getPhongBan_GD($limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT * FROM PhongBan LIMIT 3");
+    
+        $stmt = $conn->prepare("
+            SELECT 
+                PhongBan.*, 
+                Profile.HoTen 
+            FROM PhongBan 
+            LEFT JOIN Profile 
+            ON 
+                PhongBan.QuanLyID = Profile.EmpID
+            LIMIT ? OFFSET ?
+        ");
+        $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
         $phongBans = $result->fetch_all(MYSQLI_ASSOC);
-
+    
         $stmt->close();
         $db->close();
         return $phongBans;
     }
+    
+    public static function countAllPhongBan_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM PhongBan");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return $row['total'];
+    }
 
+    public static function searchPhongBan_GD($searchTerm_PB, $limit, $offset) {
+        $searchTerm = "%$searchTerm_PB%";
+        $query = "
+            SELECT PhongBan.PhongID, PhongBan.TenPhong, PhongBan.QuanLyID, Profile.HoTen 
+            FROM PhongBan
+            LEFT JOIN Profile 
+            ON PhongBan.QuanLyID = Profile.EmpID
+            WHERE Profile.HoTen LIKE ? OR PhongBan.TenPhong LIKE ?
+            LIMIT ? OFFSET ?";
+    
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+    
+        // Truyền các giá trị trực tiếp vào bind_param
+        $stmt->bind_param('ssii', $searchTerm, $searchTerm, $limit, $offset);
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $rooms = [];
+        while ($row = $result->fetch_assoc()) {
+            $rooms[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $rooms;
+    }
+    
+    public static function countSearchPhongBan_GD($searchTerm_PB) {
+        $searchTerm = "%$searchTerm_PB%";
+        $query = "
+            SELECT COUNT(PhongBan.PhongID) as total
+            FROM PhongBan
+            LEFT JOIN Profile 
+            ON PhongBan.QuanLyID = Profile.EmpID
+            WHERE Profile.HoTen LIKE ? OR PhongBan.TenPhong LIKE ?";
+    
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+    
+        // Truyền các giá trị trực tiếp vào bind_param
+        $stmt->bind_param('ss', $searchTerm, $searchTerm);
+        
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        // Lấy giá trị của tổng số lượng
+        $row = $result->fetch_assoc();
+        $total = $row['total'];
+        
+        $stmt->close();
+        $db->close();
+    
+        return $total;
+    }
+    
     public static function GetTime_checkInOut($empID) {
         $db = new Database();
         $conn = $db->connect();

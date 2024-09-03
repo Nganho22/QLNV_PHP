@@ -17,7 +17,7 @@ body {
     background-color: #e6e6e6;
     padding: 20px;
     border-radius: 8px;
-    
+
 }
 
 .right-panel {
@@ -47,7 +47,8 @@ h3 {
 .calendar {
     margin-bottom: 20px;
     background-color: #ffffff;
-    border-radius: 8px; /* Thêm border-radius để đồng nhất với các khối khác */
+    border-radius: 8px;
+    /* Thêm border-radius để đồng nhất với các khối khác */
 }
 
 .calendar .month {
@@ -72,7 +73,8 @@ h3 {
     font-weight: bold;
 }
 
-.calendar .weekdays, .calendar .days {
+.calendar .weekdays,
+.calendar .days {
     margin: 0;
     padding: 10px 0;
     list-style-type: none;
@@ -80,8 +82,10 @@ h3 {
     flex-wrap: wrap;
 }
 
-.calendar .weekdays li, .calendar .days li {
-    width: 14.28%; /* 100% / 7 */
+.calendar .weekdays li,
+.calendar .days li {
+    width: 14.28%;
+    /* 100% / 7 */
     text-align: center;
     margin-bottom: 5px;
     font-size: 12px;
@@ -94,7 +98,8 @@ h3 {
     background-color: #f0f0f0;
     padding: 10px;
     border-radius: 4px;
-    position: relative; /* Thêm thuộc tính này */
+    position: relative;
+    /* Thêm thuộc tính này */
 }
 
 /* Đảm bảo hiển thị thông tin khi hover */
@@ -108,24 +113,26 @@ h3 {
     padding: 5px;
     white-space: nowrap;
     border-radius: 3px;
-    z-index: 1000; /* Đảm bảo thông tin hiển thị trên các phần tử khác */
-    transform: translateY(5px); /* Thêm khoảng cách giữa thông tin và ô ngày */
-    pointer-events: none; /* Đảm bảo không làm cản trở tương tác */
+    z-index: 1000;
+    /* Đảm bảo thông tin hiển thị trên các phần tử khác */
+    transform: translateY(5px);
+    /* Thêm khoảng cách giữa thông tin và ô ngày */
+    pointer-events: none;
+    /* Đảm bảo không làm cản trở tương tác */
 }
 
 .calendar .days li.day-today {
-    background-color: #74ffa9; 
+    background-color: #74ffa9;
     color: #ffffff;
 }
 
-.employee-list ul,
 .timesheet-list ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-.employee-list li,
+
 .timesheet-list li {
     background-color: #f9f9f9;
     border-radius: 8px;
@@ -150,17 +157,9 @@ a {
     text-decoration: none;
 }
 
-.project-list a{
+.project-list a {
     position: relative;
-        margin-left: 650px;
-}
-
-.project-list ul,
-.employee-list ul,
-.room-list ul {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+    margin-left: 650px;
 }
 
 .project-list li,
@@ -168,12 +167,30 @@ a {
 .room-list li {
     background-color: #f9f9f9;
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin: 10px;
     padding: 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
+
+/* #project-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+} */
+
+#project-list p {
+    margin: 0;
+    flex: 1;
+}
+
+#project-list span {
+    margin-left: 16px;
+    white-space: nowrap;
+}
+
 
 input[type="text"] {
     width: 100%;
@@ -188,30 +205,6 @@ a {
     text-decoration: none;
 }
 
-.search-wrapper1 {
-    display: flex;
-    align-items: center;
-    position: relative;
-    margin-bottom: 15px;
-    margin-left: 350px;
-}
-
-.search-wrapper1 input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    padding-right: 30px; 
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
-.search-wrapper1 i {
-    position: absolute;
-    right: 10px; 
-    color: #a6a6a6; 
-    font-size: 18px; 
-    top: 15px;
-}
-
 .search-wrapper {
     display: flex;
     align-items: center;
@@ -222,54 +215,60 @@ a {
 .search-wrapper input[type="text"] {
     width: 100%;
     padding: 10px;
-    padding-right: 30px; 
+    padding-right: 30px;
     border-radius: 5px;
     border: 1px solid #ccc;
 }
 
 .search-wrapper i {
     position: absolute;
-    right: 10px; 
-    color: #a6a6a6; 
-    font-size: 18px; 
+    right: 10px;
+    color: #a6a6a6;
+    font-size: 18px;
     top: 15px;
 }
 
 
-.pagination {
+.pagination-wrapper {
     display: flex;
     justify-content: center;
-    align-items: center;
     margin-top: 20px;
 }
 
 .pagination a {
-    margin: 0 5px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
     text-decoration: none;
-    color: #333;
-    font-size: 14px;
-    transition: background-color 0.3s, color 0.3s;
+    color: #007bff;
 }
 
 .pagination a.active {
-    background-color: #a6a6a6;
+    background-color: #007bff;
     color: white;
 }
 
-.pagination a:hover {
-    background-color: #f0f0f0;
+.pagination .page-item.active .page-link-phongban {
+    background-color: #007bff;
+    color: white;
 }
 
-.pagination a.prev, .pagination a.next {
-    font-weight: bold;
+.pagination .page-item.active .page-link-project {
+    background-color: #007bff;
+    color: white;
 }
 
-.pagination a.prev:hover, .pagination a.next:hover {
-    background-color: #e0e0e0;
+.page-link-phongban {
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
 }
+
+
 .notification-wrapper {
     position: fixed;
     top: 50%;
@@ -312,6 +311,7 @@ a {
 .notification .close:hover {
     color: #333;
 }
+
 .room-list table {
     width: 100%;
     border-collapse: collapse;
@@ -351,6 +351,6 @@ a {
 }
 
 .project-list li.sub-project {
-    margin-left: 30px; 
+    margin-left: 30px;
     background-color: #e0e0e0;
 }
