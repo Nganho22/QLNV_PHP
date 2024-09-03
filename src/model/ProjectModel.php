@@ -57,14 +57,13 @@ class ProjectModel {
         
         // Check if the $user_id is 3
         if ($user_id == 3) {
-            // Select all projects
-            $listPrj = "SELECT * FROM Project LIMIT ? OFFSET ?";
+            // Select all projects and order by NgayGiao in descending order
+            $listPrj = "SELECT * FROM Project ORDER BY NgayGiao DESC LIMIT ? OFFSET ?";
             $stmt = $conn->prepare($listPrj);
             $stmt->bind_param('ii', $limit, $offset);
-
         } else {
-            // Select projects where QuanLy equals $user_id
-            $listPrj = "SELECT * FROM Project WHERE QuanLy = ? LIMIT ? OFFSET ?";
+            // Select projects where QuanLy equals $user_id and order by NgayGiao in descending order
+            $listPrj = "SELECT * FROM Project WHERE QuanLy = ? ORDER BY NgayGiao DESC LIMIT ? OFFSET ?";
             $stmt = $conn->prepare($listPrj);
             $stmt->bind_param('iii', $user_id, $limit, $offset);
         }
@@ -77,6 +76,7 @@ class ProjectModel {
         $db->close();
         return $list;
     }
+    
 
     public static function getProjectsAndCount($user_id, $searchTerm = '', $types = [], $statuses = [], $departments = [], $limit, $offset) {
         $db = new Database();
@@ -108,7 +108,7 @@ class ProjectModel {
             $sql .= " AND PhongID IN ($departmentPlaceholders)";
         }
 
-        $sql .= " LIMIT ? OFFSET ?";
+        $sql .= " ORDER BY NgayGiao DESC LIMIT ? OFFSET ?";
         $stmt = $conn->prepare($sql);
 
         $params = [];
@@ -134,7 +134,71 @@ class ProjectModel {
 
         return ['projects' => $projects, 'total' => $totalResult];
     }
-    
+
+    //========= Tạo prj - Giám đốc ================
+    public static function getQuanLyList () {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "SELECT * FROM Profile WHERE Role = 'Quản lý'";
+        $stmt = $conn->prepare($query);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $requests = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+        $db->close();
+        return $requests;
+    }
+
+    public static function getProjectIDs() {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $sql = "SELECT ProjectID FROM Project";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $projectIDs = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+        $db->close();
+        return $projectIDs;
+    }
+
+    public static function getCreateProject($newProjectID, $Ten, $NgayGiao, $HanChotDuKien, $HanChot, $QuanLy) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $TienDo = '0%';
+        $SoGioThucHanh = 0;
+        $PhongID = '';
+        $TinhTrang = 'Chưa hoàn thành';
+
+        $PhongIDQuery = "SELECT PhongID FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($PhongIDQuery);
+        $stmt->bind_param('i', $QuanLy);
+        $stmt->execute();
+        $stmt->bind_result($PhongID);
+        $stmt->fetch();
+        $stmt->close();
+
+        $query = "INSERT INTO Project (ProjectID, Ten, NgayGiao, HanChotDuKien, HanChot, TienDo, SoGioThucHanh, PhongID, QuanLy, TinhTrang)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('ssssssisis', $newProjectID, $Ten, $NgayGiao, $HanChotDuKien, $HanChot, $TienDo, $SoGioThucHanh, $PhongID, $QuanLy, $TinhTrang);
+        
+        $result = $stmt->execute();
+        
+        $stmt->close();
+        $db->close();
+        
+        return $result;
+    }
+
     //================ Nhân viên ===================
     private static function getProjectIDsByEmpID($user_id) {
         $db = new Database();
@@ -436,6 +500,23 @@ class ProjectModel {
         $stmt->close();
         $db->close();
         
+        return $result;
+    }
+
+    public static function UpdateProjectStatus($projectID_s, $newStatus) {
+        $db = new Database();
+        $conn = $db->connect();
+        // var_dump($projectID_s);
+        // var_dump($newStatus);
+
+        $query = "UPDATE Project SET TinhTrang = ?, TienDo = '100%' WHERE ProjectID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('ss', $newStatus, $projectID_s);
+        
+        $result = $stmt->execute();
+
+        $stmt->close();
+        $db->close();
         return $result;
     }
 

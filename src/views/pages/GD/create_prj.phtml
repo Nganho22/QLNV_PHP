@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo htmlspecialchars($title); ?></title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/project.css" type="text/css"/> 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+</head>
+<body>
+    <?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        </div>
+    <?php endif; ?>
+    <div class="header">
+        <div class="back-button" id ="back-button" style="position: relative;">
+            <a href="#" class="btn-link"><i class="fas fa-arrow-left"></i> Quay lại</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="left-column" style="width: 500px; padding-top: 30px;">
+            <h2 style="text-align: center;">Form tạo dự án</h2>
+            <form id="create-project-form" >
+                <div class="form-group">
+                    <label for="projectName">Tên dự án</label>
+                    <input type="text" class="form-control" id="projectName" name="projectName" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">Ngày giao</label>
+                    <input type="text" class="form-control" id="startDate" name="startDate" value="<?php echo date('Y-m-d'); ?>" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="expectedDeadline">Hạn chót dự kiến</label>
+                    <input type="date" class="form-control" id="expectedDeadline" name="expectedDeadline" required>
+                </div>
+                <div class="form-group">
+                    <label for="deadline">Hạn chót</label>
+                    <input type="date" class="form-control" id="deadline" name="deadline" required>
+                </div>
+                <div class="form-group">
+                    <label for="manager">Quản lý</label>
+                    <select class="form-control" id="manager" name="manager" required>
+                        <option value="">Chọn quản lý</option>
+                        <?php foreach ($QuanLy as $quanly): ?>
+                            <option value="<?= htmlspecialchars($quanly['EmpID']) ?>">
+                                <?= htmlspecialchars($quanly['HoTen']) ?>
+                            </option>
+                        <?php endforeach; ?> 
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Tạo dự án</button>
+            </form>
+        </div>
+
+        <div class="right-column" style="width: 800px;">
+            <h2 style="text-align: center;">Review dự án</h2>
+            <div class="review" id="project-info" style="display: none;">
+                <h3>Thông tin dự án</h3>
+                <p><strong>Tên dự án:</strong> <span id="project-name"></span></p>
+                <p><strong>Ngày giao:</strong> <span id="project-startDate"></span></p>
+                <p><strong>Hạn chót dự kiến:</strong> <span id="project-expectedDeadline"></span></p>
+                <p><strong>Hạn chót:</strong> <span id="project-deadline"></span></p>
+                <p><strong>Quản lý:</strong> <span id="project-manager"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Thông báo</h2>
+            <p id="popupMessage"></p>
+            <button class="btn btn-primary close-popup-btn popup-button" onclick="closePopup()">Đóng</button>
+        </div>
+    </div>
+
+    <script>
+        function showPopup(message, success) {
+            var popup = document.getElementById('popup');
+            var popupMessage = document.getElementById('popupMessage');
+            var closeButton = document.querySelector('.close-popup-btn');
+
+            popupMessage.textContent = message;
+            popup.style.display = 'flex';
+
+            // if (success && closeButton) {
+            //     closeButton.onclick = function() {
+            //         window.location.reload(); 
+            //     };
+            // }
+        }
+
+        function closePopup() {
+            $('#popup').hide();
+        }
+
+        $(document).ready(function() {
+            $('#create-project-form').on('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this); 
+                $.ajax({
+                    type: 'POST',
+                    url: 'index.php?action=GetCreateProjectPage',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        try {
+                            console.log("response: ", response);
+                            var result = JSON.parse(response);
+                            // let result = JSON.parse(response);
+                            // $('#popupMessage').text(result.message);
+                            // $('#popup').show();
+
+                            if (result.success) {
+                                $('#project-name').text($('#projectName').val());
+                                $('#project-startDate').text($('#startDate').val());
+                                $('#project-expectedDeadline').text($('#expectedDeadline').val());
+                                $('#project-deadline').text($('#deadline').val());
+                                $('#project-manager').text($('#manager option:selected').text());
+                                showPopup(result.message, true);
+                                $('#project-info').show();
+                            }
+                            else {
+                                showPopup(result.message, false);
+                            }
+                            } catch (e) {
+                                console.error('Lỗi phân tích JSON:', e);
+                                showPopup('Đã xảy ra lỗi khi xử lý dữ liệu!', false);
+                        }
+                    }
+                });
+            });
+        });
+
+        document.getElementById('back-button').addEventListener('click', function() {
+        window.history.back();
+        });
+    </script>
+    
+</body>
+</html>

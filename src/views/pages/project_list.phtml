@@ -119,6 +119,11 @@
                 </div>
                 
             </div>
+            <?php if ($role === 'Giám đốc'): ?>
+                <button class="btn btn-primary btn-block" 
+                    onclick="window.location.href='index.php?action=GetCreateProjectPage';" 
+                    style="margin-top:35px">Tạo thêm dự án</button>
+            <?php endif; ?>
         </div>
     </div>
 
