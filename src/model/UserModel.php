@@ -35,27 +35,6 @@ class UserModel {
             return false;
         }
     }
-    public function clogin2($username, $password) {
-        $url = $this->apiUrl . '/getActiveProfile?tenTaiKhoan=' . urlencode($username) . '&matKhau=' . urlencode($password);
-        if (!$this->isApiAvailable($url)) {
-            return null;
-        }
-
-        $response = file_get_contents($url);
-        $userData = json_decode($response, true);
-
-        if ($userData) {
-            $user = [
-                'EmpID' => $userData['empID'],
-                'PhongID' => $userData['phongID'],
-                'HoTen' => $userData['hoTen'],
-                'Role' => $userData['role'],
-                'Image' => 'public/img/avatar/' . $userData['image']
-            ];
-            return $user;
-        }
-        return null;
-    }
 
     public function clogin($username, $password) {
 
@@ -1187,7 +1166,7 @@ class UserModel {
         $conn = $db->connect();
         $stmt = $conn->prepare($query);
     
-        
+
         $stmt->bind_param('ss', $searchTerm, $searchTerm);
         
         $stmt->execute();
