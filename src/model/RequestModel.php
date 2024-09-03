@@ -283,7 +283,7 @@ class RequestModel {
         $query = "
             SELECT * 
             FROM Request
-            WHERE EmpID IN ($empIDsString)";
+            WHERE EmpID IN ($empIDsString) ORDER BY NgayGui DESC";
 
         $db = new Database();
         $conn = $db->connect();
@@ -323,6 +323,7 @@ class RequestModel {
             SELECT RequestID, EmpID, TieuDe, Loai, NguoiGui, NgayGui, TrangThai
             FROM Request
             WHERE EmpID IN ($empIDsString) AND NguoiGui LIKE ? 
+            ORDER BY NgayGui DESC
             LIMIT ? OFFSET ?";
 
         $db = new Database();
@@ -363,7 +364,7 @@ class RequestModel {
         $query = "
             SELECT COUNT(RequestID) as total
             FROM Request
-            WHERE EmpID IN ($empIDsString) AND NguoiGui LIKE ?";
+            WHERE EmpID IN ($empIDsString) AND NguoiGui LIKE ? ORDER BY NgayGui DESC";
 
         $db = new Database();
         $conn = $db->connect();
@@ -403,6 +404,7 @@ class RequestModel {
             AND NguoiGui LIKE ?
             " . (count($types) > 0 ? "AND Loai IN ($typesPlaceholders)" : "") . "
             " . (count($statuses) > 0 ? "AND TrangThai IN ($statusesPlaceholders)" : "") . "
+            ORDER BY NgayGui DESC
             LIMIT ? OFFSET ?";
     
         $db = new Database();
@@ -463,7 +465,8 @@ class RequestModel {
             WHERE EmpID IN ($empIDsString)
             AND NguoiGui LIKE ?
             " . (count($types) > 0 ? "AND Loai IN ($typesPlaceholders)" : "") . "
-            " . (count($statuses) > 0 ? "AND TrangThai IN ($statusesPlaceholders)" : "") . "";
+            " . (count($statuses) > 0 ? "AND TrangThai IN ($statusesPlaceholders)" : "") . "
+            ORDER BY NgayGui DESC";
     
         $db = new Database();
         $conn = $db->connect();

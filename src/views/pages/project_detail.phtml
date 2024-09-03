@@ -153,10 +153,33 @@
 
                     <button type="submit">Xác Nhận</button>
                 </form>
+
+                <button id="duyet-project" class="btn btn-primary btn-block" style="margin-top:35px">Cập nhật dự án hoàn thành</button>
+
             </section>
             <?php endif; ?>
         </div>
     </div>
+
+    <div id="status-popup" class="status-popup" style="display: none;">
+        <div class="status-popup-content">
+            <h2>Chọn tình trạng cập nhật</h2>
+            <form id="status-update-form" action="index.php?action=UpdateProjectStatus" method="POST" style="padding: 10px;">
+                <input type="hidden" id="update-projectID" name="projectID" value="">
+                
+                <label for="new-status">Tình trạng:</label>
+                <select id="new-status" name="newStatus" required style="margin-left: 50px;">
+                    <option value="Hoàn thành">Hoàn thành</option>
+                    <option value="Hủy">Hủy</option>
+                    <option value="Tạm dừng">Tạm dừng</option>
+                </select>
+                <br>
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <button type="button" class="btn btn-secondary" onclick="closeStatusPopup()">Đóng</button>
+            </form>
+        </div>
+    </div>
+                         
 
     <div id="popup" class="popup">
         <div class="popup-content">
@@ -168,6 +191,13 @@
 
     <script>
         var projectId = <?php echo json_encode($detail['ProjectID']); ?>;
+
+        function closeStatusPopup() {
+            var popup = document.getElementById('status-popup');
+            if (popup) {
+                popup.style.display = 'none';
+            }
+        }
 
         function closePopup() {
             console.log("Popup closing...");
@@ -190,6 +220,35 @@
         }
 
         $(document).ready(function() {
+            $('#duyet-project').on('click', function() {
+                $('#status-popup').show();
+                console.log("Project ID: ", projectId);
+                $('#update-projectID').val(projectId);
+            });
+
+            $('#status-update-form').on('submit', function(e) {
+                e.preventDefault();
+                console.log("Form data: ", $(this).serialize());
+                //var formData = new FormData(this); 
+                $.ajax({
+                    type: 'POST',
+                    url: 'index.php?action=UpdateProjectStatus',
+                    data: $(this).serialize(),
+                    success: function(response) {
+                        console.log("response: ", response);
+                        var data = JSON.parse(response);
+                        if (data.success) {
+                            showPopup('Cập nhật trạng thái thành công!', true);
+                        } else {
+                            showPopup('Đã xảy ra lỗi: ' + data.message, false);
+                        }
+                    },
+                    error: function() {
+                        showPopup('Có lỗi xảy ra khi cập nhật trạng thái.', false);
+                    }
+                });
+            });
+
             $('.close-popup-btn').on('click', function() {
                 closePopup();
             });

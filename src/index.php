@@ -61,6 +61,14 @@ switch ($action)
         $controller = new ProjectController();
         $controller->GetProjectPage();
         break;
+    case "GetCreateProjectPage":
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller = new ProjectController();
+            $controller->CreateProject();
+        } else { 
+        $controller = new ProjectController();
+        $controller->GetCreateProjectPage(); }
+        break;
     case "GetDetailProjectPage":
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $controller = new ProjectController();
@@ -68,6 +76,10 @@ switch ($action)
         } else { 
         $controller = new ProjectController();
         $controller->GetDetailProjectPage();}
+        break;
+    case "UpdateProjectStatus":
+        $controller = new ProjectController();
+        $controller->UpdateProjectStatus();
         break;
     case "GetDetailTimeSheet":
         $controller = new ProjectController();
