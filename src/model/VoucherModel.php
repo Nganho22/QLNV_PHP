@@ -4,11 +4,28 @@ require_once __DIR__ . '/../config/MySQLconnect.php';
 class VoucherModel {
     private $db;
 
-    public function __construct() {
-        $database = new Database();
-        $this->db = $database->connect();   
+    private $apiUrl;
+
+    public function __construct($apiUrl) {
+        $this->apiUrl = $apiUrl;
     }
 
+    private function isApiAvailable($url) {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+    
+        $result = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        if ($result !== false && $httpCode == 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
     public static function getVoucherCountsByEmpID($user_id) {
         $db = new Database();
         $conn = $db->connect();
