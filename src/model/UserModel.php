@@ -956,27 +956,31 @@ class UserModel {
     }
 
     public static function searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ) {
-        $searchTerm = "%$searchTerm_PJ%";
-        $query = "
-            SELECT Ten, NgayGiao, TienDo
-            FROM Project
-            WHERE Ten LIKE ?
-            LIMIT ? OFFSET ?";
-
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
-        $params = [$searchTerm, $limit_PJ, $offset_PJ];
-        $stmt->bind_param('sii', ...$params);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $phongBans = $result->fetch_all(MYSQLI_ASSOC);
-
-        $stmt->close();
-        $db->close();
-
-        return $projects;
-    }
+            $searchTerm = "%$searchTerm_PJ%";
+            $query = "
+                SELECT Ten, NgayGiao, TienDo
+                FROM Project
+                WHERE Ten LIKE ?
+                LIMIT ? OFFSET ?";
+    
+            $db = new Database();
+            $conn = $db->connect();
+            $stmt = $conn->prepare($query);
+            $params = [$searchTerm, $limit_PJ, $offset_PJ];
+            $stmt->bind_param('sii', ...$params);
+            $stmt->execute();
+            $result = $stmt->get_result();
+    
+            $projects = [];
+            while ($row = $result->fetch_assoc()) {
+                $projects[] = $row;
+            }
+    
+            $stmt->close();
+            $db->close();
+    
+            return $projects;
+        }
 
     public static function countSearchProject_GD($searchTerm_PJ) {
         $searchTerm = "%$searchTerm_PJ%";
