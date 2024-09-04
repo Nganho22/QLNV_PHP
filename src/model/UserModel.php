@@ -1248,7 +1248,7 @@ class UserModel {
         return $statusinout;
     }
 
-    private function callAPI($method, $url, $data = false) {
+    private function callAPI($method, $url, $data) {
         $curl = curl_init();
     
         switch ($method){
