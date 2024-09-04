@@ -205,22 +205,130 @@ class VoucherModel {
     $db->close();
     return $voucherDetails;
 }
-public static function getExVoucherDetails($voucherID) {
-    $db = new Database();
-    $conn = $db->connect();
+    public static function getExVoucherDetails($voucherID) {
+        $db = new Database();
+        $conn = $db->connect();
 
-    $query = "SELECT TenVoucher, TriGia, HanSuDung, TinhTrang, ChiTiet, HuongDanSuDung
-              FROM Voucher
-              WHERE VoucherID = ? AND TinhTrang IS NULL";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param('i', $voucherID);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $voucherDetails = $result->fetch_assoc();
+        $query = "SELECT TenVoucher, TriGia, HanSuDung, TinhTrang, ChiTiet, HuongDanSuDung
+                FROM Voucher
+                WHERE VoucherID = ? AND TinhTrang IS NULL";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $voucherID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $voucherDetails = $result->fetch_assoc();
 
-    $stmt->close();
-    $db->close();
-    return $voucherDetails;
-}
-}
-?>
+        $stmt->close();
+        $db->close();
+        return $voucherDetails;
+    }
+
+    public static function updateVoucherTinhTrangEx($voucherID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "UPDATE Voucher SET TinhTrang = 'Chưa dùng' WHERE VoucherID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $voucherID);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static function updateVoucherTinhTrangUsed($voucherID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "UPDATE Voucher SET TinhTrang = 'Đã dùng' WHERE VoucherID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $voucherID);
+
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function getTinhTrangVoucherByID($voucherID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "SELECT TinhTrang
+                FROM Voucher
+                WHERE VoucherID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $voucherID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $tinhtrang = $result->fetch_assoc();
+
+        $stmt->close();
+        $db->close();
+        
+        // Trả về giá trị của TinhTrang nếu có, ngược lại trả về một chuỗi rỗng
+        return isset($tinhtrang['TinhTrang']) ? $tinhtrang['TinhTrang'] : '';
+    }
+
+    public static function getEmployeePointsByID($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        // Truy vấn điểm hiện có của nhân viên
+        $query = "SELECT DiemThuong FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $points = $result->fetch_assoc()['DiemThuong'] ?? 0;
+
+        $stmt->close();
+        $db->close();
+        return $points;
+    }
+
+    public static function updateEmpExPoints($user_id, $pointEx) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+        // Truy vấn để lấy điểm thưởng hiện tại của quản lý
+        $query = "SELECT DiemThuong FROM Profile WHERE EmpID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $user_id);
+        $stmt->execute();
+        
+        $result = $stmt->get_result();
+        $currentPoints = $result->fetch_assoc()['DiemThuong'] ?? 0;
+        
+        // Tính điểm thưởng mới
+        $newPoints = $currentPoints - $pointEx;
+
+        // Cập nhật điểm thưởng của quản lý
+        $updateQuery = "UPDATE Profile SET DiemThuong = ? WHERE EmpID = ?";
+        $updateStmt = $conn->prepare($updateQuery);
+        $updateStmt->bind_param('ii', $newPoints, $user_id);
+        $updateStmt->execute();
+
+        $stmt->close();
+        $updateStmt->close();
+        $db->close();
+    }
+    public static function addFelicitation($point, $noiDung, $nguoiNhan, $voucherID) {
+        $point = -abs($point);
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "INSERT INTO Felicitation (Point, Date, NoiDung, NguoiNhan, VoucherID) 
+                VALUES (?, CURDATE(), ?, ?, ?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('isii', $point, $noiDung, $nguoiNhan, $voucherID);
+
+        $stmt->execute();
+        $stmt->close();
+        $db->close();
+    }
+    }
+    ?>

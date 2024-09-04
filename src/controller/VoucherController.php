@@ -6,7 +6,17 @@ class VoucherController {
         if (isset($_SESSION['user'])) {
             $title = 'Yêu cầu';
             $user_id = $_SESSION['user']['EmpID'];
-    
+
+        $message = '';
+        if (isset($_GET['status'])) {
+            if ($_GET['status'] === 'exsuccess') {
+                $message = "Đổi Voucher thành công.";
+            } elseif ($_GET['status'] === 'usedsuccess') {
+                $message = "Dùng Voucher thành công.";
+            } elseif ($_GET['status'] === 'error') {
+                $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+            }
+        }
             $limit = 3;
             $pageAvailableVoucher = isset($_GET['pageAvailableVoucher']) ? (int)$_GET['pageAvailableVoucher'] : 1;
             $pageExchangeVoucher = isset($_GET['pageExchangeVoucher']) ? (int)$_GET['pageExchangeVoucher'] : 1;
@@ -65,18 +75,7 @@ class VoucherController {
                     'timeSheets' => $timeSheets
                 ]);
             } else {
-                $message = '';
-                if (isset($_GET['status'])) {
-                    if ($_GET['status'] === 'checked-in') {
-                        $message = "Bạn đã check-in thành công.";
-                    } elseif ($_GET['status'] === 'checked-out') {
-                        $message = "Bạn đã check-out thành công.";
-                    } elseif ($_GET['status'] === 'already-checked-out') {
-                        $message = "Bạn đã check-out, không thể thực hiện lại.";
-                    } else {
-                        $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
-                    }
-                }
+            
                 ob_start();
                 require($file);
                 $content = ob_get_clean();
@@ -134,5 +133,39 @@ class VoucherController {
         }
      
     }
+
+    public function updateVoucherStatus() {
+        if (isset($_SESSION['user'])) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $user_id = $_SESSION['user']['EmpID'];
+                $voucherID = $_POST['voucherID'];
+                $noiDung = $_POST['noidung'];
+                $tinhtrang = VoucherModel::getTinhTrangVoucherByID($voucherID);
+                $pointHave = VoucherModel::getEmployeePointsByID($user_id);
+                $pointEx = isset($_POST['valuePoint']) ? (int)$_POST['valuePoint'] : null;
+    
+                $status = 'error'; // Mặc định là lỗi nếu không có gì xảy ra
+    
+                if ($tinhtrang === '' && $pointHave > $pointEx) {
+                    // Nếu tình trạng là rỗng, có thể là voucher mới hoặc chưa dùng
+                    $result = VoucherModel::updateVoucherTinhTrangEx($voucherID);
+                    VoucherModel::updateEmpExPoints($user_id, $pointEx);
+                    VoucherModel::addFelicitation($pointEx, $noiDung, $user_id, $voucherID);
+                    $status = 'exsuccess';
+                } elseif ($tinhtrang === 'Chưa dùng') {
+                    // Nếu tình trạng là 'Chưa dùng', cập nhật tình trạng thành đã dùng
+                    $result = VoucherModel::updateVoucherTinhTrangUsed($voucherID);
+                    $status = 'usedsuccess';
+                }
+    
+                header("Location: index.php?action=GetVoucherPage&status=$status");
+                exit();
+            }
+        } else {
+            header('Location: index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+    
 }
 ?>

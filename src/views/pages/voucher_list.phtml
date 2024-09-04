@@ -119,12 +119,15 @@
             </div>
                 <div class="request-list">
                     <h2>Chi tiết Voucher</h2>
+                    <form id="VoucherForm" action="index.php?action=updateVoucherStatus" method="POST" enctype="multipart/form-data">
                         <div class="Voucher_List">
                             <div class="info-box2">
                                 <div class="row1">
                                     <div class="left-box">
+                                    <input type="hidden" id="voucher-id-input" name="voucherID" value="">
                                         <p><strong>Tên Voucher</strong></p>
-                                            <ul id= "voucher-name"></ul>       
+                                            <ul id= "voucher-name" name="noidung"></ul>   
+                                            <input type="hidden" id="noidung" name="noidung" value="">
                                         <p><strong>Hạn sử dụng </strong></p>
                                             <ul id= "voucher-expiry"></ul>
                                         <p><strong>Chi tiết </strong></p>
@@ -135,6 +138,7 @@
                                 <div class="right-box">
                                     <p><strong>Trị Giá </strong></p>
                                         <ul id ="valueBox"></ul>
+                                        <input type="hidden" id="valuePoint" name="valuePoint" value="">
                                     <p><strong>Tình trạng </strong></p>
                                         <ul id ="voucher-status"></ul>
 
@@ -142,9 +146,12 @@
                                 </div>
                             </div>   
                             <div class="text-center-btn mt-4">
-                            <a id="voucher-action-btn" href="#" class="btn btn-primary btn-block">Dùng Voucher</a>
+                            
+                                <button type="submit" id="voucher-action-btn" class="btn btn-primary btn-block"></button>
+                           
                         </div>
-                        </div>                   
+                        </div>   
+                        </form>                
                     </div>
                 </div>                
             </div>
@@ -226,12 +233,15 @@
                         // Cập nhật thông tin vào các phần tử chi tiết voucher
                         $('#valueBox').text(data.TriGia); // Hiển thị trị giá voucher
                         $('#voucher-name').text(data.TenVoucher);
+                        $('#noidung').val(data.TenVoucher);
                         $('#voucher-expiry').text(data.HanSuDung);
                         $('#voucher-status').text(data.TinhTrang);
                         $('#voucher-detail').text(data.ChiTiet);
                         $('#voucher-guide').text(data.HuongDanSuDung);
                         $('#voucher-action-btn').text('Dùng Voucher');
-
+                        $('#voucher-id-input').val(voucherID);
+                        $('#valuePoint').val(data.TriGia);
+                    
                     },
                     error: function() {
                         console.error('Không thể tải dữ liệu chi tiết voucher');
@@ -257,11 +267,15 @@
                         // Cập nhật thông tin vào các phần tử chi tiết voucher
                         $('#valueBox').text(data.TriGia); // Hiển thị trị giá voucher
                         $('#voucher-name').text(data.TenVoucher);
+                        $('#noidung').val(data.TenVoucher);
                         $('#voucher-expiry').text(data.HanSuDung);
                         $('#voucher-status').text(data.TinhTrang);
                         $('#voucher-detail').text(data.ChiTiet);
                         $('#voucher-guide').text(data.HuongDanSuDung);
                         $('#voucher-action-btn').text('Đổi Voucher');
+                        $('#voucher-id-input').val(voucherID);
+                        $('#valuePoint').val(data.TriGia);
+                    
                     },
                     error: function() {
                         console.error('Không thể tải dữ liệu chi tiết voucher');

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yêu cầu</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/check_inout_list.css">
+</head>
+<body>
+    <?php if (!empty($message)): ?>
+            <div class="notification-wrapper">
+                <div class="notification">
+                    <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                    <?php echo htmlspecialchars($message); ?>
+                </div>
+            </div>
+        <?php endif; ?>
+        <div class="container">
+        <div class="row">
+            <div class="info-box">
+                <p><strong>Tổng </strong></p>
+                    <h4><?php echo htmlspecialchars($creq['total']); ?></h4>
+                </div>
+                <div class="info-box">
+                    <p><strong>Check-in đúng hạn</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['ontime']); ?></h4>
+                </div>
+                <div class="info-box">
+                    <p><strong>Check-in trễ</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['late']); ?></h4>
+                </div>
+                <div class="info-box">
+                    <p><strong>Check-out</strong></p>
+                    <h4><?php echo htmlspecialchars($creq['checkout']); ?></h4>
+                </div>
+            <div class="column">
+                <div class="historyfelicitationg-requests">
+                    <h2>Danh sách nhân viên chấm công</h2>
+                    <table class="table" id="historyfelicitation-requests-table">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Nhân viên</th>
+                                <th>Giờ Check-in</th>
+                                <th>Giờ Check-out</th>
+                                <th>Ghi chú</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($historyRequests as $request): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($request['ThoiGian']); ?></td>
+                                    <td><?php echo htmlspecialchars($request['NhanVien']); ?></td>
+                                    <td><?php echo htmlspecialchars($request['GioCheckIn']); ?></td>
+                                    <td><?php echo htmlspecialchars($request['GioCheckOut']); ?></td>
+                                    <td><?php echo htmlspecialchars($request['Note']); ?></td>
+                                    <td class="<?php 
+                                        if ($request['statusCheck'] === 'Đã check-in') {
+                                            echo 'status-check-in';
+                                        } elseif ($request['statusCheck'] === 'Đã check-out') {
+                                            echo 'status-check-out';
+                                        } else {
+                                            echo 'status-not-check-in';
+                                        }
+                                    ?>"><?php echo htmlspecialchars($request['statusCheck']); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <div id="historyfelicitation-pagination" class="pagination pagination-wrapper">
+                        <?php if ($totalHistory > $limit): ?>
+                            <?php for ($i = 1; $i <= ceil($totalHistory / $limit); $i++): ?>
+                                <li class="page-item <?php echo ($i == $pageHistory) ? 'active' : ''; ?>">
+                                    <a class="page-link" href="#" data-page="<?php echo $i; ?>"><?php echo $i; ?></a>
+                                </li>
+                            <?php endfor; ?>
+                        <?php endif; ?>
+                    </div>
+            </div>
+            
+        </div>
+        <!-- Cột bên phải -->             
+            </div>
+        </div>
+    <script>
+
+        $(document).ready(function() {
+    // Xử lý phân trang cho yêu cầu chờ duyệt
+    $(document).on('click', '#historyfelicitation-pagination .page-link', function(e) {
+        e.preventDefault();
+        var page = $(this).data('page');
+        loadHistoryRequests(page, $(this));
+    });
+
+    function loadHistoryRequests(page, element) {
+        $.ajax({
+            url: 'index.php?action=GetCheck_inoutList&ajax=true&pageHistory=' + page,
+            method: 'GET',
+            success: function(response) {
+                var data = JSON.parse(response);
+                $('#historyfelicitation-requests-table tbody').html(data.historyHtml);
+                $('#historyfelicitation-pagination').html(data.historyPagination);
+
+                // Cập nhật trạng thái active
+                var updatedPagination = $('#historyfelicitation-pagination .page-link[data-page="' + page + '"]');
+                updatedPagination.parent().addClass('active');
+            },
+            error: function() {
+                console.error('Không thể tải dữ liệu');
+            }
+        });
+    }
+});
+
+    </script>
+</body>
+</html>

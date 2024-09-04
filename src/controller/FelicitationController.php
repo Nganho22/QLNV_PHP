@@ -8,7 +8,7 @@ class FelicitationController {
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
     
-            $limit = 12;
+            $limit = 6;
             $pageHistory = isset($_GET['pageHistory']) ? (int)$_GET['pageHistory'] : 1;
             $pageHistory_QL = isset($_GET['pageHistory_QL']) ? (int)$_GET['pageHistory_QL'] : 1;
             $offsetHistory = ($pageHistory - 1) * $limit;

@@ -1,0 +1,176 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    display: flex;
+    /* padding: 20px; */
+    max-width: 1400px;
+    margin: auto;
+    gap: 40px;
+    /* Khoảng cách giữa hai cột */
+}
+
+
+.column {
+    width: 95%;
+    /* Mỗi cột chiếm 50% chiều rộng */
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.row {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+}
+
+
+
+.info-box {
+    width: 20%;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #999999;
+}
+
+.info-box p {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.info-box h4 {
+    font-size: 2em;
+    margin: 0;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+table {
+    width: 80%; /* Đặt chiều rộng bảng là 100% */
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    table-layout: fixed; /* Sử dụng layout cố định */
+}
+
+table th,
+table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+    white-space: nowrap; /* Ngăn nội dung xuống dòng */
+    overflow: hidden; /* Giữ nội dung trong ô và ngăn tràn */
+    text-overflow: ellipsis; /* Thêm dấu "..." nếu nội dung bị cắt */
+}
+
+/* table th:first-child,
+table td:first-child {
+    width: 15%; /* Điều chỉnh tỷ lệ theo nhu cầu */
+/* } */
+
+/* table th:last-child,
+table td:last-child {
+    width: 20%; /* Điều chỉnh tỷ lệ theo nhu cầu */
+/* } */ 
+
+table th,
+table td {
+    word-wrap: break-word; /* Cho phép từ xuống dòng khi cần thiết */
+}
+
+
+.text-center {
+    text-align: center;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
+}
+
+.pagination a.active {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+}
+
+.notification-wrapper {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.notification {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    position: relative;
+    z-index: 1001;
+    max-width: 90%;
+    box-sizing: border-box;
+}
+
+.notification .close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+    font-size: 20px;
+    color: #999;
+    transition: color 0.3s ease;
+}
+
+.notification .close:hover {
+    color: #333;
+}
+
+
+.status-check-in {
+    background-color: #8effa8; /* Màu xanh nhạt */
+}
+
+.status-check-out {
+    background-color: #ff7581; /* Màu đỏ nhạt */
+}
+
+.status-not-check-in {
+    background-color: #fff3cd; /* Màu vàng nhạt */
+ }

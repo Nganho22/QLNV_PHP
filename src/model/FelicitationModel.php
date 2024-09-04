@@ -169,13 +169,8 @@ class FelicitationModel {
 
         $usedVoucher = "SELECT COUNT(*) AS uvoucher
                         FROM Voucher
-                        WHERE VoucherID IN (
-                            SELECT VoucherID
-                            FROM Felicitation
-                            WHERE NguoiNhan = ? AND VoucherID IS NOT NULL
-                        ) AND TinhTrang = 'Đã dùng'";
+                        WHERE TinhTrang = 'Đã dùng'";
         $stmt = $conn->prepare($usedVoucher);
-        $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $usedVoucher = $result->fetch_assoc()['uvoucher']?? 0;

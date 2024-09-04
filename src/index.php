@@ -145,9 +145,14 @@ switch ($action)
         $controller = new VoucherController();
         $controller->GetExVoucherDetails();
         break;
+
     case "GetCheck_inoutPage":
         $controller = new Check_inoutController();
         $controller->GetCheck_inoutPage();
+        break;
+    case "GetCheck_inoutList":
+        $controller = new Check_inoutController();
+        $controller->GetCheck_inoutList();
         break;
     case 'GetEmployeePoints':
         $controller = new FelicitationController();
@@ -157,6 +162,10 @@ switch ($action)
         $controller = new FelicitationController();
         $controller->GivePoints();
         break;
+    case 'updateVoucherStatus':
+        $controller = new VoucherController();
+        $controller->updateVoucherStatus();
+        break;  
 default:
         $controller = new HomeController();
         $controller->login();
