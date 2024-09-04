@@ -970,11 +970,7 @@ class UserModel {
         $stmt->bind_param('sii', ...$params);
         $stmt->execute();
         $result = $stmt->get_result();
-
-        $projects = [];
-        while ($row = $result->fetch_assoc()) {
-            $projects[] = $row;
-        }
+        $phongBans = $result->fetch_all(MYSQLI_ASSOC);
 
         $stmt->close();
         $db->close();
