@@ -123,19 +123,6 @@ CREATE TABLE Voucher (
     TinhTrang VARCHAR(50)
 );
 
-CREATE TABLE Activity (
-    ActivityID VARCHAR(10) PRIMARY KEY,
-    TenHoatDong VARCHAR(255),
-    LoaiHoatDong VARCHAR(255),
-    Point INT,
-    NoiDung TEXT,
-    ChiTiet TEXT,
-    SoNguoiThamGia INT,
-    ChiPhi DECIMAL(10, 2),
-    HanCuoiDangKy DATE,
-    NgayBatDau DATE,
-    NgayKetThuc DATE
-);
 
 CREATE TABLE Felicitation (
     FelicitationID INT AUTO_INCREMENT PRIMARY KEY,
@@ -150,15 +137,3 @@ CREATE TABLE Felicitation (
     FOREIGN KEY (VoucherID) REFERENCES Voucher(VoucherID)
 );
 
-CREATE TABLE emp_activity (
-    emp_activityID INT AUTO_INCREMENT PRIMARY KEY,
-    EmpID INT,
-    ActivityID VARCHAR(10),
-    Start_date_join DATE NOT NULL,
-    End_date_join DATE NOT NULL,
-    NgayThamGia DATE NOT NULL,
-    ThanhTich VARCHAR(255),
-    ThoiGianThucHien DATE NOT NULL,
-    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID),
-    FOREIGN KEY (ActivityID) REFERENCES Activity(ActivityID)
-);

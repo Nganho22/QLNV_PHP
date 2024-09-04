@@ -41,7 +41,7 @@
                     </div>
                     <div class="stat-box-down">
                         <h2>Hoạt động hoàn thành</h2>
-                        <p><?php echo count(array_filter($cactivities, fn($a) => $a['ThanhTich'] == 'Tốt')); ?></p>
+                        <p>Tốt</p>
                     </div>
                 </div>
             <div class="tasks-today">
@@ -59,14 +59,46 @@
 
             <div class="activities">
                 <h3>Hoạt động:</h3>
-                <ul>
-                    <?php foreach ($activities as $activity): ?>
-                        <li>
-                            <p><?php echo htmlspecialchars($activity['TenHoatDong']); ?></p>
-                            <span class="status"><?php echo htmlspecialchars($activity['ThoiGianThucHien']); ?></span>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                <div class="activity-list">
+                    <ul>
+                        <?php if (!empty($Activities)): ?>
+                            <?php foreach ($Activities as $activity): ?>
+                                <div class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                    <?php
+                                    $statusColor = '#bdbdbd';
+
+                                    switch ($activity['TinhTrang']) {
+                                        case 'Chờ Đăng ký':
+                                            $statusColor = '#ff9900';
+                                            break;
+                                        case 'Sắp diễn ra':
+                                            $statusColor = '#00bfff';
+                                            break;
+                                        case 'Đang diễn ra':
+                                            $statusColor = '#32cd32';
+                                            break;
+                                        case 'Kết Thúc':
+                                            $statusColor = '#ff6347';
+                                            break;
+                                        case 'Chưa xác định':
+                                            $statusColor = '#bdbdbd';
+                                            break;
+                                    }
+                                    ?>
+                                    <div><?php echo htmlspecialchars($activity['tenHoatDong']); ?><br>
+                                    <small>Hạn chót đăng ký: <?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?></small><br>
+                                    <small>Ngày bắt đầu: <?php echo htmlspecialchars($activity['ngayBatDau']); ?> - Ngày kết thúc: <?php echo htmlspecialchars($activity['ngayKetThuc']); ?></small></div>
+                                    <div class="status" style="background-color: <?php echo $statusColor; ?>;">
+                                        <?php echo htmlspecialchars($activity['TinhTrang']); ?>
+                                    </div>
+                                    <br>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else:?>
+                            <div>Không có<br>
+                        <?php endif; ?>
+                    </ul>
+                </div>
             </div>
             </div>
         <div class="right-panel">

@@ -35,8 +35,10 @@ class HomeController{
                     $phongID = UserModel::getPhongIDByEmpID($empID);
                     $projects = UserModel::getProjects_NV($empID);
                     $cprojects = UserModel::getCountProjects_NV($empID);
-                    $cactivities = UserModel::getActivities($empID);
-                    $activities = UserModel::getActivities($empID);
+                    $apiUrlActivity = 'http://localhost:9002/apiActivity';
+                    $model = new ActivityModel($apiUrlActivity);
+                    $cactivities = $model->getActivitiesByMonth(date('m'));
+                    $Activities = $model->getActivitiesByMonth(date('m'));
                     $checkInOut = UserModel::getCheckInOut($empID);
                     $points = UserModel::getPoint_Month($empID);
                     $deadlines = UserModel::getDeadlinesTimesheet($empID);
