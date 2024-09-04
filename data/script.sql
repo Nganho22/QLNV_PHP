@@ -2,8 +2,6 @@ DROP DATABASE IF EXISTS QLNV_UDPT;
 CREATE DATABASE QLNV_UDPT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE QLNV_UDPT;
 
-
-
 CREATE TABLE PhongBan (
     PhongID VARCHAR(3) PRIMARY KEY,
     TenPhong VARCHAR(50),
@@ -15,27 +13,36 @@ CREATE TABLE PhongBan (
 CREATE TABLE Profile (
     EmpID INT AUTO_INCREMENT PRIMARY KEY,
     PhongID VARCHAR(3),
-    Role VARCHAR(20),
-    HoTen VARCHAR(50),
-    Email VARCHAR(50),
-    TenTaiKhoan VARCHAR(50),
-    MatKhau VARCHAR(50),
-    GioiTinh VARCHAR(5),
+    Role VARCHAR(20) DEFAULT 'Nhân viên',
+    HoTen VARCHAR(50) NOT NULL,
+    Email VARCHAR(50) NOT NULL,
+    TenTaiKhoan VARCHAR(50) NOT NULL,
+    MatKhau VARCHAR(50) NOT NULL,
+    GioiTinh VARCHAR(5) DEFAULT 'Nam',
     SoDienThoai VARCHAR(20),
     CCCD INT(20),
-    STK VARCHAR(20),
+    STK INT,
     Luong FLOAT,
     DiemThuong INT,
-    TinhTrang INT,
+    TinhTrang INT DEFAULT 1,
     DiaChi VARCHAR(255),
-    Image VARCHAR(50)
+    Image VARCHAR(50),
+    FOREIGN KEY (PhongID) REFERENCES PhongBan(PhongID) ON DELETE SET NULL
 );
 
+ALTER TABLE PhongBan
+ADD FOREIGN KEY (QuanLyID) REFERENCES Profile(EmpID);
+
+
+ALTER TABLE Profile MODIFY Email VARCHAR(50) NOT NULL;
+ALTER TABLE Profile ADD UNIQUE (Email);
 
 CREATE TABLE password_resets (
     email VARCHAR(50) NOT NULL,
     code VARCHAR(6) NOT NULL,
-    created_at DATETIME NOT NULL
+    created_at DATETIME NOT NULL,
+    PRIMARY KEY (email, code),
+    FOREIGN KEY (email) REFERENCES Profile(Email) ON DELETE CASCADE
 );
 
 CREATE TABLE Check_inout (
@@ -47,11 +54,12 @@ CREATE TABLE Check_inout (
     Overtime INT DEFAULT 0,
     Late INT DEFAULT 0,
     WorkFromHome INT DEFAULT 0,
-    Nghi INT DEFAULT 0
+    Nghi INT DEFAULT 0,
+    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID)
 );
 
 CREATE TABLE Project (
-    ProjectID VARCHAR(10) PRIMARY KEY,
+    ProjectID INT AUTO_INCREMENT PRIMARY KEY,
     Ten VARCHAR(255),
     NgayGiao DATE,
     HanChotDuKien DATE,
@@ -60,12 +68,14 @@ CREATE TABLE Project (
     SoGioThucHanh INT,
     PhongID VARCHAR(3),
     QuanLy INT,
-    TinhTrang VARCHAR(50)
+    TinhTrang VARCHAR(50),
+    FOREIGN KEY (QuanLy) REFERENCES Profile(EmpID),
+    FOREIGN KEY (PhongID) REFERENCES PhongBan(PhongID)
 );
 
 CREATE TABLE Time_sheet (
     Time_sheetID INT AUTO_INCREMENT PRIMARY KEY,
-    ProjectID VARCHAR(10),
+    ProjectID INT,
     EmpID INT,
     TenDuAn VARCHAR(50),
     NguoiGui VARCHAR(50),
@@ -78,7 +88,10 @@ CREATE TABLE Time_sheet (
     DiemThuong INT,
     Tre INT DEFAULT 0,
     NoiDung TEXT,
-    TaiLieu TEXT NULL
+    TaiLieu TEXT NULL,
+    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID),
+    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID),
+    FOREIGN KEY (PhongBan) REFERENCES PhongBan(PhongID)
 );
 
 CREATE TABLE Request (
@@ -95,7 +108,9 @@ CREATE TABLE Request (
     PhanHoi TEXT NULL,
     Time_sheetID INT NULL,
     Up_TinhTrang_Timesheet VARCHAR(50) NULL,
-    Up_ThoiGian_Timesheet INT NULL
+    Up_ThoiGian_Timesheet INT NULL,
+    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID),
+    FOREIGN KEY (Time_sheetID) REFERENCES Time_sheet(Time_sheetID)
 );
 
 CREATE TABLE Voucher (
@@ -129,7 +144,10 @@ CREATE TABLE Felicitation (
     NoiDung VARCHAR(255),
     NguoiNhan INT,
     NguoiTang INT,
-    VoucherID INT
+    VoucherID INT,
+    FOREIGN KEY (NguoiNhan) REFERENCES Profile(EmpID),
+    FOREIGN KEY (NguoiTang) REFERENCES Profile(EmpID),
+    FOREIGN KEY (VoucherID) REFERENCES Voucher(VoucherID)
 );
 
 CREATE TABLE emp_activity (
@@ -140,6 +158,7 @@ CREATE TABLE emp_activity (
     End_date_join DATE NOT NULL,
     NgayThamGia DATE NOT NULL,
     ThanhTich VARCHAR(255),
-    ThoiGianThucHien DATE NOT NULL
+    ThoiGianThucHien DATE NOT NULL,
+    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID),
+    FOREIGN KEY (ActivityID) REFERENCES Activity(ActivityID)
 );
-

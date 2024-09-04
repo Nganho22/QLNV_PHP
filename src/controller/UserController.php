@@ -10,7 +10,7 @@ class UserController{
         $model = new UserModel($apiUrl);
         $user =  $model->clogin($username, $password);
         $str = 'Wrong username or password, please check again';
-        if ($user['EmpID'] === null) {
+        if ($user === null) {
             $title = 'Login';
             $error_message = "Thông tin đăng nhập sai, vui lòng thử lại";
             require("./views/pages/login.phtml");
