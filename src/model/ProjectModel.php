@@ -140,7 +140,7 @@ class ProjectModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT * FROM Profile WHERE Role = 'Quản lý'";
+        $query = "SELECT EmpID, HoTen FROM Profile WHERE Role = 'Quản lý'";
         $stmt = $conn->prepare($query);
         $stmt->execute();
         
@@ -168,7 +168,7 @@ class ProjectModel {
         return $projectIDs;
     }
 
-    public static function getCreateProject($newProjectID, $Ten, $NgayGiao, $HanChotDuKien, $HanChot, $QuanLy) {
+    public static function getCreateProject($Ten, $NgayGiao, $HanChotDuKien, $HanChot, $QuanLy) {
         $db = new Database();
         $conn = $db->connect();
 
@@ -185,11 +185,11 @@ class ProjectModel {
         $stmt->fetch();
         $stmt->close();
 
-        $query = "INSERT INTO Project (ProjectID, Ten, NgayGiao, HanChotDuKien, HanChot, TienDo, SoGioThucHanh, PhongID, QuanLy, TinhTrang)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO Project (Ten, NgayGiao, HanChotDuKien, HanChot, TienDo, SoGioThucHanh, PhongID, QuanLy, TinhTrang)
+                  VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $conn->prepare($query);
-        $stmt->bind_param('ssssssisis', $newProjectID, $Ten, $NgayGiao, $HanChotDuKien, $HanChot, $TienDo, $SoGioThucHanh, $PhongID, $QuanLy, $TinhTrang);
+        $stmt->bind_param('sssssisis', $Ten, $NgayGiao, $HanChotDuKien, $HanChot, $TienDo, $SoGioThucHanh, $PhongID, $QuanLy, $TinhTrang);
         
         $result = $stmt->execute();
         

@@ -122,6 +122,9 @@
             <form id="phanHoiForm" action="index.php?action=GetDetailRequestPage&id=<?php echo htmlspecialchars($detail['RequestID']); ?>" 
                 method="POST" enctype="multipart/form-data">
                 <input type="hidden" id="trangThai" name="trangThai" value="">
+                <?php if ($detail['Loai'] === "Time-sheet"): ?>
+                    <input type="hidden" id="diemThuong" name="diemThuong" value="<?php echo htmlspecialchars($detail_ts['DiemThuong'])?>">
+                <?php endif; ?>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="nguoiGui">Người phản hồi:</label>

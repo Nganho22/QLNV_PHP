@@ -377,7 +377,15 @@ class RequestController {
                                     $timeSheetID = $detail['Time_sheetID'];
                                     $Up_TinhTrang_TS = $detail['Up_TinhTrang_Timesheet']; 
                                     $up_ThoiGian_TS = $detail['Up_TinhTrang_Timesheet']; 
+                                    $point = $_POST['diemThuong'];
                                     $updateTimeSheetResult = RequestModel::updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS);
+                                    if ($Up_TinhTrang_TS = 'Hoàn thành') {
+                                        $updatePointProfile = RequestModel::updatePointProfile($empID, $point); 
+                                        if (!$updatePointProfile) {
+                                            $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật Điểm thưởng.';
+                                            $responseSuccess = false;
+                                        }
+                                    }
                                     if (!$updateTimeSheetResult) {
                                         $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật Time-sheet.';
                                         $responseSuccess = false;

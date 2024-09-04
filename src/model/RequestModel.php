@@ -539,6 +539,20 @@ class RequestModel {
         return $result;
     }
 
+    public static function updatePointProfile ($EmpID, $point) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "UPDATE Profile SET DiemThuong = DiemThuong + ? WHERE EmpID = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ii", $point, $EmpID);
+        $result = $stmt->execute();
+
+        $stmt->close();
+        $db->close();
+        return $result;
+    }
+
     public static function  updateProfile($user_id) {
         $db = new Database();
         $conn = $db->connect();

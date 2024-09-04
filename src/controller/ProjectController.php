@@ -336,18 +336,18 @@ class ProjectController {
             $HanChot = $_POST['deadline'];
             $QuanLy = $_POST['manager'];
             
-            $projectIDs = ProjectModel::getProjectIDs();
-            $maxID = 0;
-            foreach ($projectIDs as $project) {
-                $numberPart = (int)substr($project['ProjectID'], 2);
+            // $projectIDs = ProjectModel::getProjectIDs();
+            // $maxID = 0;
+            // foreach ($projectIDs as $project) {
+            //     $numberPart = (int)substr($project['ProjectID'], 2);
             
-                if ($numberPart > $maxID) {
-                    $maxID = $numberPart;
-                }
-            }
-            $newProjectID = 'PJ' . ($maxID + 1);
+            //     if ($numberPart > $maxID) {
+            //         $maxID = $numberPart;
+            //     }
+            // }
+            // $newProjectID = 'PJ' . ($maxID + 1);
 
-            $result = ProjectModel::getCreateProject($newProjectID, $Ten, $NgayGiao, $HanChotDuKien, $HanChot, $QuanLy);
+            $result = ProjectModel::getCreateProject( $Ten, $NgayGiao, $HanChotDuKien, $HanChot, $QuanLy);
 
             echo json_encode([
                 'success' => $result, 
