@@ -477,26 +477,7 @@ class UserModel {
         $db->close();
         return $cactivities;
     }
-    // Lấy thông tin chấm công
-    public static function getCheckInOut($empID) {
-        $db = new Database();
-        $conn = $db->connect();
-    
-        // Lấy ngày hiện tại
-        $today = date('Y-m-d');
-    
-        $stmt = $conn->prepare("SELECT Time_checkin, Time_checkout 
-                                FROM Check_inout 
-                                WHERE EmpID = ? AND Date_checkin = ?");
-        $stmt->bind_param("is", $empID, $today);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $checkInOut = $result->fetch_assoc();
-    
-        $stmt->close();
-        $db->close();
-        return $checkInOut;
-    }
+
 
     public static function getPoint_Month($empID) {
         $db = new Database();
@@ -524,63 +505,6 @@ class UserModel {
         return $monthlyPoints;
     }
 
-    public static function UpCheckInOut($empID) {
-        $db = new Database();
-        $conn = $db->connect();
-        
-        // Lấy thông tin check-in/check-out hiện tại
-        $stmt = $conn->prepare("SELECT STT, Time_checkin, Time_checkout FROM Check_inout WHERE EmpID = ? AND Date_checkin = CURDATE() AND Nghi != '1';");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        $statusinout = '';
-        
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-    
-            if (is_null($row['Time_checkin'])) {
-                $updateStmt = $conn->prepare("
-                    UPDATE Check_inout 
-                    SET Time_checkin = CURTIME(), 
-                        Late = CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END 
-                    WHERE STT = ?
-                ");
-                $updateStmt->bind_param("i", $row['STT']);
-                $updateStmt->execute();
-                $updateStmt->close();
-                $statusinout = 'checked-in';
-            } 
-            else if (is_null($row['Time_checkout'])) {
-                $updateStmt = $conn->prepare("
-                    UPDATE Check_inout 
-                    SET Time_checkout = CURTIME(), 
-                        Overtime = CASE WHEN CURTIME() > '17:00:00' THEN 1 ELSE 0 END 
-                    WHERE STT = ?
-                ");
-                $updateStmt->bind_param("i", $row['STT']);
-                $updateStmt->execute();
-                $updateStmt->close();
-                $statusinout = 'checked-out';
-            } else {
-                $statusinout = 'already-checked-out';
-            }
-        } else {
-            $insertStmt = $conn->prepare("
-                INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin, Late) 
-                VALUES (?, CURDATE(), CURTIME(), CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END)
-            ");
-            $insertStmt->bind_param("i", $empID);
-            $insertStmt->execute();
-            $insertStmt->close();
-            $statusinout = 'checked-in';
-        }
-    
-        $stmt->close();
-        $db->close();
-    
-        return $statusinout;
-    }
     
      //===================================Quản lý========================================
      public static function getDeadlinesTimesheet_QL($empID) {
@@ -1181,33 +1105,179 @@ class UserModel {
     
         return $total;
     }
+
+    public function GetTime_checkInOut($empID) {
+        
+        $url = $this->apiUrl . '/CurrentTimesheet/' . $empID;
+
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
+
+        $response = file_get_contents($url);
+        $checkinoutData = json_decode($response, true);
+        $CheckInOut = [
+            'STT' => null,
+            'Time_checkin' => null,
+            'Time_checkout' => null,
+            'WorkFromHome' => 0,
+            'Nghi' => 0,
+            'Late' => 0,
+            'Overtime' => 0,
+        ];
+        if($checkinoutData){
+            $CheckInOut['STT'] =  $checkinoutData['stt'];
+            $CheckInOut['Time_checkin'] =  $checkinoutData['timeCheckin'];
+            $CheckInOut['Time_checkout'] =  $checkinoutData['timeCheckout'];
+            $CheckInOut['WorkFromHome'] =  $checkinoutData['workFromHome'];
+            $CheckInOut['Nghi'] =  $checkinoutData['nghi'];
+            $CheckInOut['Late'] =  $checkinoutData['late'];
+            $CheckInOut['Overtime'] =  $checkinoutData['overtime'];
+        }
+        return $CheckInOut;
+
+    }
+
     
-    public static function GetTime_checkInOut($empID) {
+    public function UpCheckInOut2($empID) {
         $db = new Database();
         $conn = $db->connect();
-        $stmt = $conn->prepare("SELECT Time_checkin, Time_checkout, WorkFromHome, Nghi FROM Check_inout WHERE EmpID = ? AND Date_checkin =  CURDATE();");
+        $statusinout = '';
+        $url = $this->apiUrl . '/CurrentTimesheet/' . $empID;
+
+        $CheckInOut = $this->GetTime_checkInOut($empID);   
+        if ($CheckInOut) {
+    
+            if (is_null($CheckInOut['Time_checkin'])) {
+                $updateStmt = $conn->prepare("
+                    UPDATE Check_inout 
+                    SET Time_checkin = CURTIME(), 
+                        Late = CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END 
+                    WHERE STT = ?
+                ");
+                $updateStmt->bind_param("i",  $CheckInOut ['STT']);
+                $updateStmt->execute();
+                $updateStmt->close();
+                $statusinout = 'checked-in';
+            } 
+            else if (is_null($CheckInOut['Time_checkout'])) {
+                $updateStmt = $conn->prepare("
+                    UPDATE Check_inout 
+                    SET Time_checkout = CURTIME(), 
+                        Overtime = CASE WHEN CURTIME() > '17:00:00' THEN 1 ELSE 0 END 
+                    WHERE STT = ?
+                ");
+                $updateStmt->bind_param("i", $CheckInOut['STT']);
+                $updateStmt->execute();
+                $updateStmt->close();
+                $statusinout = 'checked-out';
+            } else {
+                $statusinout = 'already-checked-out';
+            }
+        } else {
+            $insertStmt = $conn->prepare("
+                INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin, Late) 
+                VALUES (?, CURDATE(), CURTIME(), CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END)
+            ");
+            $insertStmt->bind_param("i", $empID);
+            $insertStmt->execute();
+            $insertStmt->close();
+            $statusinout = 'checked-in';
+        }
+    
+        $db->close();
+    
+        return $statusinout;
+    }
+
+    public static function UpCheckInOut($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+        
+
+        $stmt = $conn->prepare("SELECT STT, Time_checkin, Time_checkout FROM Check_inout WHERE EmpID = ? AND Date_checkin = CURDATE();");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $CheckInOuts = [
-            'Time_checkin' => null,
-            'Time_checkout' => null,
-            'WorkFromHome' => '0',
-            'Nghi' => '0',
-        ];
-
-        if($result->num_rows > 0){
-            $u = $result->fetch_assoc();
-
-            $CheckInOuts['Time_checkin'] = $u['Time_checkin'];
-            $CheckInOuts['Time_checkout'] = $u['Time_checkout'];
-            $CheckInOuts['WorkFromHome'] = $u['WorkFromHome'];
-            $CheckInOuts['Nghi'] = $u['Nghi'];
+    
+        $statusinout = '';
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+    
+            if (is_null($row['Time_checkin'])) {
+                $updateStmt = $conn->prepare("
+                    UPDATE Check_inout 
+                    SET Time_checkin = CURTIME(), 
+                        Late = CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END 
+                    WHERE STT = ?
+                ");
+                $updateStmt->bind_param("i", $row['STT']);
+                $updateStmt->execute();
+                $updateStmt->close();
+                $statusinout = 'checked-in';
+            } 
+            else if (is_null($row['Time_checkout'])) {
+                $updateStmt = $conn->prepare("
+                    UPDATE Check_inout 
+                    SET Time_checkout = CURTIME(), 
+                        Overtime = CASE WHEN CURTIME() > '17:00:00' THEN 1 ELSE 0 END 
+                    WHERE STT = ?
+                ");
+                $updateStmt->bind_param("i", $row['STT']);
+                $updateStmt->execute();
+                $updateStmt->close();
+                $statusinout = 'checked-out';
+            } else {
+                $statusinout = 'already-checked-out';
+            }
+        } else {
+            $insertStmt = $conn->prepare("
+                INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin, Late) 
+                VALUES (?, CURDATE(), CURTIME(), CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END)
+            ");
+            $insertStmt->bind_param("i", $empID);
+            $insertStmt->execute();
+            $insertStmt->close();
+            $statusinout = 'checked-in';
         }
+    
         $stmt->close();
         $db->close();
-        return $CheckInOuts;
+    
+        return $statusinout;
     }
+
+    private function callAPI($method, $url, $data = false) {
+        $curl = curl_init();
+    
+        switch ($method){
+            case "POST":
+                curl_setopt($curl, CURLOPT_POST, 1);
+                if ($data)
+                    curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+                break;
+            case "PUT":
+                curl_setopt($curl, CURLOPT_PUT, 1);
+                break;
+            default:
+                if ($data)
+                    $url = sprintf("%s?%s", $url, http_build_query($data));
+        }
+    
+        // Các tùy chọn cURL khác
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    
+        // Thực hiện request
+        $result = curl_exec($curl);
+        if(!$result){die("Connection Failure");}
+        curl_close($curl);
+        
+        return json_decode($result, true);  // Trả về dữ liệu dưới dạng mảng
+    }
+    
 }
     
 

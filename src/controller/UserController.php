@@ -17,7 +17,8 @@ class UserController{
         } else {
             $_SESSION['logged_in'] = true;
             $_SESSION['user'] = $user;
-            $checkInOut = UserModel::GetTime_checkInOut($user['EmpID']);
+            $checkInOut =  $model->GetTime_checkInOut($user['EmpID']);
+
             $_SESSION['CheckInOut']= $checkInOut;
             
             if (isset($_SESSION['redirect_url'])) {
@@ -42,9 +43,11 @@ class UserController{
     public function CheckInOut(){
         if (isset($_SESSION['user'])) {
             $empID = $_SESSION['user']['EmpID'];
-            
+            $apiUrl = 'http://localhost:9003/apiProfile';
+            $model = new UserModel($apiUrl);
+
             $statusinout = UserModel::UpCheckInOut($empID);
-            $checkInOut = UserModel::GetTime_checkInOut($_SESSION['user']['EmpID']);
+            $checkInOut =  $model-> GetTime_checkInOut($_SESSION['user']['EmpID']);
             $_SESSION['CheckInOut']= $checkInOut;
            
             
