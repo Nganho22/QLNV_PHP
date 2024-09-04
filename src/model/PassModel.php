@@ -4,28 +4,12 @@ require_once __DIR__ . '/../config/MySQLconnect.php';
 class PassModel {
     private $db;
 
+    /*
     private $apiUrl;
 
     public function __construct($apiUrl) {
         $this->apiUrl = $apiUrl;
-    }
-
-    private function isApiAvailable($url) {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-    
-        $result = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-    
-        if ($result !== false && $httpCode == 200) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+    }*/
 
     public function isEmailExists($email) {
         $sql = "SELECT * FROM Profile WHERE Email = ?";

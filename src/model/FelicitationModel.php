@@ -84,6 +84,7 @@ class FelicitationModel {
 
     //UpdatePoint cho Felicitation
     public static function addFelicitation($point, $nguoiNhan, $nguoiTang) {
+        
         $noiDung = "Nhờ hoàn thành time-sheet";
     
         $db = new Database();

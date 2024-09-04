@@ -8,6 +8,8 @@ use PHPMailer\PHPMailer\Exception;
 
 class PasswordController {
     private $model;
+    private $apiUrlActivity = 'http://localhost:9002/apiActivity';
+
 
     public function __construct() {
         $this->model = new PassModel();
