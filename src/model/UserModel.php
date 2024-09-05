@@ -49,12 +49,12 @@ class UserModel {
 
         if ($userData) {
             $user = [
-                'EmpID' => $userData['empID'],
-                'PhongID' => $userData['phongID'],
-                'HoTen' => $userData['hoTen'],
+                'EmpID' => $userData['empid'],
+                'PhongID' => $userData['phongid'],
+                'HoTen' => $userData['hoten'],
                 'Role' => $userData['role'],
                 'Image' => 'public/img/avatar/' . $userData['image'],
-                'TenPhong' => $userData['tenPhong']
+                'TenPhong' => $userData['tenphong']
             ];
             return $user;
         }
@@ -1014,18 +1014,30 @@ class UserModel {
         $stmt = $conn->prepare("
             SELECT 
                 PhongBan.*, 
-                Profile.HoTen 
+                Profile.hoten 
             FROM PhongBan 
             LEFT JOIN Profile 
             ON 
-                PhongBan.QuanLyID = Profile.EmpID
+                PhongBan.quanlyid = Profile.empid
             LIMIT ? OFFSET ?
         ");
         $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
-        $phongBans = $result->fetch_all(MYSQLI_ASSOC);
-    
+        $phongBans = [];    
+        while ($row = $result->fetch_assoc()) {
+            
+            $phongBan = [
+                'PhongID' => $row['phongid'],
+                'TenPhong' => $row['tenphong'],
+                'QuanLyID' => $row['quanlyid'],
+                'SoThanhVien' => $row['sothanhvien']
+            ];
+            
+         
+            $phongBans[] = $phongBan;
+        }
+
         $stmt->close();
         $db->close();
         return $phongBans;
@@ -1127,9 +1139,9 @@ class UserModel {
         ];
         if($checkinoutData){
             $CheckInOut['STT'] =  $checkinoutData['stt'];
-            $CheckInOut['Time_checkin'] =  $checkinoutData['timeCheckin'];
-            $CheckInOut['Time_checkout'] =  $checkinoutData['timeCheckout'];
-            $CheckInOut['WorkFromHome'] =  $checkinoutData['workFromHome'];
+            $CheckInOut['Time_checkin'] =  $checkinoutData['timecheckin'];
+            $CheckInOut['Time_checkout'] =  $checkinoutData['timecheckout'];
+            $CheckInOut['WorkFromHome'] =  $checkinoutData['workfromhome'];
             $CheckInOut['Nghi'] =  $checkinoutData['nghi'];
             $CheckInOut['Late'] =  $checkinoutData['late'];
             $CheckInOut['Overtime'] =  $checkinoutData['overtime'];

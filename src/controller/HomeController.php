@@ -58,7 +58,6 @@ class HomeController{
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
                 case 'Giám đốc':
-
                     $limit = 6;
                     $searchTerm_NV = isset($_GET['search_nhanvien']) ? $_GET['search_nhanvien'] : '';
                     $page_NV = isset($_GET['page_nhanvien']) ? (int)$_GET['page_nhanvien'] : 1;
@@ -169,7 +168,6 @@ class HomeController{
                     break;
 
             }
-            
             if ($file && file_exists($file)) {
                 $message='';
                 if (isset($_GET['status'])) {
