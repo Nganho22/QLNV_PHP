@@ -25,55 +25,59 @@ class RequestModel {
         }
     }
 
-    public static function getRequestCountsByEmpID($user_id) {
-        $db = new Database();
-        $conn = $db->connect();
-        
-        $totalRequestsQuery = "SELECT COUNT(RequestID) as total FROM Request WHERE EmpID = ?";
-        $stmt = $conn->prepare($totalRequestsQuery);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $totalRequests = $result->fetch_assoc()['total'];
-    
-        $pendingRequestsQuery = "SELECT COUNT(RequestID) as pending FROM Request WHERE EmpID = ? AND TrangThai = 0";
-        $stmt = $conn->prepare($pendingRequestsQuery);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $pendingRequests = $result->fetch_assoc()['pending'];
-    
-        $approvedRequestsQuery = "SELECT COUNT(RequestID) as approved FROM Request WHERE EmpID = ? AND TrangThai != 0";
-        $stmt = $conn->prepare($approvedRequestsQuery);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $approvedRequests = $result->fetch_assoc()['approved'];
+    public function getRequestCountsByEmpID($user_id) {
+        $url = $this->apiUrl . "/counts/" . $user_id;
 
-        $stmt->close();
-        $db->close();
-        return [
-            'total' => $totalRequests,
-            'pending' => $pendingRequests,
-            'approved' => $approvedRequests
-        ];
+        if ($this->isApiAvailable($url)) {
+            $ch = curl_init($url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+            
+            if ($httpCode == 200) {
+                $result = json_decode($response, true);
+                return [
+                    'total' => $result['total'],
+                    'pending' => $result['pending'],
+                    'approved' => $result['approved']
+                ];
+            } else {
+                return [
+                    'total' => 0,
+                    'pending' => 0,
+                    'approved' => 0
+                ];
+            }
+        } else {
+            return [
+                'total' => 0,
+                'pending' => 0,
+                'approved' => 0
+            ];
+        }
     }
 
-    public static function getPendingRequestsByEmpID($user_id, $limit, $offset) {
-        $db = new Database();
-        $conn = $db->connect();
+    public function getPendingRequestsByEmpID($user_id, $limit, $offset) {
+        $url = $this->apiUrl . "/pending?empID=$user_id&limit=$limit&offset=$offset";
 
-        $query = "SELECT * FROM Request WHERE EmpID = ? AND TrangThai = 0 ORDER BY NgayGui DESC LIMIT ? OFFSET ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('iii', $user_id, $limit, $offset);
-        $stmt->execute();
-        
-        $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
 
-        $stmt->close();
-        $db->close();
-        return $requests;
+        $response = file_get_contents($url);
+        $results = json_decode($response, true);
+
+        if ($results) {
+            $result = [
+                'TieuDe' => $results['tieude'],
+                'Loai' => $results['loai'],
+                'NgayGui' => $results['ngaygui'],
+                'NgayXuLy' => $results['ngayxuly'],
+                'TrangThai' => $results['trangthai']
+            ];
+            return $result;
+        }
     }
 
     public static function getApprovedRequestsByEmpID($user_id, $limit, $offset) {
@@ -93,20 +97,16 @@ class RequestModel {
         return $requests;
     }
 
-    public static function countPendingRequests($user_id) {
-        $db = new Database();
-        $conn = $db->connect();
+    public function countPendingRequests($user_id) {
+        $url = $this->apiUrl . "/count/pending?empID=$user_id";
 
-        $query = "SELECT COUNT(RequestID) as total FROM Request WHERE EmpID = ? AND TrangThai = 0";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
         
-        $result = $stmt->get_result();
-        $total = $result->fetch_assoc()['total'];
+        $response = file_get_contents($url);
+        $total = json_decode($response, true);
 
-        $stmt->close();
-        $db->close();
         return $total;
     }
 

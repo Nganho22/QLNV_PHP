@@ -7,6 +7,8 @@ class RequestController {
             $title = 'Yêu cầu';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
+            $apiUrl = 'http://localhost:9004/apiRequest';
+            $model = new RequestModel($apiUrl);
             //NV
             $limit = 3;
             $pagePending = isset($_GET['pagePending']) ? (int)$_GET['pagePending'] : 1;
@@ -26,10 +28,10 @@ class RequestController {
             switch ($role) {
                 case 'Nhân viên':
                     $file = "./views/pages/NV/request.phtml";
-                    $creq = RequestModel::getRequestCountsByEmpID($user_id);
-                    $pendingRequests = RequestModel::getPendingRequestsByEmpID($user_id, $limit, $offsetPending);
+                    $creq = $model->getRequestCountsByEmpID($user_id);
+                    $pendingRequests =  $model->getPendingRequestsByEmpID($user_id, $limit, $offsetPending);
                     $approvedRequests = RequestModel::getApprovedRequestsByEmpID($user_id, $limit, $offsetApproved);
-                    $totalPending = RequestModel::countPendingRequests($user_id);
+                    $totalPending =  $model->countPendingRequests($user_id);
                     $totalApproved = RequestModel::countApprovedRequests($user_id);
     
                     if (isset($_GET['ajax'])) {
