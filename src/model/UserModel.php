@@ -2,16 +2,6 @@
 require_once __DIR__ . '/../config/MySQLconnect.php';
 
 class UserModel {
-    public $EmpID;
-    public $Role;
-    public $HoTen;
-    public $Email;
-    public $TenTaiKhoan;
-    public $TinhTrang;
-    public $Phong;
-    public $Checkin;
-    public $Checkout;
-    public $workcheck;
 
     private $apiUrl;
 
@@ -66,7 +56,7 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT PhongID, Role, HoTen, Email, GioiTinh, SoDienThoai, CCCD, STK, Luong, DiemThuong, DiaChi, Image 
+        $stmt = $conn->prepare("SELECT phongid, role, hoten, email, gioitinh, sodienthoai, CCCD, STK, Luong, DiemThuong, DiaChi, Image 
                                 FROM Profile WHERE EmpID = ?");
         $stmt->bind_param("i", $user_id,);
         $stmt->execute();
@@ -103,6 +93,7 @@ class UserModel {
 
             $profile['Image'] = 'public/img/avatar/'.$u['Image'];
             $profile['Image_name'] = $u['Image'];
+            
 
             if (!is_null($u['PhongID'])) {
                 $phong_stmt = $conn->prepare("SELECT TenPhong FROM PhongBan WHERE PhongID = ?");
