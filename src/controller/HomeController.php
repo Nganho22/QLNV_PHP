@@ -205,12 +205,11 @@ class HomeController{
             $title='Profile';
             $user_id = $_SESSION['user']['EmpID'];
             $profile = UserModel::getprofile($user_id);
-            $timesheet = UserModel::gettimesheet($user_id);
+            $timesheets = UserModel::gettimesheet($user_id);
             $cNghi= UserModel::getCountNghiPhep($user_id);
             $cTre= UserModel::getCountTre($user_id);
             $cPrj = UserModel::getCountPrj_GD();
             $listPrj = UserModel::getListPrj_GD();
-
             if ($_SESSION['user']['Role'] == 'Nhân viên') {
                 $cPrj_NV = UserModel::getCountPrj_NV($user_id);
                 $listPrj_NV = UserModel::getListPrj_NV($user_id);
@@ -238,6 +237,7 @@ class HomeController{
             $content = ob_get_clean();
             require(__DIR__ . '/../views/template.phtml');
         }
+        
         else{
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
             exit();

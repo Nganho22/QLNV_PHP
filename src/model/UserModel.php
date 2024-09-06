@@ -56,8 +56,8 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT phongid, role, hoten, email, gioitinh, sodienthoai, CCCD, STK, Luong, DiemThuong, DiaChi, Image 
-                                FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid, role, hoten, email, gioitinh, sodienthoai, cccd, stk, luong, diemthuong, diachi, image 
+                                FROM profile WHERE empid = ?");
         $stmt->bind_param("i", $user_id,);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -80,29 +80,29 @@ class UserModel {
         if($result->num_rows > 0){
             $u = $result->fetch_assoc();
 
-            $profile['HoTen'] = $u['HoTen'];
-            $profile['Role'] = $u['Role'];
-            $profile['Email'] = $u['Email'];
-            $profile['GioiTinh'] = $u['GioiTinh'];
-            $profile['SoDienThoai'] = $u['SoDienThoai'];
-            $profile['CCCD'] = $u['CCCD'];
-            $profile['STK'] = $u['STK'];
-            $profile['Luong'] = $u['Luong'];
-            $profile['DiemThuong'] = $u['DiemThuong'];
-            $profile['DiaChi'] = $u['DiaChi'];
+            $profile['HoTen'] = $u['hoten'];
+            $profile['Role'] = $u['role'];
+            $profile['Email'] = $u['email'];
+            $profile['GioiTinh'] = $u['gioitinh'];
+            $profile['SoDienThoai'] = $u['sodienthoai'];
+            $profile['CCCD'] = $u['cccd'];
+            $profile['STK'] = $u['stk'];
+            $profile['Luong'] = $u['luong'];
+            $profile['DiemThuong'] = $u['diemthuong'];
+            $profile['DiaChi'] = $u['diachi'];
 
-            $profile['Image'] = 'public/img/avatar/'.$u['Image'];
-            $profile['Image_name'] = $u['Image'];
+            $profile['Image'] = 'public/img/avatar/'.$u['image'];
+            $profile['Image_name'] = $u['image'];
             
 
-            if (!is_null($u['PhongID'])) {
-                $phong_stmt = $conn->prepare("SELECT TenPhong FROM PhongBan WHERE PhongID = ?");
+            if (!is_null($u['phongid'])) {
+                $phong_stmt = $conn->prepare("SELECT tenphong FROM PhongBan WHERE phongid = ?");
                 $phong_stmt->bind_param("i", $u['PhongID']);
                 $phong_stmt->execute();
                 $phong_result = $phong_stmt->get_result();
                 if ($phong_result->num_rows > 0) {
                     $phong_row = $phong_result->fetch_assoc();
-                    $profile['TenPhong'] = $phong_row['TenPhong'];
+                    $profile['TenPhong'] = $phong_row['tenphong'];
                 }
                 $phong_stmt->close();
             }
@@ -118,28 +118,43 @@ class UserModel {
         $conn = $db->connect();
 
         $stmt = $conn->prepare("SELECT * 
-                                FROM Time_sheet WHERE EmpID = ?");
+                                FROM time_sheet WHERE empid = ?");
         $stmt->bind_param("i", $user_id,);
         $stmt->execute();
         $result = $stmt->get_result();
-
-        $timesheet = array();
+        $timesheets = array();
         while ($row = $result->fetch_assoc()) {
-            $timesheet[] = $row;
-        }
+            $timesheet =[
+                'Time_SheetID' => $row['time_sheetid'],
+                'ProjectID' => $row['projectid'],
+                'EmpID' => $row['empid'],
+                'TenDuAn' => $row['tenduan'],
+                'NguoiGui' => $row['nguoigui'],
+                'PhongBan' => $row['phongban'],
+                'TrangThai' => $row['trangthai'],
+                'SoGioThucHien' => $row['sogiothuchien'],
+                'NgayGiao' => $row['ngaygiao'],
+                'HanChot' => $row['hanchot'],
+                'DiemThuong' => $row['diemthuong'],
+                'Tre' => $row['tre'],
+                'NoiDung' => $row['noidung']
 
+            ];
+            $timesheets[]=$timesheet;
+            
+        }
         $stmt->close();
         $db->close();
-        return $timesheet;
+        return $timesheets;
     }
 
     public static function getCountPrj_NV($user_id) {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT COUNT(DISTINCT ProjectID) AS total_projects 
+        $stmt = $conn->prepare("SELECT COUNT(DISTINCT projectid) AS total_projects 
                                     FROM Time_sheet 
-                                    WHERE EmpID = ?");
+                                    WHERE empid = ?");
         $stmt->bind_param("i", $user_id,);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -155,9 +170,9 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT COUNT(DISTINCT ProjectID) AS total_projects 
+        $stmt = $conn->prepare("SELECT COUNT(DISTINCT projectid) AS total_projects 
                                     FROM Project 
-                                    WHERE QuanLy = ?");
+                                    WHERE quanly = ?");
         $stmt->bind_param("i", $user_id,);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -173,8 +188,8 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT COUNT(ProjectID) AS total_projects 
-                                    FROM Project");
+        $stmt = $conn->prepare("SELECT COUNT(projectid) AS total_projects 
+                                    FROM project");
         $stmt->execute();
         $result = $stmt->get_result();
         $cPrj = $result->fetch_assoc()['total_projects'];
@@ -189,9 +204,9 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT COUNT(Nghi) as total_nghi
+        $stmt = $conn->prepare("SELECT COUNT(nghi) as total_nghi
                                     FROM Check_inout
-                                    WHERE EmpID = ? and Nghi = 1");
+                                    WHERE empid = ? and nghi = 1");
         $stmt->bind_param("i", $user_id,);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -207,9 +222,9 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT COUNT(Late) as countTre
+        $stmt = $conn->prepare("SELECT COUNT(late) as countTre
                                     FROM Check_inout
-                                    WHERE EmpID = ? and Late = 1");
+                                    WHERE empid = ? and late = 1");
         $stmt->bind_param("i", $user_id,);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -225,23 +240,23 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $stmt = $conn->prepare("SELECT DISTINCT ProjectID FROM Time_sheet WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT DISTINCT projectid FROM Time_sheet WHERE empid = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
     
         $projects = [];
         while ($row = $result->fetch_assoc()) {
-            $project_id = $row['ProjectID'];
+            $project_id = $row['projectid'];
     
-            $project_stmt = $conn->prepare("SELECT TienDo FROM Project WHERE ProjectID = ?");
+            $project_stmt = $conn->prepare("SELECT tiendo FROM Project WHERE projectid = ?");
             $project_stmt->bind_param("i", $project_id);
             $project_stmt->execute();
             $project_result = $project_stmt->get_result();
     
             if ($project_result->num_rows > 0) {
                 $project_data = $project_result->fetch_assoc();
-                $tien_do_str = $project_data['TienDo'];
+                $tien_do_str = $project_data['tiendo'];
                 
                 $tien_do_percentage = (float) str_replace('%', '', $tien_do_str);
                 
@@ -262,17 +277,17 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $stmt = $conn->prepare("SELECT ProjectID, TienDo FROM Project WHERE QuanLy = ?");
+        $stmt = $conn->prepare("SELECT projectid, tiendo FROM Project WHERE quanly = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
     
         $projects = [];
         while ($row = $result->fetch_assoc()) {
-            $tienDo = str_replace('%', '', $row['TienDo']);
+            $tienDo = str_replace('%', '', $row['tiendo']);
     
             $projects[] = [
-                'ProjectID' => $row['ProjectID'],
+                'ProjectID' => $row['projectid'],
                 'TienDo' => (int)$tienDo
             ];
         }
@@ -287,16 +302,16 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $stmt = $conn->prepare("SELECT ProjectID, TienDo FROM Project");
+        $stmt = $conn->prepare("SELECT projectid, tiendo FROM Project");
         $stmt->execute();
         $result = $stmt->get_result();
     
         $projects = [];
         while ($row = $result->fetch_assoc()) {
-            $tienDo = str_replace('%', '', $row['TienDo']);
+            $tienDo = str_replace('%', '', $row['tiendo']);
     
             $projects[] = [
-                'ProjectID' => $row['ProjectID'],
+                'ProjectID' => $row['projectid'],
                 'TienDo' => (int)$tienDo
             ];
         }
@@ -312,11 +327,11 @@ class UserModel {
         $conn = $db->connect();
 
         if ($newPass) {
-            $sql = "UPDATE Profile SET GioiTinh = ?, CCCD = ?, SoDienThoai = ?, STK = ?, DiaChi = ?, Image = ?, MatKhau = ? WHERE EmpID = ?";
+            $sql = "UPDATE Profile SET gioitinh = ?, cccd = ?, sodienthoai = ?, stk = ?, diachi = ?, image = ?, matkhau = ? WHERE empid = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("sssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $newPass, $suser_id);
         } else {
-            $sql = "UPDATE Profile SET GioiTinh = ?, CCCD = ?, SoDienThoai = ?, STK = ?, DiaChi = ?, Image = ? WHERE EmpID = ?";
+            $sql = "UPDATE Profile SET gioitinh = ?, cccd = ?, sodienthoai = ?, stk = ?, diachi = ?, image = ? WHERE empid = ?";
             $stmt = $conn->prepare($sql);
             $stmt->bind_param("ssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $suser_id);
         }
@@ -324,11 +339,6 @@ class UserModel {
         $stmt->close(); // Close statement
         return $result;
     }
-
-    public static function checkpw($user_id, $pw) {
-       
-    }
-
     //Phần Home
 
     // Hàm để lấy PhongID của nhân viên dựa trên EmpID
@@ -338,15 +348,15 @@ class UserModel {
         $conn = $db->connect();
 
         $stmt = $conn->prepare(
-            "SELECT PhongID 
+            "SELECT phongid 
             FROM Profile 
-            WHERE EmpID = ?"
+            WHERE empid = ?"
         );
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $phongID = $result->fetch_assoc()['PhongID'];
+        $phongID = $result->fetch_assoc()['phongid'];
 
         $stmt->close();
         $db->close();
@@ -360,9 +370,9 @@ class UserModel {
             $db = new Database();
             $conn = $db->connect();
         
-            $stmt = $conn->prepare("SELECT Time_sheet.TenDuAn, Time_sheet.HanChot 
+            $stmt = $conn->prepare("SELECT Time_sheet.tenduan, Time_sheet.hanchot 
                                     FROM Time_sheet
-                                    WHERE Time_sheet.EmpID = ?");
+                                    WHERE Time_sheet.empid = ?");
             $stmt->bind_param("i", $empID);
             $stmt->execute();
             $result = $stmt->get_result();
@@ -370,8 +380,8 @@ class UserModel {
             $deadlines = [];
             while ($row = $result->fetch_assoc()) {
                 $deadlines[] = [
-                    'TenDuAn' => $row['TenDuAn'],
-                    'HanChot' => $row['HanChot']
+                    'TenDuAn' => $row['tenduan'],
+                    'HanChot' => $row['hanchot']
                 ];
             }
         
@@ -385,17 +395,23 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Time_sheet.TrangThai
+        $stmt = $conn->prepare("SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai
                                 FROM Time_sheet
-                                JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
-                                WHERE Time_sheet.EmpID = ? AND Time_sheet.TrangThai = 'Chưa hoàn thành' LIMIT 3" );
+                                JOIN Project ON Time_sheet.projectid = Project.projectid 
+                                WHERE Time_sheet.empid = ? AND Time_sheet.trangthai = 'Chưa hoàn thành' LIMIT 3" );
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
 
         $projects = [];
         while ($row = $result->fetch_assoc()) {
-            $projects[] = $row;
+            $project =[
+                'Ten' => $row['ten'],
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'TrangThai' => $row['trangthai']
+
+            ];
+            $projects[]=$project;
         }
 
         $stmt->close();
@@ -407,67 +423,31 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Time_sheet.TrangThai
+        $stmt = $conn->prepare("SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai
                                 FROM Time_sheet
                                 JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
-                                WHERE Time_sheet.EmpID = ? " );
+                                WHERE Time_sheet.empid = ? " );
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $cprojects = [];
+        $projects = [];
         while ($row = $result->fetch_assoc()) {
-            $cprojects[] = $row;
-        }
+            $project =[
+                'Ten' => $row['ten'],
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'TrangThai' => $row['trangthai']
 
+            ];
+            $projects[]=$project;
+        }
         $stmt->close();
         $db->close();
-        return $cprojects;
+        return $projects;
     }
     // Lấy danh sách hoạt động   
-    public static function getActivities($empID) {
-        $db = new Database();
-        $conn = $db->connect();
+   
 
-        $stmt = $conn->prepare("SELECT Activity.TenHoatDong, emp_activity.ThoiGianThucHien, emp_activity.ThanhTich
-                                FROM Activity 
-                                JOIN emp_activity ON Activity.ActivityID = emp_activity.ActivityID
-                                WHERE emp_activity.EmpID = ? LIMIT 3");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $activities = [];
-        while ($row = $result->fetch_assoc()) {
-            $activities[] = $row;
-        }
-
-        $stmt->close();
-        $db->close();
-        return $activities;
-    }
-
-    public static function getCountActivities($empID) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT Activity.TenHoatDong, emp_activity.ThoiGianThucHien, emp_activity.ThanhTich
-                                FROM Activity 
-                                JOIN emp_activity ON Activity.ActivityID = emp_activity.ActivityID
-                                WHERE emp_activity.EmpID = ?");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $cactivities = [];
-        while ($row = $result->fetch_assoc()) {
-            $cactivities[] = $row;
-        }
-
-        $stmt->close();
-        $db->close();
-        return $cactivities;
-    }
 
 
     public static function getPoint_Month($empID) {
@@ -475,11 +455,11 @@ class UserModel {
         $conn = $db->connect();
     
         $stmt = $conn->prepare("
-            SELECT MONTH(Date) AS month, SUM(Point) AS total_points
+            SELECT MONTH(date) AS month, SUM(point) AS total_points
             FROM Felicitation
-            WHERE NguoiNhan = ?
-            GROUP BY MONTH(Date)
-            ORDER BY MONTH(Date)
+            WHERE nguoinhan = ?
+            GROUP BY MONTH(date)
+            ORDER BY MONTH(date)
         ");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
@@ -502,9 +482,9 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChot 
+        $stmt = $conn->prepare("SELECT Project.ten, Project.hanchot 
                                 FROM Project
-                                WHERE Project.QuanLy = ?");
+                                WHERE Project.quanly = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -512,8 +492,8 @@ class UserModel {
         $deadlines = [];
         while ($row = $result->fetch_assoc()) {
             $deadlines[] = [
-                'TenDuAn' => $row['Ten'],
-                'HanChot' => $row['HanChot']
+                'TenDuAn' => $row['ten'],
+                'HanChot' => $row['hanchot']
             ];
         }
     
@@ -526,19 +506,25 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT p.Ten AS ProjectName, 
-                                       p.TienDo, p.TinhTrang
+        $stmt = $conn->prepare("SELECT p.ten AS ProjectName, 
+                                       p.tiendo, p.tinhtrang
                                 FROM Project p
-                                JOIN Profile prof ON p.QuanLy = prof.EmpID
-                                WHERE prof.EmpID = ? AND p.TinhTrang <> 'Đã hoàn thành'
-                                ORDER BY p.NgayGiao DESC");
+                                JOIN Profile prof ON p.quanly = prof.empid
+                                WHERE prof.empid = ? AND p.tinhtrang <> 'Đã hoàn thành'
+                                ORDER BY p.ngaygiao DESC");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
 
         $projects = [];
         while ($row = $result->fetch_assoc()) {
-            $projects[] = $row;
+            $project=[
+            'ProjectName' => $row['ProjectName'],
+            'TienDo' => $row['tiendo'],
+            'TinhTrang' => $row['tinhtrang']
+            ];
+
+            $projects[] = $project;
         }
 
         $stmt->close();
@@ -551,11 +537,11 @@ class UserModel {
         $conn = $db->connect();
         
         // Lấy PhongID của quản lý
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $phongID = $result->fetch_assoc()['PhongID'];
+        $phongID = $result->fetch_assoc()['phongid'];
         $stmt->close();
     
         if (!$phongID) {
@@ -563,16 +549,21 @@ class UserModel {
             return [];
         }
     
-        $stmt = $conn->prepare("SELECT Profile.EmpID, Profile.HoTen
+        $stmt = $conn->prepare("SELECT Profile.empid, Profile.hoten
                                 FROM Profile
-                                WHERE Profile.PhongID = ?");
+                                WHERE Profile.phongid = ?");
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
         $result = $stmt->get_result();
         
         $employees = [];
         while ($row = $result->fetch_assoc()) {
-            $employees[] = $row;
+            
+            $employee =[
+                'EmpID' => $row['empid'],
+                'HoTen' => $row['hoten']
+            ];
+            $employees[] = $employee;
         }
     
         $stmt->close();
@@ -584,11 +575,11 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
         
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $phongID = $result->fetch_assoc()['PhongID'];
+        $phongID = $result->fetch_assoc()['phongid'];
         $stmt->close();
         
         if (!$phongID) {
