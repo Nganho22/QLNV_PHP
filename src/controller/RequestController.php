@@ -9,13 +9,6 @@ class RequestController {
             $role = $_SESSION['user']['Role'];
             $apiUrl = 'http://localhost:9004/apiRequest';
             $model = new RequestModel($apiUrl);
-            //NV
-            $limit = 3;
-            $pagePending = isset($_GET['pagePending']) ? (int)$_GET['pagePending'] : 1;
-            $pageApproved = isset($_GET['pageApproved']) ? (int)$_GET['pageApproved'] : 1;
-            $offsetPending = ($pagePending - 1) * $limit;
-            $offsetApproved = ($pageApproved - 1) * $limit;
-            $timeSheets = RequestModel::getTimeSheetsByEmpID($user_id);
             //QL
             $qllimit = 7; 
             $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -27,27 +20,31 @@ class RequestController {
   
             switch ($role) {
                 case 'Nhân viên':
+                    $pagePending = isset($_GET['pagePending']) ? (int)$_GET['pagePending'] : 1;
+                    $pageApproved = isset($_GET['pageApproved']) ? (int)$_GET['pageApproved'] : 1;
+                    $limit = 3;
+                    $offsetPending = ($pagePending - 1) ;
+                    $offsetApproved = ($pageApproved - 1) ;
+                    $timeSheets = RequestModel::getTimeSheetsByEmpID($user_id);
+
                     $file = "./views/pages/NV/request.phtml";
                     $creq = $model->getRequestCountsByEmpID($user_id);
                     $pendingRequests =  $model->getPendingRequestsByEmpID($user_id, $limit, $offsetPending);
-                    $approvedRequests = RequestModel::getApprovedRequestsByEmpID($user_id, $limit, $offsetApproved);
+                    $approvedRequests = $model->getApprovedRequestsByEmpID($user_id, $limit, $offsetApproved);
                     $totalPending =  $model->countPendingRequests($user_id);
-                    $totalApproved = RequestModel::countApprovedRequests($user_id);
-    
+                    $totalApproved = $model->countApprovedRequests($user_id);
+                                    
                     if (isset($_GET['ajax'])) {
-                        // Trả về dữ liệu dưới dạng JSON cho AJAX
                         $pendingHtml = '';
                         foreach ($pendingRequests as $request) {
                             $pendingHtml .= '<tr>'
                             . '<td><a href = "index.php?action=GetDetailRequestPage&id=' . htmlspecialchars($request['RequestID']) . '">' 
                                 . htmlspecialchars($request['TieuDe']) . '</a></td>'
-                            // . '<td>' . ($request['TrangThai'] == 0 ? 'Chưa duyệt' : 'Đã duyệt') . '</td>'
                             . '<td>' . htmlspecialchars($request['Loai']) . '</td>'
                             . '<td>' . htmlspecialchars($request['NgayGui']) . '</td>'
                             . '</tr>';
                         
                         }
-    
                         $approvedHtml = '';
                         foreach ($approvedRequests as $request) {
                             $approvedHtml .= '<tr>'

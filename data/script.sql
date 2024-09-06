@@ -3,137 +3,135 @@ CREATE DATABASE QLNV_UDPT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE QLNV_UDPT;
 
 CREATE TABLE PhongBan (
-    PhongID VARCHAR(3) PRIMARY KEY,
-    TenPhong VARCHAR(50),
-    QuanLyID INT,
-    SoThanhVien INT
+	phongid VARCHAR(3) PRIMARY KEY,
+    tenphong VARCHAR(50),
+    quanlyid int,
+    sothanhvien INT
 );
 
 
 CREATE TABLE Profile (
-    EmpID INT AUTO_INCREMENT PRIMARY KEY,
-    PhongID VARCHAR(3),
-    Role VARCHAR(20) DEFAULT 'Nhân viên',
-    HoTen VARCHAR(50) NOT NULL,
-    Email VARCHAR(50) NOT NULL,
-    TenTaiKhoan VARCHAR(50) NOT NULL,
-    MatKhau VARCHAR(50) NOT NULL,
-    GioiTinh VARCHAR(5) DEFAULT 'Nam',
-    SoDienThoai VARCHAR(20),
-    CCCD INT(20),
-    STK INT,
-    Luong FLOAT,
-    DiemThuong INT,
-    TinhTrang INT DEFAULT 1,
-    DiaChi VARCHAR(255),
-    Image VARCHAR(50),
-    FOREIGN KEY (PhongID) REFERENCES PhongBan(PhongID) ON DELETE SET NULL
+	empid INT AUTO_INCREMENT PRIMARY KEY,
+    phongid VARCHAR(3),
+    role VARCHAR(20) DEFAULT 'Nhân viên',
+    hoten VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    tentaikhoan VARCHAR(50) NOT NULL,
+    matkhau VARCHAR(50) NOT NULL,
+    gioitinh VARCHAR(5) DEFAULT 'Nam',
+    sodienthoai VARCHAR(20),
+    cccd INT(20),
+    stk INT,
+    luong FLOAT,
+    diemthuong INT,
+    tinhtrang INT DEFAULT 1,
+    diachi VARCHAR(255),
+    image VARCHAR(50),
+    FOREIGN KEY (phongid) REFERENCES PhongBan(phongid) ON DELETE SET NULL
 );
 
 ALTER TABLE PhongBan
-ADD FOREIGN KEY (QuanLyID) REFERENCES Profile(EmpID);
+ADD FOREIGN KEY (quanlyid) REFERENCES Profile(empid);
 
 
-ALTER TABLE Profile MODIFY Email VARCHAR(50) NOT NULL;
-ALTER TABLE Profile ADD UNIQUE (Email);
+ALTER TABLE Profile MODIFY email VARCHAR(50) NOT NULL;
+ALTER TABLE Profile ADD UNIQUE (email);
 
 CREATE TABLE password_resets (
     email VARCHAR(50) NOT NULL,
     code VARCHAR(6) NOT NULL,
     created_at DATETIME NOT NULL,
     PRIMARY KEY (email, code),
-    FOREIGN KEY (email) REFERENCES Profile(Email) ON DELETE CASCADE
+    FOREIGN KEY (email) REFERENCES Profile(email) ON DELETE CASCADE
 );
 
 CREATE TABLE Check_inout (
-    STT INT AUTO_INCREMENT PRIMARY KEY,
-    EmpID INT,
-    Date_checkin DATE,
-    Time_checkin TIME NULL,
-    Time_checkout TIME NULL,
-    Overtime INT DEFAULT 0,
-    Late INT DEFAULT 0,
-    WorkFromHome INT DEFAULT 0,
-    Nghi INT DEFAULT 0,
-    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID)
+    stt INT AUTO_INCREMENT PRIMARY KEY,
+    empid INT,
+    date_checkin DATE,
+    time_checkin TIME NULL,
+    time_checkout TIME NULL,
+    overtime INT DEFAULT 0,
+    late INT DEFAULT 0,
+    workfromhome INT DEFAULT 0,
+    nghi INT DEFAULT 0,
+    FOREIGN KEY (empid) REFERENCES Profile(empid)
 );
 
 CREATE TABLE Project (
-    ProjectID INT AUTO_INCREMENT PRIMARY KEY,
-    Ten VARCHAR(255),
-    NgayGiao DATE,
-    HanChotDuKien DATE,
-    HanChot DATE,
-    TienDo VARCHAR(10),
-    SoGioThucHanh INT,
-    PhongID VARCHAR(3),
-    QuanLy INT,
-    TinhTrang VARCHAR(50),
-    FOREIGN KEY (QuanLy) REFERENCES Profile(EmpID),
-    FOREIGN KEY (PhongID) REFERENCES PhongBan(PhongID)
+    projectid INT AUTO_INCREMENT PRIMARY KEY,
+    ten VARCHAR(255),
+    ngaygiao DATE,
+    hanchotdukien DATE,
+    hanchot DATE,
+    tiendo VARCHAR(10),
+    sogiothuchanh INT,
+    phongid VARCHAR(3),
+    quanly INT,
+    tinhtrang VARCHAR(50),
+    FOREIGN KEY (quanly) REFERENCES Profile(empid),
+    FOREIGN KEY (phongid) REFERENCES PhongBan(phongid)
 );
 
 CREATE TABLE Time_sheet (
-    Time_sheetID INT AUTO_INCREMENT PRIMARY KEY,
-    ProjectID INT,
-    EmpID INT,
-    TenDuAn VARCHAR(50),
-    NguoiGui VARCHAR(50),
-    PhongBan VARCHAR(3),
-    TienDo INT,
-    TrangThai VARCHAR(50),
-    SoGioThucHien INT,
-    NgayGiao DATE,
-    HanChot DATE,
-    DiemThuong INT,
-    Tre INT DEFAULT 0,
-    NoiDung TEXT,
-    TaiLieu TEXT NULL,
-    FOREIGN KEY (ProjectID) REFERENCES Project(ProjectID),
-    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID),
-    FOREIGN KEY (PhongBan) REFERENCES PhongBan(PhongID)
+    time_sheetid INT AUTO_INCREMENT PRIMARY KEY,
+    projectid INT,
+    empid INT,
+    tenduan VARCHAR(50),
+    nguoigui VARCHAR(50),
+    phongban VARCHAR(3),
+    trangthai VARCHAR(50),
+    sogiothuchien INT,
+    ngaygiao DATE,
+    hanchot DATE,
+    diemthuong INT,
+    tre INT DEFAULT 0,
+    noidung TEXT,
+    FOREIGN KEY (projectid) REFERENCES Project(projectid),
+    FOREIGN KEY (empid) REFERENCES Profile(empid),
+    FOREIGN KEY (phongban) REFERENCES PhongBan(phongid)
 );
 
 CREATE TABLE Request (
-    RequestID INT AUTO_INCREMENT PRIMARY KEY,
-    EmpID INT,
-    NguoiGui VARCHAR(50),
-    Loai VARCHAR(20),
-    TieuDe VARCHAR(50),
-    NgayGui DATE,
-    NgayXuLy DATE NULL,
-    NgayChon DATE NULL,
-    TrangThai INT DEFAULT 0,
-    NoiDung TEXT,
-    PhanHoi TEXT NULL,
-    Time_sheetID INT NULL,
-    Up_TinhTrang_Timesheet VARCHAR(50) NULL,
-    Up_ThoiGian_Timesheet INT NULL,
-    FOREIGN KEY (EmpID) REFERENCES Profile(EmpID),
-    FOREIGN KEY (Time_sheetID) REFERENCES Time_sheet(Time_sheetID)
+    requestid INT AUTO_INCREMENT PRIMARY KEY,
+    empid INT,
+    nguoigui VARCHAR(50),
+    loai VARCHAR(20),
+    tieude VARCHAR(50),
+    ngaygui DATE,
+    ngayxuly DATE NULL,
+    ngaychon DATE NULL,
+    trangthai INT DEFAULT 0,
+    noidung TEXT,
+    phanhoi TEXT NULL,
+    time_sheetid INT NULL,
+    up_tinhtrang_timesheet VARCHAR(50) NULL,
+    up_thoigian_timesheet INT NULL,
+    FOREIGN KEY (empid) REFERENCES Profile(empid),
+    FOREIGN KEY (time_sheetid) REFERENCES Time_sheet(time_sheetid)
 );
 
 CREATE TABLE Voucher (
-    VoucherID INT AUTO_INCREMENT PRIMARY KEY,
-    TenVoucher VARCHAR(255),
-    TriGia INT,
-    HanSuDung DATE,
-    ChiTiet TEXT,
-    HuongDanSuDung TEXT,
-    TinhTrang VARCHAR(50)
+    voucherid INT AUTO_INCREMENT PRIMARY KEY,
+    tenvoucher VARCHAR(255),
+    trigia INT,
+    hansudung DATE,
+    chitiet TEXT,
+    huongdansudung TEXT,
+    tinhtrang VARCHAR(50)
 );
 
 
 CREATE TABLE Felicitation (
-    FelicitationID INT AUTO_INCREMENT PRIMARY KEY,
-    Point INT,
-    Date DATE,
-    NoiDung VARCHAR(255),
-    NguoiNhan INT,
-    NguoiTang INT,
-    VoucherID INT,
-    FOREIGN KEY (NguoiNhan) REFERENCES Profile(EmpID),
-    FOREIGN KEY (NguoiTang) REFERENCES Profile(EmpID),
-    FOREIGN KEY (VoucherID) REFERENCES Voucher(VoucherID)
+    felicitationid INT AUTO_INCREMENT PRIMARY KEY,
+    point INT,
+    date DATE,
+    noidung VARCHAR(255),
+    nguoinhan INT,
+    nguoitang INT,
+    voucherid INT,
+    FOREIGN KEY (nguoinhan) REFERENCES Profile(empid),
+    FOREIGN KEY (nguoitang) REFERENCES Profile(empid),
+    FOREIGN KEY (voucherid) REFERENCES Voucher(voucherid)
 );
 

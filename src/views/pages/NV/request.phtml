@@ -396,6 +396,8 @@
                 url: 'index.php?action=GetRequestPage&ajax=true&pagePending=' + page,
                 method: 'GET',
                 success: function(response) {
+                    console.log(page);
+                    console.log(response);
                     var data = JSON.parse(response);
                     $('#pending-requests-table tbody').html(data.pendingHtml);
                     $('#pending-pagination').html(data.pendingPagination);
@@ -407,6 +409,24 @@
                     console.error('Không thể tải dữ liệu');
                 }
             });
+            // $.ajax({
+            //     url: 'http://localhost:9004/apiRequest/pending',
+            //     method: 'GET',
+            //     data: {
+            //         empID: userId,   
+            //         page: page,
+            //         size: limit     
+            //     },
+            //     success: function(response) {
+            //         $('#pending-requests-table tbody').html(response.pendingHtml);
+            //         $('#pending-pagination').html(response.pendingPagination);
+
+            //         $('#pending-pagination .page-link[data-page="' + page + '"]').parent().addClass('active');
+            //     },
+            //     error: function() {
+            //         console.error('Không thể tải dữ liệu');
+            //     }
+            // });
         }
 
         // Xử lý phân trang cho yêu cầu đã duyệt
@@ -505,7 +525,7 @@
                             dropdown.empty();
                             dropdown.append('<option value="">Chọn Time-sheet</option>');
                             $.each(data.timeSheets, function(index, timeSheet) {
-                                dropdown.append('<option value="' + timeSheet.Time_sheetID + '">' + timeSheet.ProjectID + ' - ' + timeSheet.Time_sheetID + ' - ' + timeSheet.TenDuAn + '</option>');
+                                dropdown.append('<option value="' + timeSheet.time_sheetid + '">' + timeSheet.projectid + ' - ' + timeSheet.time_sheetid + ' - ' + timeSheet.tenduan + '</option>');
                             });
                         }
                     },

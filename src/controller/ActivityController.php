@@ -56,6 +56,16 @@ class ActivityController{
                 $pagedActivitiesLK = [];
                 $totalPagesLK = 1;
             }
+
+            if (isset($_GET['ajax']) && $_GET['ajax'] === 'true') {
+                echo json_encode([
+                    'activitiesCB' => $pagedActivitiesCB,
+                    'totalPagesCB' => $totalPagesCB,
+                    'activitiesLK' => $pagedActivitiesLK,
+                    'totalPagesLK' => $totalPagesLK
+                ]);
+                exit();
+            }
             
             // Chọn file view dựa trên vai trò
             switch ($Role) {

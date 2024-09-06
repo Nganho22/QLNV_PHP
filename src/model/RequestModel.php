@@ -59,7 +59,7 @@ class RequestModel {
     }
 
     public function getPendingRequestsByEmpID($user_id, $limit, $offset) {
-        $url = $this->apiUrl . "/pending?empID=$user_id&limit=$limit&offset=$offset";
+        $url = $this->apiUrl . "/pending?empID=$user_id&page=$offset&size=$limit";
 
         if (!$this->isApiAvailable($url)) {
             return null;
@@ -67,34 +67,24 @@ class RequestModel {
 
         $response = file_get_contents($url);
         $results = json_decode($response, true);
-
-        if ($results) {
-            $result = [
-                'TieuDe' => $results['tieude'],
-                'Loai' => $results['loai'],
-                'NgayGui' => $results['ngaygui'],
-                'NgayXuLy' => $results['ngayxuly'],
-                'TrangThai' => $results['trangthai']
-            ];
-            return $result;
+        if (is_array($results['content'])) {
+            $formattedResults = [];
+            foreach ($results['content'] as $result) {
+                $formattedResults[] = [
+                    'RequestID' => $result['requestID'] ?? 'N/A',
+                    'TieuDe' => $result['tieuDe'] ?? 'N/A',
+                    'Loai' => $result['loai'] ?? 'N/A',
+                    'NgayGui' => $result['ngayGui'] ?? 'N/A',
+                    'NgayXuLy' => $result['ngayXuLy'] ?? 'N/A',
+                    'TrangThai' => $result['trangThai'] ?? 'N/A'
+                ];
+            }
+        } else {
+            return null;
         }
-    }
+        //print_r($formattedResults);
 
-    public static function getApprovedRequestsByEmpID($user_id, $limit, $offset) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $query = "SELECT * FROM Request WHERE EmpID = ? AND TrangThai != 0 ORDER BY NgayGui DESC LIMIT ? OFFSET ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('iii', $user_id, $limit, $offset);
-        $stmt->execute();
-        
-        $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
-
-        $stmt->close();
-        $db->close();
-        return $requests;
+        return $formattedResults;
     }
 
     public function countPendingRequests($user_id) {
@@ -110,28 +100,52 @@ class RequestModel {
         return $total;
     }
 
-    public static function countApprovedRequests($user_id) {
-        $db = new Database();
-        $conn = $db->connect();
+    public function getApprovedRequestsByEmpID($user_id, $limit, $offset) {
+        $url = $this->apiUrl . "/approved?empID=$user_id&page=$offset&size=$limit";
 
-        $query = "SELECT COUNT(RequestID) as total FROM Request WHERE EmpID = ? AND TrangThai != 0";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
+
+        $response = file_get_contents($url);
+        $results = json_decode($response, true);
+        // print_r($results);
+        if (isset($results['content']) && is_array($results['content'])) {
+            $formattedResults = [];
+            foreach ($results['content'] as $result) {
+                $formattedResults[] = [
+                    'RequestID' => $result['requestID'] ?? 'N/A',
+                    'TieuDe' => $result['tieuDe'] ?? 'N/A',
+                    'Loai' => $result['loai'] ?? 'N/A',
+                    'NgayGui' => $result['ngayGui'] ?? 'N/A',
+                    'NgayXuLy' => $result['ngayXuLy'] ?? 'N/A',
+                    'TrangThai' => $result['trangThai'] ?? 'N/A'
+                ];
+            }
+            return $formattedResults;
+        } else {
+            return [];
+        }
+    }
+    
+    public function countApprovedRequests($user_id) {
+        $url = $this->apiUrl . "/count/approved?empID=$user_id";
+
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
         
-        $result = $stmt->get_result();
-        $total = $result->fetch_assoc()['total'];
+        $response = file_get_contents($url);
+        $total = json_decode($response, true);
 
-        $stmt->close();
-        $db->close();
-        return $total;
+        return (int)$total;
     }
 
     public static function getTimeSheetsByEmpID($user_id) {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT * FROM Time_sheet WHERE EmpID = ? AND TrangThai = 'Chưa hoàn thành'";
+        $query = "SELECT * FROM Time_sheet WHERE empid = ? AND trangthai = 'Chưa hoàn thành'";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -148,24 +162,37 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "SELECT * FROM Time_sheet WHERE Time_sheetID = ?";
+        $query = "SELECT * FROM Time_sheet WHERE time_sheetid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $timeSheetID);
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $timeSheet = $result->fetch_assoc();
+        $timeSheets = $result->fetch_assoc();
     
         $stmt->close();
         $db->close();
-        return $timeSheet;
+        if ($timeSheets) {
+            $timeSheet = [
+                'tTime_sheetID' => $timeSheets['time_sheetid'],
+                'ProjectID' => $timeSheets['projectid'],
+                'NgayGiao' => $timeSheets['ngaygiao'],
+                'HanChot' => $timeSheets['hanchot'],
+                'TenDuAn' => $timeSheets['tenduan'],
+                'DiemThuong' => $timeSheets['diemthuong'],
+                'SoGioThucHien' => $timeSheets['sogiothuchien'],
+                'TrangThai' => $timeSheets['trangthai'],
+                'NoiDung' => $timeSheets['noidung']
+            ];
+            return $timeSheet;
+        }
     }
     
     public static function createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung) {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "INSERT INTO Request (EmpID, NguoiGui, Loai, TieuDe, NgayGui, NgayChon ,NoiDung) VALUES (?,?,?,?,?,?,?)";
+        $query = "INSERT INTO Request (empid, nguoigui, loai, tieude, ngaygui, ngaychon ,noidung) VALUES (?,?,?,?,?,?,?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('issssss', $user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung);
         $result = $stmt->execute();
@@ -179,7 +206,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "INSERT INTO Request (EmpID, NguoiGui, Loai, TieuDe, NgayGui, NoiDung, Time_sheetID, Up_TinhTrang_Timesheet, Up_ThoiGian_Timesheet)
+        $query = "INSERT INTO Request (empid, nguoigui, loai, tieude, ngaygui, noidung, time_sheetid, up_tinhtrang_timesheet, up_thoigian_timesheet)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('isssssiss', $user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet);
@@ -194,7 +221,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "SELECT * FROM Request WHERE RequestID = ?";
+        $query = "SELECT * FROM Request WHERE requestid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $RequestID);
         $stmt->execute();
@@ -204,7 +231,23 @@ class RequestModel {
     
         $stmt->close();
         $db->close();
-        return $requests;
+
+        if ($requests) {
+            $request = [
+                'RequestID' => $requests['requestid'],
+                'NguoiGui' => $requests['nguoigui'],
+                'Loai' => $requests['loai'],
+                'NgayGui' => $requests['ngayxuly'],
+                'TrangThai' => $requests['trangthai'],
+                'NgayXuLy' => $requests['ngayxuly'],
+                'Time_sheetID' => $requests['time_sheetid'],
+                'TieuDe' => $requests['tieude'],
+                'NoiDung' => $requests['noidung'],
+                'Up_TinhTrang_Timesheet' => $requests['up_tinhtrang_timesheet'],
+                'Up_ThoiGian_Timesheet' => $requests['up_thoigian_timesheet']
+            ];
+            return $request;
+        }
     }
 
 //============== Quản lý =====================    
@@ -214,10 +257,10 @@ class RequestModel {
 
         // 1. Lấy PhongID và danh sách EmpID từ Profile dựa trên EmpID
         $query = "
-            SELECT p1.PhongID, p2.EmpID
+            SELECT p1.phongid, p2.empid
             FROM Profile p1
-            LEFT JOIN Profile p2 ON p1.PhongID = p2.PhongID
-            WHERE p1.EmpID = ?";
+            LEFT JOIN Profile p2 ON p1.phongid = p2.phongid
+            WHERE p1.empid = ?";
 
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
@@ -229,9 +272,9 @@ class RequestModel {
 
         while ($row = $result->fetch_assoc()) {
             if ($phongID === null) {
-                $phongID = $row['PhongID'];
+                $phongID = $row['phongid'];
             }
-            $empIDs[] = $row['EmpID'];
+            $empIDs[] = $row['empid'];
         }
 
         $stmt->close();
@@ -257,11 +300,11 @@ class RequestModel {
 
         $query = "
             SELECT
-                COUNT(RequestID) as total,
-                SUM(CASE WHEN TrangThai = 0 THEN 1 ELSE 0 END) as pending,
-                SUM(CASE WHEN TrangThai IN (1, 2) THEN 1 ELSE 0 END) as approved
+                COUNT(requestid) as total,
+                SUM(CASE WHEN trangthai = 0 THEN 1 ELSE 0 END) as pending,
+                SUM(CASE WHEN trangthai IN (1, 2) THEN 1 ELSE 0 END) as approved
             FROM Request
-            WHERE EmpID IN ($empIDsString)";
+            WHERE empid IN ($empIDsString)";
 
         $db = new Database();
         $conn = $db->connect();
@@ -299,7 +342,7 @@ class RequestModel {
         $query = "
             SELECT * 
             FROM Request
-            WHERE EmpID IN ($empIDsString) ORDER BY NgayGui DESC";
+            WHERE empid IN ($empIDsString) ORDER BY ngaygui DESC";
 
         $db = new Database();
         $conn = $db->connect();
@@ -316,7 +359,19 @@ class RequestModel {
         $stmt->close();
         $db->close();
 
-        return $requests;
+        $formattedResults = [];
+        foreach ($requests['content'] as $result) {
+            $formattedResults[] = [
+                'RequestID' => $result['requestid'] ?? 'N/A',
+                'TieuDe' => $result['tieude'] ?? 'N/A',
+                'Loai' => $result['loai'] ?? 'N/A',
+                'NgayGui' => $result['ngayGui'] ?? 'N/A',
+                'NgayXuLy' => $result['ngayXuLy'] ?? 'N/A',
+                'TrangThai' => $result['trangThai'] ?? 'N/A'
+            ];
+        }
+        
+        return $formattedResults;
     }
 
     public static function searchRequestsByEmpID_QL($user_id, $searchTerm, $limit, $offset) {
