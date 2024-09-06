@@ -821,7 +821,7 @@ class UserModel {
                 Project.ten,
                 Project.hanchot,
                 Profile.hoten,
-                Project.phongid,
+                Project.phongid
             FROM 
                 Project
             INNER JOIN 
@@ -958,7 +958,7 @@ class UserModel {
         $result = $stmt->get_result();
         $employees =[];
         while ($row = $result->fetch_assoc()) {
-            $employee[] = [
+            $employee= [
                 'EmpID' => $row['empid'],
                 'HoTen' => $row['hoten'],
                 'Email' => $row['email'],

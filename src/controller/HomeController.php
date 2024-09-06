@@ -70,7 +70,7 @@ class HomeController{
                         $employees = UserModel::getEmployeesList_GD($limit, $offset_NV);
                         $totalEmployees = UserModel::countAllEmployees_GD();
                     }
-
+                    
                     $limit_PB = 3;
                     $searchTerm_PB = isset($_GET['search_phongban']) ? $_GET['search_phongban'] : '';
                     $page_PB = isset($_GET['page_phongban']) ? (int)$_GET['page_phongban'] : 1;
