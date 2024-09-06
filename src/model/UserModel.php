@@ -588,12 +588,12 @@ class UserModel {
         }
     
         $stmt = $conn->prepare(
-            "SELECT COUNT(DISTINCT Check_inout.EmpID) AS countWFH
+            "SELECT COUNT(DISTINCT Check_inout.empid) AS countWFH
             FROM Check_inout
-            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
-            WHERE Profile.PhongID = ? 
-            AND Check_inout.WorkFromHome = 1
-            AND DATE(Check_inout.Date_checkin) = CURDATE()"
+            INNER JOIN Profile ON Check_inout.empid = Profile.empid
+            WHERE Profile.phongid = ? 
+            AND Check_inout.workfromhome = 1
+            AND DATE(Check_inout.date_checkin) = CURDATE()"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
@@ -609,11 +609,11 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
         
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $phongID = $result->fetch_assoc()['PhongID'];
+        $phongID = $result->fetch_assoc()['phongid'];
         $stmt->close();
         
         if (!$phongID) {
@@ -622,12 +622,12 @@ class UserModel {
         }
     
         $stmt = $conn->prepare(
-            "SELECT COUNT(DISTINCT Check_inout.EmpID) AS absence
+            "SELECT COUNT(DISTINCT Check_inout.empid) AS absence
             FROM Check_inout
-            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
-            WHERE Profile.PhongID = ? 
-            AND Check_inout.Nghi = 1
-            AND DATE(Check_inout.Date_checkin) = CURDATE()"
+            INNER JOIN Profile ON Check_inout.empid = Profile.empid
+            WHERE Profile.phongid = ? 
+            AND Check_inout.nghi = 1
+            AND DATE(Check_inout.date_checkin) = CURDATE()"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
@@ -645,14 +645,14 @@ class UserModel {
         
 
         $stmt = $conn->prepare(
-            "SELECT PhongID 
+            "SELECT phongid 
              FROM Profile 
-             WHERE EmpID = ?"
+             WHERE empid = ?"
         );
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $phongID = $result->fetch_assoc()['PhongID'];
+        $phongID = $result->fetch_assoc()['phongid'];
         $stmt->close();
         
         if (!$phongID) {
@@ -662,29 +662,33 @@ class UserModel {
        
         $stmt = $conn->prepare(
             "SELECT 
-                PhongBan.PhongID, 
-                PhongBan.TenPhong, 
-                COUNT(DISTINCT Check_inout.EmpID) AS SoHienDien
+                PhongBan.phongid, 
+                PhongBan.tenphong, 
+                COUNT(DISTINCT Check_inout.empid) AS SoHienDien
             FROM PhongBan
-            LEFT JOIN Profile ON PhongBan.PhongID = Profile.PhongID
-            LEFT JOIN Check_inout ON Profile.EmpID = Check_inout.EmpID
-                AND DATE(Check_inout.Date_checkin) = CURDATE()
-                AND Check_inout.Time_checkout IS NULL
-            WHERE PhongBan.PhongID = ?
-            GROUP BY PhongBan.PhongID, PhongBan.TenPhong"
+            LEFT JOIN Profile ON PhongBan.phongid = Profile.phongid
+            LEFT JOIN Check_inout ON Profile.empid = Check_inout.empid
+                AND DATE(Check_inout.date_checkin) = CURDATE()
+                AND Check_inout.time_checkout IS NULL
+            WHERE PhongBan.phongid = ?
+            GROUP BY PhongBan.Phongid, PhongBan.tenphong"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
         $result = $stmt->get_result();
         
-        $hiendien = [];
+        $hiendiens = [];
         while ($row = $result->fetch_assoc()) {
-            $hiendien[] = $row;
+            $hiendien =[
+                'PhongID' => $row['phongid'],
+                'TenPhong' => $row['tenphong'],
+                'SoHienDien' => $row['SoHienDien']
+                ];
+            $hiendiens[] = $hiendien;
         }
-        
         $stmt->close();
         $db->close();
-        return $hiendien;
+        return $hiendiens;
     }
 
     public static function getPhongBan_Checkinout($empID) {
@@ -692,14 +696,14 @@ class UserModel {
         $conn = $db->connect();
     
         $stmtPhongID = $conn->prepare(
-            "SELECT PhongID 
+            "SELECT phongid
              FROM Profile 
-             WHERE EmpID = ?"
+             WHERE empid = ?"
         );
         $stmtPhongID->bind_param("i", $empID);
         $stmtPhongID->execute();
         $resultPhongID = $stmtPhongID->get_result();
-        $phongID = $resultPhongID->fetch_assoc()['PhongID'];
+        $phongID = $resultPhongID->fetch_assoc()['phongid'];
         $stmtPhongID->close();
         
         if (!$phongID) {
@@ -708,28 +712,34 @@ class UserModel {
         }
     
         $stmt = $conn->prepare(
-            "SELECT PhongBan.PhongID, PhongBan.TenPhong, 
-                    COALESCE(COUNT(CASE WHEN Check_inout.Time_checkin IS NOT NULL THEN 1 END), 0) AS SoLanCheckin,
-                    COALESCE(COUNT(CASE WHEN Check_inout.Time_checkout IS NOT NULL THEN 1 END), 0) AS SoLanCheckout
+            "SELECT PhongBan.phongid, PhongBan.tenphong, 
+                    COALESCE(COUNT(CASE WHEN Check_inout.time_checkin IS NOT NULL THEN 1 END), 0) AS SoLanCheckin,
+                    COALESCE(COUNT(CASE WHEN Check_inout.time_checkout IS NOT NULL THEN 1 END), 0) AS SoLanCheckout
              FROM Profile
-             INNER JOIN PhongBan ON Profile.PhongID = PhongBan.PhongID
-             LEFT JOIN Check_inout ON Profile.EmpID = Check_inout.EmpID
-                AND DATE(Check_inout.Date_checkin) = CURDATE()
-             WHERE PhongBan.PhongID = ?
-             GROUP BY PhongBan.PhongID, PhongBan.TenPhong"
+             INNER JOIN PhongBan ON Profile.phongid = PhongBan.phongid
+             LEFT JOIN Check_inout ON Profile.empid = Check_inout.empid
+                AND DATE(Check_inout.date_checkin) = CURDATE()
+             WHERE PhongBan.phongid = ?
+             GROUP BY PhongBan.phongid, PhongBan.tenphong"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
         $result = $stmt->get_result();
     
-        $checkinout = [];
+        $checkinouts = [];
         while ($row = $result->fetch_assoc()) {
-            $checkinout[] = $row;
+            $checkinout =[
+                'PhongID' => $row['phongid'],
+                'TenPhong' => $row['tenphong'],
+                'SoLanCheckin' => $row['SoLanCheckin'],
+                'SoLanCheckout' => $row['SoLanCheckout']
+                ];
+            $checkinouts[]=$checkinout;
         }
     
         $stmt->close();
         $db->close();
-        return $checkinout;
+        return $checkinouts;
     }
 
     public static function getEmployeesList_QL($empID) {
@@ -737,23 +747,27 @@ class UserModel {
         $conn = $db->connect();
 
         // Lấy PhongID của người dùng hiện tại
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $phongID = $row['PhongID'];
+        $phongID = $row['phongid'];
         $stmt->close();
 
         // Lấy danh sách nhân viên cùng PhongID, loại bỏ người có EmpID trùng với người quản lý
-        $stmt = $conn->prepare("SELECT HoTen, Email FROM Profile WHERE PhongID = ? AND EmpID != ? LIMIT 3");
+        $stmt = $conn->prepare("SELECT hoten, email FROM Profile WHERE phongid = ? AND empid != ? LIMIT 3");
         $stmt->bind_param("ii", $phongID, $empID);
         $stmt->execute();
         $result = $stmt->get_result();
 
         $employees = [];
         while ($row = $result->fetch_assoc()) {
-            $employees[] = $row;
+            $employee =[
+                'HoTen' => $row['hoten'],
+                'Email' => $row['email']
+                ];
+            $employees[] = $employee;
         }
 
         $stmt->close();
@@ -765,20 +779,18 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
     
-        // Lấy PhongID của người dùng hiện tại
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        $phongID = $row['PhongID'];
+        $phongID = $row['phongid'];
         $stmt->close();
     
-        // Lấy danh sách time-sheet của nhân viên cùng PhongID, chỉ lấy 3 người đầu tiên
-        $stmt = $conn->prepare("SELECT NgayGiao, NoiDung, NguoiGui 
+        $stmt = $conn->prepare("SELECT ngaygiao, noidung, nguoigui 
                                 FROM Time_sheet 
-                                WHERE EmpID IN (
-                                    SELECT EmpID FROM Profile WHERE PhongID = ?
+                                WHERE empid IN (
+                                    SELECT empid FROM Profile WHERE phongid = ?
                                 ) LIMIT 3");
         $stmt->bind_param("i", $phongID);
         $stmt->execute();
@@ -786,7 +798,12 @@ class UserModel {
     
         $timesheets = [];
         while ($row = $result->fetch_assoc()) {
-            $timesheets[] = $row;
+            $timesheet =[
+                'NgayGiao' => $row['ngaygiao'],
+                'NoiDung' => $row['noidung'],
+                'NguoiGui' => $row['nguoigui'],
+                ];
+            $timesheets[] = $timesheet;
         }
     
         $stmt->close();
@@ -801,28 +818,29 @@ class UserModel {
     
         $stmt = $conn->prepare(
             "SELECT 
-                Project.Ten AS TenDuAn, 
-                Project.HanChot AS HanChot,
-                Profile.HoTen AS TenQuanLy, 
-                Project.PhongID AS PhongID
+                Project.ten,
+                Project.hanchot,
+                Profile.hoten,
+                Project.phongid,
             FROM 
                 Project
             INNER JOIN 
-                Profile ON Project.QuanLy = Profile.EmpID
+                Profile ON Project.quanly = Profile.empid
             INNER JOIN 
-                PhongBan ON Project.PhongID = PhongBan.PhongID"
+                PhongBan ON Project.phongid = PhongBan.phongid"
         );
         $stmt->execute();
         $result = $stmt->get_result();
     
         $deadlines = [];
         while ($row = $result->fetch_assoc()) {
-            $deadlines[] = [
-                'TenDuAn' => $row['TenDuAn'],
-                'HanChot' => $row['HanChot'],
-                'TenQuanLy' => $row['TenQuanLy'],
-                'PhongID' => $row['PhongID']
+            $deadline = [
+                'TenDuAn' => $row['ten'],
+                'HanChot' => $row['hanchot'],
+                'TenQuanLy' => $row['hoten'],
+                'PhongID' => $row['phongid']
             ];
+            $deadlines[] = $deadline;
         }
     
         $stmt->close();
@@ -839,7 +857,22 @@ class UserModel {
         $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
-        $projects = $result->fetch_all(MYSQLI_ASSOC);
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $project = [
+                'ProjectID' => $row['projectid'],
+                'Ten' => $row['ten'],
+                'NgayGiao' => $row['ngaygiao'],
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'HanChot' => $row['hanchot'],
+                'TienDo' => $row['tiendo'],
+                'SoGioThucHanh' => $row['sogiothuchanh'],
+                'PhongID' => $row['phongid'],
+                'QuanLy' => $row['quanly'],
+                'TinhTrang' => $row['tinhtrang'],
+            ];
+            $projects[]= $project;
+        }
 
         $stmt->close();
         $db->close();
@@ -864,9 +897,9 @@ class UserModel {
     public static function searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ) {
             $searchTerm = "%$searchTerm_PJ%";
             $query = "
-                SELECT Ten, NgayGiao, TienDo
+                SELECT ten, ngaygiao, tiendo
                 FROM Project
-                WHERE Ten LIKE ?
+                WHERE ten LIKE ?
                 LIMIT ? OFFSET ?";
     
             $db = new Database();
@@ -879,7 +912,12 @@ class UserModel {
     
             $projects = [];
             while ($row = $result->fetch_assoc()) {
-                $projects[] = $row;
+                $project = [
+                    'Ten' => $row['ten'],
+                    'NgayGiao' => $row['ngaygiao'],
+                    'TienDo' => $row['tiendo'],
+                ];
+                $projects[] = $project;
             }
     
             $stmt->close();
@@ -891,9 +929,9 @@ class UserModel {
     public static function countSearchProject_GD($searchTerm_PJ) {
         $searchTerm = "%$searchTerm_PJ%";
         $query = "
-            SELECT COUNT(ProjectID) as total
+            SELECT COUNT(projectid) as total
             FROM Project
-            WHERE Ten LIKE ?";
+            WHERE ten LIKE ?";
 
         $db = new Database();
         $conn = $db->connect();
@@ -914,12 +952,19 @@ class UserModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $stmt = $conn->prepare("SELECT EmpID, HoTen, Email FROM Profile LIMIT ? OFFSET ?");
+        $stmt = $conn->prepare("SELECT empid, hoten, email FROM Profile LIMIT ? OFFSET ?");
         $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
-        $employees = $result->fetch_all(MYSQLI_ASSOC);
-    
+        $employees =[];
+        while ($row = $result->fetch_assoc()) {
+            $employee[] = [
+                'EmpID' => $row['empid'],
+                'HoTen' => $row['hoten'],
+                'Email' => $row['email'],
+            ];
+            $employees[] = $employee;
+        }
         $stmt->close();
         $db->close();
         return $employees;
@@ -943,9 +988,9 @@ class UserModel {
     public static function searchProfiles_GD($searchTerm, $limit, $offset) {
         $searchTerm = "%$searchTerm%";
         $query = "
-            SELECT EmpID, HoTen, Email
+            SELECT empid, hoten, email
             FROM Profile
-            WHERE HoTen LIKE ?
+            WHERE hoten LIKE ?
             LIMIT ? OFFSET ?";
 
         $db = new Database();
@@ -956,23 +1001,28 @@ class UserModel {
         $stmt->execute();
         $result = $stmt->get_result();
 
-        $profiles = [];
+        $employees =[];
         while ($row = $result->fetch_assoc()) {
-            $profiles[] = $row;
+            $employee = [
+                'EmpID' => $row['empid'],
+                'HoTen' => $row['hoten'],
+                'Email' => $row['email'],
+            ];
+            $employees[] = $employee;
         }
 
         $stmt->close();
         $db->close();
 
-        return $profiles;
+        return $employees;
     }
 
     public static function countSearchProfiles_GD($searchTerm) {
         $searchTerm = "%$searchTerm%";
         $query = "
-            SELECT COUNT(EmpID) as total
+            SELECT COUNT(empid) as total
             FROM Profile
-            WHERE HoTen LIKE ?";
+            WHERE hoten LIKE ?";
 
         $db = new Database();
         $conn = $db->connect();
@@ -1008,12 +1058,12 @@ class UserModel {
         $result = $stmt->get_result();
         $phongBans = [];    
         while ($row = $result->fetch_assoc()) {
-            
             $phongBan = [
                 'PhongID' => $row['phongid'],
                 'TenPhong' => $row['tenphong'],
                 'QuanLyID' => $row['quanlyid'],
-                'SoThanhVien' => $row['sothanhvien']
+                'SoThanhVien' => $row['sothanhvien'],
+                'HoTen' => $row['hoten']
             ];
             
          
@@ -1043,11 +1093,11 @@ class UserModel {
     public static function searchPhongBan_GD($searchTerm_PB, $limit, $offset) {
         $searchTerm = "%$searchTerm_PB%";
         $query = "
-            SELECT PhongBan.PhongID, PhongBan.TenPhong, PhongBan.QuanLyID, Profile.HoTen 
+            SELECT PhongBan.phongid, PhongBan.tenphong, PhongBan.quanlyid, Profile.hoten 
             FROM PhongBan
             LEFT JOIN Profile 
-            ON PhongBan.QuanLyID = Profile.EmpID
-            WHERE Profile.HoTen LIKE ? OR PhongBan.TenPhong LIKE ?
+            ON PhongBan.quanlyid = Profile.empid
+            WHERE Profile.hoten LIKE ? OR PhongBan.tenphong LIKE ?
             LIMIT ? OFFSET ?";
     
         $db = new Database();
@@ -1062,7 +1112,13 @@ class UserModel {
     
         $rooms = [];
         while ($row = $result->fetch_assoc()) {
-            $rooms[] = $row;
+            $room= [
+                'PhongID' => $row['phongid'],
+                'TenPhong' => $row['tenphong'],
+                'QuanLyID' => $row['quanlyid'],
+                'HoTen' => $row['hoten']
+            ];
+            $rooms[] = $room;
         }
     
         $stmt->close();
@@ -1074,11 +1130,11 @@ class UserModel {
     public static function countSearchPhongBan_GD($searchTerm_PB) {
         $searchTerm = "%$searchTerm_PB%";
         $query = "
-            SELECT COUNT(PhongBan.PhongID) as total
+            SELECT COUNT(PhongBan.phongid) as total
             FROM PhongBan
             LEFT JOIN Profile 
-            ON PhongBan.QuanLyID = Profile.EmpID
-            WHERE Profile.HoTen LIKE ? OR PhongBan.TenPhong LIKE ?";
+            ON PhongBan.quanlyid = Profile.empid
+            WHERE Profile.hoten LIKE ? OR PhongBan.tenphong LIKE ?";
     
         $db = new Database();
         $conn = $db->connect();
@@ -1089,8 +1145,6 @@ class UserModel {
         
         $stmt->execute();
         $result = $stmt->get_result();
-        
-        // Lấy giá trị của tổng số lượng
         $row = $result->fetch_assoc();
         $total = $row['total'];
         
@@ -1132,7 +1186,7 @@ class UserModel {
 
     }
 
-    
+    /*
     public function UpCheckInOut2($empID) {
         $db = new Database();
         $conn = $db->connect();
@@ -1182,14 +1236,14 @@ class UserModel {
         $db->close();
     
         return $statusinout;
-    }
+    }*/
 
     public static function UpCheckInOut($empID) {
         $db = new Database();
         $conn = $db->connect();
         
 
-        $stmt = $conn->prepare("SELECT STT, Time_checkin, Time_checkout FROM Check_inout WHERE EmpID = ? AND Date_checkin = CURDATE();");
+        $stmt = $conn->prepare("SELECT stt, time_checkin, time_checkout FROM Check_inout WHERE empid = ? AND date_checkin = CURDATE();");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -1199,26 +1253,26 @@ class UserModel {
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
     
-            if (is_null($row['Time_checkin'])) {
+            if (is_null($row['time_checkin'])) {
                 $updateStmt = $conn->prepare("
                     UPDATE Check_inout 
-                    SET Time_checkin = CURTIME(), 
-                        Late = CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END 
-                    WHERE STT = ?
+                    SET time_checkin = CURTIME(), 
+                        late = CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END 
+                    WHERE stt = ?
                 ");
-                $updateStmt->bind_param("i", $row['STT']);
+                $updateStmt->bind_param("i", $row['stt']);
                 $updateStmt->execute();
                 $updateStmt->close();
                 $statusinout = 'checked-in';
             } 
-            else if (is_null($row['Time_checkout'])) {
+            else if (is_null($row['time_checkout'])) {
                 $updateStmt = $conn->prepare("
                     UPDATE Check_inout 
-                    SET Time_checkout = CURTIME(), 
-                        Overtime = CASE WHEN CURTIME() > '17:00:00' THEN 1 ELSE 0 END 
-                    WHERE STT = ?
+                    SET time_checkout = CURTIME(), 
+                        overtime = CASE WHEN CURTIME() > '17:00:00' THEN 1 ELSE 0 END 
+                    WHERE stt = ?
                 ");
-                $updateStmt->bind_param("i", $row['STT']);
+                $updateStmt->bind_param("i", $row['stt']);
                 $updateStmt->execute();
                 $updateStmt->close();
                 $statusinout = 'checked-out';
@@ -1227,8 +1281,8 @@ class UserModel {
             }
         } else {
             $insertStmt = $conn->prepare("
-                INSERT INTO Check_inout (EmpID, Date_checkin, Time_checkin, Late) 
-                VALUES (?, CURDATE(), CURTIME(), CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END)
+                INSERT INTO Check_inout (empid, date_checkin, time_checkin, late, nghi) 
+                VALUES (?, CURDATE(), CURTIME(), CASE WHEN CURTIME() > '08:00:00' THEN 1 ELSE 0 END, 0)
             ");
             $insertStmt->bind_param("i", $empID);
             $insertStmt->execute();
