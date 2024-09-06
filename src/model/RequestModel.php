@@ -28,38 +28,26 @@ class RequestModel {
     public function getRequestCountsByEmpID($user_id) {
         $url = $this->apiUrl . "/counts/" . $user_id;
 
-        if ($this->isApiAvailable($url)) {
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($ch);
-            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-            
-            if ($httpCode == 200) {
-                $result = json_decode($response, true);
-                return [
-                    'total' => $result['total'],
-                    'pending' => $result['pending'],
-                    'approved' => $result['approved']
-                ];
-            } else {
-                return [
-                    'total' => 0,
-                    'pending' => 0,
-                    'approved' => 0
-                ];
-            }
-        } else {
-            return [
-                'total' => 0,
-                'pending' => 0,
-                'approved' => 0
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
+
+        $response = file_get_contents($url);
+        $results = json_decode($response, true);
+
+        if ($results) {
+            $user = [
+                'total' => $results['total'],
+                'pending' => $results['pending'],
+                'approved' => $results['approved'],
             ];
+            return $results;
         }
     }
 
     public function getPendingRequestsByEmpID($user_id, $limit, $offset) {
-        $url = $this->apiUrl . "/pending?empID=$user_id&page=$offset&size=$limit";
+        $page = floor($offset / $limit);
+        $url = $this->apiUrl . "/pending?empID=$user_id&page=$page&size=$limit";
 
         if (!$this->isApiAvailable($url)) {
             return null;
@@ -67,23 +55,20 @@ class RequestModel {
 
         $response = file_get_contents($url);
         $results = json_decode($response, true);
+        $formattedResults = [];
+
         if (is_array($results['content'])) {
-            $formattedResults = [];
             foreach ($results['content'] as $result) {
                 $formattedResults[] = [
-                    'RequestID' => $result['requestID'] ?? 'N/A',
-                    'TieuDe' => $result['tieuDe'] ?? 'N/A',
+                    'RequestID' => $result['requestid'] ?? 'N/A',
+                    'TieuDe' => $result['tieude'] ?? 'N/A',
                     'Loai' => $result['loai'] ?? 'N/A',
-                    'NgayGui' => $result['ngayGui'] ?? 'N/A',
-                    'NgayXuLy' => $result['ngayXuLy'] ?? 'N/A',
-                    'TrangThai' => $result['trangThai'] ?? 'N/A'
+                    'NgayGui' => $result['ngaygui'] ?? 'N/A',
+                    'NgayXuLy' => $result['ngayxuly'] ?? 'N/A',
+                    'TrangThai' => $result['trangthai'] ?? 'N/A'
                 ];
             }
-        } else {
-            return null;
-        }
-        //print_r($formattedResults);
-
+        } 
         return $formattedResults;
     }
 
@@ -101,7 +86,8 @@ class RequestModel {
     }
 
     public function getApprovedRequestsByEmpID($user_id, $limit, $offset) {
-        $url = $this->apiUrl . "/approved?empID=$user_id&page=$offset&size=$limit";
+        $page = floor($offset / $limit);
+        $url = $this->apiUrl . "/approved?empID=$user_id&page=$page&size=$limit";
 
         if (!$this->isApiAvailable($url)) {
             return null;
@@ -109,22 +95,20 @@ class RequestModel {
 
         $response = file_get_contents($url);
         $results = json_decode($response, true);
+        $formattedResults = [];
         // print_r($results);
         if (isset($results['content']) && is_array($results['content'])) {
-            $formattedResults = [];
             foreach ($results['content'] as $result) {
                 $formattedResults[] = [
-                    'RequestID' => $result['requestID'] ?? 'N/A',
-                    'TieuDe' => $result['tieuDe'] ?? 'N/A',
+                    'RequestID' => $result['requestid'] ?? 'N/A',
+                    'TieuDe' => $result['tieude'] ?? 'N/A',
                     'Loai' => $result['loai'] ?? 'N/A',
-                    'NgayGui' => $result['ngayGui'] ?? 'N/A',
-                    'NgayXuLy' => $result['ngayXuLy'] ?? 'N/A',
-                    'TrangThai' => $result['trangThai'] ?? 'N/A'
+                    'NgayGui' => $result['ngaygui'] ?? 'N/A',
+                    'NgayXuLy' => $result['ngayxuly'] ?? 'N/A',
+                    'TrangThai' => $result['trangthai'] ?? 'N/A'
                 ];
             }
             return $formattedResults;
-        } else {
-            return [];
         }
     }
     
@@ -151,7 +135,26 @@ class RequestModel {
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
+        //$requests = $result->fetch_all(MYSQLI_ASSOC);
+
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'Time_sheetID' => $row['time_sheetid'] ?? 'N/A',
+                'ProjectID' => $row['projectid'] ?? 'N/A',
+                'TenDuAn' => $row['tenduan'] ?? 'N/A',
+                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
+                'PhongBan' => $row['phongban'] ?? 'N/A',
+                'TrangThai' => $row['trangthai'] ?? 'N/A',
+                'SoGioThucHien' => $row['sogiothuchien'] ?? 'N/A',
+                'NgayGiao' => $row['ngaygiao'] ?? 'N/A',
+                'HanChot' => $row['hanchot'] ?? 'N/A',
+                'DiemThuong' => $row['diemthuong'] ?? 'N/A',
+                'Tre' => $row['tre'] ?? 'N/A',
+                'NoiDung' => $row['noidung'] ?? 'N/A'
+            ];
+            $requests[] = $row;
+        }
 
         $stmt->close();
         $db->close();
@@ -174,7 +177,7 @@ class RequestModel {
         $db->close();
         if ($timeSheets) {
             $timeSheet = [
-                'tTime_sheetID' => $timeSheets['time_sheetid'],
+                'Time_sheetID' => $timeSheets['time_sheetid'],
                 'ProjectID' => $timeSheets['projectid'],
                 'NgayGiao' => $timeSheets['ngaygiao'],
                 'HanChot' => $timeSheets['hanchot'],
@@ -236,13 +239,16 @@ class RequestModel {
             $request = [
                 'RequestID' => $requests['requestid'],
                 'NguoiGui' => $requests['nguoigui'],
+                'EmpID' => $requests['empid'],
                 'Loai' => $requests['loai'],
-                'NgayGui' => $requests['ngayxuly'],
+                'NgayGui' => $requests['ngaygui'],
                 'TrangThai' => $requests['trangthai'],
                 'NgayXuLy' => $requests['ngayxuly'],
+                'NgayChon' => $requests['ngaychon'],
                 'Time_sheetID' => $requests['time_sheetid'],
                 'TieuDe' => $requests['tieude'],
                 'NoiDung' => $requests['noidung'],
+                'PhanHoi' => $requests['phanhoi'],
                 'Up_TinhTrang_Timesheet' => $requests['up_tinhtrang_timesheet'],
                 'Up_ThoiGian_Timesheet' => $requests['up_thoigian_timesheet']
             ];
@@ -353,25 +359,23 @@ class RequestModel {
 
         $requests = [];
         while ($row = $result->fetch_assoc()) {
+            $row = [
+                'RequestID' => $row['requestid'] ?? 'N/A',
+                'TieuDe' => $row['tieude'] ?? 'N/A',
+                'Loai' => $row['loai'] ?? 'N/A',
+                'NgayGui' => $row['ngaygui'] ?? 'N/A',
+                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
+                'NgayXuLy' => $row['ngayxuly'] ?? 'N/A',
+                'TrangThai' => $row['trangthai'] ?? 'N/A',
+                'NgayChon' => $row['ngaychon'] ?? 'N/A'
+            ];
             $requests[] = $row;
         }
 
         $stmt->close();
         $db->close();
-
-        $formattedResults = [];
-        foreach ($requests['content'] as $result) {
-            $formattedResults[] = [
-                'RequestID' => $result['requestid'] ?? 'N/A',
-                'TieuDe' => $result['tieude'] ?? 'N/A',
-                'Loai' => $result['loai'] ?? 'N/A',
-                'NgayGui' => $result['ngayGui'] ?? 'N/A',
-                'NgayXuLy' => $result['ngayXuLy'] ?? 'N/A',
-                'TrangThai' => $result['trangThai'] ?? 'N/A'
-            ];
-        }
         
-        return $formattedResults;
+        return $requests;
     }
 
     public static function searchRequestsByEmpID_QL($user_id, $searchTerm, $limit, $offset) {
@@ -391,10 +395,10 @@ class RequestModel {
 
         $searchTerm = "%$searchTerm%";
         $query = "
-            SELECT RequestID, EmpID, TieuDe, Loai, NguoiGui, NgayGui, TrangThai
+            SELECT requestid, empid, tieude, loai, nguoigui, ngaygui, trangthai
             FROM Request
-            WHERE EmpID IN ($empIDsString) AND NguoiGui LIKE ? 
-            ORDER BY NgayGui DESC
+            WHERE empid IN ($empIDsString) AND nguoigui LIKE ? 
+            ORDER BY ngaygui DESC
             LIMIT ? OFFSET ?";
 
         $db = new Database();
@@ -407,6 +411,15 @@ class RequestModel {
 
         $requests = [];
         while ($row = $result->fetch_assoc()) {
+            $row = [
+                'RequestID' => $row['requestid'] ?? 'N/A',
+                'EmpID' => $row['empid'] ?? 'N/A',
+                'TieuDe' => $row['tieude'] ?? 'N/A',
+                'Loai' => $row['loai'] ?? 'N/A',
+                'NgayGui' => $row['ngaygui'] ?? 'N/A',
+                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
+                'TrangThai' => $row['trangthai'] ?? 'N/A'
+            ];
             $requests[] = $row;
         }
 
@@ -433,9 +446,9 @@ class RequestModel {
 
         $searchTerm = "%$searchTerm%";
         $query = "
-            SELECT COUNT(RequestID) as total
+            SELECT COUNT(requestid) as total
             FROM Request
-            WHERE EmpID IN ($empIDsString) AND NguoiGui LIKE ? ORDER BY NgayGui DESC";
+            WHERE empid IN ($empIDsString) AND nguoigui LIKE ? ORDER BY ngaygui DESC";
 
         $db = new Database();
         $conn = $db->connect();
@@ -469,13 +482,13 @@ class RequestModel {
         $searchTerm = "%$searchTerm%";
         // Xây dựng câu truy vấn SQL
         $query = "
-            SELECT RequestID, EmpID, TieuDe, Loai, NguoiGui, NgayGui, TrangThai
+            SELECT requestid, empid, tieude, loai, nguoigui, ngaygui, trangthai
             FROM Request
-            WHERE EmpID IN ($empIDsString)
-            AND NguoiGui LIKE ?
-            " . (count($types) > 0 ? "AND Loai IN ($typesPlaceholders)" : "") . "
-            " . (count($statuses) > 0 ? "AND TrangThai IN ($statusesPlaceholders)" : "") . "
-            ORDER BY NgayGui DESC
+            WHERE empid IN ($empIDsString)
+            AND nguoigui LIKE ?
+            " . (count($types) > 0 ? "AND loai IN ($typesPlaceholders)" : "") . "
+            " . (count($statuses) > 0 ? "AND trangthai IN ($statusesPlaceholders)" : "") . "
+            ORDER BY ngaygui DESC
             LIMIT ? OFFSET ?";
     
         $db = new Database();
@@ -504,6 +517,15 @@ class RequestModel {
 
         $requests = [];
         while ($row = $result->fetch_assoc()) {
+            $row = [
+                'RequestID' => $row['requestid'] ?? 'N/A',
+                'EmpID' => $row['empid'] ?? 'N/A',
+                'TieuDe' => $row['tieude'] ?? 'N/A',
+                'Loai' => $row['loai'] ?? 'N/A',
+                'NgayGui' => $row['ngaygui'] ?? 'N/A',
+                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
+                'TrangThai' => $row['trangthai'] ?? 'N/A'
+            ];
             $requests[] = $row;
         }
 
@@ -531,13 +553,13 @@ class RequestModel {
 
         // Xây dựng câu truy vấn SQL
         $query = "
-            SELECT COUNT(RequestID) as total
+            SELECT COUNT(requestid) as total
             FROM Request
-            WHERE EmpID IN ($empIDsString)
-            AND NguoiGui LIKE ?
-            " . (count($types) > 0 ? "AND Loai IN ($typesPlaceholders)" : "") . "
-            " . (count($statuses) > 0 ? "AND TrangThai IN ($statusesPlaceholders)" : "") . "
-            ORDER BY NgayGui DESC";
+            WHERE empid IN ($empIDsString)
+            AND nguoigui LIKE ?
+            " . (count($types) > 0 ? "AND loai IN ($typesPlaceholders)" : "") . "
+            " . (count($statuses) > 0 ? "AND trangthai IN ($statusesPlaceholders)" : "") . "
+            ORDER BY ngaygui DESC";
     
         $db = new Database();
         $conn = $db->connect();
@@ -572,7 +594,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "UPDATE Request SET NgayXuLy = ?, TrangThai = ?, PhanHoi = ? WHERE RequestID = ?";
+        $query = "UPDATE Request SET ngayxuly = ?, trangthai = ?, phanhoi = ? WHERE requestid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('sssi', $ngayXuLy, $trangThai, $noiDung, $requestID);
         $result = $stmt->execute();
@@ -586,7 +608,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "INSERT INTO Check_inout (EmpID, Date_checkin, WorkFromHome, Nghi) VALUES (?,?,?,?)";
+        $query = "INSERT INTO Check_inout (empid, date_checkin, workfromhome, nghi) VALUES (?,?,?,?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('isii', $empID, $ngayChon, $opt_WFH, $opt_Nghi);
         $result = $stmt->execute();
@@ -600,7 +622,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "UPDATE Time_sheet SET TrangThai = ?, SoGioThucHien = ? WHERE Time_sheetID = ?";
+        $query = "UPDATE Time_sheet SET trangthai = ?, sogiothuchien = ? WHERE time_sheetid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('sii', $Up_TinhTrang_TS, $up_ThoiGian_TS, $timeSheetID);
         $result = $stmt->execute();
@@ -614,7 +636,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "UPDATE Profile SET DiemThuong = DiemThuong + ? WHERE EmpID = ?";
+        $query = "UPDATE Profile SET diemthuong = diemthuong + ? WHERE empid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param("ii", $point, $EmpID);
         $result = $stmt->execute();
@@ -628,7 +650,7 @@ class RequestModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "UPDATE Profile SET TinhTrang = 0 WHERE EmpID = ?";
+        $query = "UPDATE Profile SET tinhtrang = 0 WHERE empid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $result = $stmt->execute();

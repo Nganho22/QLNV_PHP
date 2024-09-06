@@ -20,7 +20,6 @@ class UserController{
             $checkInOut =  $model->GetTime_checkInOut($user['EmpID']);
 
             $_SESSION['CheckInOut']= $checkInOut;
-            
             if (isset($_SESSION['redirect_url'])) {
                 $redirect_url = $_SESSION['redirect_url'];
                 unset($_SESSION['redirect_url']);

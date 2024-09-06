@@ -36,8 +36,8 @@ class ProjectController {
                 case 'Giám đốc':
                 $profile = UserModel::getprofile($user_id);
                 $cProject = ProjectModel::getProjectCountsByEmpID($user_id);
-                $listProject = ProjectModel::getListProject($user_id, $limit, $offset);
-
+                //$listProject = ProjectModel::getListProject($user_id, $limit, $offset);
+                //print_r($listProject);
                 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
                 $progressFilters = isset($_GET['processes']) ? $_GET['processes'] : [];
                 $statusFilters = isset($_GET['types']) ? $_GET['types'] : [];

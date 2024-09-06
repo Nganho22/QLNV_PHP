@@ -9,6 +9,7 @@ class RequestController {
             $role = $_SESSION['user']['Role'];
             $apiUrl = 'http://localhost:9004/apiRequest';
             $model = new RequestModel($apiUrl);
+
             //QL
             $qllimit = 7; 
             $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -23,12 +24,13 @@ class RequestController {
                     $pagePending = isset($_GET['pagePending']) ? (int)$_GET['pagePending'] : 1;
                     $pageApproved = isset($_GET['pageApproved']) ? (int)$_GET['pageApproved'] : 1;
                     $limit = 3;
-                    $offsetPending = ($pagePending - 1) ;
-                    $offsetApproved = ($pageApproved - 1) ;
+                    $offsetPending = ($pagePending - 1) * $limit ;
+                    $offsetApproved = ($pageApproved - 1) * $limit;
                     $timeSheets = RequestModel::getTimeSheetsByEmpID($user_id);
-
+                    
                     $file = "./views/pages/NV/request.phtml";
                     $creq = $model->getRequestCountsByEmpID($user_id);
+                
                     $pendingRequests =  $model->getPendingRequestsByEmpID($user_id, $limit, $offsetPending);
                     $approvedRequests = $model->getApprovedRequestsByEmpID($user_id, $limit, $offsetApproved);
                     $totalPending =  $model->countPendingRequests($user_id);
@@ -375,7 +377,7 @@ class RequestController {
                                 } elseif ($loai == 'Time-sheet') {
                                     $timeSheetID = $detail['Time_sheetID'];
                                     $Up_TinhTrang_TS = $detail['Up_TinhTrang_Timesheet']; 
-                                    $up_ThoiGian_TS = $detail['Up_TinhTrang_Timesheet']; 
+                                    $up_ThoiGian_TS = $detail['Up_ThoiGian_Timesheet']; 
                                     $point = $_POST['diemThuong'];
                                     $updateTimeSheetResult = RequestModel::updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS);
                                     if ($Up_TinhTrang_TS = 'Hoàn thành') {

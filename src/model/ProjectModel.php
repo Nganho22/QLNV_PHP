@@ -34,18 +34,18 @@ class ProjectModel {
         if ($user_id == 3) {
             $query = "
                 SELECT 
-                    COUNT(ProjectID) as total, 
-                    SUM(CASE WHEN TinhTrang = 'Đã hoàn thành' THEN 1 ELSE 0 END) as completed,
-                    SUM(CASE WHEN TinhTrang = 'Chưa hoàn thành' THEN 1 ELSE 0 END) as not_completed
+                    COUNT(projectid) as total, 
+                    SUM(CASE WHEN tinhtrang = 'Đã hoàn thành' THEN 1 ELSE 0 END) as completed,
+                    SUM(CASE WHEN tinhtrang = 'Chưa hoàn thành' THEN 1 ELSE 0 END) as not_completed
                 FROM Project
             ";
             $stmt = $conn->prepare($query);
         } else {
             $query = "
                 SELECT 
-                    COUNT(ProjectID) as total, 
-                    SUM(CASE WHEN TinhTrang = 'Đã hoàn thành' THEN 1 ELSE 0 END) as completed,
-                    SUM(CASE WHEN TinhTrang = 'Chưa hoàn thành' THEN 1 ELSE 0 END) as not_completed
+                    COUNT(projectid) as total, 
+                    SUM(CASE WHEN tinhtrang = 'Đã hoàn thành' THEN 1 ELSE 0 END) as completed,
+                    SUM(CASE WHEN tinhtrang = 'Chưa hoàn thành' THEN 1 ELSE 0 END) as not_completed
                 FROM Project 
                 WHERE QuanLy = ?
             ";
@@ -74,19 +74,36 @@ class ProjectModel {
         // Check if the $user_id is 3
         if ($user_id == 3) {
             // Select all projects and order by NgayGiao in descending order
-            $listPrj = "SELECT * FROM Project ORDER BY NgayGiao DESC LIMIT ? OFFSET ?";
+            $listPrj = "SELECT projectid, ten, ngaygiao, hanchotdukien, hanchot, tiendo, sogiothuchanh, phongid, quanly, tinhtrang  FROM Project ORDER BY ngaygiao DESC LIMIT ? OFFSET ?";
             $stmt = $conn->prepare($listPrj);
             $stmt->bind_param('ii', $limit, $offset);
         } else {
             // Select projects where QuanLy equals $user_id and order by NgayGiao in descending order
-            $listPrj = "SELECT * FROM Project WHERE QuanLy = ? ORDER BY NgayGiao DESC LIMIT ? OFFSET ?";
+            $listPrj = "SELECT projectid, ten, ngaygiao, hanchotdukien, hanchot, tiendo, sogiothuchanh, phongid, quanly, tinhtrang  FROM Project WHERE quanly = ? ORDER BY ngaygiao DESC LIMIT ? OFFSET ?";
             $stmt = $conn->prepare($listPrj);
             $stmt->bind_param('iii', $user_id, $limit, $offset);
         }
     
         $stmt->execute();
         $result = $stmt->get_result();
-        $list = $result->fetch_all(MYSQLI_ASSOC);
+        //$list = $result->fetch_all(MYSQLI_ASSOC);
+
+        $list = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'ProjectID' => $row['projectid'] ?? 'N/A',
+                'Ten' => $row['ten'] ?? 'N/A',
+                'NgayGiao' => $row['ngaygiao'] ?? 'N/A',
+                'HanChotDuKien' => $row['hanchotdukien'] ?? 'N/A',
+                'HanChot' => $row['hanchot'] ?? 'N/A',
+                'TienDo' => $row['tiendo'] ?? 'N/A',
+                'SoGioThucHanh' => $row['sogiothuchanh'] ?? 'N/A',
+                'PhongID' => $row['phongid'] ?? 'N/A',
+                'QuanLy' => $row['quanly'] ?? 'N/A',
+                'TinhTrang' => $row['tinhtrang'] ?? 'N/A'
+            ];
+            $list[] = $row;
+        }
     
         $stmt->close();
         $db->close();
@@ -101,30 +118,30 @@ class ProjectModel {
         $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM Project WHERE 1=1";
 
         if ($user_id != 3) {
-            $sql .= " AND QuanLy = ?";
+            $sql .= " AND quanly = ?";
         }
         
         if (!empty($searchTerm)) {
-            $sql .= " AND Ten LIKE ?";
+            $sql .= " AND ten LIKE ?";
             $searchTerm = '%' . $searchTerm . '%';
         }
         
         if (!empty($types)) {
             $typePlaceholders = implode(',', array_fill(0, count($types), '?'));
-            $sql .= " AND TienDo IN ($typePlaceholders)";
+            $sql .= " AND tiendo IN ($typePlaceholders)";
         }
         
         if (!empty($statuses)) {
             $statusPlaceholders = implode(',', array_fill(0, count($statuses), '?'));
-            $sql .= " AND TinhTrang IN ($statusPlaceholders)";
+            $sql .= " AND tinhtrang IN ($statusPlaceholders)";
         }
 
         if (!empty($departments)) {
             $departmentPlaceholders = implode(',', array_fill(0, count($departments), '?'));
-            $sql .= " AND PhongID IN ($departmentPlaceholders)";
+            $sql .= " AND phongid IN ($departmentPlaceholders)";
         }
 
-        $sql .= " ORDER BY NgayGiao DESC LIMIT ? OFFSET ?";
+        $sql .= " ORDER BY ngaygiao DESC LIMIT ? OFFSET ?";
         $stmt = $conn->prepare($sql);
 
         $params = [];
@@ -140,7 +157,24 @@ class ProjectModel {
         $stmt->execute();
 
         $result = $stmt->get_result();
-        $projects = $result->fetch_all(MYSQLI_ASSOC);
+        //$projects = $result->fetch_all(MYSQLI_ASSOC);
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'ProjectID' => $row['projectid'] ?? 'N/A',
+                'Ten' => $row['ten'] ?? 'N/A',
+                'NgayGiao' => $row['ngaygiao'] ?? 'N/A',
+                'HanChotDuKien' => $row['hanchotdukien'] ?? 'N/A',
+                'HanChot' => $row['hanchot'] ?? 'N/A',
+                'TienDo' => $row['tiendo'] ?? 'N/A',
+                'SoGioThucHanh' => $row['sogiothuchanh'] ?? 'N/A',
+                'PhongID' => $row['phongid'] ?? 'N/A',
+                'QuanLy' => $row['quanly'] ?? 'N/A',
+                'TinhTrang' => $row['tinhtrang'] ?? 'N/A'
+            ];
+            $projects[] = $row;
+        }
 
         $stmt = $conn->query("SELECT FOUND_ROWS() as total");
         $totalResult = $stmt->fetch_assoc()['total'];
@@ -156,12 +190,21 @@ class ProjectModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT EmpID, HoTen FROM Profile WHERE Role = 'Quản lý'";
+        $query = "SELECT empid, hoten FROM Profile WHERE role = 'Quản lý'";
         $stmt = $conn->prepare($query);
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
+        //$requests = $result->fetch_all(MYSQLI_ASSOC);
+
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'EmpID' => $row['empid'] ?? 'N/A',
+                'HoTen' => $row['hoten'] ?? 'N/A'
+            ];
+            $requests[] = $row;
+        }
 
         $stmt->close();
         $db->close();
@@ -172,7 +215,7 @@ class ProjectModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $sql = "SELECT ProjectID FROM Project";
+        $sql = "SELECT projectid FROM Project";
         $stmt = $conn->prepare($sql);
         $stmt->execute();
 
@@ -193,7 +236,7 @@ class ProjectModel {
         $PhongID = '';
         $TinhTrang = 'Chưa hoàn thành';
 
-        $PhongIDQuery = "SELECT PhongID FROM Profile WHERE EmpID = ?";
+        $PhongIDQuery = "SELECT phongid FROM Profile WHERE EmpID = ?";
         $stmt = $conn->prepare($PhongIDQuery);
         $stmt->bind_param('i', $QuanLy);
         $stmt->execute();
@@ -201,7 +244,7 @@ class ProjectModel {
         $stmt->fetch();
         $stmt->close();
 
-        $query = "INSERT INTO Project (Ten, NgayGiao, HanChotDuKien, HanChot, TienDo, SoGioThucHanh, PhongID, QuanLy, TinhTrang)
+        $query = "INSERT INTO Project (ten, ngaygiao, hanchotdukien, hanchot, tiendo, sogiothuchanh, phongid, quanly, tinhtrang)
                   VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $conn->prepare($query);
@@ -221,9 +264,9 @@ class ProjectModel {
         $conn = $db->connect();
     
         $projectQuery = "
-            SELECT DISTINCT ProjectID
+            SELECT DISTINCT projectid
             FROM Time_sheet
-            WHERE EmpID = ?
+            WHERE empid = ?
         ";
         $projectStmt = $conn->prepare($projectQuery);
         $projectStmt->bind_param('i', $user_id);
@@ -257,11 +300,11 @@ class ProjectModel {
     
         $query = "
             SELECT 
-                COUNT(ProjectID) as total, 
-                SUM(CASE WHEN TinhTrang = 'Đã hoàn thành' THEN 1 ELSE 0 END) as completed,
-                SUM(CASE WHEN TinhTrang = 'Chưa hoàn thành' THEN 1 ELSE 0 END) as not_completed
+                COUNT(projectid) as total, 
+                SUM(CASE WHEN tinhtrang = 'Đã hoàn thành' THEN 1 ELSE 0 END) as completed,
+                SUM(CASE WHEN tinhtrang = 'Chưa hoàn thành' THEN 1 ELSE 0 END) as not_completed
             FROM Project
-            WHERE ProjectID IN (" . implode(',', array_fill(0, count($projectIDs), '?')) . ")
+            WHERE projectid IN (" . implode(',', array_fill(0, count($projectIDs), '?')) . ")
         ";
     
         $stmt = $conn->prepare($query);
@@ -293,7 +336,7 @@ class ProjectModel {
     
         $listPrj = "
             SELECT * FROM Project 
-            WHERE ProjectID IN ($placeholders)
+            WHERE projectid IN ($placeholders)
             LIMIT ? OFFSET ?
         ";
     
