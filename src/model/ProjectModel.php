@@ -364,21 +364,21 @@ class ProjectModel {
         $db = new Database();
         $conn = $db->connect();
         
-        $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM Project WHERE ProjectID IN (" . implode(',', array_fill(0, count($projectIDs), '?')) . ")";
+        $sql = "SELECT SQL_CALC_FOUND_ROWS * FROM Project WHERE projectid IN (" . implode(',', array_fill(0, count($projectIDs), '?')) . ")";
         
         if (!empty($searchTerm)) {
-            $sql .= " AND Ten LIKE ?";
+            $sql .= " AND ten LIKE ?";
             $searchTerm = '%' . $searchTerm . '%';
         }
         
         if (!empty($types)) {
             $typePlaceholders = implode(',', array_fill(0, count($types), '?'));
-            $sql .= " AND TienDo IN ($typePlaceholders)";
+            $sql .= " AND tiendo IN ($typePlaceholders)";
         }
         
         if (!empty($statuses)) {
             $statusPlaceholders = implode(',', array_fill(0, count($statuses), '?'));
-            $sql .= " AND TinhTrang IN ($statusPlaceholders)";
+            $sql .= " AND tinhtrang IN ($statusPlaceholders)";
         }
     
         $sql .= " LIMIT ? OFFSET ?";
@@ -394,7 +394,24 @@ class ProjectModel {
         $stmt->execute();
     
         $result = $stmt->get_result();
-        $projects = $result->fetch_all(MYSQLI_ASSOC);
+        //$projects = $result->fetch_all(MYSQLI_ASSOC);
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'ProjectID' => $row['projectid'] ?? 'N/A',
+                'Ten' => $row['ten'] ?? 'N/A',
+                'NgayGiao' => $row['ngaygiao'] ?? 'N/A',
+                'HanChotDuKien' => $row['hanchotdukien'] ?? 'N/A',
+                'HanChot' => $row['hanchot'] ?? 'N/A',
+                'TienDo' => $row['tiendo'] ?? 'N/A',
+                'SoGioThucHanh' => $row['sogiothuchanh'] ?? 'N/A',
+                'PhongID' => $row['phongid'] ?? 'N/A',
+                'QuanLy' => $row['quanly'] ?? 'N/A',
+                'TinhTrang' => $row['tinhtrang'] ?? 'N/A'
+            ];
+            $projects[] = $row;
+        }
     
         $stmt = $conn->query("SELECT FOUND_ROWS() as total");
         $totalResult = $stmt->fetch_assoc()['total'];
@@ -414,45 +431,68 @@ class ProjectModel {
         $query = " 
             SELECT 
                 p.*, 
-                pr.HoTen, 
-                pb.TenPhong 
+                pr.hoten, 
+                pb.tenphong 
             FROM 
                 Project p
             LEFT JOIN 
-                Profile pr ON p.QuanLy = pr.EmpID
+                Profile pr ON p.quanly = pr.empid
             LEFT JOIN 
-                PhongBan pb ON p.PhongID = pb.PhongID
+                PhongBan pb ON p.phongid = pb.phongid
             WHERE 
-                p.ProjectID = ?";
+                p.projectid = ?";
 
         $stmt = $conn->prepare($query);
         $stmt->bind_param('s', $ProjectID);
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $requests = $result->fetch_assoc();
-    
+        $request = $result->fetch_assoc();
         $stmt->close();
         $db->close();
-        return $requests;
+        if ($request) {
+            $requests = [
+                'ProjectID' => $request['projectid'] ?? 'N/A',
+                'Ten' => $request['ten'] ?? 'N/A',
+                'NgayGiao' => $request['ngaygiao'] ?? 'N/A',
+                'HanChotDuKien' => $request['hanchotdukien'] ?? 'N/A',
+                'HanChot' => $request['hanchot'] ?? 'N/A',
+                'TienDo' => $request['tiendo'] ?? 'N/A',
+                'SoGioThucHanh' => $request['sogiothuchanh'] ?? 'N/A',
+                'PhongID' => $request['phongid'] ?? 'N/A',
+                'QuanLy' => $request['quanly'] ?? 'N/A',
+                'TinhTrang' => $request['tinhtrang'] ?? 'N/A',
+                'HoTen' => $request['hoten'] ?? 'N/A',
+                'TenPhong' => $request['tenphong'] ?? 'N/A'
+            ];
+            return $requests;
+        }
     }
 
     public static function getEmployeesByUserDepartment($user_id) {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "SELECT p2.EmpID, p2.HoTen 
+        $query = "SELECT p2.empid, p2.hoten 
                   FROM Profile p1
-                  LEFT JOIN Profile p2 ON p1.PhongID = p2.PhongID
-                  WHERE p1.EmpID = ?";
+                  LEFT JOIN Profile p2 ON p1.phongid = p2.phongid
+                  WHERE p1.empid = ?";
                   
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $employees = $result->fetch_all(MYSQLI_ASSOC);
-    
+
+        $employees = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'EmpID' => $row['empid'] ?? 'N/A',
+                'HoTen' => $row['hoten'] ?? 'N/A'
+            ];
+            $employees[] = $row;
+        }
+
         $stmt->close();
         $db->close();
         return $employees;
@@ -464,25 +504,25 @@ class ProjectModel {
         
         if ($user_id == 3) {
             $sql = "
-                SELECT SQL_CALC_FOUND_ROWS t.*, p.HoTen as AssigneeName, p2.TenPhong 
+                SELECT SQL_CALC_FOUND_ROWS t.*, p.hoten as AssigneeName, p2.tenphong 
                 FROM Time_sheet t
-                LEFT JOIN Profile p ON t.EmpID = p.EmpID
-                LEFT JOIN PhongBan p2 ON t.PhongBan = p2.PhongID
-                WHERE t.ProjectID = ?
+                LEFT JOIN Profile p ON t.empid = p.empid
+                LEFT JOIN PhongBan p2 ON t.phongban = p2.phongid
+                WHERE t.projectid = ?
             ";
         } else {
             $sql = "
-                SELECT SQL_CALC_FOUND_ROWS t.*, p.HoTen as AssigneeName, p2.TenPhong 
+                SELECT SQL_CALC_FOUND_ROWS t.*, p.hoten as AssigneeName, p2.tenphong 
                 FROM Time_sheet t
-                LEFT JOIN Profile p ON t.EmpID = p.EmpID
-                LEFT JOIN PhongBan p2 ON t.PhongBan = p2.PhongID
-                WHERE t.EmpID IN (" . implode(',', array_fill(0, count($employeeIDs), '?')) . ")
-                AND t.ProjectID = ?
+                LEFT JOIN Profile p ON t.empid = p.empid
+                LEFT JOIN PhongBan p2 ON t.phongban = p2.phongid
+                WHERE t.empid IN (" . implode(',', array_fill(0, count($employeeIDs), '?')) . ")
+                AND t.projectid = ?
             ";
         }
     
         if (!empty($searchTerm)) {
-            $sql .= " AND t.NguoiGui LIKE ?";
+            $sql .= " AND t.nguoigui LIKE ?";
             $searchTerm = '%' . $searchTerm . '%';
         }
     
@@ -510,6 +550,25 @@ class ProjectModel {
     
         $result = $stmt->get_result();
         $timeSheets = $result->fetch_all(MYSQLI_ASSOC);
+
+        foreach ($timeSheets as &$timeSheet) {
+            $timeSheet = [
+                'TenPhong' => $timeSheet['tenphong'] ?? 'N/A',
+                'ProjectID' => $timeSheet['projectid'] ?? 'N/A',
+                'Time_sheetID' => $timeSheet['time_sheetid'] ?? 'N/A',
+                'EmpID' => $timeSheet['empid'] ?? 'N/A',
+                'TenDuAn' => $timeSheet['tenduan'] ?? 'N/A',
+                'NguoiGui' => $timeSheet['nguoigui'] ?? 'N/A',
+                'PhongBan' => $timeSheet['phongban'] ?? 'N/A',
+                'TrangThai' => $timeSheet['trangthai'] ?? 'N/A',
+                'SoGioThucHien' => $timeSheet['sogiothuchien'] ?? 'N/A',
+                'NgayGiao' => $timeSheet['ngaygiao'] ?? 'N/A',
+                'HanChot' => $timeSheet['hanchot'] ?? 'N/A',
+                'DiemThuong' => $timeSheet['diemthuong'] ?? 'N/A',
+                'Tre' => $timeSheet['tre'] ?? 'N/A',
+                'NoiDung' => $timeSheet['noidung'] ?? 'N/A'
+            ];
+        }
     
         // Lấy tổng số lượng bản ghi
         $totalResult = $conn->query("SELECT FOUND_ROWS() as total");
@@ -528,7 +587,7 @@ class ProjectModel {
         $TenDuAn = '';
         $NguoiGui = '';
 
-        $queryTenDuAn = "SELECT Ten FROM Project WHERE ProjectID = ?";
+        $queryTenDuAn = "SELECT ten FROM Project WHERE projectid = ?";
         $stmtTenDuAn = $conn->prepare($queryTenDuAn);
         $stmtTenDuAn->bind_param('s', $projectID);
         $stmtTenDuAn->execute();
@@ -537,22 +596,21 @@ class ProjectModel {
         $stmtTenDuAn->close();
     
         // Truy vấn lấy NguoiGui từ bảng Profile
-        $queryNguoiGui = "SELECT HoTen FROM Profile WHERE EmpID = ?";
+        $queryNguoiGui = "SELECT hoten FROM Profile WHERE empid = ?";
         $stmtNguoiGui = $conn->prepare($queryNguoiGui);
         $stmtNguoiGui->bind_param('i', $assignee);
         $stmtNguoiGui->execute();
         $stmtNguoiGui->bind_result($NguoiGui);
         $stmtNguoiGui->fetch();
         $stmtNguoiGui->close();
-        $TienDo = 0;
         $TrangThai = 'Chưa hoàn thành';
         $SoGio = 0;
 
-        $query = "INSERT INTO Time_sheet (ProjectID, EmpID, TenDuAn, NguoiGui, PhongBan, TienDo, TrangThai, SoGioThucHien, NgayGiao, HanChot, DiemThuong, NoiDung)
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO Time_sheet (projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, noidung)
+                  VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         $stmt = $conn->prepare($query);
-        $stmt->bind_param('sisssisissis', $projectID, $assignee, $TenDuAn, $NguoiGui, $PhongBan, $TienDo, $TrangThai, $SoGio, $today, $deadline, $reward, $description);
+        $stmt->bind_param('sissssissis', $projectID, $assignee, $TenDuAn, $NguoiGui, $PhongBan, $TrangThai, $SoGio, $today, $deadline, $reward, $description);
         
         $result = $stmt->execute();
         
@@ -562,39 +620,130 @@ class ProjectModel {
         return $result;
     }
 
-    public static function UpdateProjectStatus($projectID_s, $newStatus) {
+    public static function getTimeSheetID_QL($employeeIDs, $projectID) {
         $db = new Database();
         $conn = $db->connect();
-        // var_dump($projectID_s);
-        // var_dump($newStatus);
-
-        $query = "UPDATE Project SET TinhTrang = ?, TienDo = '100%' WHERE ProjectID = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('ss', $newStatus, $projectID_s);
+    
+        $sql = "
+            SELECT time_sheetid 
+            FROM Time_sheet 
+            WHERE empid IN (" . implode(',', array_fill(0, count($employeeIDs), '?')) . ") 
+            AND projectid = ?
+        ";
+    
+        $params = array_merge($employeeIDs, [$projectID]);
+        $types = str_repeat('i', count($employeeIDs)) . 's';
+    
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+    
+        $result = $stmt->get_result();
+        $timeSheetIDs = $result->fetch_all(MYSQLI_ASSOC); 
         
-        $result = $stmt->execute();
-
         $stmt->close();
         $db->close();
+        
+        return array_column($timeSheetIDs, 'time_sheetid'); 
+    }
+    
+    public static function UpdateProjectStatus($projectID_s, $newStatus) {
+        $db = new Database();
+        $conn_s = $db->connect();
+    
+        if ($newStatus === 'Hoàn thành') {
+            $tiendo = '100%';
+        } else {
+            $tiendo = '0%';
+        }
+    
+        $query = "UPDATE Project SET tinhtrang = ?, tiendo = ? WHERE projectid = ?";
+        $stmt = $conn_s->prepare($query);
+        
+        if ($stmt === false) {
+            echo "Lỗi khi chuẩn bị statement cho Project update: " . $conn_s->error;
+            return false;
+        }
+    
+        $stmt->bind_param('sss', $newStatus, $tiendo, $projectID_s);
+        $result = $stmt->execute();
+        
+        $stmt->close();
+        $db->close();
+    
         return $result;
     }
+
+    public static function UpdateTimeSheetStatus($projectID_s, $timeSheetStatus, $employeeIDs) {    
+            $timeSheetIDs = self::getTimeSheetID_QL($employeeIDs, $projectID_s);
+    
+            if (!empty($timeSheetIDs)) {
+                $placeholders = implode(',', array_fill(0, count($timeSheetIDs), '?'));
+                $queryUpdateTimeSheet = "
+                    UPDATE Time_sheet 
+                    SET trangthai = ? 
+                    WHERE time_sheetid IN ($placeholders)
+                ";
+                $db = new Database();
+                $conn_s = $db->connect();
+
+                $params = array_merge([$timeSheetStatus], $timeSheetIDs);
+                $types = 's' . str_repeat('i', count($timeSheetIDs));
+    
+                $stmtUpdateTimeSheet = $conn_s->prepare($queryUpdateTimeSheet);
+    
+                if ($stmtUpdateTimeSheet === false) {
+                    echo "Lỗi khi chuẩn bị statement cho time_sheet update: " . $conn_s->error;
+                    $conn_s->close();
+                    return false;
+                }
+    
+                $stmtUpdateTimeSheet->bind_param($types, ...$params);
+                $stmtUpdateTimeSheet->execute();
+                $stmtUpdateTimeSheet->close();
+            }
+    
+        $db->close();
+        return true;
+    }
+    
+    
 
     //================ Time Sheet ======================
     public static function getDetailTimeSheet($timeSheetID) {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "SELECT * FROM Time_sheet WHERE Time_sheetID = ?";
+        $query = "SELECT * FROM Time_sheet WHERE time_sheetid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $timeSheetID);
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $timeSheet = $result->fetch_assoc();
+        $timeSheets = $result->fetch_assoc();
     
         $stmt->close();
         $db->close();
-        return $timeSheet;
+
+        if ($timeSheets) {
+            $timeSheet = [
+                'Time_sheetID' => $timeSheets['time_sheetid'] ?? 'N/A',
+                'ProjectID' => $timeSheets['projectid'] ?? 'N/A',
+                'EmpID' => $timeSheets['empid'] ?? 'N/A',
+                'TenDuAn' => $timeSheets['tenduan'] ?? 'N/A',
+                'NguoiGui' => $timeSheets['nguoigui'] ?? 'N/A',
+                'PhongBan' => $timeSheets['phongban'] ?? 'N/A',
+                'TrangThai' => $timeSheets['trangthai'] ?? 'N/A',
+                'SoGioThucHien' => $timeSheets['sogiothuchien'] ?? 'N/A',
+                'NgayGiao' => $timeSheets['ngaygiao'] ?? 'N/A',
+                'HanChot' => $timeSheets['hanchot'] ?? 'N/A',
+                'DiemThuong' => $timeSheets['diemthuong'] ?? 'N/A',
+                'Tre' => $timeSheets['tre'] ?? 'N/A',
+                'NoiDung' => $timeSheets['noidung'] ?? 'N/A'
+            ];
+            return $timeSheet;
+        }
+
     }
 }
 ?>

@@ -103,6 +103,16 @@
         $(document).ready(function() {
             $('#create-project-form').on('submit', function(e) {
                 e.preventDefault();
+                var startDate = new Date($('#startDate').val());
+                var expectedDeadline = new Date($('#expectedDeadline').val());
+                var deadline = new Date($('#deadline').val());
+
+                // Kiểm tra nếu expectedDeadline hoặc deadline nhỏ hơn startDate
+                if (expectedDeadline < startDate || deadline < startDate) {
+                    showPopup("Hạn chót dự kiến và hạn chót phải lớn hơn hoặc bằng ngày giao!", false);
+                    return; // Dừng việc gửi form
+                }
+
                 var formData = new FormData(this); 
                 $.ajax({
                     type: 'POST',

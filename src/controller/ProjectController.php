@@ -177,8 +177,7 @@ class ProjectController {
 
             $timeSheets = $result['timeSheets'];
             $totalTimeSheets = $result['total'];
-            //print_r($timeSheets);
-                        
+                    
             $file = "./views/pages/project_detail.phtml";
 
             if (isset($_GET['ajax'])) {
@@ -368,7 +367,11 @@ class ProjectController {
             $projectID_s = $_POST['projectID'];
             $newStatus = $_POST['newStatus'];
 
+            $employees = ProjectModel::getEmployeesByUserDepartment($user_id);
+            $employeeIDs = array_column($employees, 'EmpID');
+
             $result = ProjectModel::UpdateProjectStatus($projectID_s, $newStatus);
+            $result_s = ProjectModel::UpdateTimeSheetStatus($projectID_s, $newStatus, $employeeIDs);
 
             echo json_encode([
                 'success' => $result, 
