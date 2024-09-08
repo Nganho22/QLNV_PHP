@@ -8,7 +8,7 @@ class ActivityModel {
     }
 
     private function formatDate($date) {
-        // Chuyển đổi ngày thành định dạng 'd-m-Y'
+
         $dateTime = DateTime::createFromFormat('Y-m-d', $date);
         return $dateTime ? $dateTime->format('d-m-Y') : $date;
     }

@@ -48,19 +48,20 @@ class UserModel {
             ];
             return $user;
         }
+        return null;
 
     }
 
+    public function getprofile($user_id){
+        
+        $url = $this->apiUrl . '/findByID/' . $user_id;
 
-    public static function getprofile($user_id){
-        $db = new Database();
-        $conn = $db->connect();
+        if (!$this->isApiAvailable($url)) {
+            return null;
+        }
 
-        $stmt = $conn->prepare("SELECT phongid, role, hoten, email, gioitinh, sodienthoai, cccd, stk, luong, diemthuong, diachi, image 
-                                FROM profile WHERE empid = ?");
-        $stmt->bind_param("i", $user_id,);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        $response = file_get_contents($url);
+        $userData = json_decode($response, true);
 
         $profile = [
             'TenPhong' => null,
@@ -77,9 +78,9 @@ class UserModel {
             'Image' => null
         ];
 
-        if($result->num_rows > 0){
-            $u = $result->fetch_assoc();
-
+        if ($userData && is_array($userData)) {
+            $u = $userData;
+            $profile['EmpID'] = $u['empid'];
             $profile['HoTen'] = $u['hoten'];
             $profile['Role'] = $u['role'];
             $profile['Email'] = $u['email'];
@@ -93,60 +94,11 @@ class UserModel {
 
             $profile['Image'] = 'public/img/avatar/'.$u['image'];
             $profile['Image_name'] = $u['image'];
-            
-
-            if (!is_null($u['phongid'])) {
-                $phong_stmt = $conn->prepare("SELECT tenphong FROM PhongBan WHERE phongid = ?");
-                $phong_stmt->bind_param("i", $u['PhongID']);
-                $phong_stmt->execute();
-                $phong_result = $phong_stmt->get_result();
-                if ($phong_result->num_rows > 0) {
-                    $phong_row = $phong_result->fetch_assoc();
-                    $profile['TenPhong'] = $phong_row['tenphong'];
-                }
-                $phong_stmt->close();
-            }
+            $profile['TenPhong'] = $u['tenphong'];
         }
-        $profile['EmpID'] = $user_id;
-        $stmt->close();
-        $db->close();
         return $profile;
     }
 
-    public static function gettimesheet($user_id) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $stmt = $conn->prepare("SELECT * 
-                                FROM time_sheet WHERE empid = ?");
-        $stmt->bind_param("i", $user_id,);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $timesheets = array();
-        while ($row = $result->fetch_assoc()) {
-            $timesheet =[
-                'Time_SheetID' => $row['time_sheetid'],
-                'ProjectID' => $row['projectid'],
-                'EmpID' => $row['empid'],
-                'TenDuAn' => $row['tenduan'],
-                'NguoiGui' => $row['nguoigui'],
-                'PhongBan' => $row['phongban'],
-                'TrangThai' => $row['trangthai'],
-                'SoGioThucHien' => $row['sogiothuchien'],
-                'NgayGiao' => $row['ngaygiao'],
-                'HanChot' => $row['hanchot'],
-                'DiemThuong' => $row['diemthuong'],
-                'Tre' => $row['tre'],
-                'NoiDung' => $row['noidung']
-
-            ];
-            $timesheets[]=$timesheet;
-            
-        }
-        $stmt->close();
-        $db->close();
-        return $timesheets;
-    }
 
     public static function getCountPrj_NV($user_id) {
         $db = new Database();

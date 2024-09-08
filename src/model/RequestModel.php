@@ -125,6 +125,41 @@ class RequestModel {
         return (int)$total;
     }
 
+    public static function gettimesheet($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT * 
+                                FROM time_sheet WHERE empid = ?");
+        $stmt->bind_param("i", $user_id,);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $timesheets = array();
+        while ($row = $result->fetch_assoc()) {
+            $timesheet =[
+                'Time_SheetID' => $row['time_sheetid'],
+                'ProjectID' => $row['projectid'],
+                'EmpID' => $row['empid'],
+                'TenDuAn' => $row['tenduan'],
+                'NguoiGui' => $row['nguoigui'],
+                'PhongBan' => $row['phongban'],
+                'TrangThai' => $row['trangthai'],
+                'SoGioThucHien' => $row['sogiothuchien'],
+                'NgayGiao' => $row['ngaygiao'],
+                'HanChot' => $row['hanchot'],
+                'DiemThuong' => $row['diemthuong'],
+                'Tre' => $row['tre'],
+                'NoiDung' => $row['noidung']
+
+            ];
+            $timesheets[]=$timesheet;
+            
+        }
+        $stmt->close();
+        $db->close();
+        return $timesheets;
+    }
+
     public static function getTimeSheetsByEmpID($user_id) {
         $db = new Database();
         $conn = $db->connect();

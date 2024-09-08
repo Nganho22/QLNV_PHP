@@ -204,8 +204,11 @@ class HomeController{
         if (isset($_SESSION['user'])) {
             $title='Profile';
             $user_id = $_SESSION['user']['EmpID'];
-            $profile = UserModel::getprofile($user_id);
-            $timesheets = UserModel::gettimesheet($user_id);
+            $ProfileApiUrl = 'http://localhost:9003/apiProfile';
+            $modelUser = new UserModel($ProfileApiUrl);
+            $profile = $modelUser->getprofile($user_id);
+            
+            $timesheets = RequestModel::gettimesheet($user_id);
             $cNghi= UserModel::getCountNghiPhep($user_id);
             $cTre= UserModel::getCountTre($user_id);
             $cPrj = UserModel::getCountPrj_GD();
@@ -249,7 +252,9 @@ class HomeController{
         if (isset($_SESSION['user'])) {
             $title='Cập nhật Profile';
             $user_id = $_SESSION['user']['EmpID'];
-            $profile = UserModel::getprofile($user_id);
+            $ProfileApiUrl = 'http://localhost:9003/apiProfile';
+            $modelUser = new UserModel($ProfileApiUrl);
+            $profile = $modelUser->getprofile($user_id);
             $message='';
             if (isset($_GET['status'])) {
                 if ($_GET['status']  === 'checked-in') {
@@ -306,7 +311,9 @@ class HomeController{
                 }
             }
 
-            $currentProfile = UserModel::getprofile($user_id);
+            $ProfileApiUrl = 'http://localhost:9003/apiProfile';
+            $modelUser = new UserModel($ProfileApiUrl);
+            $currentProfile  = $modelUser->getprofile($user_id);
             $currentImage = $currentProfile['Image_name'];
 
             // Xử lý ảnh

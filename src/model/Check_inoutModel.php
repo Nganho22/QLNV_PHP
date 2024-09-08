@@ -31,8 +31,8 @@ class Check_inoutModel {
         
         $countLateQuery = "SELECT COUNT(*) AS countLate
                                     FROM Check_inout
-                                    WHERE EmpID = ?
-                                    AND Late = 1";
+                                    WHERE empid = ?
+                                    AND late = 1";
         $stmt = $conn->prepare($countLateQuery);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -41,8 +41,8 @@ class Check_inoutModel {
     
         $absenceQuery = "SELECT COUNT(*) AS absence
                                     FROM Check_inout
-                                    WHERE EmpID = ?
-                                    AND Nghi = 1";
+                                    WHERE empid = ?
+                                    AND nghi = 1";
         $stmt = $conn->prepare($absenceQuery);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -62,9 +62,9 @@ class Check_inoutModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $stmt = $conn->prepare("SELECT Time_sheet.TenDuAn, Time_sheet.HanChot 
+        $stmt = $conn->prepare("SELECT Time_sheet.tenduan, Time_sheet.hanchot 
                                 FROM Time_sheet
-                                WHERE Time_sheet.EmpID = ?");
+                                WHERE Time_sheet.empid = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -72,8 +72,8 @@ class Check_inoutModel {
         $deadlines = [];
         while ($row = $result->fetch_assoc()) {
             $deadlines[] = [
-                'TenDuAn' => $row['TenDuAn'],
-                'HanChot' => $row['HanChot']
+                'TenDuAn' => $row['tenduan'],
+                'HanChot' => $row['hanchot']
             ];
         }
     
@@ -92,7 +92,24 @@ class Check_inoutModel {
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'Time_sheetID' => $row['time_sheetid'] ?? 'N/A',
+                'ProjectID' => $row['projectid'] ?? 'N/A',
+                'TenDuAn' => $row['tenduan'] ?? 'N/A',
+                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
+                'PhongBan' => $row['phongban'] ?? 'N/A',
+                'TrangThai' => $row['trangthai'] ?? 'N/A',
+                'SoGioThucHien' => $row['sogiothuchien'] ?? 'N/A',
+                'NgayGiao' => $row['ngaygiao'] ?? 'N/A',
+                'HanChot' => $row['hanchot'] ?? 'N/A',
+                'DiemThuong' => $row['diemthuong'] ?? 'N/A',
+                'Tre' => $row['tre'] ?? 'N/A',
+                'NoiDung' => $row['noidung'] ?? 'N/A'
+            ];
+            $requests[] = $row;
+        }
 
         $stmt->close();
         $db->close();
@@ -105,15 +122,23 @@ class Check_inoutModel {
         
         $query = "SELECT *
                   FROM Check_inout
-                  WHERE EmpID = ?";
+                  WHERE empid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         
         $data = [];
-        while ($row = $result->fetch_assoc()) {
-            $data[] = $row;
+        while ($checkinoutData = $result->fetch_assoc()) {
+            $CheckInOut['STT'] =  $checkinoutData['stt'];
+            $CheckInOut['Time_checkin'] =  $checkinoutData['timecheckin'];
+            $CheckInOut['Time_checkout'] =  $checkinoutData['timecheckout'];
+            $CheckInOut['WorkFromHome'] =  $checkinoutData['workfromhome'];
+            $CheckInOut['Nghi'] =  $checkinoutData['nghi'];
+            $CheckInOut['Late'] =  $checkinoutData['late'];
+            $CheckInOut['Overtime'] =  $checkinoutData['overtime'];
+
+            $data[]=$CheckInOut;
         }
         
         $stmt->close();
@@ -127,11 +152,11 @@ class Check_inoutModel {
         $conn = $db->connect();
         
         // Lấy PhongID của người dùng hiện tại
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE EmpID = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $phongID = $result->fetch_assoc()['PhongID'];
+        $phongID = $result->fetch_assoc()['phongid'];
         $stmt->close();
         
         if (!$phongID) {
@@ -142,8 +167,8 @@ class Check_inoutModel {
         $stmt = $conn->prepare(
             "SELECT COUNT(*) AS total
             FROM Check_inout
-            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
-            WHERE Profile.PhongID = ?"
+            INNER JOIN Profile ON Check_inout.empid = Profile.empid
+            WHERE Profile.phongid = ?"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
@@ -153,9 +178,9 @@ class Check_inoutModel {
         $stmt = $conn->prepare(
             "SELECT COUNT(*) AS ontime
             FROM Check_inout
-            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
-            WHERE Profile.PhongID = ?
-            AND Check_inout.Late = 0"
+            INNER JOIN Profile ON Check_inout.empid = Profile.empid
+            WHERE Profile.phongid = ?
+            AND Check_inout.late = 0"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
@@ -165,9 +190,9 @@ class Check_inoutModel {
         $stmt = $conn->prepare(
             "SELECT COUNT(*) AS late
             FROM Check_inout
-            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
-            WHERE Profile.PhongID = ?
-            AND Check_inout.Late = 1"
+            INNER JOIN Profile ON Check_inout.empid = Profile.empid
+            WHERE Profile.phongid = ?
+            AND Check_inout.late = 1"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
@@ -177,18 +202,18 @@ class Check_inoutModel {
         $stmt = $conn->prepare(
             "SELECT COUNT(*) AS checkout
             FROM Check_inout
-            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
-            WHERE Profile.PhongID = ?
-            AND Check_inout.Time_checkout IS NOT NULL"
+            INNER JOIN Profile ON Check_inout.empid = Profile.empid
+            WHERE Profile.phongid = ?
+            AND Check_inout.time_checkout IS NOT NULL"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
         $result = $stmt->get_result();
         $cCheckInOut = $result->fetch_assoc()['checkout'] ?? 0;
     
-        $deductedFelicitationQuery = "SELECT SUM(Point) AS deducted
+        $deductedFelicitationQuery = "SELECT SUM(point) AS deducted
                                     FROM Felicitation 
-                                    WHERE NguoiNhan = ? AND Point<0";
+                                    WHERE nguoinhan = ? AND point<0";
         $stmt = $conn->prepare($deductedFelicitationQuery);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -197,7 +222,7 @@ class Check_inoutModel {
     
         $availableVoucher = "SELECT COUNT(*) AS cvoucher
                                 FROM Felicitation
-                                WHERE NguoiNhan = ? AND VoucherID IS NOT NULL";
+                                WHERE nguoinhan = ? AND voucherid IS NOT NULL";
         $stmt = $conn->prepare($availableVoucher);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -206,10 +231,10 @@ class Check_inoutModel {
     
         $usedVoucher = "SELECT COUNT(*) AS uvoucher
                         FROM Voucher
-                        WHERE VoucherID IN (
-                            SELECT VoucherID
+                        WHERE voucherid IN (
+                            SELECT voucherid
                             FROM Felicitation
-                            WHERE NguoiNhan = ? AND VoucherID IS NOT NULL
+                            WHERE nguoinhan = ? AND voucherid IS NOT NULL
                         ) AND TinhTrang = 'Đã dùng'";
         $stmt = $conn->prepare($usedVoucher);
         $stmt->bind_param('i', $user_id);
@@ -235,11 +260,11 @@ class Check_inoutModel {
         $conn = $db->connect();
     
         // Lấy PhongID của người dùng hiện tại
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $phongID = $result->fetch_assoc()['PhongID'];
+        $phongID = $result->fetch_assoc()['phongid'];
         $stmt->close();
         
         if (!$phongID) {
@@ -247,27 +272,27 @@ class Check_inoutModel {
             return 0;
         }
     
-        $query = "SELECT c.Date_checkin AS ThoiGian,
-                         p.HoTen AS NhanVien,
-                         c.Time_checkin AS GioCheckIn,
-                         c.Time_checkout AS GioCheckOut,
+        $query = "SELECT c.date_checkin,
+                         p.hoten AS NhanVien,
+                         c.time_checkin AS GioCheckIn,
+                         c.time_checkout AS GioCheckOut,
                          CASE
-                             WHEN c.Late = 1 THEN 'Trễ'
-                             WHEN c.Nghi = 1 THEN 'Nghỉ'
-                             WHEN c.WorkFromHome = 1 THEN 'Làm việc tại nhà'
-                             WHEN c.Late = 0 AND c.Nghi = 0 AND c.WorkFromHome = 0 THEN 'Không có'
+                             WHEN c.late = 1 THEN 'Trễ'
+                             WHEN c.nghi = 1 THEN 'Nghỉ'
+                             WHEN c.workfromhome = 1 THEN 'Làm việc tại nhà'
+                             WHEN c.late = 0 AND c.nghi = 0 AND c.workfromhome = 0 THEN 'Không có'
                             ELSE ''
                          END AS Note,
                          CASE
-                             WHEN c.Time_checkin IS NOT NULL AND c.Time_checkout IS NULL THEN 'Đã check-in'
-                             WHEN c.Time_checkin IS NOT NULL AND c.Time_checkout IS NOT NULL THEN 'Đã check-out'
-                             WHEN c.Time_checkin IS NULL AND c.Time_checkout IS NULL THEN 'Không có'
+                             WHEN c.time_checkin IS NOT NULL AND c.time_checkout IS NULL THEN 'Đã check-in'
+                             WHEN c.time_checkin IS NOT NULL AND c.time_checkout IS NOT NULL THEN 'Đã check-out'
+                             WHEN c.time_checkin IS NULL AND c.time_checkout IS NULL THEN 'Không có'
                              ELSE 'Chưa check-in'
                          END AS statusCheck
                   FROM Check_inout c
-                  JOIN Profile p ON c.EmpID = p.EmpID
-                  WHERE p.PhongID = ?
-                  ORDER BY c.Date_checkin DESC
+                  JOIN Profile p ON c.empid = p.empid
+                  WHERE p.phongid = ?
+                  ORDER BY c.date_checkin DESC
                   LIMIT ? OFFSET ?";
         
         $stmt = $conn->prepare($query);
@@ -275,11 +300,22 @@ class Check_inoutModel {
         $stmt->execute();
     
         $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
+        $data = [];
+        while ($checkinoutData = $result->fetch_assoc()) {
+            $CheckInOut['ThoiGian'] =  $checkinoutData['date_checkin'];
+            $CheckInOut['NhanVien'] =  $checkinoutData['hoten'];
+            $CheckInOut['GioCheckOut'] =  $checkinoutData['timecheckout'];
+            $CheckInOut['GioCheckIn'] =  $checkinoutData['time_checkin'];
+            $CheckInOut['Note'] =  $checkinoutData['Note'];
+            $CheckInOut['statusCheck'] =  $checkinoutData['statusCheck'];
+
+            $data[]=$CheckInOut;
+        }
+
     
         $stmt->close();
         $db->close();
-        return $requests;
+        return $data;
     }
     
     
@@ -288,11 +324,11 @@ class Check_inoutModel {
         $conn = $db->connect();
 
         // Lấy PhongID của người dùng hiện tại
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE EmpID = ?");
+        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
         $stmt->bind_param("i", $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $phongID = $result->fetch_assoc()['PhongID'];
+        $phongID = $result->fetch_assoc()['phongid'];
         $stmt->close();
         
         if (!$phongID) {
@@ -303,8 +339,8 @@ class Check_inoutModel {
         $stmt = $conn->prepare(
             "SELECT COUNT(*) AS total
             FROM Check_inout
-            INNER JOIN Profile ON Check_inout.EmpID = Profile.EmpID
-            WHERE Profile.PhongID = ?"
+            INNER JOIN Profile ON Check_inout.empid = Profile.empid
+            WHERE Profile.phongid = ?"
         );
         $stmt->bind_param("s", $phongID);
         $stmt->execute();
@@ -321,14 +357,14 @@ class Check_inoutModel {
         $db = new Database();
         $conn = $db->connect();
         
-        // Truy vấn tổng điểm hàng tháng, bao gồm cả điểm bị trừ
+
         $stmt = $conn->prepare("
-            SELECT MONTH(Date) AS month, 
-                   SUM(CASE WHEN NguoiTang = ? THEN -Point ELSE Point END) AS total_points
+            SELECT MONTH(date) AS month, 
+                   SUM(CASE WHEN nguoitang = ? THEN -point ELSE point END) AS total_points
             FROM Felicitation
-            WHERE NguoiNhan = ? OR NguoiTang = ?
-            GROUP BY MONTH(Date)
-            ORDER BY MONTH(Date)
+            WHERE nguoinhan = ? OR nguoitang = ?
+            GROUP BY MONTH(date)
+            ORDER BY MONTH(date)
         ");
         $stmt->bind_param("iii", $user_id, $user_id, $user_id);
         $stmt->execute();
