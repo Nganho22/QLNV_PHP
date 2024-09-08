@@ -10,20 +10,17 @@ class PasswordController {
     private $model;
     private $apiUrlActivity = 'http://localhost:9002/apiActivity';
 
-
-    public function __construct() {
-        $this->model = new PassModel();
-    }
-
     public function sendCode() {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $email = $_POST['email'];
             $_SESSION['email'] = $email; 
-
-            if ($this->model->isEmailExists($email)) {
-                $this->model->deleteOldResetCode($email);
-                $code = $this->model->generateResetCode();
-                if ($this->model->storeResetCode($email, $code)) {
+    
+            $emaiExist = PassModel::isEmailExists($email);
+    
+            if ($emaiExist) {
+                PassModel::deleteOldResetCode($email);
+                $code = PassModel::generateResetCode();
+                if (PassModel::storeResetCode($email, $code)) {
                     if ($this->sendEmail($email, $code)) {
                         $_SESSION['reset_email'] = $email;
                         echo json_encode([
@@ -51,6 +48,7 @@ class PasswordController {
             exit();
         }
     }
+    
 
     private function sendEmail($to, $code) {
         $mail = new PHPMailer(true);
@@ -69,7 +67,7 @@ class PasswordController {
 
             $mail->isHTML(true);
             $mail->Subject = 'Code reset password';
-            $mail->Body    = "Bạn đã yêu cầu thay đổi mật khẩu từ ứng dụng QLNV_PHP. Mã xác nhận của bạn là: <strong>$code</strong>";
+            $mail->Body    = "This is your code to change password: <strong>$code</strong>";
 
             $mail->send();
             return true;
@@ -97,9 +95,9 @@ class PasswordController {
                 exit();
             }
 
-            if ($this->model->isValidResetCode($email, $code)) {
-                if ($this->model->updatePassword($email, $newPassword)) {
-                    $this->model->deletePasswordReset($email, $code);
+            if (PassModel::isValidResetCode($email, $code)) {
+                if (PassModel::updatePassword($email, $newPassword)) {
+                    PassModel::deletePasswordReset($email, $code);
                     echo json_encode([
                         'success' => true,
                         'message' => 'Mật khẩu đã được cập nhật thành công.'

@@ -275,7 +275,7 @@ class ProjectModel {
     
         $projectIDs = [];
         while ($row = $projectResult->fetch_assoc()) {
-            $projectIDs[] = $row['ProjectID'];
+            $projectIDs[] = $row['projectid'];
         }
     
         $projectStmt->close();
@@ -625,7 +625,7 @@ class ProjectModel {
         $conn = $db->connect();
     
         $sql = "
-            SELECT time_sheetid 
+            SELECT time_sheetid, empid, diemthuong, hanchot
             FROM Time_sheet 
             WHERE empid IN (" . implode(',', array_fill(0, count($employeeIDs), '?')) . ") 
             AND projectid = ?
@@ -644,7 +644,8 @@ class ProjectModel {
         $stmt->close();
         $db->close();
         
-        return array_column($timeSheetIDs, 'time_sheetid'); 
+        //return array_column($timeSheetIDs, 'time_sheetid'); 
+        return $timeSheetIDs;
     }
     
     public static function UpdateProjectStatus($projectID_s, $newStatus) {
@@ -674,38 +675,73 @@ class ProjectModel {
         return $result;
     }
 
-    public static function UpdateTimeSheetStatus($projectID_s, $timeSheetStatus, $employeeIDs) {    
-            $timeSheetIDs = self::getTimeSheetID_QL($employeeIDs, $projectID_s);
+    public static function UpdateTimeSheetStatus($projectID_s, $timeSheetStatus, $employeeIDs, $tre) {    
+        //$timeSheetIDs = self::getTimeSheetID_QL($employeeIDs, $projectID_s);
+        if (1) {
+            $db = new Database();
+            $conn_s = $db->connect();
+            $queryUpdateTimeSheet = "
+                UPDATE Time_sheet 
+                SET trangthai = ?, tre = ?
+                WHERE time_sheetid = ?
+            ";
     
-            if (!empty($timeSheetIDs)) {
-                $placeholders = implode(',', array_fill(0, count($timeSheetIDs), '?'));
-                $queryUpdateTimeSheet = "
-                    UPDATE Time_sheet 
-                    SET trangthai = ? 
-                    WHERE time_sheetid IN ($placeholders)
-                ";
-                $db = new Database();
-                $conn_s = $db->connect();
-
-                $params = array_merge([$timeSheetStatus], $timeSheetIDs);
-                $types = 's' . str_repeat('i', count($timeSheetIDs));
+            $stmtUpdateTimeSheet = $conn_s->prepare($queryUpdateTimeSheet);
+            $stmtUpdateTimeSheet->bind_param("sii", $timeSheetStatus, $tre ,$employeeIDs);
+            $stmtUpdateTimeSheet->execute();
     
-                $stmtUpdateTimeSheet = $conn_s->prepare($queryUpdateTimeSheet);
+            // foreach ($employeeIDs as $time_sheetid) {
+            //     $stmtUpdateTimeSheet->bind_param("iii", $timeSheetStatus, $tre ,$time_sheetid);
+            //     $stmtUpdateTimeSheet->execute();
+            // }
+            $stmtUpdateTimeSheet->close();
+            $db->close();
+        }
     
-                if ($stmtUpdateTimeSheet === false) {
-                    echo "Lỗi khi chuẩn bị statement cho time_sheet update: " . $conn_s->error;
-                    $conn_s->close();
-                    return false;
-                }
-    
-                $stmtUpdateTimeSheet->bind_param($types, ...$params);
-                $stmtUpdateTimeSheet->execute();
-                $stmtUpdateTimeSheet->close();
-            }
-    
-        $db->close();
         return true;
     }
+    
+
+    
+    public static function updatePointProfile($employeeIDs, $point) {
+        //$timeSheetIDs = self::getTimeSheetID_QL($employeeIDs, $projectID_s);
+    
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $query = "UPDATE Profile SET diemthuong = diemthuong + ? WHERE empid = ?";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("ii", $employeeIDs, $point);
+        $stmt->execute();
+    
+        // foreach ($employeeIDs as $timeSheet) {
+        //     $stmt->bind_param("ii", $timeSheet, $point);
+        //     $stmt->execute();
+        // }
+    
+        $stmt->close();
+        $db->close();
+        
+        return true;
+    }
+    
+    
+    public static function updatePointFelicitation ($employeeIDs, $point, $user_id, $currentDate) {
+        //$timeSheetIDs = self::getTimeSheetID_QL($employeeIDs, $projectID_s);
+        $NoiDung = 'Nhờ hoàn thành Time-sheet';
+
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "INSERT INTO Felicitation (point, date, noidung, nguoinhan, nguoitang) VALUES (?,?,?,?,?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("issii", $point, $currentDate, $NoiDung, $employeeIDs, $user_id);
+        $result = $stmt->execute();
+
+        $stmt->close();
+        $db->close();
+        return $result;
+    } 
     
     
 

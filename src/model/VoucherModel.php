@@ -30,14 +30,14 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $totalPointQuery = "SELECT DiemThuong as totalPoint FROM Profile WHERE EmpID = ?";
+        $totalPointQuery = "SELECT diemthuong as totalPoint FROM Profile WHERE empid = ?";
         $stmt = $conn->prepare($totalPointQuery);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $totalPoint = $result->fetch_assoc()['totalPoint']?? 0;
 
-        $totalFelicitationQuery = "SELECT COUNT(*) AS total FROM Voucher WHERE TinhTrang IS NOT NULL";
+        $totalFelicitationQuery = "SELECT COUNT(*) AS total FROM Voucher WHERE tinhtrang IS NOT NULL";
         $stmt = $conn->prepare($totalFelicitationQuery);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -45,7 +45,7 @@ class VoucherModel {
     
         $existingFelicitationQuery = "SELECT COUNT(*) AS existing
                                         FROM Voucher
-                                        WHERE TinhTrang <> 'Đã dùng'";
+                                        WHERE tinhtrang <> 'Đã dùng'";
         $stmt = $conn->prepare($existingFelicitationQuery);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -53,13 +53,13 @@ class VoucherModel {
     
         $exchangeFelicitationQuery = "SELECT COUNT(*) AS exchange
                                         FROM Voucher
-                                        WHERE TinhTrang = 'Đã dùng'";
+                                        WHERE tinhtrang = 'Đã dùng'";
         $stmt = $conn->prepare($exchangeFelicitationQuery);
         $stmt->execute();
         $result = $stmt->get_result();
         $exchangeFelicitation = $result->fetch_assoc()['exchange']?? 0;
 
-        $expiredVoucherQuery = "SELECT COUNT(*) AS expired FROM Voucher WHERE HanSuDung < CURDATE()";
+        $expiredVoucherQuery = "SELECT COUNT(*) AS expired FROM Voucher WHERE hansudung < CURDATE()";
         $stmt = $conn->prepare($expiredVoucherQuery);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -81,20 +81,32 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "SELECT VoucherID, 
-                        TenVoucher AS TenVoucher, 
-                        HanSuDung AS HanSuDung,
-                        TriGia AS TriGia
+        $query = "SELECT voucherid, 
+                        tenvoucher, 
+                        hansudung,
+                        trigia 
                     FROM Voucher 
-                    WHERE TinhTrang <> 'Đã dùng'
+                    WHERE tinhtrang <> 'Đã dùng'
                     LIMIT ? OFFSET ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('ii', $limit, $offset);
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
+        //$requests = $result->fetch_all(MYSQLI_ASSOC);
     
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'VoucherID' => $row['voucherid'] ?? 'N/A',
+                'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
+                'HanSuDung' => $row['hansudung'] ?? 'N/A',
+                'TriGia' => $row['trigia'] ?? 'N/A',
+                'TinhTrang' => $row['tinhtrang'] ?? 'N/A'
+            ];
+            $requests[] = $row;
+        }
+
         $stmt->close();
         $db->close();
         return $requests;
@@ -104,10 +116,10 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "SELECT VoucherID, 
-                        TenVoucher AS TenVoucher, 
-                        HanSuDung AS HanSuDung,
-                        TriGia AS TriGia
+        $query = "SELECT voucherid, 
+                        tenvoucher, 
+                        hansudung,
+                        trigia
                     FROM Voucher 
                     WHERE TinhTrang IS NULL
                     LIMIT ? OFFSET ?";
@@ -117,8 +129,20 @@ class VoucherModel {
         $stmt->execute();
     
         $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
+        //$requests = $result->fetch_all(MYSQLI_ASSOC);
     
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'VoucherID' => $row['voucherid'] ?? 'N/A',
+                'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
+                'HanSuDung' => $row['hansudung'] ?? 'N/A',
+                'TriGia' => $row['trigia'] ?? 'N/A',
+                'TinhTrang' => $row['tinhtrang'] ?? 'N/A'
+            ];
+            $requests[] = $row;
+        }
+
         $stmt->close();
         $db->close();
         return $requests;
@@ -130,7 +154,7 @@ class VoucherModel {
 
         $query = "SELECT COUNT(*) AS total
                     FROM Voucher
-                    WHERE TinhTrang <> 'Đã dùng'";
+                    WHERE tinhtrang <> 'Đã dùng'";
         $stmt = $conn->prepare($query);
         $stmt->execute();
         
@@ -148,7 +172,7 @@ class VoucherModel {
 
         $query = "SELECT COUNT(*) AS total
                     FROM Voucher
-                    WHERE TinhTrang IS NULL";
+                    WHERE tinhtrang IS NULL";
         $stmt = $conn->prepare($query);
         $stmt->execute();
         
@@ -164,14 +188,31 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT * FROM Time_sheet WHERE EmpID = ?";
+        $query = "SELECT * FROM Time_sheet WHERE empid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $requests = $result->fetch_all(MYSQLI_ASSOC);
-
+        //$requests = $result->fetch_all(MYSQLI_ASSOC);
+        $requests = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'Time_sheetID' => $row['time_sheetid'] ?? 'N/A',
+                'ProjectID' => $row['projectid'] ?? 'N/A',
+                'TenDuAn' => $row['tenduan'] ?? 'N/A',
+                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
+                'PhongBan' => $row['phongban'] ?? 'N/A',
+                'TrangThai' => $row['trangthai'] ?? 'N/A',
+                'SoGioThucHien' => $row['sogiothuchien'] ?? 'N/A',
+                'NgayGiao' => $row['ngaygiao'] ?? 'N/A',
+                'HanChot' => $row['hanchot'] ?? 'N/A',
+                'DiemThuong' => $row['diemthuong'] ?? 'N/A',
+                'Tre' => $row['tre'] ?? 'N/A',
+                'NoiDung' => $row['noidung'] ?? 'N/A'
+            ];
+            $requests[] = $row;
+        }
         $stmt->close();
         $db->close();
         return $requests;

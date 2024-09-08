@@ -115,7 +115,7 @@
     </div>
 </div>
     
-<?php if ($detail['TrangThai'] === 0): ?>
+<?php if ($detail['TrangThai'] === 0 && (($detail_ts['TrangThai'] ?? null) !== 'Hủy')): ?>
     <div class="container-fluid">
         <div class="request-detail">
             <h1>Phản hồi đơn yêu cầu</h1>

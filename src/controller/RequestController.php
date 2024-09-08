@@ -379,14 +379,29 @@ class RequestController {
                                     $Up_TinhTrang_TS = $detail['Up_TinhTrang_Timesheet']; 
                                     $up_ThoiGian_TS = $detail['Up_ThoiGian_Timesheet']; 
                                     $point = $_POST['diemThuong'];
-                                    $updateTimeSheetResult = RequestModel::updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS);
+                                    
                                     if ($Up_TinhTrang_TS = 'Hoàn thành') {
-                                        $updatePointProfile = RequestModel::updatePointProfile($empID, $point); 
-                                        if (!$updatePointProfile) {
-                                            $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật Điểm thưởng.';
-                                            $responseSuccess = false;
+                                        if ($detail['NgayGui'] > $detail_ts['HanChot']) {
+                                            $tre = 1;
+                                            $updateTimeSheetResult = RequestModel::updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS, $tre);
+                                        }
+                                        else {
+                                            $noidung = 'Nhờ hoàn thành Time-sheet';
+                                            $tre = 0;
+                                            $updateTimeSheetResult = RequestModel::updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS, $tre);
+                                            $updatePointProfile = RequestModel::updatePointProfile($empID, $point); 
+                                            $updateFelicitation = RequestModel::updatePointFelicitation($empID, $point, $noidung, $_SESSION['user']['EmpID'], $ngayPhanHoi);
+                                            if (!$updatePointProfile || !$updateFelicitation) {
+                                                $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật Điểm thưởng.';
+                                                $responseSuccess = false;
+                                            }
                                         }
                                     }
+                                    else {
+                                        $tre = 0;
+                                        $updateTimeSheetResult = RequestModel::updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS, $tre);
+                                    }
+
                                     if (!$updateTimeSheetResult) {
                                         $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật Time-sheet.';
                                         $responseSuccess = false;

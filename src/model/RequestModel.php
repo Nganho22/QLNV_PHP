@@ -653,13 +653,13 @@ class RequestModel {
         return $result;
     }
 
-    public static function  updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS) {
+    public static function  updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS, $Tre) {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "UPDATE Time_sheet SET trangthai = ?, sogiothuchien = ? WHERE time_sheetid = ?";
+        $query = "UPDATE Time_sheet SET trangthai = ?, sogiothuchien = ?, tre = ? WHERE time_sheetid = ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param('sii', $Up_TinhTrang_TS, $up_ThoiGian_TS, $timeSheetID);
+        $stmt->bind_param('siii', $Up_TinhTrang_TS, $up_ThoiGian_TS, $Tre, $timeSheetID);
         $result = $stmt->execute();
         
         $stmt->close();
@@ -680,6 +680,20 @@ class RequestModel {
         $db->close();
         return $result;
     }
+    
+    public static function updatePointFelicitation ($NguoiNhan, $point, $NoiDung, $NguoiTang, $Date) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "INSERT INTO Felicitation (point, date, noidung, nguoinhan, nguoitang) VALUES (?,?,?,?,?)";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param("issii", $point, $Date, $NoiDung, $NguoiNhan, $NguoiTang);
+        $result = $stmt->execute();
+
+        $stmt->close();
+        $db->close();
+        return $result;
+    } 
 
     public static function  updateProfile($user_id) {
         $db = new Database();

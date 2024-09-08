@@ -371,8 +371,28 @@ class ProjectController {
             $employeeIDs = array_column($employees, 'EmpID');
 
             $result = ProjectModel::UpdateProjectStatus($projectID_s, $newStatus);
-            $result_s = ProjectModel::UpdateTimeSheetStatus($projectID_s, $newStatus, $employeeIDs);
-
+            if ($newStatus === 'Hoàn thành') {
+                $timeSheetIDs = ProjectModel::getTimeSheetID_QL($employeeIDs, $projectID_s);
+                $currentDate = date('Y-m-d');
+                //print_r($timeSheetIDs);
+                foreach ($timeSheetIDs as $timeSheet) {
+                    $tre = ($timeSheet['hanchot'] < $currentDate) ? 1 : 0;
+    
+                    ProjectModel::UpdateTimeSheetStatus($projectID_s, $newStatus, $timeSheet['time_sheetid'], $tre);
+                  
+                    if ($tre === 0) {
+                        ProjectModel::updatePointProfile($timeSheet['empid'], $timeSheet['diemthuong']);
+                        ProjectModel::updatePointFelicitation($timeSheet['empid'], $timeSheet['diemthuong'], $user_id, $currentDate);
+                    }
+                }
+                // $result_s = ProjectModel::UpdateTimeSheetStatus($projectID_s, $newStatus, $employeeIDs);
+                // $updatePointProfile = ProjectModel::updatePointProfile($employeeIDs, $projectID_s); 
+                // $updateFelicitation = ProjectModel::updatePointFelicitation($employeeIDs, $projectID_s, $user_id);
+            }
+            else {
+                $tre = 0;
+                $result_s = ProjectModel::UpdateTimeSheetStatus($projectID_s, $newStatus, $employeeIDs, $tre);
+            }
             echo json_encode([
                 'success' => $result, 
                 'message' => $result ? 'Dự án cập nhật thành công.' : 'Đã xảy ra lỗi khi cập nhật. Vui lòng thử lại.'
