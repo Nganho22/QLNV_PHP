@@ -131,8 +131,8 @@ class Check_inoutModel {
         $data = [];
         while ($checkinoutData = $result->fetch_assoc()) {
             $CheckInOut['STT'] =  $checkinoutData['stt'];
-            $CheckInOut['Time_checkin'] =  $checkinoutData['timecheckin'];
-            $CheckInOut['Time_checkout'] =  $checkinoutData['timecheckout'];
+            $CheckInOut['Time_checkin'] =  $checkinoutData['time_checkin'];
+            $CheckInOut['Time_checkout'] =  $checkinoutData['time_checkout'];
             $CheckInOut['WorkFromHome'] =  $checkinoutData['workfromhome'];
             $CheckInOut['Nghi'] =  $checkinoutData['nghi'];
             $CheckInOut['Late'] =  $checkinoutData['late'];
@@ -274,8 +274,8 @@ class Check_inoutModel {
     
         $query = "SELECT c.date_checkin,
                          p.hoten AS NhanVien,
-                         c.time_checkin AS GioCheckIn,
-                         c.time_checkout AS GioCheckOut,
+                         c.time_checkin,
+                         c.time_checkout,
                          CASE
                              WHEN c.late = 1 THEN 'Trễ'
                              WHEN c.nghi = 1 THEN 'Nghỉ'
@@ -304,7 +304,7 @@ class Check_inoutModel {
         while ($checkinoutData = $result->fetch_assoc()) {
             $CheckInOut['ThoiGian'] =  $checkinoutData['date_checkin'];
             $CheckInOut['NhanVien'] =  $checkinoutData['hoten'];
-            $CheckInOut['GioCheckOut'] =  $checkinoutData['timecheckout'];
+            $CheckInOut['GioCheckOut'] =  $checkinoutData['time_checkout'];
             $CheckInOut['GioCheckIn'] =  $checkinoutData['time_checkin'];
             $CheckInOut['Note'] =  $checkinoutData['Note'];
             $CheckInOut['statusCheck'] =  $checkinoutData['statusCheck'];
@@ -370,7 +370,6 @@ class Check_inoutModel {
         $stmt->execute();
         $result = $stmt->get_result();
     
-        // Khởi tạo mảng 12 tháng với giá trị 0
         $monthlyPoints = array_fill(1, 12, 0);
         while ($row = $result->fetch_assoc()) {
             $monthlyPoints[(int)$row['month']] = $row['total_points'];

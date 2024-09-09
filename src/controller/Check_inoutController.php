@@ -66,9 +66,8 @@ class Check_inoutController {
             $title='Trang danh sách nhân viên chấm công';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
-            $ProfileApiUrl = 'http://localhost:9003/apiProfile';
-            $modelUser = new UserModel($ProfileApiUrl);
-            $profile = $modelUser->getprofile($user_id);
+         
+            $profile = UserModel::getprofile($user_id);
 
             $limit = 8;
             $pageHistory = isset($_GET['pageHistory']) ? (int)$_GET['pageHistory'] : 1;

@@ -24,6 +24,333 @@ class ProjectModel {
             return false;
         }
     }
+    public static function getCountPrj_NV($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT COUNT(DISTINCT projectid) AS total_projects 
+                                    FROM Time_sheet 
+                                    WHERE empid = ?");
+        $stmt->bind_param("i", $user_id,);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $cPrj_NV = $result->fetch_assoc()['total_projects'];
+
+        $stmt->close();
+        $db->close();
+        
+        return $cPrj_NV;
+    }
+
+    public static function getCountPrj_QL($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT COUNT(DISTINCT projectid) AS total_projects 
+                                    FROM Project 
+                                    WHERE quanly = ?");
+        $stmt->bind_param("i", $user_id,);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $cPrj_QL = $result->fetch_assoc()['total_projects'];
+
+        $stmt->close();
+        $db->close();
+        
+        return $cPrj_QL;
+    }
+
+    public static function getCountPrj_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT COUNT(projectid) AS total_projects 
+                                    FROM project");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $cPrj = $result->fetch_assoc()['total_projects'];
+
+        $stmt->close();
+        $db->close();
+        
+        return $cPrj;
+    }
+
+    
+    public static function getListPrj_NV($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT DISTINCT projectid FROM Time_sheet WHERE empid = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $project_id = $row['projectid'];
+    
+            $project_stmt = $conn->prepare("SELECT tiendo FROM Project WHERE projectid = ?");
+            $project_stmt->bind_param("i", $project_id);
+            $project_stmt->execute();
+            $project_result = $project_stmt->get_result();
+    
+            if ($project_result->num_rows > 0) {
+                $project_data = $project_result->fetch_assoc();
+                $tien_do_str = $project_data['tiendo'];
+                
+                $tien_do_percentage = (float) str_replace('%', '', $tien_do_str);
+                
+                $projects[] = [
+                    'ProjectID' => $project_id,
+                    'TienDo' => $tien_do_percentage
+                ];
+            }
+            $project_stmt->close();
+        }
+        $stmt->close();
+        $db->close();
+    
+        return $projects;
+    }
+
+    public static function getProjects_NV($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai
+                                FROM Time_sheet
+                                JOIN Project ON Time_sheet.projectid = Project.projectid 
+                                WHERE Time_sheet.empid = ? AND Time_sheet.trangthai = 'Chưa hoàn thành' LIMIT 3" );
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $project =[
+                'Ten' => $row['ten'],
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'TrangThai' => $row['trangthai']
+
+            ];
+            $projects[]=$project;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
+    public static function getCountProjects_NV($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai
+                                FROM Time_sheet
+                                JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
+                                WHERE Time_sheet.empid = ? " );
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $project =[
+                'Ten' => $row['ten'],
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'TrangThai' => $row['trangthai']
+
+            ];
+            $projects[]=$project;
+        }
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
+    public static function getProjects_QL($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT p.ten AS ProjectName, 
+                                       p.tiendo, p.tinhtrang
+                                FROM Project p
+                                JOIN Profile prof ON p.quanly = prof.empid
+                                WHERE prof.empid = ? AND p.tinhtrang <> 'Đã hoàn thành'
+                                ORDER BY p.ngaygiao DESC");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $project=[
+            'ProjectName' => $row['ProjectName'],
+            'TienDo' => $row['tiendo'],
+            'TinhTrang' => $row['tinhtrang']
+            ];
+
+            $projects[] = $project;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
+    public static function getProjects_GD($limit, $offset) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT * FROM Project LIMIT ? OFFSET ?");
+        $stmt->bind_param("ii", $limit, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $project = [
+                'ProjectID' => $row['projectid'],
+                'Ten' => $row['ten'],
+                'NgayGiao' => $row['ngaygiao'],
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'HanChot' => $row['hanchot'],
+                'TienDo' => $row['tiendo'],
+                'SoGioThucHanh' => $row['sogiothuchanh'],
+                'PhongID' => $row['phongid'],
+                'QuanLy' => $row['quanly'],
+                'TinhTrang' => $row['tinhtrang'],
+            ];
+            $projects[]= $project;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
+    public static function countAllProject_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM Project");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return $row['total'];
+    }
+
+    public static function searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ) {
+            $searchTerm = "%$searchTerm_PJ%";
+            $query = "
+                SELECT ten, ngaygiao, tiendo
+                FROM Project
+                WHERE ten LIKE ?
+                LIMIT ? OFFSET ?";
+    
+            $db = new Database();
+            $conn = $db->connect();
+            $stmt = $conn->prepare($query);
+            $params = [$searchTerm, $limit_PJ, $offset_PJ];
+            $stmt->bind_param('sii', ...$params);
+            $stmt->execute();
+            $result = $stmt->get_result();
+    
+            $projects = [];
+            while ($row = $result->fetch_assoc()) {
+                $project = [
+                    'Ten' => $row['ten'],
+                    'NgayGiao' => $row['ngaygiao'],
+                    'TienDo' => $row['tiendo'],
+                ];
+                $projects[] = $project;
+            }
+    
+            $stmt->close();
+            $db->close();
+    
+            return $projects;
+        }
+
+    public static function countSearchProject_GD($searchTerm_PJ) {
+        $searchTerm = "%$searchTerm_PJ%";
+        $query = "
+            SELECT COUNT(projectid) as total
+            FROM Project
+            WHERE ten LIKE ?";
+
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$searchTerm];
+        $stmt->bind_param('s', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+
+        $stmt->close();
+        $db->close();
+
+        return $total;
+    }
+
+
+    
+    public static function getListPrj_QL($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT projectid, tiendo FROM Project WHERE quanly = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $tienDo = str_replace('%', '', $row['tiendo']);
+    
+            $projects[] = [
+                'ProjectID' => $row['projectid'],
+                'TienDo' => (int)$tienDo
+            ];
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $projects;
+    }
+
+    public static function getListPrj_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT projectid, tiendo FROM Project");
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $tienDo = str_replace('%', '', $row['tiendo']);
+    
+            $projects[] = [
+                'ProjectID' => $row['projectid'],
+                'TienDo' => (int)$tienDo
+            ];
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $projects;
+    }
+    
+
+
 
     //========= Quản lý + Giám đốc ================
     public static function getProjectCountsByEmpID($user_id) {

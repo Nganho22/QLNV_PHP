@@ -147,7 +147,8 @@ class FelicitationController {
         if (isset($_SESSION['user'])) {
             $title='Trang danh sách Voucher';
             $user_id = $_SESSION['user']['EmpID'];
-            $profile = UserModel::getprofile($user_id);
+            $ProfileApiUrl = 'http://localhost:9003/apiProfile';
+            $profile =  new UserModel($ProfileApiUrl);
             
             ob_start();
             require("./views/pages/voucher_list.phtml");

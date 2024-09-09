@@ -33,8 +33,8 @@ class HomeController{
             switch ($Role) {
                 case 'Nhân viên':
                     $phongID = UserModel::getPhongIDByEmpID($empID);
-                    $projects = UserModel::getProjects_NV($empID);
-                    $cprojects = UserModel::getCountProjects_NV($empID);
+                    $projects = ProjectModel::getProjects_NV($empID);
+                    $cprojects =  ProjectModel::getCountProjects_NV($empID);
                     $apiUrlActivity = 'http://localhost:9002/apiActivity';
                     $modelActivity = new ActivityModel($apiUrlActivity);
                     $cactivities = $modelActivity->getActivitiesByMonth(date('m'));
@@ -53,7 +53,7 @@ class HomeController{
                     $checkinout = UserModel::getPhongBan_Checkinout($empID);
                     $employees = UserModel::getEmployeesList_QL($empID);
                     $timesheets = UserModel::getTimesheetList($empID); 
-                    $managedProjects = UserModel::getProjects_QL($empID);
+                    $managedProjects = ProjectModel::getProjects_QL($empID);
                     $deadlines = UserModel::getDeadlinesTimesheet_QL($empID);
                     $file = "./views/pages/QL/home_QL.phtml";
                     break;
@@ -90,11 +90,11 @@ class HomeController{
                     $offset_PJ = ($page_PJ - 1) * $limit_PJ;
 
                     if (!empty($searchTerm_PJ)) {
-                        $projects = UserModel::searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ);
-                        $totalProjects = UserModel::countSearchProject_GD($searchTerm_PJ);
+                        $projects = ProjectModel::searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ);
+                        $totalProjects = ProjectModel::countSearchProject_GD($searchTerm_PJ);
                     } else {
-                        $projects = UserModel::getProjects_GD($limit_PJ, $offset_PJ);
-                        $totalProjects = UserModel::countAllProject_GD();
+                        $projects = ProjectModel::getProjects_GD($limit_PJ, $offset_PJ);
+                        $totalProjects = ProjectModel::countAllProject_GD();
                     }
 
                     $deadlines = UserModel::getDeadlinesTimesheet_GD();
@@ -204,21 +204,19 @@ class HomeController{
         if (isset($_SESSION['user'])) {
             $title='Profile';
             $user_id = $_SESSION['user']['EmpID'];
-            $ProfileApiUrl = 'http://localhost:9003/apiProfile';
-            $modelUser = new UserModel($ProfileApiUrl);
-            $profile = $modelUser->getprofile($user_id);
+            $profile =  UserModel::getprofile($user_id);
             
             $timesheets = RequestModel::gettimesheet($user_id);
             $cNghi= UserModel::getCountNghiPhep($user_id);
             $cTre= UserModel::getCountTre($user_id);
-            $cPrj = UserModel::getCountPrj_GD();
-            $listPrj = UserModel::getListPrj_GD();
+            $cPrj = ProjectModel::getCountPrj_GD();
+            $listPrj = ProjectModel::getListPrj_GD();
             if ($_SESSION['user']['Role'] == 'Nhân viên') {
-                $cPrj_NV = UserModel::getCountPrj_NV($user_id);
-                $listPrj_NV = UserModel::getListPrj_NV($user_id);
+                $cPrj_NV =ProjectModel::getCountPrj_NV($user_id);
+                $listPrj_NV = ProjectModel::getListPrj_NV($user_id);
             } elseif ($_SESSION['user']['Role'] == 'Quản lý') {
-                $cPrj_QL= UserModel::getCountPrj_QL($user_id);
-                $listPrj_QL = UserModel::getListPrj_QL($user_id);
+                $cPrj_QL= ProjectModel::getCountPrj_QL($user_id);
+                $listPrj_QL = ProjectModel::getListPrj_QL($user_id);
             }
             $message='';
             if (isset($_GET['status'])) {
@@ -252,9 +250,8 @@ class HomeController{
         if (isset($_SESSION['user'])) {
             $title='Cập nhật Profile';
             $user_id = $_SESSION['user']['EmpID'];
-            $ProfileApiUrl = 'http://localhost:9003/apiProfile';
-            $modelUser = new UserModel($ProfileApiUrl);
-            $profile = $modelUser->getprofile($user_id);
+
+            $profile = UserModel::getprofile($user_id);
             $message='';
             if (isset($_GET['status'])) {
                 if ($_GET['status']  === 'checked-in') {
@@ -311,9 +308,8 @@ class HomeController{
                 }
             }
 
-            $ProfileApiUrl = 'http://localhost:9003/apiProfile';
-            $modelUser = new UserModel($ProfileApiUrl);
-            $currentProfile  = $modelUser->getprofile($user_id);
+
+            $currentProfile  =  UserModel::getprofile($user_id);
             $currentImage = $currentProfile['Image_name'];
 
             // Xử lý ảnh

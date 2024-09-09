@@ -8,7 +8,7 @@ class UserController{
         $password = isset($_POST['password']) ? $_POST['password'] : '';
         $apiUrl = 'http://localhost:9003/apiProfile';
         $model = new UserModel($apiUrl);
-        $user =  $model->clogin($username, $password);
+        $user =  UserModel::clogin($username, $password);
         $str = 'Wrong username or password, please check again';
         if ($user === null) {
             $title = 'Login';
