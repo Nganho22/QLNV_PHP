@@ -228,7 +228,7 @@ UPDATE PhongBan SET quanlyid = '4' WHERE phongid = 'P03';
 
 INSERT INTO Project (projectid, ten, ngaygiao, hanchotdukien, hanchot, tiendo, sogiothuchanh, phongid, quanly, tinhtrang)
 VALUES 
-('1', 'Nghiên cứu PHP', '2024-08-20', '2024-06-10', '2024-08-15', '100%', 490, 'P01', 2, 'Đã hoàn thành'),
+('1', 'Nghiên cứu PHP', '2024-08-20', '2024-06-10', '2024-08-15', '100%', 490, 'P01', 2, 'Hoàn thành'),
 ('2', 'Nghiên cứu API', '2024-08-18', '2024-10-18', '2024-10-20', '30%', 200, 'P02', 7, 'Chưa hoàn thành'),
 ('3', 'Nghiên cứu NoSQL', '2024-08-13', '2024-10-25', '2024-10-31', '40%', 210, 'P03', 14, 'Chưa hoàn thành'),
 ('4', 'Nghiên cứu ODI', '2024-07-23', '2024-09-23', '2024-09-20', '70%', 400, 'P01', 2, 'Chưa hoàn thành'),
