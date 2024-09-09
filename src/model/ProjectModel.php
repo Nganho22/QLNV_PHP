@@ -952,7 +952,7 @@ class ProjectModel {
         $conn = $db->connect();
     
         $sql = "
-            SELECT time_sheetid, empid, diemthuong, hanchot
+            SELECT time_sheetid, empid, diemthuong, hanchot, sogiothuchien
             FROM Time_sheet 
             WHERE empid IN (" . implode(',', array_fill(0, count($employeeIDs), '?')) . ") 
             AND projectid = ?
@@ -975,7 +975,7 @@ class ProjectModel {
         return $timeSheetIDs;
     }
     
-    public static function UpdateProjectStatus($projectID_s, $newStatus) {
+    public static function UpdateProjectStatus($projectID_s, $newStatus, $totalTime) {
         $db = new Database();
         $conn_s = $db->connect();
     
@@ -985,7 +985,7 @@ class ProjectModel {
             $tiendo = '0%';
         }
     
-        $query = "UPDATE Project SET tinhtrang = ?, tiendo = ? WHERE projectid = ?";
+        $query = "UPDATE Project SET tinhtrang = ?, tiendo = ?, sogiothuchanh = ? WHERE projectid = ?";
         $stmt = $conn_s->prepare($query);
         
         if ($stmt === false) {
@@ -993,7 +993,7 @@ class ProjectModel {
             return false;
         }
     
-        $stmt->bind_param('sss', $newStatus, $tiendo, $projectID_s);
+        $stmt->bind_param('ssii', $newStatus, $tiendo, $totalTime, $projectID_s);
         $result = $stmt->execute();
         
         $stmt->close();

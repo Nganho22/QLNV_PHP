@@ -10,6 +10,8 @@ class ProjectController {
             $title='Danh sách Project';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
+            $apiUrl = 'http://localhost:9004/apiRequest';
+            $model = new UserModel($apiUrl);
             $limit = 4;
             $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
             $offset = ($page - 1) * $limit;
@@ -34,7 +36,7 @@ class ProjectController {
             switch ($role) {
                 case 'Quản lý':
                 case 'Giám đốc':
-                $profile = UserModel::getprofile($user_id);
+                $profile = $model->getprofile($user_id);
                 $cProject = ProjectModel::getProjectCountsByEmpID($user_id);
                 //$listProject = ProjectModel::getListProject($user_id, $limit, $offset);
                 //print_r($listProject);
@@ -85,7 +87,7 @@ class ProjectController {
                     $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
                     $progressFilters = isset($_GET['processes']) ? $_GET['processes'] : [];
                     $statusFilters = isset($_GET['types']) ? $_GET['types'] : [];
-                    $profile = UserModel::getprofile($user_id);
+                    $profile = $model->getprofile($user_id);
                     $cProject = ProjectModel::getProjectCountsByEmpID_NV($user_id);
                     $listProject = ProjectModel::getListProject_NV($user_id, $limit, $offset);
                     
@@ -363,21 +365,17 @@ class ProjectController {
             $title='Project';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
-
             $projectID_s = $_POST['projectID'];
             $newStatus = $_POST['newStatus'];
-
+            $totalTime = 0;
             $employees = ProjectModel::getEmployeesByUserDepartment($user_id);
             $employeeIDs = array_column($employees, 'EmpID');
-
-            $result = ProjectModel::UpdateProjectStatus($projectID_s, $newStatus);
             if ($newStatus === 'Hoàn thành') {
                 $timeSheetIDs = ProjectModel::getTimeSheetID_QL($employeeIDs, $projectID_s);
                 $currentDate = date('Y-m-d');
-                //print_r($timeSheetIDs);
                 foreach ($timeSheetIDs as $timeSheet) {
                     $tre = ($timeSheet['hanchot'] < $currentDate) ? 1 : 0;
-    
+                    $totalTime = $totalTime + $timeSheet['sogiothuchien'];
                     ProjectModel::UpdateTimeSheetStatus($projectID_s, $newStatus, $timeSheet['time_sheetid'], $tre);
                   
                     if ($tre === 0) {
@@ -385,13 +383,12 @@ class ProjectController {
                         ProjectModel::updatePointFelicitation($timeSheet['empid'], $timeSheet['diemthuong'], $user_id, $currentDate);
                     }
                 }
-                // $result_s = ProjectModel::UpdateTimeSheetStatus($projectID_s, $newStatus, $employeeIDs);
-                // $updatePointProfile = ProjectModel::updatePointProfile($employeeIDs, $projectID_s); 
-                // $updateFelicitation = ProjectModel::updatePointFelicitation($employeeIDs, $projectID_s, $user_id);
+                $result = ProjectModel::UpdateProjectStatus($projectID_s, $newStatus, $totalTime);
             }
             else {
                 $tre = 0;
                 $result_s = ProjectModel::UpdateTimeSheetStatus($projectID_s, $newStatus, $employeeIDs, $tre);
+                $result = ProjectModel::UpdateProjectStatus($projectID_s, $newStatus, $totalTime);
             }
             echo json_encode([
                 'success' => $result, 
