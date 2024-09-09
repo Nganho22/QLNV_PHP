@@ -36,12 +36,10 @@
                             <div class="info-box">
                                     <p>TỔNG SỐ DỰ ÁN</p>
                                     <h4><?php 
-                                        if ($_SESSION['user']['Role'] == 'Quản lý') {
+                                        if ($role == 'Quản lý') {
                                             echo htmlspecialchars($cPrj_QL); 
-                                        } elseif ($_SESSION['user']['Role'] == 'Nhân viên') {
+                                        } elseif ($role == 'Nhân viên') {
                                             echo htmlspecialchars($cPrj_NV); 
-                                        } else {
-                                            echo htmlspecialchars($cPrj); 
                                         }
                                     ?></h4>
                             </div>
@@ -79,23 +77,16 @@
                                 <p><strong>Lương:</strong> <?php echo htmlspecialchars($profile['Luong'])?></p>
                                 <p><strong>Điểm thưởng:</strong> <?php echo htmlspecialchars($profile['DiemThuong'])?></p>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12 text-center-btn mt-4">
-                                    <a href="index.php?action=GetUpdateProfilePage" class="btn btn-primary">Update Profile</a>
-                                </div>
-                            </div>
                         </div>
                         
                         <div class="col-md-4">
                             <div class="info-box">
                                 <h5>Thông tin dự án</h5>
                                 <?php
-                                if ($_SESSION['user']['Role'] == 'Nhân viên') {
+                                if ($role == 'Nhân viên') {
                                     $projectList = $listPrj_NV;
-                                } elseif ($_SESSION['user']['Role'] == 'Quản lý') {
+                                } elseif ($role == 'Quản lý') {
                                     $projectList = $listPrj_QL;
-                                } else {
-                                    $projectList = $listPrj;
                                 }
                                 ?>
 
@@ -133,7 +124,7 @@
         <?php if ($_SESSION['user']['Role'] == 'Nhân viên'): ?>
             <div class="timesheet">
                 <h5>Time-sheet</h5>
-                <?php if (!empty($timesheets)): ?>
+                <?php if (!empty($timesheet)): ?>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -147,7 +138,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($timesheets as $timesheet): ?>
+                            <?php foreach ($timesheet as $timesheet): ?>
                                 <tr>
                                     <td> <?php echo htmlspecialchars($timesheet['ProjectID']); ?></td>
                                     <td> <?php echo htmlspecialchars($timesheet['TenDuAn']); ?></td>

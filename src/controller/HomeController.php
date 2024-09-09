@@ -32,9 +32,11 @@ class HomeController{
             $timeSheets = FelicitationModel::getTimeSheetsByEmpID($empID);
             switch ($Role) {
                 case 'Nhân viên':
+                    $limit = 2;
+                    $file = "./views/pages/NV/home_NV.phtml";
                     $phongID = UserModel::getPhongIDByEmpID($empID);
-                    $projects = ProjectModel::getProjects_NV($empID);
-                    $cprojects =  ProjectModel::getCountProjects_NV($empID);
+                    $projects = UserModel::getProjects_NV($empID);
+                    $cprojects = UserModel::getCountProjects_NV($empID);
                     $apiUrlActivity = 'http://localhost:9002/apiActivity';
                     $modelActivity = new ActivityModel($apiUrlActivity);
                     $cactivities = $modelActivity->getActivitiesByMonth(date('m'));
@@ -42,20 +44,138 @@ class HomeController{
                     $checkInOut = $_SESSION['CheckInOut'];
                     $points = UserModel::getPoint_Month($empID);
                     $deadlines = UserModel::getDeadlinesTimesheet($empID);
+                    
+                    $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                    $offset = ($page - 1) * $limit;
+
+
+                    $projects = UserModel::getProjectsList_NV($empID, $limit, $offset);
+                    $totalProjects = UserModel::countProjectsList_NV($empID);
+                
+                    if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
+                        $response = [];
+                    
+                        $projectsHtml = '';
+                        foreach ($projects as $project) {
+                            $projectsHtml .= '<li>
+                                <a href="index.php?action=GetDetailProjectPage&projectID=' . htmlspecialchars($project['ProjectID']) . '">
+                                    ' . htmlspecialchars($project['Ten']) . '
+                                </a>
+                                <span>Hạn chót: ' . htmlspecialchars($project['HanChotDuKien']) . '</span>
+                                <span class="status ' . strtolower(htmlspecialchars($project['TrangThai'])) . '">
+                                    ' . htmlspecialchars($project['TrangThai']) . '
+                                </span>
+                            </li>';
+                        }
+                    
+                        $paginationHtml = '';
+                        if ($totalProjects > $limit) {
+                            for ($i = 1; $i <= ceil($totalProjects / $limit); $i++) {
+                                $paginationHtml .= '<li class="page-item' . ($i == $page ? ' active' : '') . '">
+                                    <a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a>
+                                </li>';
+                            }
+                        }
+                    
+                        $response['projectsHtml'] = $projectsHtml;
+                        $response['paginationHtml'] = $paginationHtml;
+                    
+                        echo json_encode($response);
+                        exit;
+                    }
+                     else {
                     $file = "./views/pages/NV/home_NV.phtml";
+                }
                     break;
                 case 'Quản lý':
+                                      
+                    $limit = 2;
+                    $searchTerm_NV = isset($_GET['search_nhanvien']) ? $_GET['search_nhanvien'] : '';
+                    $page_NV = isset($_GET['page_nhanvien']) ? (int)$_GET['page_nhanvien'] : 1;
+                    $offset_NV = ($page_NV - 1) * $limit;
+
+                    if (!empty($searchTerm_NV)) {
+                        $employees = UserModel::searchProfiles_QL($empID, $searchTerm_NV, $limit, $offset_NV);
+                        $totalEmployees = UserModel::countSearchProfiles_QL($empID, $searchTerm_NV);
+                    } else {
+                        $employees = UserModel::getEmployeesList_QL($empID, $limit, $offset_NV);
+                        $totalEmployees = UserModel::countAllEmployees_QL($empID);
+                    }
+
+                    $limit_TS = 5;
+                    $page_TS = isset($_GET['page_timesheet']) ? (int)$_GET['page_timesheet'] : 1;
+                    $offset_TS = ($page_TS - 1) * $limit_TS;
+                    $timesheets = UserModel::getTimesheetList_QL($empID, $limit_TS, $offset_TS);
+                    $totalTimesheets = UserModel::countAllTimesheet_QL($empID);
+                    
+                    $checkInOut = $_SESSION['CheckInOut'];
                     $phongID = UserModel::getPhongIDByEmpID($empID);
                     $countWFH = UserModel::getWorkFromHomeCountByEmpID($empID);
                     $absence = UserModel::getAbsence($empID);
                     $phongBans = UserModel::getPhongBanStatistics($empID);
                     $hiendien = UserModel::getHienDien($empID);
                     $checkinout = UserModel::getPhongBan_Checkinout($empID);
-                    $employees = UserModel::getEmployeesList_QL($empID);
-                    $timesheets = UserModel::getTimesheetList($empID); 
-                    $managedProjects = ProjectModel::getProjects_QL($empID);
+                    // $employees = UserModel::getEmployeesList_QL($empID);
+                    // $timesheets = UserModel::getTimesheetList($empID); 
+                    $managedProjects = UserModel::getProjects_QL($empID);
                     $deadlines = UserModel::getDeadlinesTimesheet_QL($empID);
-                    $file = "./views/pages/QL/home_QL.phtml";
+                    if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
+                        $response = [];
+
+                        if (isset($_GET['search_nhanvien']) || isset($_GET['page_nhanvien'])) {
+                            $requestHtml = '';
+                            foreach ($employees as $employee) {
+                                $requestHtml .= '<li>
+                                    <a href="index.php?action=GetProfileDetail&ID=' . htmlspecialchars($employee['EmpID']) . '">
+                                        ' . htmlspecialchars($employee['HoTen']) . '
+                                    </a><br>
+                                    <span>' . htmlspecialchars($employee['Email']) . '</span>
+                                </li>';
+                            }
+                        
+                            $paginationHtml = '';
+                            if ($totalEmployees > $limit) {
+                                for ($i = 1; $i <= ceil($totalEmployees / $limit); $i++) {
+                                    $paginationHtml .= '<li class="page-item">
+                                        <a class="page-link" href="#" data-page="' . $i . '">' . $i . '</a>
+                                    </li>';
+                                }
+                            }
+                        
+                            $response['requestHtml'] = $requestHtml;
+                            $response['paginationHtml'] = $paginationHtml;
+                        }
+                        
+
+                        
+                        if (isset($_GET['page_timesheet'])) {
+                            $timesheetHtml = '';
+                            foreach ($timesheets as $timesheet) {
+                                $timesheetHtml .= '<li>' . htmlspecialchars($timesheet['NgayGiao']) . '<br>
+                                            <a href="index.php?action=GetDetailTimeSheet&timesheetID=' . htmlspecialchars($timesheet['Time_sheetID']) . '">
+                                                ' . htmlspecialchars($timesheet['NoiDung']) . '
+                                            </a><br>
+                                                <span>' . htmlspecialchars($timesheet['NguoiGui']) . '</span></li>';
+                            }
+                    
+                            $timesheetPaginationHtml = '';
+                            if ($totalTimesheets > $limit_TS) {
+                                for ($i = 1; $i <= ceil($totalTimesheets / $limit_TS); $i++) {
+                                    $timesheetPaginationHtml .= '<li class="page-item"><a class="page-link-timesheet" href="#" data-page="' . $i . '">' . $i . '</a></li>';
+                                }
+                            }
+                    
+                            $response['timesheetHtml'] = $timesheetHtml;
+                            $response['timesheetPaginationHtml'] = $timesheetPaginationHtml;
+                        }
+                    
+
+                        echo json_encode($response);
+                        exit;
+                    } else {
+                        $file = "./views/pages/QL/home_QL.phtml"; 
+                    }
+
                     break;
                 case 'Giám đốc':
                     $limit = 6;
@@ -67,10 +187,10 @@ class HomeController{
                         $employees = UserModel::searchProfiles_GD($searchTerm_NV, $limit, $offset_NV);
                         $totalEmployees = UserModel::countSearchProfiles_GD($searchTerm_NV);
                     } else {
-                        $employees = UserModel::getEmployeesList_GD($limit, $offset_NV);
-                        $totalEmployees = UserModel::countAllEmployees_GD();
+                        $employees = UserModel::getEmployeesList_GD($empID, $limit, $offset_NV);
+                        $totalEmployees = UserModel::countAllEmployees_GD($empID);
                     }
-                    
+
                     $limit_PB = 3;
                     $searchTerm_PB = isset($_GET['search_phongban']) ? $_GET['search_phongban'] : '';
                     $page_PB = isset($_GET['page_phongban']) ? (int)$_GET['page_phongban'] : 1;
@@ -90,11 +210,11 @@ class HomeController{
                     $offset_PJ = ($page_PJ - 1) * $limit_PJ;
 
                     if (!empty($searchTerm_PJ)) {
-                        $projects = ProjectModel::searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ);
-                        $totalProjects = ProjectModel::countSearchProject_GD($searchTerm_PJ);
+                        $projects = UserModel::searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ);
+                        $totalProjects = UserModel::countSearchProject_GD($searchTerm_PJ);
                     } else {
-                        $projects = ProjectModel::getProjects_GD($limit_PJ, $offset_PJ);
-                        $totalProjects = ProjectModel::countAllProject_GD();
+                        $projects = UserModel::getProjects_GD($limit_PJ, $offset_PJ);
+                        $totalProjects = UserModel::countAllProject_GD();
                     }
 
                     $deadlines = UserModel::getDeadlinesTimesheet_GD();
@@ -105,7 +225,12 @@ class HomeController{
                         if (isset($_GET['search_nhanvien']) || isset($_GET['page_nhanvien'])) {
                             $requestHtml = '';
                             foreach ($employees as $employee) {
-                                $requestHtml .= '<li>' . htmlspecialchars($employee['HoTen']) . '<br><span>' . htmlspecialchars($employee['Email']) . '</span></li>';
+                                $requestHtml .= '<li>
+                                    <a href="index.php?action=GetProfileDetail&ID=' . htmlspecialchars($employee['EmpID']) . '">
+                                        ' . htmlspecialchars($employee['HoTen']) . '
+                                    </a><br>
+                                    <span>' . htmlspecialchars($employee['Email']) . '</span>
+                                </li>';
                             }
 
                             $paginationHtml = '';
@@ -122,10 +247,14 @@ class HomeController{
                         if (isset($_GET['search_phongban']) || isset($_GET['page_phongban'])) {
                             $requestHtml_PB = '';
                             foreach ($phongBans as $phongBan) {
-                                $requestHtml_PB .= '<tr>' . '<td>' . htmlspecialchars($phongBan['PhongID']) . '</td>' .
+                                $requestHtml_PB .= '<tr>' .
+                                                    '<td>' . htmlspecialchars($phongBan['PhongID']) . '</td>' .
                                                     '<td>' . htmlspecialchars($phongBan['TenPhong']) . '</td>' .
-                                                    '<td>' . htmlspecialchars($phongBan['HoTen']) . '</td>' . '</tr>';
+                                                    '<td><a href="index.php?action=GetProfileDetail&ID=' . htmlspecialchars($phongBan['QuanLyID']) . '">' .
+                                                    htmlspecialchars($phongBan['HoTen']) . '</a></td>' .
+                                                   '</tr>';
                             }
+                            
 
                             $paginationHtml_PB = '';
                             if ($totalRooms > $limit_PB) {
@@ -141,11 +270,12 @@ class HomeController{
                         if (isset($_GET['search_project']) || isset($_GET['page_project'])) {
                             $requestHtml_PJ = '';
                             foreach ($projects as $project) {
-                                $requestHtml_PJ .= '<li>' .
-                                                        '<p>' . htmlspecialchars($project['Ten']) . '</p>' .
-                                                        '<span>' . htmlspecialchars($project['NgayGiao']) . '</span>' .
-                                                        '<span class="status">' . htmlspecialchars($project['TienDo']) . '</span>' .
-                                                    '</li>';
+                                $requestHtml_PJ .= '<li>
+                                                        <a href="index.php?action=GetDetailProjectPage&projectID=' . htmlspecialchars($project['ProjectID']) . '">
+                                                            ' . htmlspecialchars($project['Ten']) . '
+                                                        </a><br>
+                                                        <span>' . htmlspecialchars($project['NgayGiao']) . '</span><br>
+                                                        <span class="status">' . htmlspecialchars($project['TienDo']) . '</span></li>';
                             }
 
                             $paginationHtml_PJ = '';
@@ -387,8 +517,53 @@ class HomeController{
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
             exit();
         }
-     
     }
+    
+    public function GetProfileDetail() {
+        if (isset($_SESSION['user'])) {
+            $title = 'Chi tiết nhân viên';
+            $user_id = $_SESSION['user']['EmpID'];
+            $ID = isset($_GET['ID']) ? $_GET['ID'] : null;
+            $profile = UserModel::getprofile($ID);
+            $role = $profile['Role'];
+            $timesheet = UserModel::gettimesheet($ID);
+            $cNghi = UserModel::getCountNghiPhep($ID);
+            $cTre = UserModel::getCountTre($ID);
+            $cPrj_NV = UserModel::getCountPrj_NV($ID);
+            $listPrj_NV = UserModel::getListPrj_NV($ID);
+            $cPrj_QL= UserModel::getCountPrj_QL($ID);
+            $listPrj_QL = UserModel::getListPrj_QL($ID);
+    
+            $message = '';
+            if (isset($_GET['status'])) {
+                switch ($_GET['status']) {
+                    case 'checked-in':
+                        $message = "Bạn đã check-in thành công.";
+                        break;
+                    case 'checked-out':
+                        $message = "Bạn đã check-out thành công.";
+                        break;
+                    case 'already-checked-out':
+                        $message = "Bạn đã check-out, không thể thực hiện lại.";
+                        break;
+                    case 'success':
+                        $message = "Cập nhật thành công!";
+                        break;
+                    default:
+                        $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                        break;
+                }
+            }
+    
+            // Render giao diện profile_detail.phtml cho nhân viên
+            ob_start();
+            require("./views/pages/profile_detail.phtml");
+            $content = ob_get_clean();
+            require(__DIR__ . '/../views/template.phtml');
+        } else {
+    
+        }
+}
 
 }
 ?>

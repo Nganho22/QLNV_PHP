@@ -77,11 +77,6 @@ h3 {
     margin-top: 20px;
 }
 
-.tasks-today a {
-    position: relative;
-    margin-left: 800px;
-}
-
 .activities a {
     position: relative;
     margin-left: 800px;
@@ -105,8 +100,29 @@ h3 {
     align-items: center;
 }
 
+.header-with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.action-button {
+    background-color: #4CAF50; /* Màu xanh lá cây */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #45a049; /* Màu khi hover */
+}
+
+
 .checkin-out p {
-    margin-top: 20px;
     background-color: #ffffff;
     border-radius: 8px;
     padding: 20px;
@@ -337,4 +353,106 @@ h3 {
     background-color: #bdbdbd;
     color: #ffffff;
     margin-left: 100px;
+}
+
+.status-absent {
+    color: red;
+}
+
+.status-late {
+    color: orange;
+}
+
+.status-normal {
+    color: green;
+}
+
+.project-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.project-item {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.project-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-name {
+    font-weight: bold;
+    font-size: 16px;
+    color: #007bff;
+    text-decoration: none;
+    margin-bottom: 5px;
+}
+
+.project-name:hover {
+    text-decoration: underline;
+}
+
+.project-deadline, .project-status {
+    font-size: 14px;
+    color: #555;
+}
+
+.project-status {
+    margin-top: 5px;
+    padding: 4px 8px;
+    border-radius: 12px;
+    text-transform: capitalize;
+}
+
+.project-status.hoan-thanh {
+    background-color: #28a745;
+    color: white;
+}
+
+.project-status.dang-thuc-hien {
+    background-color: #ffc107;
+    color: white;
+}
+
+.project-status.chua-bat-dau {
+    background-color: #dc3545;
+    color: white;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.page-item {
+    margin: 0 5px;
+}
+
+.page-item .page-link {
+    display: block;
+    padding: 8px 16px;
+    color: #007bff;
+    text-decoration: none;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+}
+
+.page-item .page-link:hover {
+    background-color: #0056b3;
+    color: white;
 }

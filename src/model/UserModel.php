@@ -185,8 +185,126 @@ class UserModel {
         return $phongID;
     }
 
+    public static function gettimesheet($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT * 
+                                FROM Time_sheet WHERE empid = ?");
+        $stmt->bind_param("i", $user_id,);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $timesheet = array();
+        while ($row = $result->fetch_assoc()) {
+            $timesheet[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $timesheet;
+    }
+
     //=================================Nhân viên=================================
-        //Lấy Deadline từ Time-sheet
+    public static function getProjects_NV($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai, Project.projectid
+                                FROM Time_sheet
+                                JOIN Project ON Time_sheet.projectid = Project.projectid 
+                                WHERE Time_sheet.empid = ? AND Time_sheet.trangthai = 'Chưa hoàn thành'" );
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $projects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+    
+    public static function getCountProjects_NV($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Time_sheet.TrangThai
+                                FROM Time_sheet
+                                JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
+                                WHERE Time_sheet.empid = ? " );
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $cprojects = [];
+        while ($row = $result->fetch_assoc()) {
+            $cprojects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $cprojects;
+    }
+    
+    public static function getProjectsList_NV($empID, $limit, $offset) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "
+            SELECT Project.Ten, Project.HanChotDuKien, Time_sheet.TrangThai, Project.ProjectID
+                                FROM Time_sheet
+                                JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
+                                WHERE Time_sheet.empid = ? AND Time_sheet.TrangThai = 'Chưa hoàn thành'
+                                LIMIT ? OFFSET ?";
+    
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('iii', $empID, $limit, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $projects = $result->fetch_all(MYSQLI_ASSOC);
+    
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+    
+    public static function countProjectsList_NV($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Lấy PhongID của người dùng hiện tại
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE empid = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $phongID = $row['PhongID'];
+        $stmt->close();
+    
+        // Đếm số lượng nhân viên trong phòng ban
+        $query = "
+            SELECT COUNT(*) as total
+            FROM Time_sheet
+            JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
+            WHERE Time_sheet.empid = ? AND Time_sheet.TrangThai = 'Chưa hoàn thành'";
+    
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return $row['total'];
+    }
+    
+    //Lấy Deadline từ Time-sheet
     public static function getDeadlinesTimesheet($empID) {
             $db = new Database();
             $conn = $db->connect();
@@ -211,10 +329,6 @@ class UserModel {
             return $deadlines;
     }
     
-
-
-
-
     public static function getPoint_Month($empID) {
         $db = new Database();
         $conn = $db->connect();
@@ -241,8 +355,285 @@ class UserModel {
         return $monthlyPoints;
     }
 
+    public static function getCountPrj_NV($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT COUNT(DISTINCT ProjectID) AS total_projects 
+                                    FROM Time_sheet 
+                                    WHERE empid = ?");
+        $stmt->bind_param("i", $user_id,);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $cPrj_NV = $result->fetch_assoc()['total_projects'];
+
+        $stmt->close();
+        $db->close();
+        
+        return $cPrj_NV;
+    }
+
+    public static function getListPrj_NV($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
     
+        $stmt = $conn->prepare("SELECT DISTINCT ProjectID FROM Time_sheet WHERE empid = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $project_id = $row['ProjectID'];
+    
+            $project_stmt = $conn->prepare("SELECT TienDo FROM Project WHERE ProjectID = ?");
+            $project_stmt->bind_param("i", $project_id);
+            $project_stmt->execute();
+            $project_result = $project_stmt->get_result();
+    
+            if ($project_result->num_rows > 0) {
+                $project_data = $project_result->fetch_assoc();
+                $tien_do_str = $project_data['TienDo'];
+                
+                $tien_do_percentage = (float) str_replace('%', '', $tien_do_str);
+                
+                $projects[] = [
+                    'ProjectID' => $project_id,
+                    'TienDo' => $tien_do_percentage
+                ];
+            }
+            $project_stmt->close();
+        }
+        $stmt->close();
+        $db->close();
+    
+        return $projects;
+    }
      //===================================Quản lý========================================
+     public static function searchProfiles_QL($empID, $searchTerm, $limit, $offset) {
+        $searchTerm = "%$searchTerm%";
+        // Tìm kiếm danh sách nhân viên trong phòng ban với từ khóa tìm kiếm và phân trang
+        $query = "
+            SELECT empid, HoTen, Email
+            FROM Profile
+            WHERE PhongID = (
+                SELECT PhongID 
+                FROM Profile 
+                WHERE empid = ?
+            ) AND HoTen LIKE ? AND empid <> ?
+            LIMIT ? OFFSET ?";
+            
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$empID, $searchTerm, $empID, $limit, $offset];
+        $stmt->bind_param('isiii', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $profiles = [];
+        while ($row = $result->fetch_assoc()) {
+            $profiles[] = $row;
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $profiles;
+    }
+     
+     public static function countSearchProfiles_QL($empID, $searchTerm) {
+        $searchTerm = "%$searchTerm%";
+        // Đếm số lượng nhân viên trong phòng ban với từ khóa tìm kiếm
+        $query = "
+            SELECT COUNT(empid) as total
+            FROM Profile
+            WHERE PhongID = (
+                SELECT PhongID 
+                FROM Profile 
+                WHERE empid = ?
+            ) AND HoTen LIKE ? AND empid <> ?";
+        
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$empID, $searchTerm, $empID];
+        $stmt->bind_param('isi', ...$params);
+        $stmt->execute();
+
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+    
+        $stmt->close();
+        $db->close();
+    
+        return $total;
+    }
+    
+     public static function countAllEmployees_QL($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Lấy PhongID của người dùng hiện tại
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE empid = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $phongID = $row['PhongID'];
+        $stmt->close();
+    
+        // Đếm số lượng nhân viên trong phòng ban
+        $query = "
+            SELECT COUNT(*) as total
+            FROM Profile
+            WHERE PhongID = ? AND empid <> ?";
+    
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('si', $phongID, $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return $row['total'];
+    }
+    
+     public static function getTimesheetList_QL($empID, $limit, $offset) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Lấy PhongID của người dùng hiện tại
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE empid = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $phongID = $row['PhongID'];
+        $stmt->close();
+    
+        // Lấy danh sách time-sheet của các nhân viên thuộc phòng ban với phân trang
+        $query = "
+            SELECT NgayGiao, NoiDung, NguoiGui, Time_sheetID 
+            FROM Time_sheet 
+            WHERE empid IN (
+                SELECT empid FROM Profile WHERE PhongBan = ? AND empid <> ?
+            )
+            LIMIT ? OFFSET ?";
+    
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('siii', $phongID, $empID, $limit, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $timesheets = $result->fetch_all(MYSQLI_ASSOC);
+    
+        $stmt->close();
+        $db->close();
+        return $timesheets;
+    }
+    
+     public static function countAllTimesheet_QL($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        // Lấy PhongID của người dùng hiện tại
+        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE empid = ?");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $phongID = $row['PhongID'];
+        $stmt->close();
+    
+        // Đếm số lượng time-sheet của các nhân viên trong phòng ban
+        $query = "
+            SELECT COUNT(*) as total
+            FROM Time_sheet 
+            WHERE empid IN (
+                SELECT empid FROM Profile WHERE PhongBan = ? AND empid <> ?
+            )";
+    
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('si', $phongID, $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return $row['total'];
+    }
+
+     public static function getProjects_QL($empID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT p.Ten AS ProjectName, 
+                                       p.TienDo, p.TinhTrang
+                                FROM Project p
+                                JOIN Profile prof ON p.QuanLy = prof.empid
+                                WHERE prof.empid = ? AND p.TinhTrang <> 'Đã hoàn thành'
+                                ORDER BY p.NgayGiao DESC");
+        $stmt->bind_param("i", $empID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $projects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
+     public static function getCountPrj_QL($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT COUNT(DISTINCT ProjectID) AS total_projects 
+                                    FROM Project 
+                                    WHERE QuanLy = ?");
+        $stmt->bind_param("i", $user_id,);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $cPrj_QL = $result->fetch_assoc()['total_projects'];
+
+        $stmt->close();
+        $db->close();
+        
+        return $cPrj_QL;
+    }
+     
+     public static function getListPrj_QL($user_id) {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT ProjectID, TienDo FROM Project WHERE QuanLy = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+    
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $tienDo = str_replace('%', '', $row['TienDo']);
+    
+            $projects[] = [
+                'ProjectID' => $row['ProjectID'],
+                'TienDo' => (int)$tienDo
+            ];
+        }
+    
+        $stmt->close();
+        $db->close();
+    
+        return $projects;
+    }
+    
      public static function getDeadlinesTimesheet_QL($empID) {
         $db = new Database();
         $conn = $db->connect();
@@ -493,7 +884,10 @@ class UserModel {
         $stmt->close();
 
         // Lấy danh sách nhân viên cùng PhongID, loại bỏ người có EmpID trùng với người quản lý
-        $stmt = $conn->prepare("SELECT hoten, email FROM Profile WHERE phongid = ? AND empid != ? LIMIT 3");
+        $stmt = $conn->prepare("SELECT empid, hoten, email
+                                FROM Profile
+                                WHERE phongid = ? AND empid <> ?
+                                LIMIT ? OFFSET ?");
         $stmt->bind_param("ii", $phongID, $empID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -549,6 +943,85 @@ class UserModel {
     }
 
     //=================================Giam doc==============================
+    public static function searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ) {
+        $searchTerm = "%$searchTerm_PJ%";
+        $query = "
+            SELECT Ten, NgayGiao, TienDo
+            FROM Project
+            WHERE Ten LIKE ?
+            LIMIT ? OFFSET ?";
+
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$searchTerm, $limit_PJ, $offset_PJ];
+        $stmt->bind_param('sii', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $projects[] = $row;
+        }
+
+        $stmt->close();
+        $db->close();
+
+        return $projects;
+    }
+    
+    public static function countSearchProject_GD($searchTerm_PJ) {
+        $searchTerm = "%$searchTerm_PJ%";
+        $query = "
+            SELECT COUNT(ProjectID) as total
+            FROM Project
+            WHERE Ten LIKE ?";
+
+        $db = new Database();
+        $conn = $db->connect();
+        $stmt = $conn->prepare($query);
+        $params = [$searchTerm];
+        $stmt->bind_param('s', ...$params);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $total = $result->fetch_assoc()['total'];
+
+        $stmt->close();
+        $db->close();
+
+        return $total;
+    }
+    
+    public static function getProjects_GD($limit, $offset) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $stmt = $conn->prepare("SELECT * FROM Project LIMIT ? OFFSET ?");
+        $stmt->bind_param("ii", $limit, $offset);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $projects = $result->fetch_all(MYSQLI_ASSOC);
+
+        $stmt->close();
+        $db->close();
+        return $projects;
+    }
+
+    public static function countAllProject_GD() {
+        $db = new Database();
+        $conn = $db->connect();
+    
+        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM Project");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+    
+        $stmt->close();
+        $db->close();
+    
+        return $row['total'];
+    }
+    
     public static function getDeadlinesTimesheet_GD() {
         $db = new Database();
         $conn = $db->connect();
@@ -585,8 +1058,6 @@ class UserModel {
         return $deadlines;
     }
     
-
-
     public static function getEmployeesList_GD($limit, $offset) {
         $db = new Database();
         $conn = $db->connect();

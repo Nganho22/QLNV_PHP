@@ -228,58 +228,59 @@ UPDATE PhongBan SET quanlyid = '4' WHERE phongid = 'P03';
 
 INSERT INTO Project (projectid, ten, ngaygiao, hanchotdukien, hanchot, tiendo, sogiothuchanh, phongid, quanly, tinhtrang)
 VALUES 
-('1', 'Nghiên cứu PHP', '2024-08-20', '2024-06-10', '2024-08-15', '100%', 490, 'P01', 2, 'Hoàn thành'),
+('1', 'Nghiên cứu PHP', '2024-08-20', '2024-06-10', '2024-08-15', '100%', 490, 'P01', 2, 'Đã hoàn thành'),
 ('2', 'Nghiên cứu API', '2024-08-18', '2024-10-18', '2024-10-20', '30%', 200, 'P02', 7, 'Chưa hoàn thành'),
-('3', 'Nghiên cứu NoSQL', '2024-08-13', '2024-10-25', '2024-10-31', '40%', 210, 'P03', 14, 'Chưa hoàn thành'),
-('4', 'Nghiên cứu ODI', '2024-07-23', '2024-09-23', '2024-09-20', '70%', 400, 'P01', 2, 'Chưa hoàn thành'),
-('5', 'Thiết kế Web', '2024-08-27', '2024-11-27', '2024-11-20', '20%', 150, 'P03', 14, 'Chưa hoàn thành');
+('3', 'Nghiên cứu NoSQL', '2024-08-13', '2024-10-25', '2024-10-31', '40%', 210, 'P02', 7, 'Chưa hoàn thành'),
+('4', 'Nghiên cứu ODI', '2024-07-23', '2024-09-23', '2024-09-20', '70%', 400, 'P03', 14, 'Chưa hoàn thành'),
+('5', 'Thiết kế Web', '2024-08-27', '2024-11-27', '2024-11-20', '20%', 150, 'P01', 2, 'Chưa hoàn thành');
 
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('1', '4', '13', 'Nghiên cứu ODI', 'Alan Ruley', 'P03', 'Hoàn thành', '16', '2024-08-10 00:00:00', '2024-08-17 00:00:00', '10', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('2', '5', '4', 'Thiết kế Web', 'Tara Applewhite', 'P01', 'Hoàn thành', '21', '2024-08-03 00:00:00', '2024-08-10 00:00:00', '20', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('3', '2', '6', 'Nghiên cứu API', 'Lucile Sexton', 'P02', 'Hoàn thành', '21', '2024-07-09 00:00:00', '2024-07-16 00:00:00', '10', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('4', '1', '4', 'Nghiên cứu PHP', 'Tara Applewhite', 'P01', 'Hoàn thành', '24', '2024-06-27 00:00:00', '2024-07-04 00:00:00', '20', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('5', '4', '9', 'Nghiên cứu ODI', 'Jim Martin', 'P03', 'Hoàn thành', '9', '2024-08-14 00:00:00', '2024-08-21 00:00:00', '5', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('6', '5', '12', 'Thiết kế Web', 'Joel Thomas', 'P01', 'Hoàn thành', '15', '2024-08-02 00:00:00', '2024-08-09 00:00:00', '5', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('7', '5', '15', 'Thiết kế Web', 'Richard L. Anderson', 'P01', 'Hoàn thành', '4', '2024-07-03 00:00:00', '2024-07-10 00:00:00', '10', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('8', '2', '9', 'Nghiên cứu API', 'Jim Martin', 'P02', 'Chưa hoàn thành', '10', '2024-07-28 00:00:00', '2024-08-04 00:00:00', '20', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('9', '5', '1', 'Thiết kế Web', 'Bông Bông', 'P01', 'Chưa hoàn thành', '11', '2024-07-19 00:00:00', '2024-07-26 00:00:00', '25', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('10', '5', '10', 'Thiết kế Web', 'Kathy Weatherby', 'P01', 'Chưa hoàn thành', '26', '2024-08-09 00:00:00', '2024-08-16 00:00:00', '15', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('11', '5', '5', 'Thiết kế Web', 'Devin Lear', 'P01', 'Hoàn thành', '8', '2024-08-26 00:00:00', '2024-09-02 00:00:00', '20', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('12', '2', '9', 'Nghiên cứu API', 'Jim Martin', 'P02', 'Hoàn thành', '16', '2024-07-18 00:00:00', '2024-07-25 00:00:00', '5', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('13', '5', '4', 'Thiết kế Web', 'Tara Applewhite', 'P01', 'Hoàn thành', '14', '2024-08-14 00:00:00', '2024-08-21 00:00:00', '5', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('14', '5', '8', 'Thiết kế Web', 'Terry Gross', 'P01', 'Hoàn thành', '5', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '5', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('15', '4', '8', 'Nghiên cứu ODI', 'Terry Gross', 'P03', 'Chưa hoàn thành', '12', '2024-07-14 00:00:00', '2024-07-21 00:00:00', '10', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('16', '5', '1', 'Thiết kế Web', 'Bông Bông', 'P01', 'Chưa hoàn thành', '13', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '20', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('17', '1', '8', 'Nghiên cứu PHP', 'Terry Gross', 'P01', 'Chưa hoàn thành', '13', '2024-07-21 00:00:00', '2024-07-28 00:00:00', '25', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('18', '4', '8', 'Nghiên cứu ODI', 'Terry Gross', 'P03', 'Chưa hoàn thành', '9', '2024-07-21 00:00:00', '2024-07-28 00:00:00', '15', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('19', '4', '12', 'Nghiên cứu ODI', 'Joel Thomas', 'P03', 'Chưa hoàn thành', '8', '2024-07-08 00:00:00', '2024-07-15 00:00:00', '10', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('20', '3', '9', 'Nghiên cứu NoSQL', 'Jim Martin', 'P02', 'Hoàn thành', '1', '2024-08-23 00:00:00', '2024-08-30 00:00:00', '20', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('21', '5', '6', 'Thiết kế Web', 'Lucile Sexton', 'P01', 'Chưa hoàn thành', '20', '2024-08-17 00:00:00', '2024-08-24 00:00:00', '5', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('22', '1', '11', 'Nghiên cứu PHP', 'Nancy Garcia', 'P01', 'Hoàn thành', '20', '2024-08-14 00:00:00', '2024-08-21 00:00:00', '5', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('23', '5', '5', 'Thiết kế Web', 'Devin Lear', 'P01', 'Hoàn thành', '18', '2024-08-05 00:00:00', '2024-08-12 00:00:00', '10', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('24', '2', '10', 'Nghiên cứu API', 'Kathy Weatherby', 'P02', 'Hoàn thành', '29', '2024-07-30 00:00:00', '2024-08-06 00:00:00', '20', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('25', '3', '11', 'Nghiên cứu NoSQL', 'Nancy Garcia', 'P02', 'Hoàn thành', '5', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '25', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('26', '5', '6', 'Thiết kế Web', 'Lucile Sexton', 'P01', 'Hoàn thành', '27', '2024-06-28 00:00:00', '2024-07-05 00:00:00', '15', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('27', '4', '5', 'Nghiên cứu ODI', 'Devin Lear', 'P03', 'Hoàn thành', '5', '2024-08-02 00:00:00', '2024-08-09 00:00:00', '20', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('28', '4', '5', 'Nghiên cứu ODI', 'Devin Lear', 'P03', 'Chưa hoàn thành', '21', '2024-07-16 00:00:00', '2024-07-23 00:00:00', '5', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('29', '2', '1', 'Nghiên cứu API', 'Bông Bông', 'P02', 'Hoàn thành', '12', '2024-08-10 00:00:00', '2024-08-17 00:00:00', '5', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('30', '3', '11', 'Nghiên cứu NoSQL', 'Nancy Garcia', 'P02', 'Chưa hoàn thành', '6', '2024-08-13 00:00:00', '2024-08-20 00:00:00', '5', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('31', '1', '5', 'Nghiên cứu PHP', 'Devin Lear', 'P01', 'Hoàn thành', '6', '2024-08-22 00:00:00', '2024-08-29 00:00:00', '10', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('32', '5', '8', 'Thiết kế Web', 'Terry Gross', 'P01', 'Chưa hoàn thành', '6', '2024-06-28 00:00:00', '2024-07-05 00:00:00', '20', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('33', '5', '12', 'Thiết kế Web', 'Joel Thomas', 'P01', 'Chưa hoàn thành', '9', '2024-08-02 00:00:00', '2024-08-09 00:00:00', '20', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('34', '1', '9', 'Nghiên cứu PHP', 'Jim Martin', 'P01', 'Chưa hoàn thành', '6', '2024-07-03 00:00:00', '2024-07-10 00:00:00', '25', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('35', '2', '6', 'Nghiên cứu API', 'Lucile Sexton', 'P02', 'Chưa hoàn thành', '13', '2024-07-28 00:00:00', '2024-08-04 00:00:00', '15', '0', 'Tìm hiểu');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('36', '1', '11', 'Nghiên cứu PHP', 'Nancy Garcia', 'P01', 'Chưa hoàn thành', '10', '2024-07-19 00:00:00', '2024-07-26 00:00:00', '10', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('37', '5', '5', 'Thiết kế Web', 'Devin Lear', 'P01', 'Chưa hoàn thành', '10', '2024-08-09 00:00:00', '2024-08-16 00:00:00', '20', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('38', '2', '10', 'Nghiên cứu API', 'Kathy Weatherby', 'P02', 'Chưa hoàn thành', '11', '2024-08-26 00:00:00', '2024-09-02 00:00:00', '5', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('39', '1', '11', 'Nghiên cứu PHP', 'Nancy Garcia', 'P01', 'Chưa hoàn thành', '5', '2024-07-18 00:00:00', '2024-07-25 00:00:00', '5', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('40', '1', '6', 'Nghiên cứu PHP', 'Lucile Sexton', 'P01', 'Chưa hoàn thành', '15', '2024-08-14 00:00:00', '2024-08-21 00:00:00', '10', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('41', '2', '5', 'Nghiên cứu API', 'Devin Lear', 'P02', 'Chưa hoàn thành', '11', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '20', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('42', '1', '5', 'Nghiên cứu PHP', 'Devin Lear', 'P01', 'Chưa hoàn thành', '10', '2024-07-14 00:00:00', '2024-07-21 00:00:00', '5', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('43', '5', '1', 'Thiết kế Web', 'Bông Bông', 'P01', 'Chưa hoàn thành', '5', '2024-08-12 00:00:00', '2024-08-19 00:00:00', '5', '0', 'Giao diện');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('44', '1', '12', 'Nghiên cứu PHP', 'Joel Thomas', 'P01', 'Chưa hoàn thành', '13', '2024-07-21 00:00:00', '2024-07-28 00:00:00', '10', '0', 'Làm web');
-INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung) VALUES ('45', '4', '9', 'Nghiên cứu ODI', 'Jim Martin', 'P03', 'Chưa hoàn thành', '10', '2024-07-19 00:00:00', '2024-07-26 00:00:00', '20', '0', 'Giao diện');
-
+INSERT INTO Time_sheet (time_sheetid, projectid, empid, tenduan, nguoigui, phongban, trangthai, sogiothuchien, ngaygiao, hanchot, diemthuong, tre, noidung)
+VALUES
+(1, 3, 13, 'Nghiên cứu NoSQL', 'Alan Ruley', 'P02', 'Hoàn thành', 16, '2024-08-10', '2024-08-17', 10, 0, 'Giao diện'),
+(2, 5, 4, 'Thiết kế Web', 'Tara Applewhite', 'P01', 'Hoàn thành', 21, '2024-08-03', '2024-08-10', 20, 0, 'Tìm hiểu'),
+(3, 1, 6, 'Nghiên cứu PHP', 'Lucile Sexton', 'P01', 'Hoàn thành', 21, '2024-07-09', '2024-07-16', 10, 0, 'Làm web'),
+(4, 1, 4, 'Nghiên cứu PHP', 'Tara Applewhite', 'P01', 'Hoàn thành', 24, '2024-06-27', '2024-07-04', 20, 0, 'Giao diện'),
+(5, 4, 9, 'Nghiên cứu ODI', 'Jim Martin', 'P03', 'Hoàn thành', 9, '2024-08-14', '2024-08-21', 5, 0, 'Tìm hiểu'),
+(6, 5, 12, 'Thiết kế Web', 'Joel Thomas', 'P01', 'Hoàn thành', 15, '2024-08-02', '2024-08-09', 5, 0, 'Tìm hiểu'),
+(7, 3, 15, 'Nghiên cứu NoSQL', 'Richard L. Anderson', 'P02', 'Hoàn thành', 4, '2024-07-03', '2024-07-10', 10, 0, 'Tìm hiểu'),
+(8, 4, 9, 'Nghiên cứu ODI', 'Jim Martin', 'P03', 'Chưa hoàn thành', 10, '2024-07-28', '2024-08-04', 20, 0, 'Tìm hiểu'),
+(9, 5, 1, 'Thiết kế Web', 'Bông Bông', 'P01', 'Chưa hoàn thành', 11, '2024-07-19', '2024-07-26', 25, 0, 'Giao diện'),
+(10, 3, 10, 'Nghiên cứu NoSQL', 'Kathy Weatherby', 'P02', 'Chưa hoàn thành', 26, '2024-08-09', '2024-08-16', 15, 0, 'Tìm hiểu'),
+(11, 2, 5, 'Nghiên cứu API', 'Devin Lear', 'P02', 'Hoàn thành', 8, '2024-08-26', '2024-09-02', 20, 0, 'Tìm hiểu'),
+(12, 4, 9, 'Nghiên cứu ODI', 'Jim Martin', 'P03', 'Hoàn thành', 16, '2024-07-18', '2024-07-25', 5, 0, 'Làm web'),
+(13, 5, 4, 'Thiết kế Web', 'Tara Applewhite', 'P01', 'Hoàn thành', 14, '2024-08-14', '2024-08-21', 5, 0, 'Làm web'),
+(14, 4, 8, 'Nghiên cứu ODI', 'Terry Gross', 'P03', 'Hoàn thành', 5, '2024-08-12', '2024-08-19', 5, 0, 'Làm web'),
+(15, 4, 8, 'Nghiên cứu ODI', 'Terry Gross', 'P03', 'Chưa hoàn thành', 12, '2024-07-14', '2024-07-21', 10, 0, 'Tìm hiểu'),
+(16, 5, 1, 'Thiết kế Web', 'Bông Bông', 'P01', 'Chưa hoàn thành', 13, '2024-08-12', '2024-08-19', 20, 0, 'Giao diện'),
+(17, 4, 8, 'Nghiên cứu ODI', 'Terry Gross', 'P03', 'Chưa hoàn thành', 13, '2024-07-21', '2024-07-28', 25, 0, 'Tìm hiểu'),
+(18, 4, 8, 'Nghiên cứu ODI', 'Terry Gross', 'P03', 'Chưa hoàn thành', 9, '2024-07-21', '2024-07-28', 15, 0, 'Tìm hiểu'),
+(19, 5, 12, 'Thiết kế Web', 'Joel Thomas', 'P01', 'Chưa hoàn thành', 8, '2024-07-08', '2024-07-15', 10, 0, 'Tìm hiểu'),
+(20, 4, 9, 'Nghiên cứu ODI', 'Jim Martin', 'P03', 'Hoàn thành', 1, '2024-08-23', '2024-08-30', 20, 0, 'Tìm hiểu'),
+(21, 5, 6, 'Thiết kế Web', 'Lucile Sexton', 'P01', 'Chưa hoàn thành', 20, '2024-08-17', '2024-08-24', 5, 0, 'Giao diện'),
+(22, 4, 11, 'Nghiên cứu ODI', 'Nancy Garcia', 'P03', 'Hoàn thành', 20, '2024-08-14', '2024-08-21', 5, 0, 'Tìm hiểu'),
+(23, 3, 5, 'Nghiên cứu NoSQL', 'Devin Lear', 'P02', 'Hoàn thành', 18, '2024-08-05', '2024-08-12', 10, 0, 'Làm web'),
+(24, 2, 10, 'Nghiên cứu API', 'Kathy Weatherby', 'P02', 'Hoàn thành', 29, '2024-07-30', '2024-08-06', 20, 0, 'Giao diện'),
+(25, 4, 11, 'Nghiên cứu ODI', 'Nancy Garcia', 'P03', 'Hoàn thành', 5, '2024-08-12', '2024-08-19', 25, 0, 'Giao diện'),
+(26, 5, 6, 'Thiết kế Web', 'Lucile Sexton', 'P01', 'Hoàn thành', 27, '2024-06-28', '2024-07-05', 15, 0, 'Làm web'),
+(27, 3, 5, 'Nghiên cứu NoSQL', 'Devin Lear', 'P02', 'Hoàn thành', 5, '2024-08-02', '2024-08-09', 20, 0, 'Giao diện'),
+(28, 2, 5, 'Nghiên cứu API', 'Devin Lear', 'P02', 'Chưa hoàn thành', 21, '2024-07-16', '2024-07-23', 5, 0, 'Làm web'),
+(29, 1, 1, 'Nghiên cứu PHP', 'Bông Bông', 'P02', 'Hoàn thành', 12, '2024-08-10', '2024-08-17', 5, 0, 'Tìm hiểu'),
+(30, 4, 11, 'Nghiên cứu ODI', 'Nancy Garcia', 'P03', 'Chưa hoàn thành', 6, '2024-08-13', '2024-08-20', 5, 0, 'Làm web'),
+(31, 2, 5, 'Nghiên cứu API', 'Devin Lear', 'P02', 'Hoàn thành', 6, '2024-08-22', '2024-08-29', 10, 0, 'Tìm hiểu'),
+(32, 4, 8, 'Nghiên cứu ODI', 'Terry Gross', 'P03', 'Chưa hoàn thành', 6, '2024-06-28', '2024-07-05', 20, 0, 'Giao diện'),
+(33, 5, 12, 'Thiết kế Web', 'Joel Thomas', 'P01', 'Chưa hoàn thành', 9, '2024-08-02', '2024-08-09', 20, 0, 'Tìm hiểu'),
+(34, 4, 9, 'Nghiên cứu ODI', 'Jim Martin', 'P03', 'Chưa hoàn thành', 6, '2024-07-03', '2024-07-10', 25, 0, 'Giao diện'),
+(35, 1, 6, 'Nghiên cứu PHP', 'Lucile Sexton', 'P01', 'Hoàn thành', 13, '2024-07-28', '2024-08-04', 15, 0, 'Tìm hiểu'),
+(36, 4, 11, 'Nghiên cứu ODI', 'Nancy Garcia', 'P03', 'Chưa hoàn thành', 10, '2024-07-19', '2024-07-26', 10, 0, 'Làm web'),
+(37, 3, 5, 'Nghiên cứu NoSQL', 'Devin Lear', 'P02', 'Chưa hoàn thành', 10, '2024-08-09', '2024-08-16', 20, 0, 'Giao diện'),
+(38, 2, 10, 'Nghiên cứu API', 'Kathy Weatherby', 'P02', 'Chưa hoàn thành', 11, '2024-08-26', '2024-09-02', 5, 0, 'Giao diện'),
+(39, 4, 11, 'Nghiên cứu ODI', 'Nancy Garcia', 'P03', 'Chưa hoàn thành', 5, '2024-07-18', '2024-07-25', 5, 0, 'Làm web'),
+(40, 1, 6, 'Nghiên cứu PHP', 'Lucile Sexton', 'P01', 'Hoàn thành', 15, '2024-08-14', '2024-08-21', 10, 0, 'Giao diện'),
+(41, 2, 5, 'Nghiên cứu API', 'Devin Lear', 'P02', 'Chưa hoàn thành', 11, '2024-08-12', '2024-08-19', 20, 0, 'Làm web'),
+(42, 3, 5, 'Nghiên cứu NoSQL', 'Devin Lear', 'P02', 'Chưa hoàn thành', 10, '2024-07-14', '2024-07-21', 5, 0, 'Giao diện'),
+(43, 5, 1, 'Thiết kế Web', 'Bông Bông', 'P01', 'Chưa hoàn thành', 5, '2024-08-12', '2024-08-19', 5, 0, 'Giao diện'),
+(44, 1, 12, 'Nghiên cứu PHP', 'Joel Thomas', 'P01', 'Hoàn thành', 13, '2024-07-21', '2024-07-28', 10, 0, 'Làm web'),
+(45, 4, 9, 'Nghiên cứu ODI', 'Jim Martin', 'P03', 'Chưa hoàn thành', 10, '2024-07-19', '2024-07-26', 20, 0, 'Giao diện');
 
 INSERT INTO Request (requestid, empid, nguoigui, loai, tieude, ngaygui, ngaychon, trangthai, noidung) VALUES ('1', '15', 'Richard L. Anderson', 'From home', 'Đơn xin làm việc tại nhà', '2024-08-24 00:00:00', '2024-08-26 00:00:00', '0', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ');
 INSERT INTO Request (requestid, empid, nguoigui, loai, tieude, ngaygui, ngaychon, trangthai, noidung, phanhoi) VALUES ('2', '1', 'Bông Bông', 'From home', 'Đơn xin làm việc tại nhà', '2024-08-20 00:00:00', '2024-08-22 00:00:00', '2', 'Lorem ipsum dolor sit amet. Ut ipsam amet qui optio laudantium est velit perspiciatis qui impedit assumenda. Ad maiores galisum sit quis itaque sed voluptatum beatae! ', 'False');

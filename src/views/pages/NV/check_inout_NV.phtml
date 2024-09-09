@@ -22,35 +22,35 @@
     
     <div class="container">
         <div class="row">
-                <div class="info-box">
+            <div class="info-box">
                 <p><strong>Số ngày đi trễ</strong></p>
-                    <h4><?php echo htmlspecialchars($creqq['countLate']); ?></h4>
-                </div>
-                <div class="info-box">
+                <h4><?php echo htmlspecialchars($creqq['countLate']); ?></h4>
+            </div>
+            <div class="info-box">
                 <p><strong>Số ngày nghỉ</strong></p>
-                    <h4><?php echo htmlspecialchars($creqq['absence']); ?></h4>
-                </div>
-        <div class="left-panel">
-            <div class="calendar">
-                <div class="month">
-                    <span id="monthYear"></span>
-                </div>
-                <ul class="weekdays">
-                    <li>Mo</li>
-                    <li>Tu</li>
-                    <li>We</li>
-                    <li>Th</li>
-                    <li>Fr</li>
-                    <li>Sa</li>
-                    <li>Su</li>
-                </ul>
-                <div class="cadays">
-                    <button class="prev">&#10094;</button>
-                    <ul class="days" id="calendarDays"></ul>
-                    <button class="next">&#10095;</button>
+                <h4><?php echo htmlspecialchars($creqq['absence']); ?></h4>
+            </div>
+            <div class="left-panel">
+                <div class="calendar">
+                    <div class="month">
+                        <span id="monthYear"></span>
+                    </div>
+                    <ul class="weekdays">
+                        <li>Mo</li>
+                        <li>Tu</li>
+                        <li>We</li>
+                        <li>Th</li>
+                        <li>Fr</li>
+                        <li>Sa</li>
+                        <li>Su</li>
+                    </ul>
+                    <div class="cadays">
+                        <button class="prev">&#10094;</button>
+                        <ul class="days" id="calendarDays"></ul>
+                        <button class="next">&#10095;</button>
+                    </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 <script>
@@ -72,82 +72,84 @@
                 timeCheckin: entry.Time_checkin,
                 timeCheckout: entry.Time_checkout,
                 isAbsent: entry.Nghi == 1,
-                isLate: entry.Late > 0
+                isLate: entry.Late == 1,
+                isWorkFromHome: entry.WorkFromHome == 1
             };
         });
 
         function renderCalendar(date) {
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const firstDay = new Date(year, month, 1);
-        const lastDay = new Date(year, month + 1, 0);
-        const daysInMonth = lastDay.getDate();
-        const startDay = (firstDay.getDay() + 6) % 7;
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const firstDay = new Date(year, month, 1);
+            const lastDay = new Date(year, month + 1, 0);
+            const daysInMonth = lastDay.getDate();
+            const startDay = (firstDay.getDay() + 6) % 7;
 
-        const today = new Date();
-        const todayString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+            const today = new Date();
+            const todayString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
 
-        daysElement.innerHTML = '';
-        monthYearElement.textContent = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
+            daysElement.innerHTML = '';
+            monthYearElement.textContent = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
 
-        // Add empty cells for the days before the first day of the month
-        for (let i = 0; i < startDay; i++) {
-            const emptyCell = document.createElement('li');
-            daysElement.appendChild(emptyCell);
-        }
-
-        // Add cells for the days in the month
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dayCell = document.createElement('li');
-            const dateString = `${year}-${month + 1}-${day}`;
-            dayCell.textContent = day;
-
-            // Default styles for the day
-            dayCell.style.backgroundColor = ''; // Reset background color
-            dayCell.style.border = ''; // Reset border
-            dayCell.dataset.info = ''; // Reset data-info
-
-        if (checkInOutMap[dateString]) {
-            const entry = checkInOutMap[dateString];
-            if (entry.timeCheckin) {
-                    dayCell.dataset.infoCheckin = `IN: ${entry.timeCheckin}`;
-                } else {
-                    dayCell.dataset.infoCheckin = 'IN: N/A'; 
-                }
-                if (entry.timeCheckout) {
-                    dayCell.dataset.infoCheckout = `OUT: ${entry.timeCheckout}`;
-                } else {
-                    dayCell.dataset.infoCheckout = 'OUT: N/A';
-                }
-
-            if (entry.isAbsent) {
-                dayCell.style.backgroundColor = '#fe7272'; 
-            } else if (entry.isLate) {
-                dayCell.style.backgroundColor = '#ff8c00'; 
-            } else {
-                dayCell.style.backgroundColor = '#a6a6a6'; 
+            // Add empty cells for the days before the first day of the month
+            for (let i = 0; i < startDay; i++) {
+                const emptyCell = document.createElement('li');
+                daysElement.appendChild(emptyCell);
             }
+
+            // Add cells for the days in the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayCell = document.createElement('li');
+                const dateString = `${year}-${month + 1}-${day}`;
+                dayCell.textContent = day;
+
+                // Default styles for the day
+                dayCell.style.backgroundColor = ''; // Reset background color
+                dayCell.style.border = ''; // Reset border
+                dayCell.dataset.info = ''; // Reset data-info
+
+                if (checkInOutMap[dateString]) {
+                    const entry = checkInOutMap[dateString];
+                    if (entry.timeCheckin) {
+                        dayCell.dataset.infoCheckin = `IN: ${entry.timeCheckin}`;
+                    } else {
+                        dayCell.dataset.infoCheckin = 'IN: N/A'; 
+                    }
+                    if (entry.timeCheckout) {
+                        dayCell.dataset.infoCheckout = `OUT: ${entry.timeCheckout}`;
+                    } else {
+                        dayCell.dataset.infoCheckout = 'OUT: N/A';
+                    }
+                    if (entry.isWorkFromHome) {
+                        dayCell.style.backgroundColor = '#c2c25e'; 
+                    } else if (entry.isAbsent) {
+                        dayCell.style.backgroundColor = '#fe7272'; 
+                    } else if (entry.isLate) {
+                        dayCell.style.backgroundColor = '#ff8c00'; 
+                    } else {
+                        dayCell.style.backgroundColor = '#a6a6a6'; 
+                    }
                 } else if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    dayCell.style.backgroundColor = '#74ffa9'; // Thêm màu xanh cho ngày hôm nay 
+                    dayCell.style.backgroundColor = '#74ffa9'; 
                 }
 
                 daysElement.appendChild(dayCell);
             }
         }
 
-            prevButton.addEventListener('click', function() {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                renderCalendar(currentDate);
-            });
-
-            nextButton.addEventListener('click', function() {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                renderCalendar(currentDate);
-            });
-
-            // Render the initial calendar
+        prevButton.addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() - 1);
             renderCalendar(currentDate);
         });
-    </script>
+
+        nextButton.addEventListener('click', function() {
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            renderCalendar(currentDate);
+        });
+
+        // Render the initial calendar
+        renderCalendar(currentDate);
+    });
+</script>
 </body>
 </html>

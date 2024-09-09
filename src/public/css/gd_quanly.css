@@ -297,32 +297,61 @@ a {
     margin-top: 20px;
 }
 
-.pagination a {
-    margin: 0 5px;
-    padding: 10px 15px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    text-decoration: none;
-    color: #333;
-    font-size: 14px;
-    transition: background-color 0.3s, color 0.3s;
-}
-
-.pagination a.active {
-    background-color: #a6a6a6;
+.pagination .page-item.active .page-link-timesheet {
+    background-color: #007bff;
     color: white;
 }
 
-.pagination a:hover {
-    background-color: #f0f0f0;
+.pagination a {
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
 }
 
-.pagination a.prev, .pagination a.next {
-    font-weight: bold;
+.pagination a.active {
+    background-color: #007bff;
 }
 
-.pagination a.prev:hover, .pagination a.next:hover {
-    background-color: #e0e0e0;
+.page-link-timesheet {
+    padding: 8px 16px;
+    margin: 0 4px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #007bff;
 }
 
+.header-with-button {
+    display: flex;
+    justify-content: space-between;
+}
 
+.action-button {
+    background-color: #4CAF50; /* Màu xanh lá cây */
+    color: white;
+    border: none;
+    padding: 20px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #45a049; /* Màu khi hover */
+}
+
+.checkin-out p {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.checkin-out h3 {
+    font-size: 18px;
+    color: #333;
+}

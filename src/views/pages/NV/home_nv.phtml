@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Nhân Viên</title>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="//code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/gd_nhanvien.css">
 </head>
@@ -25,38 +24,53 @@
             <h1>Chào mừng, <?php echo htmlspecialchars($_SESSION['user']['HoTen']); ?>!</h1>
             <p>Phòng ban: <?php echo htmlspecialchars($phongID, ENT_QUOTES, 'UTF-8'); ?></p>
             <div class="stats-up">
-                    <div class="stat-box-up">
-                        <h2>Tổng dự án</h2>
-                        <p><?php echo count($cprojects); ?></p>
-                    </div>
-                    <div class="stat-box-up">
-                        <h2>Tổng hoạt động</h2>
-                        <p><?php echo count($cactivities); ?></p>
-                    </div>
+                <div class="stat-box-up">
+                    <h2>Tổng dự án</h2>
+                    <p><?php echo count($cprojects); ?></p>
                 </div>
-                <div class="stats-down">
-                    <div class="stat-box-down">
-                        <h2>Dự án hoàn thành</h2>
-                        <p><?php echo count(array_filter($cprojects, fn($p) => $p['TrangThai'] == 'Hoàn thành')); ?></p>
-                    </div>
-                    <div class="stat-box-down">
-                        <h2>Hoạt động hoàn thành</h2>
-                        <p>Tốt</p>
-                    </div>
+                <div class="stat-box-up">
+                    <h2>Tổng hoạt động</h2>
+                    <p><?php echo count($cactivities); ?></p>
                 </div>
+            </div>
+            <div class="stats-down">
+                <div class="stat-box-down">
+                    <h2>Dự án hoàn thành</h2>
+                    <p><?php echo count(array_filter($cprojects, fn($p) => $p['TrangThai'] == 'Hoàn thành')); ?></p>
+                </div>
+                <div class="stat-box-down">
+                    <h2>Hoạt động hoàn thành</h2>
+                    <p>Tốt</p>
+                </div>
+            </div>
             <div class="tasks-today">
                 <h3>Công việc hôm nay:</h3>
-                <ul>
+                <ul id="tasks-list">
                     <?php foreach ($projects as $project): ?>
                         <li>
-                            <p><?php echo htmlspecialchars($project['Ten']); ?></p>
+                            <a href="index.php?action=GetDetailProjectPage&projectID=<?php echo htmlspecialchars($project['ProjectID']); ?>">
+                                <?php echo htmlspecialchars($project['Ten']); ?>
+                            </a>
                             <span>Hạn chót: <?php echo htmlspecialchars($project['HanChotDuKien']); ?></span>
-                            <span class="status"><?php echo htmlspecialchars($project['TrangThai']); ?></span>
+                            <span class="status <?php echo strtolower(htmlspecialchars($project['TrangThai'])); ?>">
+                                <?php echo htmlspecialchars($project['TrangThai']); ?>
+                            </span>
                         </li>
                     <?php endforeach; ?>
                 </ul>
+                <!-- Phân trang -->
+                <div id="tasks-pagination" class="pagination pagination-wrapper">
+                    <?php 
+                        $totalPages = ceil($totalProjects / $limit);
+                        $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+                        for ($i = 1; $i <= $totalPages; $i++): 
+                    ?>
+                        <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
+                            <a class="page-link" href="#" data-page="<?= $i ?>"><?= $i ?></a>
+                        </li>
+                    <?php endfor; ?>
+                </div>
             </div>
-
             <div class="activities">
                 <h3>Hoạt động:</h3>
                 <div class="activity-list">
@@ -94,18 +108,43 @@
                                     <br>
                                 </div>
                             <?php endforeach; ?>
-                        <?php else:?>
+                        <?php else: ?>
                             <div>Không có<br>
                         <?php endif; ?>
                     </ul>
                 </div>
             </div>
-            </div>
+        </div>
         <div class="right-panel">
             <div class="checkin-out">
-                <h3>Thời gian ra vào:</h3>
-                <p>Check-in: <?php echo htmlspecialchars($checkInOut['Time_checkin'] ?? 'Chưa có'); ?></p>
-                <p>Check-out: <?php echo htmlspecialchars($checkInOut['Time_checkout'] ?? 'Chưa có'); ?></p>
+                <div class="header-with-button">
+                    <h3>Thời gian ra vào:</h3>
+                    <a href="index.php?action=GetCheck_inoutPage">
+                        <button class="action-button">Chấm công</button>
+                    </a>
+                </div>
+                <p>
+                    Check-in: 
+                    <span style="color: <?php echo $checkInOut['WorkFromHome'] == 1 ? '#c2c25e' : ($checkInOut['Nghi'] == 1 ? 'red' : ($checkInOut['Late'] == 1 ? 'orange' : 'green')); ?>">
+                        <?php echo htmlspecialchars($checkInOut['Time_checkin'] ?? 'Chưa có'); ?>
+                        <?php if ($checkInOut['WorkFromHome'] == 1): ?>
+                            <span style="color: #c2c25e;">(Làm việc tại nhà)</span>
+                        <?php elseif ($checkInOut['Late'] == 1): ?> 
+                            <span style="color: orange;">(Đi trễ)</span> 
+                        <?php elseif ($checkInOut['Nghi'] == 1): ?> 
+                            <span style="color: red;">(Nghỉ phép)</span> 
+                        <?php endif; ?>
+                    </span>
+                </p>
+                <p> 
+                    Check-out: 
+                    <span style="color: <?php echo $checkInOut['WorkFromHome'] == 1 ? '#c2c25e' : ($checkInOut['Nghi'] == 1 ? 'red' : ($checkInOut['Late'] == 1 ? 'orange' : 'green')); ?>">
+                        <?php echo htmlspecialchars($checkInOut['Time_checkout'] ?? 'Chưa có'); ?>
+                        <?php if ($checkInOut['WorkFromHome'] == 1): ?>
+                            <span style="color: #c2c25e;">(Làm việc tại nhà)</span>
+                        <?php endif; ?>
+                    </span>
+                </p>
             </div>
             <div class="calendar">
                 <div class="month">
@@ -132,6 +171,59 @@
         </div>
     </div>
     <script>
+        $(document).ready(function() {
+            $(document).on('click', '#tasks-pagination .page-link', function(e) {
+                e.preventDefault();
+                var page = $(this).data('page');
+                loadTasks(page);
+            });
+
+            function loadTasks(page = 1) {
+                $.get('index.php?action=home', { ajax: 1, page: page }, function(response) {
+                    try {
+                        var data = JSON.parse(response);
+                        $('#tasks-list').html(data.projectsHtml);
+                        $('#tasks-pagination').html(data.paginationHtml);
+
+                        // Cập nhật lớp active cho phân trang
+                        $('#tasks-pagination .page-item').removeClass('active');
+                        $('#tasks-pagination .page-item').filter(function() {
+                            return $(this).find('.page-link').data('page') === page;
+                        }).addClass('active');
+                    } catch (e) {
+                        console.error("JSON parse error: ", e);
+                        console.error("Server response: ", response);
+                    }
+                });
+            }
+
+            // Chart Thống kê điểm thưởng
+            const ctx = document.getElementById('rewardChart').getContext('2d');
+            const monthlyPoints = [<?php echo implode(",", $monthlyPoints); ?>];
+            const backgroundColors = monthlyPoints.map(point => point < 0 ? 'rgba(255, 99, 132, 0.2)' : 'rgba(75, 192, 192, 0.2)');
+
+            const rewardChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                    datasets: [{
+                        label: 'Điểm thưởng',
+                        data: monthlyPoints,
+                        backgroundColor: backgroundColors,
+                        borderColor: '#a6a6a6',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+
         document.addEventListener('DOMContentLoaded', function() {
             const daysElement = document.getElementById('calendarDays');
             const monthYearElement = document.getElementById('monthYear');
@@ -151,14 +243,14 @@
                 }
                 deadlinesMap[key].push(deadline.TenDuAn);
             });
-            
+
             function renderCalendar(date) {
                 const year = date.getFullYear();
                 const month = date.getMonth();
                 const firstDay = new Date(year, month, 1);
                 const lastDay = new Date(year, month + 1, 0);
                 const daysInMonth = lastDay.getDate();
-                const startDay = (firstDay.getDay()+6)%7;
+                const startDay = (firstDay.getDay() + 6) % 7;
 
                 daysElement.innerHTML = '';
 
@@ -177,7 +269,7 @@
                     dayCell.textContent = day;
 
                     // Default styles for the day
-                    dayCell.style.backgroundColor = ''; // Reset background color
+                    dayCell.style.backgroundColor = '';
                     dayCell.classList.remove('day-today');
 
                     if (deadlinesMap[dateString]) {
@@ -190,7 +282,7 @@
                         } else if (deadlineDate < today) {
                             dayCell.style.backgroundColor = '#a6a6a6'; // Xám cho quá khứ
                         } else {
-                            dayCell.style.border = '2px solid  #fe7272'; // Xanh cho tương lai
+                            dayCell.style.border = '2px solid #fe7272'; // Xanh cho tương lai
                         }
                     } else if (day === new Date().getDate() && month === new Date().getMonth() && year === new Date().getFullYear()) {
                         dayCell.classList.add('day-today'); // Thêm lớp cho ngày hôm nay không phải hạn chót
@@ -212,36 +304,6 @@
 
             renderCalendar(currentDate);
         });
-
-        // Chart Thống kê điểm thưởng
-        const ctx = document.getElementById('rewardChart').getContext('2d');
-        // Lấy dữ liệu điểm thưởng từ PHP
-        const monthlyPoints = [<?php echo implode(",", $monthlyPoints); ?>];
-
-        // Xác định màu nền dựa trên giá trị của điểm
-        const backgroundColors = monthlyPoints.map(point => point < 0 ? 'rgba(255, 99, 132, 0.2)' : 'rgba(75, 192, 192, 0.2)');
-
-        const rewardChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-                datasets: [{
-                    label: 'Điểm thưởng',
-                    data: monthlyPoints,
-                    backgroundColor: backgroundColors, // Sử dụng màu nền tùy thuộc vào giá trị điểm
-                    borderColor: '#a6a6a6',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
     </script>
-
 </body>
 </html>

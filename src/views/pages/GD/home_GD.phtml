@@ -50,7 +50,9 @@
                 <ul id="project-list">
                     <?php foreach ($projects as $project): ?>
                         <li>
-                            <p><?php echo htmlspecialchars($project['Ten']); ?></p>
+                            <a href="index.php?action=GetDetailProjectPage&projectID=<?php echo htmlspecialchars($project['ProjectID']); ?>">
+                                <?php echo htmlspecialchars($project['Ten']); ?>
+                            </a><br>
                             <span><?php echo htmlspecialchars($project['NgayGiao']); ?></span>
                             <span class="status"><?php echo htmlspecialchars($project['TienDo']); ?></span>
                         </li>
@@ -73,16 +75,20 @@
         </div>
 
         <div class="right-panel">
-            <div class="employee-list">
+        <div class="employee-list">
                 <h3>Danh sách nhân viên:</h3>
                 <div class="search-wrapper">
                     <input type="text" id="search-box" placeholder="Tên nhân viên..." class="search-box">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </div>
-                <?php if($employees):?>
                 <ul id="employee-list">
                     <?php foreach ($employees as $employee): ?>
-                        <li><?php echo htmlspecialchars($employee['HoTen']); ?><br><span><?php echo htmlspecialchars($employee['Email']); ?></span></li>
+                        <li>
+                            <a href="index.php?action=GetProfileDetail&ID=<?php echo htmlspecialchars($employee['EmpID']); ?>">
+                                <?php echo htmlspecialchars($employee['HoTen']); ?>
+                            </a><br>
+                            <span><?php echo htmlspecialchars($employee['Email']); ?></span>
+                        </li>
                     <?php endforeach; ?>
                 </ul>
                 <div id="pagination" class="pagination pagination-wrapper">
@@ -96,8 +102,8 @@
                             </li>
                     <?php endfor; ?>
                 </div>
-                <?php endif;?>
             </div>
+
             <div class="room-list">
                 <h3 style="margin-top:10px">Danh sách phòng ban:</h3>
                 <div class="search-wrapper">
@@ -113,11 +119,15 @@
                         </tr>
                     </thead>
                     <tbody id="room-list-content">
-                    <?php foreach ($phongBans as $phongBan): ?>
+                        <?php foreach ($phongBans as $phongBan): ?>
                             <tr>
                                 <td><?php echo htmlspecialchars($phongBan['PhongID']); ?></td>
                                 <td><?php echo htmlspecialchars($phongBan['TenPhong']); ?></td>
-                                <td><?php echo htmlspecialchars($phongBan['HoTen']); ?></td>
+                                <td>
+                                    <a href="index.php?action=GetProfileDetail&ID=<?php echo htmlspecialchars($phongBan['QuanLyID']); ?>">
+                                        <?php echo htmlspecialchars($phongBan['HoTen']); ?>
+                                    </a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

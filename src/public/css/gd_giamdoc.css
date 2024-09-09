@@ -157,11 +157,6 @@ a {
     text-decoration: none;
 }
 
-.project-list a {
-    position: relative;
-    margin-left: 650px;
-}
-
 .project-list li,
 .employee-list li,
 .room-list li {

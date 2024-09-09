@@ -141,9 +141,9 @@ body {
 }
 
 .calendar .month {
-    margin: 0 auto; /* Căn giữa phần tử */
+    margin: 0 auto; 
     display: flex;
-    justify-content: center; /* Căn giữa nội dung trong phần tử */
+    justify-content: center; 
     padding: 20px;
     background: #ffffff;
     color: #333;
@@ -197,13 +197,24 @@ body {
 }
 
 .btn-primary {
-    margin-bottom: 10px;
-    background-color: #ffffff; 
-    border-color: #ffffff; 
-    color: #000000; 
+    margin-top: -25px;
+    background-color: #ffffff;
+    border-color: #ffffff;
+    color: #000000;
+    padding: 33px 20px; 
+    font-size: 1em; 
+    border-radius: 5px; 
+    text-align: center; 
+}
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #004085;
 }
 
-.btn-primary:hover {
-    background-color: #0056b3; 
-    border-color: #004085; 
+.info-box1 .text-center-btn {
+    text-align: center;
+}
+
+.text-center-btn a.btn-primary {
+    display: inline-block; 
 }

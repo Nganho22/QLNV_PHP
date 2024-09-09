@@ -166,6 +166,10 @@ switch ($action)
         $controller = new VoucherController();
         $controller->updateVoucherStatus();
         break;  
+    case 'GetProfileDetail':
+        $controller = new HomeController();
+        $controller->GetProfileDetail();
+        break;
 default:
         $controller = new HomeController();
         $controller->login();
