@@ -870,7 +870,7 @@ class UserModel {
         return $checkinouts;
     }
 
-    public static function getEmployeesList_QL($empID) {
+    public static function getEmployeesList_QL($empID, $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
 
@@ -888,7 +888,7 @@ class UserModel {
                                 FROM Profile
                                 WHERE phongid = ? AND empid <> ?
                                 LIMIT ? OFFSET ?");
-        $stmt->bind_param("ii", $phongID, $empID);
+        $stmt->bind_param("siii", $phongID, $empID, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
 
