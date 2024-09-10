@@ -224,12 +224,12 @@ class VoucherModel {
         
         // Truy vấn tổng điểm hàng tháng, bao gồm cả điểm bị trừ
         $stmt = $conn->prepare("
-            SELECT MONTH(Date) AS month, 
-                   SUM(CASE WHEN NguoiTang = ? THEN -Point ELSE Point END) AS total_points
+            SELECT MONTH(date) AS month, 
+                   SUM(CASE WHEN nguoitang = ? THEN -point ELSE point END) AS total_points
             FROM Felicitation
-            WHERE NguoiNhan = ? OR NguoiTang = ?
-            GROUP BY MONTH(Date)
-            ORDER BY MONTH(Date)
+            WHERE nguoinhan = ? OR nguoitang = ?
+            GROUP BY MONTH(date)
+            ORDER BY MONTH(date)
         ");
         $stmt->bind_param("iii", $user_id, $user_id, $user_id);
         $stmt->execute();
@@ -250,14 +250,27 @@ class VoucherModel {
     $db = new Database();
     $conn = $db->connect();
 
-    $query = "SELECT TenVoucher, TriGia, HanSuDung, TinhTrang, ChiTiet, HuongDanSuDung
+    $query = "SELECT tenvoucher, trigia, hansudung, tinhtrang, chitiet, huongdansudung
               FROM Voucher
-              WHERE VoucherID = ? AND TinhTrang is not NULL";
+              WHERE voucherid = ? AND tinhtrang is not NULL";
     $stmt = $conn->prepare($query);
     $stmt->bind_param('i', $voucherID);
     $stmt->execute();
     $result = $stmt->get_result();
-    $voucherDetails = $result->fetch_assoc();
+    //$voucherDetails = $result->fetch_assoc();
+    $voucherDetails = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'VoucherID' => $row['voucherid'] ?? 'N/A',
+                'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
+                'TriGia' => $row['trigia'] ?? 'N/A',
+                'NguoiGui' => $row['hansudung'] ?? 'N/A',
+                'TinhTrang' => $row['tinhtrang'] ?? 'N/A',
+                'ChiTiet' => $row['chitiet'] ?? 'N/A',
+                'HuongDanSudung' => $row['huongdansudung'] ?? 'N/A'
+            ];
+            $voucherDetails[] = $row;
+        }
 
     $stmt->close();
     $db->close();
@@ -267,15 +280,27 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT TenVoucher, TriGia, HanSuDung, TinhTrang, ChiTiet, HuongDanSuDung
+        $query = "SELECT tenvoucher, trigia, hansudung, tinhtrang, chitiet, huongdansudung
                 FROM Voucher
-                WHERE VoucherID = ? AND TinhTrang IS NULL";
+                WHERE voucherid = ? AND tinhtrang IS NULL";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $voucherID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $voucherDetails = $result->fetch_assoc();
-
+        //$voucherDetails = $result->fetch_assoc();
+        $voucherDetails = [];
+        while ($row = $result->fetch_assoc()) {
+            $row = [
+                'VoucherID' => $row['voucherid'] ?? 'N/A',
+                'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
+                'TriGia' => $row['trigia'] ?? 'N/A',
+                'NguoiGui' => $row['hansudung'] ?? 'N/A',
+                'TinhTrang' => $row['tinhtrang'] ?? 'N/A',
+                'ChiTiet' => $row['chitiet'] ?? 'N/A',
+                'HuongDanSudung' => $row['huongdansudung'] ?? 'N/A'
+            ];
+            $voucherDetails[] = $row;
+        }
         $stmt->close();
         $db->close();
         return $voucherDetails;
@@ -285,7 +310,7 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "UPDATE Voucher SET TinhTrang = 'Chưa dùng' WHERE VoucherID = ?";
+        $query = "UPDATE Voucher SET tinhtrang = 'Chưa dùng' WHERE voucherid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $voucherID);
 
@@ -299,7 +324,7 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "UPDATE Voucher SET TinhTrang = 'Đã dùng' WHERE VoucherID = ?";
+        $query = "UPDATE Voucher SET tinhtrang = 'Đã dùng' WHERE voucherid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $voucherID);
 
@@ -314,14 +339,14 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT TinhTrang
+        $query = "SELECT tinhtrang
                 FROM Voucher
-                WHERE VoucherID = ?";
+                WHERE voucherid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $voucherID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $tinhtrang = $result->fetch_assoc();
+        $tinhtrang = $result->fetch_assoc()['TinhTrang'];
 
         $stmt->close();
         $db->close();
@@ -335,7 +360,7 @@ class VoucherModel {
         $conn = $db->connect();
 
         // Truy vấn điểm hiện có của nhân viên
-        $query = "SELECT DiemThuong FROM Profile WHERE EmpID = ?";
+        $query = "SELECT diemthuong FROM Profile WHERE empid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -353,7 +378,7 @@ class VoucherModel {
         $conn = $db->connect();
         
         // Truy vấn để lấy điểm thưởng hiện tại của quản lý
-        $query = "SELECT DiemThuong FROM Profile WHERE EmpID = ?";
+        $query = "SELECT diemthuong FROM Profile WHERE empid = ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
@@ -365,7 +390,7 @@ class VoucherModel {
         $newPoints = $currentPoints - $pointEx;
 
         // Cập nhật điểm thưởng của quản lý
-        $updateQuery = "UPDATE Profile SET DiemThuong = ? WHERE EmpID = ?";
+        $updateQuery = "UPDATE Profile SET diemthuong = ? WHERE empid = ?";
         $updateStmt = $conn->prepare($updateQuery);
         $updateStmt->bind_param('ii', $newPoints, $user_id);
         $updateStmt->execute();
@@ -379,7 +404,7 @@ class VoucherModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "INSERT INTO Felicitation (Point, Date, NoiDung, NguoiNhan, VoucherID) 
+        $query = "INSERT INTO Felicitation (point, date, noidung, nguoinhan, voucherid) 
                 VALUES (?, CURDATE(), ?, ?, ?)";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('isii', $point, $noiDung, $nguoiNhan, $voucherID);

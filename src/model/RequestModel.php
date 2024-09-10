@@ -26,7 +26,10 @@ class RequestModel {
     }
 
     public function getRequestCountsByEmpID($user_id) {
-        $url = $this->apiUrl . "/counts/" . $user_id;
+        $apiUrl='http://localhost:9004/apiProfile';
+        $url = $apiUrl . '/counts/' . urlencode($user_id);
+
+        //$url = $this->apiUrl . "/counts/" . $user_id;
 
         if (!$this->isApiAvailable($url)) {
             return null;
