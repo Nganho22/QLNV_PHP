@@ -11,7 +11,7 @@ class Check_inoutController {
             $title = 'Danh sách Project';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
-            $timeSheets = Check_inoutModel::getTimeSheetsByEmpID($user_id);
+            $timeSheets = ProjectModel::getTimeSheetsByEmpID($user_id);
             $message = '';
             $checkInOutData = Check_inoutModel::getCheckInOutData($user_id);
 
@@ -72,7 +72,7 @@ class Check_inoutController {
             $limit = 8;
             $pageHistory = isset($_GET['pageHistory']) ? (int)$_GET['pageHistory'] : 1;
             $offsetHistory = ($pageHistory - 1) * $limit;
-            $timeSheets = Check_inoutModel::getTimeSheetsByEmpID($user_id);
+            $timeSheets = ProjectModel::getTimeSheetsByEmpID($user_id);
     
             $message = '';
             if (isset($_GET['status'])) {

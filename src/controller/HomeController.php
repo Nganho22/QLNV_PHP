@@ -36,21 +36,21 @@ class HomeController{
                     $file = "./views/pages/NV/home_NV.phtml";
                     $phongID = UserModel::getPhongIDByEmpID($empID);
                     // $projects = UserModel::getProjects_NV($empID);
-                    $cprojects = UserModel::getCountProjects_NV($empID);
+                    $cprojects = ProjectModel::getCountProjects_NV($empID);
                     $apiUrlActivity = 'http://localhost:9002/apiActivity';
                     $modelActivity = new ActivityModel($apiUrlActivity);
                     $cactivities = $modelActivity->getActivitiesByMonth(date('m'));
                     $Activities = $modelActivity->getActivitiesByMonth(date('m'));
                     $checkInOut = $_SESSION['CheckInOut'];
                     $points = UserModel::getPoint_Month($empID);
-                    $deadlines = UserModel::getDeadlinesTimesheet($empID);
+                    $deadlines = ProjectModel::getDeadlinesTimesheet($empID);
                     
                     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                     $offset = ($page - 1) * $limit;
 
 
-                    $projects = UserModel::getProjectsList_NV($empID, $limit, $offset);
-                    $totalProjects = UserModel::countProjectsList_NV($empID);
+                    $projects = ProjectModel::getProjectsList_NV($empID, $limit, $offset);
+                    $totalProjects = ProjectModel::countProjectsList_NV($empID);
                 
                     if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
                         $response = [];
@@ -105,8 +105,8 @@ class HomeController{
                     $limit_TS = 5;
                     $page_TS = isset($_GET['page_timesheet']) ? (int)$_GET['page_timesheet'] : 1;
                     $offset_TS = ($page_TS - 1) * $limit_TS;
-                    $timesheets = UserModel::getTimesheetList_QL($empID, $limit_TS, $offset_TS);
-                    $totalTimesheets = UserModel::countAllTimesheet_QL($empID);
+                    $timesheets = ProjectModel::getTimesheetList_QL($empID, $limit_TS, $offset_TS);
+                    $totalTimesheets = ProjectModel::countAllTimesheet_QL($empID);
                     
                     $checkInOut = $_SESSION['CheckInOut'];
                     $phongID = UserModel::getPhongIDByEmpID($empID);
@@ -117,8 +117,8 @@ class HomeController{
                     $checkinout = UserModel::getPhongBan_Checkinout($empID);
                     // $employees = UserModel::getEmployeesList_QL($empID);
                     // $timesheets = UserModel::getTimesheetList($empID); 
-                    $managedProjects = UserModel::getProjects_QL($empID);
-                    $deadlines = UserModel::getDeadlinesTimesheet_QL($empID);
+                    $managedProjects = ProjectModel::getProjects_QL($empID);
+                    $deadlines = ProjectModel::getDeadlinesTimesheet_QL($empID);
                     if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
                         $response = [];
 
@@ -210,14 +210,14 @@ class HomeController{
                     $offset_PJ = ($page_PJ - 1) * $limit_PJ;
 
                     if (!empty($searchTerm_PJ)) {
-                        $projects = UserModel::searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ);
-                        $totalProjects = UserModel::countSearchProject_GD($searchTerm_PJ);
+                        $projects = ProjectModel::searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ);
+                        $totalProjects = ProjectModel::countSearchProject_GD($searchTerm_PJ);
                     } else {
-                        $projects = UserModel::getProjects_GD($limit_PJ, $offset_PJ);
-                        $totalProjects = UserModel::countAllProject_GD();
+                        $projects = ProjectModel::getProjects_GD($limit_PJ, $offset_PJ);
+                        $totalProjects = ProjectModel::countAllProject_GD();
                     }
 
-                    $deadlines = UserModel::getDeadlinesTimesheet_GD();
+                    $deadlines = ProjectModel::getDeadlinesTimesheet_GD();
 
                     if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
                         $response = [];
@@ -526,13 +526,13 @@ class HomeController{
             $ID = isset($_GET['ID']) ? $_GET['ID'] : null;
             $profile = UserModel::getprofile($ID);
             $role = $profile['Role'];
-            $timesheet = UserModel::gettimesheet($ID);
+            $timesheet = ProjectModel::gettimesheet($ID);
             $cNghi = UserModel::getCountNghiPhep($ID);
             $cTre = UserModel::getCountTre($ID);
-            $cPrj_NV = UserModel::getCountPrj_NV($ID);
-            $listPrj_NV = UserModel::getListPrj_NV($ID);
-            $cPrj_QL= UserModel::getCountPrj_QL($ID);
-            $listPrj_QL = UserModel::getListPrj_QL($ID);
+            $cPrj_NV = ProjectModel::getCountPrj_NV($ID);
+            $listPrj_NV = ProjectModel::getListPrj_NV($ID);
+            $cPrj_QL= ProjectModel::getCountPrj_QL($ID);
+            $listPrj_QL = ProjectModel::getListPrj_QL($ID);
     
             $message = '';
             if (isset($_GET['status'])) {

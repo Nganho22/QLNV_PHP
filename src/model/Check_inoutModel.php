@@ -82,39 +82,7 @@ class Check_inoutModel {
         return $deadlines;
     }
 
-    public static function getTimeSheetsByEmpID($user_id) {
-        $db = new Database();
-        $conn = $db->connect();
 
-        $query = "SELECT * FROM Time_sheet WHERE EmpID = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        
-        $result = $stmt->get_result();
-        $requests = [];
-        while ($row = $result->fetch_assoc()) {
-            $row = [
-                'Time_sheetID' => $row['time_sheetid'] ?? 'N/A',
-                'ProjectID' => $row['projectid'] ?? 'N/A',
-                'TenDuAn' => $row['tenduan'] ?? 'N/A',
-                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
-                'PhongBan' => $row['phongban'] ?? 'N/A',
-                'TrangThai' => $row['trangthai'] ?? 'N/A',
-                'SoGioThucHien' => $row['sogiothuchien'] ?? 'N/A',
-                'NgayGiao' => $row['ngaygiao'] ?? 'N/A',
-                'HanChot' => $row['hanchot'] ?? 'N/A',
-                'DiemThuong' => $row['diemthuong'] ?? 'N/A',
-                'Tre' => $row['tre'] ?? 'N/A',
-                'NoiDung' => $row['noidung'] ?? 'N/A'
-            ];
-            $requests[] = $row;
-        }
-
-        $stmt->close();
-        $db->close();
-        return $requests;
-    }
 
     public static function getCheckInOutData($user_id) {
         $db = new Database();
