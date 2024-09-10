@@ -142,14 +142,8 @@ class FelicitationModel {
         
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
-        
-        $points = [];
-        if (isset($row['diemthuong'])) {
-            $points['DiemThuong'] = $row['diemthuong']; 
-        } else {
-            $points['DiemThuong'] = 0; 
-        }
     
+        $points = $row['diemthuong'] ?? 0;
         $stmt->close();
         $db->close();
         
@@ -308,7 +302,7 @@ class FelicitationModel {
         ];
     }
 
-    public static function getHistoryRequestsByEmpID($user_id, $limit, $offset) {
+    public static function getHistoryFelicitationsByEmpID($user_id, $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
     
@@ -336,7 +330,7 @@ class FelicitationModel {
                 'FelicitationPoint' => $row['point'] ?? 'N/A',
                 'FelicitationNoiDung' => $row['noidung'] ?? 'N/A',
                 'Date' => $row['date'] ?? 'N/A',
-                'FelicitationNguoiTang' => $row['hoten'] ?? 'N/A',
+                'FelicitationNguoiTang' => $row['FelicitationNguoiTang'] ?? 'N/A',
                 'NguoiTang' => $row['nguoitang'] ?? 'N/A',
                 'EmpID' => $row['empid'] ?? 'N/A',
                 'NguoiNhan' => $row['nguoinhan'] ?? 'N/A',
@@ -349,7 +343,7 @@ class FelicitationModel {
         return $requests;
     }
 
-    public static function getHistoryRequestsByEmpID_QL($user_id, $limit, $offset) {
+    public static function getHistoryFelicitationsByEmpID_QL($user_id, $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
     
@@ -385,7 +379,7 @@ class FelicitationModel {
                 'FelicitationPoint' => $row['point'] ?? 'N/A',
                 'FelicitationNoiDung' => $row['noidung'] ?? 'N/A',
                 'Date' => $row['date'] ?? 'N/A',
-                'FelicitationNguoiTang' => $row['hoten'] ?? 'N/A',
+                'FelicitationNguoiTang' => $row['FelicitationNguoiTang'] ?? 'N/A',
                 'NguoiTang' => $row['nguoitang'] ?? 'N/A',
                 'EmpID' => $row['empid'] ?? 'N/A',
                 'NguoiNhan' => $row['nguoinhan'] ?? 'N/A',

@@ -98,11 +98,10 @@ class VoucherModel {
         $requests = [];
         while ($row = $result->fetch_assoc()) {
             $row = [
-                'VoucherID' => $row['voucherid'] ?? 'N/A',
-                'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
-                'HanSuDung' => $row['hansudung'] ?? 'N/A',
-                'TriGia' => $row['trigia'] ?? 'N/A',
-                'TinhTrang' => $row['tinhtrang'] ?? 'N/A'
+                'VoucherID' => $row['voucherid'],
+                'TenVoucher' => $row['tenvoucher'],
+                'HanSuDung' => $row['hansudung'],
+                'TriGia' => $row['trigia']
             ];
             $requests[] = $row;
         }
@@ -112,7 +111,7 @@ class VoucherModel {
         return $requests;
     }
     
-    public static function getAvailableVoucherRequestsByEmpID_QL( $limit, $offset) {
+    public static function getExchangeVoucherRequestsByEmpID( $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
     
@@ -121,7 +120,7 @@ class VoucherModel {
                         hansudung,
                         trigia
                     FROM Voucher 
-                    WHERE TinhTrang IS NULL
+                    WHERE tinhtrang IS NULL
                     LIMIT ? OFFSET ?";
     
         $stmt = $conn->prepare($query);
@@ -134,11 +133,10 @@ class VoucherModel {
         $requests = [];
         while ($row = $result->fetch_assoc()) {
             $row = [
-                'VoucherID' => $row['voucherid'] ?? 'N/A',
-                'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
-                'HanSuDung' => $row['hansudung'] ?? 'N/A',
-                'TriGia' => $row['trigia'] ?? 'N/A',
-                'TinhTrang' => $row['tinhtrang'] ?? 'N/A'
+                'VoucherID' => $row['voucherid'],
+                'TenVoucher' => $row['tenvoucher'],
+                'HanSuDung' => $row['hansudung'],
+                'TriGia' => $row['trigia']
             ];
             $requests[] = $row;
         }
@@ -148,7 +146,7 @@ class VoucherModel {
         return $requests;
     }
     
-    public static function countVoucherRequests() {
+    public static function countAvailableVoucher() {
         $db = new Database();
         $conn = $db->connect();
 
@@ -247,40 +245,41 @@ class VoucherModel {
     }
     
     public static function getVoucherDetails($voucherID) {
-    $db = new Database();
-    $conn = $db->connect();
+        $db = new Database();
+        $conn = $db->connect();
 
-    $query = "SELECT tenvoucher, trigia, hansudung, tinhtrang, chitiet, huongdansudung
-              FROM Voucher
-              WHERE voucherid = ? AND tinhtrang is not NULL";
-    $stmt = $conn->prepare($query);
-    $stmt->bind_param('i', $voucherID);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    //$voucherDetails = $result->fetch_assoc();
-    $voucherDetails = [];
-        while ($row = $result->fetch_assoc()) {
-            $row = [
-                'VoucherID' => $row['voucherid'] ?? 'N/A',
-                'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
-                'TriGia' => $row['trigia'] ?? 'N/A',
-                'NguoiGui' => $row['hansudung'] ?? 'N/A',
-                'TinhTrang' => $row['tinhtrang'] ?? 'N/A',
-                'ChiTiet' => $row['chitiet'] ?? 'N/A',
-                'HuongDanSudung' => $row['huongdansudung'] ?? 'N/A'
-            ];
-            $voucherDetails[] = $row;
-        }
+        $query = "SELECT *
+                FROM Voucher
+                WHERE voucherid = ? AND tinhtrang is not NULL";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $voucherID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        //$voucherDetails = $result->fetch_assoc();
+        $voucherDetails = [];
+            while ($row = $result->fetch_assoc()) {
+                $row = [
+                    'voucherID' => $row['voucherid'] ?? 'N/A',
+                    'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
+                    'TriGia' => $row['trigia'] ?? 'N/A',
+                    'HanSuDung' => $row['hansudung'] ?? 'N/A',
+                    'TinhTrang' => $row['tinhtrang'] ?? 'N/A',
+                    'ChiTiet' => $row['chitiet'] ?? 'N/A',
+                    'HuongDanSuDung' => $row['huongdansudung'] ?? 'N/A'
+                ];
+                $voucherDetails[] = $row;
+            }
 
-    $stmt->close();
-    $db->close();
-    return $voucherDetails;
-}
+        $stmt->close();
+        $db->close();
+        return $voucherDetails;
+    }
+    
     public static function getExVoucherDetails($voucherID) {
         $db = new Database();
         $conn = $db->connect();
 
-        $query = "SELECT tenvoucher, trigia, hansudung, tinhtrang, chitiet, huongdansudung
+        $query = "SELECT *
                 FROM Voucher
                 WHERE voucherid = ? AND tinhtrang IS NULL";
         $stmt = $conn->prepare($query);
@@ -291,13 +290,13 @@ class VoucherModel {
         $voucherDetails = [];
         while ($row = $result->fetch_assoc()) {
             $row = [
-                'VoucherID' => $row['voucherid'] ?? 'N/A',
+                'voucherID' => $row['voucherid'] ?? 'N/A',
                 'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
                 'TriGia' => $row['trigia'] ?? 'N/A',
-                'NguoiGui' => $row['hansudung'] ?? 'N/A',
+                'HanSuDung' => $row['hansudung'] ?? 'N/A',
                 'TinhTrang' => $row['tinhtrang'] ?? 'N/A',
                 'ChiTiet' => $row['chitiet'] ?? 'N/A',
-                'HuongDanSudung' => $row['huongdansudung'] ?? 'N/A'
+                'HuongDanSuDung' => $row['huongdansudung'] ?? 'N/A'
             ];
             $voucherDetails[] = $row;
         }
@@ -351,7 +350,6 @@ class VoucherModel {
         $stmt->close();
         $db->close();
         
-        // Trả về giá trị của TinhTrang nếu có, ngược lại trả về một chuỗi rỗng
         return isset($tinhtrang['TinhTrang']) ? $tinhtrang['TinhTrang'] : '';
     }
 

@@ -27,8 +27,8 @@ class VoucherController {
             $file = "./views/pages/voucher_list.phtml";
             $creq = VoucherModel::getVoucherCountsByEmpID($user_id);
             $availableVoucherRequests = VoucherModel::getAvailableVoucherRequestsByEmpID($limit, $offsetAvailableVoucher);
-            $totalAvailableVoucher = VoucherModel::countVoucherRequests();
-            $exchangeVoucherRequests = VoucherModel::getAvailableVoucherRequestsByEmpID_QL($limit, $offsetExchangeVoucher);
+            $totalAvailableVoucher = VoucherModel::countAvailableVoucher();
+            $exchangeVoucherRequests = VoucherModel::getExchangeVoucherRequestsByEmpID($limit, $offsetExchangeVoucher);
             $totalExchangeVoucher = VoucherModel::countExchangeVoucherRequests();
             $point = VoucherModel::getPoint_Month($user_id);
             

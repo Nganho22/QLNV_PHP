@@ -99,6 +99,8 @@ class Check_inoutModel {
         $data = [];
         while ($checkinoutData = $result->fetch_assoc()) {
             $CheckInOut['STT'] =  $checkinoutData['stt'];
+            $CheckInOut['EmpID'] =  $checkinoutData['empid'];
+            $CheckInOut['Date_checkin'] =  $checkinoutData['date_checkin'];
             $CheckInOut['Time_checkin'] =  $checkinoutData['time_checkin'];
             $CheckInOut['Time_checkout'] =  $checkinoutData['time_checkout'];
             $CheckInOut['WorkFromHome'] =  $checkinoutData['workfromhome'];

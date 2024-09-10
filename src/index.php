@@ -85,10 +85,6 @@ switch ($action)
         $controller = new ProjectController();
         $controller->GetDetailTimeSheet();
         break;
-    case "GetCheckinoutPage":
-        $controller = new HomeController();
-        $controller->Getcheckinout_page();
-        break;
     case "GetActivityPage":
         $controller = new ActivityController();
         $controller->GetActivity_page();

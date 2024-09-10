@@ -28,7 +28,7 @@ class FelicitationController {
                 case 'Nhân viên':
                     $file = "./views/pages/NV/point_NV.phtml";
                     $creq = FelicitationModel::getFelicitationCountsByEmpID($user_id);
-                    $historyRequests = FelicitationModel::getHistoryRequestsByEmpID($user_id, $limit, $offsetHistory);
+                    $historyRequests = FelicitationModel::getHistoryFelicitationsByEmpID($user_id, $limit, $offsetHistory);
                     $totalHistory = FelicitationModel::countFelicitationRequests($user_id);
                     $point = FelicitationModel::getPoint_Month($user_id);
                     
@@ -88,7 +88,7 @@ class FelicitationController {
                     $file = "./views/pages/QL/point_QL.phtml";
                     $employees = FelicitationModel::getEmployeesByManagerID($user_id);
                     $creq = FelicitationModel::getFelicitationCountsByEmpID_QL($user_id);
-                    $history_QLRequests = FelicitationModel::getHistoryRequestsByEmpID_QL($user_id, $limit, $offsetHistory_QL);
+                    $history_QLRequests = FelicitationModel::getHistoryFelicitationsByEmpID_QL($user_id, $limit, $offsetHistory_QL);
                     $totalHistory_QL = FelicitationModel::countFelicitationRequests_QL($user_id);
                     $point = FelicitationModel::getPoint_Month($user_id);
 
