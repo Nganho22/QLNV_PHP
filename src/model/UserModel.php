@@ -206,35 +206,35 @@ class UserModel {
     }
 
     //=================================Nhân viên=================================
-    public static function getProjects_NV($empID) {
-        $db = new Database();
-        $conn = $db->connect();
+    // public static function getProjects_NV($empID) {
+    //     $db = new Database();
+    //     $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai, Project.projectid
-                                FROM Time_sheet
-                                JOIN Project ON Time_sheet.projectid = Project.projectid 
-                                WHERE Time_sheet.empid = ? AND Time_sheet.trangthai = 'Chưa hoàn thành'" );
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    //     $stmt = $conn->prepare("SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai, Project.projectid
+    //                             FROM Time_sheet
+    //                             JOIN Project ON Time_sheet.projectid = Project.projectid 
+    //                             WHERE Time_sheet.empid = ? AND Time_sheet.trangthai = 'Chưa hoàn thành'" );
+    //     $stmt->bind_param("i", $empID);
+    //     $stmt->execute();
+    //     $result = $stmt->get_result();
 
-        $projects = [];
-        while ($row = $result->fetch_assoc()) {
-            $projects[] = $row;
-        }
+    //     $projects = [];
+    //     while ($row = $result->fetch_assoc()) {
+    //         $projects[] = $row;
+    //     }
 
-        $stmt->close();
-        $db->close();
-        return $projects;
-    }
+    //     $stmt->close();
+    //     $db->close();
+    //     return $projects;
+    // }
     
     public static function getCountProjects_NV($empID) {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT Project.Ten, Project.HanChotDuKien, Time_sheet.TrangThai
+        $stmt = $conn->prepare("SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai
                                 FROM Time_sheet
-                                JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
+                                JOIN Project ON Time_sheet.projectid = Project.projectid 
                                 WHERE Time_sheet.empid = ? " );
         $stmt->bind_param("i", $empID);
         $stmt->execute();
@@ -242,7 +242,13 @@ class UserModel {
 
         $cprojects = [];
         while ($row = $result->fetch_assoc()) {
-            $cprojects[] = $row;
+            
+            $cproject =[
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'Ten' => $row['ten'],
+                'TrangThai' => $row['trangthai']
+            ];
+            $cprojects[] = $cproject;
         }
 
         $stmt->close();
@@ -255,17 +261,28 @@ class UserModel {
         $conn = $db->connect();
 
         $query = "
-            SELECT Project.Ten, Project.HanChotDuKien, Time_sheet.TrangThai, Project.ProjectID
+            SELECT Project.ten, Project.hanchotdukien, Time_sheet.trangthai, Project.projectid 
                                 FROM Time_sheet
-                                JOIN Project ON Time_sheet.ProjectID = Project.ProjectID 
-                                WHERE Time_sheet.empid = ? AND Time_sheet.TrangThai = 'Chưa hoàn thành'
+                                JOIN Project ON Time_sheet.projectid  = Project.projectid  
+                                WHERE Time_sheet.empid = ? AND Time_sheet.trangthai = 'Chưa hoàn thành'
                                 LIMIT ? OFFSET ?";
     
         $stmt = $conn->prepare($query);
         $stmt->bind_param('iii', $empID, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
-        $projects = $result->fetch_all(MYSQLI_ASSOC);
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            
+            $project =[
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'Ten' => $row['ten'],
+                'TrangThai' => $row['trangthai'],
+                'ProjectID' => $row['projectid']
+            ];
+            $projects[] = $project;
+        }
     
         $stmt->close();
         $db->close();
@@ -285,7 +302,6 @@ class UserModel {
         $phongID = $row['PhongID'];
         $stmt->close();
     
-        // Đếm số lượng nhân viên trong phòng ban
         $query = "
             SELECT COUNT(*) as total
             FROM Time_sheet
@@ -412,15 +428,14 @@ class UserModel {
      //===================================Quản lý========================================
      public static function searchProfiles_QL($empID, $searchTerm, $limit, $offset) {
         $searchTerm = "%$searchTerm%";
-        // Tìm kiếm danh sách nhân viên trong phòng ban với từ khóa tìm kiếm và phân trang
         $query = "
-            SELECT empid, HoTen, Email
+            SELECT empid, hoten, email
             FROM Profile
-            WHERE PhongID = (
-                SELECT PhongID 
+            WHERE phongid = (
+                SELECT phongid
                 FROM Profile 
                 WHERE empid = ?
-            ) AND HoTen LIKE ? AND empid <> ?
+            ) AND hoten LIKE ? AND empid <> ?
             LIMIT ? OFFSET ?";
             
         $db = new Database();
@@ -432,8 +447,13 @@ class UserModel {
         $result = $stmt->get_result();
     
         $profiles = [];
-        while ($row = $result->fetch_assoc()) {
-            $profiles[] = $row;
+        while ($row = $result->fetch_assoc()) {      
+            $profile =[
+                'EmpID' => $row['empid'],
+                'HoTen' => $row['hoten'],
+                'Email' => $row['email']
+            ];
+            $profiles[] = $profile;
         }
     
         $stmt->close();
@@ -448,11 +468,11 @@ class UserModel {
         $query = "
             SELECT COUNT(empid) as total
             FROM Profile
-            WHERE PhongID = (
-                SELECT PhongID 
+            WHERE phongid = (
+                SELECT phongid
                 FROM Profile 
                 WHERE empid = ?
-            ) AND HoTen LIKE ? AND empid <> ?";
+            ) AND hoten LIKE ? AND empid <> ?";
         
         $db = new Database();
         $conn = $db->connect();
@@ -483,7 +503,6 @@ class UserModel {
         $phongID = $row['PhongID'];
         $stmt->close();
     
-        // Đếm số lượng nhân viên trong phòng ban
         $query = "
             SELECT COUNT(*) as total
             FROM Profile
@@ -895,6 +914,7 @@ class UserModel {
         $employees = [];
         while ($row = $result->fetch_assoc()) {
             $employee =[
+                'EmpID' => $row['empid'],
                 'HoTen' => $row['hoten'],
                 'Email' => $row['email']
                 ];
@@ -922,7 +942,7 @@ class UserModel {
                                 FROM Time_sheet 
                                 WHERE empid IN (
                                     SELECT empid FROM Profile WHERE phongid = ?
-                                ) LIMIT 3");
+                                ) ");
         $stmt->bind_param("i", $phongID);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -946,9 +966,9 @@ class UserModel {
     public static function searchProject_GD($searchTerm_PJ, $limit_PJ, $offset_PJ) {
         $searchTerm = "%$searchTerm_PJ%";
         $query = "
-            SELECT Ten, NgayGiao, TienDo
+            SELECT ten, ngaygiao, tiendo
             FROM Project
-            WHERE Ten LIKE ?
+            WHERE ten LIKE ?
             LIMIT ? OFFSET ?";
 
         $db = new Database();
@@ -961,7 +981,12 @@ class UserModel {
 
         $projects = [];
         while ($row = $result->fetch_assoc()) {
-            $projects[] = $row;
+            $project = [
+                'Ten' => $row['ten'],
+                'NgayGiao' => $row['ngaygiao'],
+                'TienDo' => $row['tiendo']
+            ];
+            $projects[] = $project;
         }
 
         $stmt->close();
@@ -973,9 +998,9 @@ class UserModel {
     public static function countSearchProject_GD($searchTerm_PJ) {
         $searchTerm = "%$searchTerm_PJ%";
         $query = "
-            SELECT COUNT(ProjectID) as total
+            SELECT COUNT(projectid) as total
             FROM Project
-            WHERE Ten LIKE ?";
+            WHERE ten LIKE ?";
 
         $db = new Database();
         $conn = $db->connect();
@@ -1000,10 +1025,27 @@ class UserModel {
         $stmt->bind_param("ii", $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
-        $projects = $result->fetch_all(MYSQLI_ASSOC);
+
+        $projects = [];
+        while ($row = $result->fetch_assoc()) {
+            $project = [
+                'ProjectID' => $row['projectid'],
+                'Ten' => $row['ten'],
+                'NgayGiao' => $row['ngaygiao'],
+                'HanChotDuKien' => $row['hanchotdukien'],
+                'HanChot' => $row['hanchot'],
+                'TienDo' => $row['tiendo'],
+                'SoGioThucHanh' => $row['sogiothuchanh'],
+                'PhongID' => $row['phongid'],
+                'QuanLy' => $row['quanly'],
+                'TinhTrang' => $row['tinhtrang']
+            ];
+            $projects[] = $project;
+        }
 
         $stmt->close();
         $db->close();
+
         return $projects;
     }
 
@@ -1058,12 +1100,15 @@ class UserModel {
         return $deadlines;
     }
     
-    public static function getEmployeesList_GD($limit, $offset) {
+    public static function getEmployeesList_GD($empID, $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
     
-        $stmt = $conn->prepare("SELECT empid, hoten, email FROM Profile LIMIT ? OFFSET ?");
-        $stmt->bind_param("ii", $limit, $offset);
+        $stmt = $conn->prepare("SELECT empid, hoten, email
+                                FROM Profile
+                                WHERE empid <> ?
+                                LIMIT ? OFFSET ?");
+        $stmt->bind_param("iii", $empID, $limit, $offset);
         $stmt->execute();
         $result = $stmt->get_result();
         $employees =[];
@@ -1080,11 +1125,14 @@ class UserModel {
         return $employees;
     }
 
-    public static function countAllEmployees_GD() {
+    public static function countAllEmployees_GD($empID) {
         $db = new Database();
         $conn = $db->connect();
     
-        $stmt = $conn->prepare("SELECT COUNT(*) as total FROM Profile");
+        $stmt = $conn->prepare("SELECT COUNT(*) as total
+                                FROM Profile
+                                WHERE empid <> ?");
+        $stmt->bind_param("i", $empID);
         $stmt->execute();
         $result = $stmt->get_result();
         $row = $result->fetch_assoc();
@@ -1094,6 +1142,7 @@ class UserModel {
     
         return $row['total'];
     }
+
 
     public static function searchProfiles_GD($searchTerm, $limit, $offset) {
         $searchTerm = "%$searchTerm%";

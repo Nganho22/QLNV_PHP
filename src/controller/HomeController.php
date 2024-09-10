@@ -35,7 +35,7 @@ class HomeController{
                     $limit = 2;
                     $file = "./views/pages/NV/home_NV.phtml";
                     $phongID = UserModel::getPhongIDByEmpID($empID);
-                    $projects = UserModel::getProjects_NV($empID);
+                    // $projects = UserModel::getProjects_NV($empID);
                     $cprojects = UserModel::getCountProjects_NV($empID);
                     $apiUrlActivity = 'http://localhost:9002/apiActivity';
                     $modelActivity = new ActivityModel($apiUrlActivity);
