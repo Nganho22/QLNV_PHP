@@ -26,8 +26,8 @@ class RequestModel {
     }
 
     public function getRequestCountsByEmpID($user_id) {
-        $apiUrl='http://localhost:9004/apiProfile';
-        $url = $apiUrl . '/counts/' . urlencode($user_id);
+        $apiUrl='http://localhost:9004/apiRequest';
+        $url = $apiUrl . '/counts/' . ($user_id);
 
         //$url = $this->apiUrl . "/counts/" . $user_id;
 
@@ -38,14 +38,16 @@ class RequestModel {
         $response = file_get_contents($url);
         $results = json_decode($response, true);
 
-        if ($results) {
-            $user = [
-                'total' => $results['total'],
-                'pending' => $results['pending'],
-                'approved' => $results['approved'],
-            ];
-            return $results;
-        }
+        return $results;
+
+        // if ($results) {
+        //     $user = [
+        //         'total' => $results['total'],
+        //         'pending' => $results['pending'],
+        //         'approved' => $results['approved'],
+        //     ];
+        //     return $results;
+        // }
     }
 
     public function getPendingRequestsByEmpID($user_id, $limit, $offset) {
