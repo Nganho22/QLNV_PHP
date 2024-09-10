@@ -190,68 +190,67 @@ class UserModel {
 
     
     public static function getPoint_Month($empID) {
-        $db = new Database();
-        $conn = $db->connect();
-    
-        $stmt = $conn->prepare("
-            SELECT MONTH(date) AS month, SUM(point) AS total_points
-            FROM Felicitation
-            WHERE nguoinhan = ?
-            GROUP BY MONTH(date)
-            ORDER BY MONTH(date)
-        ");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        // Khởi tạo mảng 12 tháng với giá trị 0
-        $monthlyPoints = array_fill(1, 12, 0);
-        while ($row = $result->fetch_assoc()) {
-            $monthlyPoints[(int)$row['month']] = $row['total_points'];
+        $apiUrl='http://localhost:9003/apiProfile';
+        
+        $url = $apiUrl . '/totalPointsByMonth/' . $empID;
+
+        if (!self::isApiAvailable($url)) {
+            return array_fill(1, 12, 0);
         }
-    
-        $stmt->close();
-        $db->close();
+        
+        $response = file_get_contents($url);
+        $data = json_decode($response, true);
+        $monthlyPoints = array_fill(1, 12, 0);
+        if ($data && is_array($data)) {
+            foreach ($data as $entry) {
+                $month = isset($entry['month']) ? (int)$entry['month'] : 0;
+                $totalPoints = isset($entry['total_points']) ? (int)$entry['total_points'] : 0;
+                
+                if ($month >= 1 && $month <= 12) {
+                    $monthlyPoints[$month] = $totalPoints;
+                }
+            }
+        }
         return $monthlyPoints;
     }
 
 
-     //===================================Quản lý========================================
-     public static function searchProfiles_QL($empID, $searchTerm, $limit, $offset) {
-        $searchTerm = "%$searchTerm%";
-        $query = "
-            SELECT empid, hoten, email
-            FROM Profile
-            WHERE phongid = (
-                SELECT phongid
-                FROM Profile 
-                WHERE empid = ?
-            ) AND hoten LIKE ? AND empid <> ?
-            LIMIT ? OFFSET ?";
-            
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
-        $params = [$empID, $searchTerm, $empID, $limit, $offset];
-        $stmt->bind_param('isiii', ...$params);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        $profiles = [];
-        while ($row = $result->fetch_assoc()) {      
-            $profile =[
-                'EmpID' => $row['empid'],
-                'HoTen' => $row['hoten'],
-                'Email' => $row['email']
-            ];
-            $profiles[] = $profile;
+
+    public static function searchProfiles_QL($empID, $searchTerm, $limit, $offset) {
+        $apiUrl = 'http://localhost:9003/apiProfile';
+        $url = $apiUrl . '/getProfileNVByQL?empid=' . $empID . '&hoten=' . urlencode($searchTerm) . '&limit=' . $limit . '&offset=' . $offset;
+        
+        if (!self::isApiAvailable($url)) {
+            return null;
+        }
+        
+        $response = file_get_contents($url);
+        if ($response === FALSE) {
+            return null;
         }
     
-        $stmt->close();
-        $db->close();
+        $Datas = json_decode($response, true);
+        if ($Datas === null) {
+            echo 'JSON Decode Error: ' . json_last_error_msg();
+            return null;
+        }
     
+        $profiles = [];
+        if (is_array($Datas)) {
+            foreach ($Datas as $Data) {
+                $profile = [
+                    'EmpID' => isset($Data['empid']) ? $Data['empid'] : null,
+                    'HoTen' => isset($Data['hoten']) ? $Data['hoten'] : null,
+                    'Email' => isset($Data['email']) ? $Data['email'] : null
+                ];
+                $profiles[] = $profile;
+            }
+        }
+        
         return $profiles;
     }
+    
+
      
      public static function countSearchProfiles_QL($empID, $searchTerm) {
         $searchTerm = "%$searchTerm%";
@@ -311,24 +310,11 @@ class UserModel {
         return $row['total'];
     }
     
-
-
-
-     
-
-
-     
-    
-    
-
-
-
-    
      public static function getPhongBanStatistics($empID) {
         $db = new Database();
         $conn = $db->connect();
         
-        // Lấy PhongID của quản lý
+
         $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
         $stmt->bind_param("i", $empID);
         $stmt->execute();
@@ -535,46 +521,39 @@ class UserModel {
     }
 
     public static function getEmployeesList_QL($empID, $limit, $offset) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        // Lấy PhongID của người dùng hiện tại
-        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $phongID = $row['phongid'];
-        $stmt->close();
-
-        // Lấy danh sách nhân viên cùng PhongID, loại bỏ người có EmpID trùng với người quản lý
-        $stmt = $conn->prepare("SELECT empid, hoten, email
-                                FROM Profile
-                                WHERE phongid = ? AND empid <> ?
-                                LIMIT ? OFFSET ?");
-        $stmt->bind_param("siii", $phongID, $empID, $limit, $offset);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $employees = [];
-        while ($row = $result->fetch_assoc()) {
-            $employee =[
-                'EmpID' => $row['empid'],
-                'HoTen' => $row['hoten'],
-                'Email' => $row['email']
-                ];
-            $employees[] = $employee;
+        $apiUrl = 'http://localhost:9003/apiProfile';
+        $url = $apiUrl . '/getProfileNVByQL?empid=' . $empID . '&hoten=' . '&limit=' . $limit . '&offset=' . $offset;
+        
+        if (!self::isApiAvailable($url)) {
+            return null;
         }
-
-        $stmt->close();
-        $db->close();
-        return $employees;
+        
+        $response = file_get_contents($url);
+        if ($response === FALSE) {
+            return null;
+        }
+    
+        $Datas = json_decode($response, true);
+        if ($Datas === null) {
+            echo 'JSON Decode Error: ' . json_last_error_msg();
+            return null;
+        }
+    
+        $profiles = [];
+        if (is_array($Datas)) {
+            foreach ($Datas as $Data) {
+                $profile = [
+                    'EmpID' => isset($Data['empid']) ? $Data['empid'] : null,
+                    'HoTen' => isset($Data['hoten']) ? $Data['hoten'] : null,
+                    'Email' => isset($Data['email']) ? $Data['email'] : null
+                ];
+                $profiles[] = $profile;
+            }
+        }
+        
+        return $profiles;
     }
 
-
-    //=================================Giam doc==============================
-
-    
     
 
 
