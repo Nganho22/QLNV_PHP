@@ -1,5 +1,7 @@
 <?php
 require_once __DIR__ . '/../model/RequestModel.php';
+require_once __DIR__ . '/../model/ServiceModel.php';
+
 
 class RequestController {
     public function GetRequestPage() {
@@ -26,7 +28,7 @@ class RequestController {
                     $limit = 3;
                     $offsetPending = ($pagePending - 1) * $limit ;
                     $offsetApproved = ($pageApproved - 1) * $limit;
-                    $timeSheets = RequestModel::getTimeSheetsByEmpID($user_id);
+                    $timeSheets = $model->getTimeSheetsByEmpID($user_id);
                     
                     $file = "./views/pages/NV/request.phtml";
                     $creq = $model->getRequestCountsByEmpID($user_id);
@@ -191,9 +193,11 @@ class RequestController {
     }
 
     public function GetTimeSheetDetails() {
+        $apiUrl = 'http://localhost:9004/apiRequest';
+        $model = new RequestModel($apiUrl);
         if (isset($_GET['timeSheetID'])) {
             $timeSheetID = $_GET['timeSheetID'];
-            $timeSheet = RequestModel::getTimeSheetByID($timeSheetID);
+            $timeSheet = $model->getTimeSheetByID($timeSheetID);
             echo json_encode($timeSheet);
         }
     }
@@ -260,7 +264,8 @@ class RequestController {
             $trangThai = $_POST['trangThai'];
             $soGio = $_POST['soGio'];
             $customHours = isset($_POST['customHours']) ? $_POST['customHours'] : null;
-
+            $apiUrl = 'http://localhost:9004/apiRequest';
+            $model = new RequestModel($apiUrl);
             if (empty($tieuDe)) {
                 echo json_encode([
                     'success' => false,
@@ -291,7 +296,7 @@ class RequestController {
             }
 
             // Lấy thông tin thời gian từ model
-            $timeSheetDetails = RequestModel::getTimeSheetByID($timeSheetID);
+            $timeSheetDetails = $model->getTimeSheetByID($timeSheetID);
             
             if ($timeSheetDetails) {
                 // Tính toán thời gian mới
@@ -321,9 +326,11 @@ class RequestController {
             $title='Chi tiết Request';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
+            $apiUrl = 'http://localhost:9004/apiRequest';
+            $model = new RequestModel($apiUrl);
 
-            $detail = RequestModel::getDetailRequest($requestId);
-            $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
+            //$detail = RequestModel::getDetailRequest($requestId);
+            //$detail_ts = $model->getTimeSheetByID($detail['Time_sheetID']);
             $message='';
             if (isset($_GET['status'])) {
                 if ($_GET['status']  === 'checked-in') {
@@ -339,7 +346,7 @@ class RequestController {
             switch ($role) {
                 case 'Nhân viên':
                     $detail = RequestModel::getDetailRequest($requestId);
-                    $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
+                    $detail_ts = $model->getTimeSheetByID($detail['Time_sheetID']);
 
                     ob_start();
                     require("./views/pages/NV/detail_req.phtml");
@@ -348,7 +355,7 @@ class RequestController {
                     break;
                 case 'Quản lý':
                     $detail = RequestModel::getDetailRequest($requestId);
-                    $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID']);
+                    $detail_ts = $model->getTimeSheetByID($detail['Time_sheetID']);
 
                     if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
                         $ngayPhanHoi = $_POST['ngayPhanHoi'];

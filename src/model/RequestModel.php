@@ -130,6 +130,7 @@ class RequestModel {
         return (int)$total;
     }
 
+    // ???
     public static function gettimesheet($user_id) {
         $db = new Database();
         $conn = $db->connect();
@@ -165,70 +166,77 @@ class RequestModel {
         return $timesheets;
     }
 
-    public static function getTimeSheetsByEmpID($user_id) {
-        $db = new Database();
-        $conn = $db->connect();
+    public function getTimeSheetsByEmpID($user_id) {
+        $apiUrl='http://localhost:9004/apiRequest';
+        $url = $apiUrl . '/timesheets/' . ($user_id);
 
-        $query = "SELECT * FROM Time_sheet WHERE empid = ? AND trangthai = 'Chưa hoàn thành'";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        
-        $result = $stmt->get_result();
-        //$requests = $result->fetch_all(MYSQLI_ASSOC);
-
-        $requests = [];
-        while ($row = $result->fetch_assoc()) {
-            $row = [
-                'Time_sheetID' => $row['time_sheetid'] ?? 'N/A',
-                'ProjectID' => $row['projectid'] ?? 'N/A',
-                'TenDuAn' => $row['tenduan'] ?? 'N/A',
-                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
-                'PhongBan' => $row['phongban'] ?? 'N/A',
-                'TrangThai' => $row['trangthai'] ?? 'N/A',
-                'SoGioThucHien' => $row['sogiothuchien'] ?? 'N/A',
-                'NgayGiao' => $row['ngaygiao'] ?? 'N/A',
-                'HanChot' => $row['hanchot'] ?? 'N/A',
-                'DiemThuong' => $row['diemthuong'] ?? 'N/A',
-                'Tre' => $row['tre'] ?? 'N/A',
-                'NoiDung' => $row['noidung'] ?? 'N/A'
-            ];
-            $requests[] = $row;
+        if (!$this->isApiAvailable($url)) {
+            return null;
         }
 
-        $stmt->close();
-        $db->close();
-        return $requests;
+        $response = file_get_contents($url);
+        $results = json_decode($response, true);
+        //print_r($results);
+        $formattedResults = [];
+
+        if (is_array($results)) {
+            foreach ($results as $result) {
+                $formattedResults[] = [
+                    'Time_sheetID' => $result['timesheetid'] ?? 'N/A',
+                    'ProjectID' => $result['projectid'] ?? 'N/A',
+                    'TenDuAn' => $result['tenduan'] ?? 'N/A',
+                    'NguoiGui' => $result['nguoigui'] ?? 'N/A',
+                    'PhongBan' => $result['phongBan'] ?? 'N/A',
+                    'TrangThai' => $result['trangThai'] ?? 'N/A',
+                    'SoGioThucHien' => $result['sogiothuchien'] ?? 'N/A',
+                    'NgayGiao' => $result['ngaygiao'] ?? 'N/A',
+                    'HanChot' => $result['hanchot'] ?? 'N/A',
+                    'DiemThuong' => $result['diemthuong'] ?? 'N/A',
+                    'Tre' => $result['tre'] ?? 'N/A',
+                    'NoiDung' => $result['noidung'] ?? 'N/A'
+                ];
+            }
+        } else {
+            return "Phản hồi từ API không phải là mảng hợp lệ.";
+        }
+    
+        return $formattedResults;
     }
 
-    public static function getTimeSheetByID($timeSheetID) {
-        $db = new Database();
-        $conn = $db->connect();
-    
-        $query = "SELECT * FROM Time_sheet WHERE time_sheetid = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $timeSheetID);
-        $stmt->execute();
-        
-        $result = $stmt->get_result();
-        $timeSheets = $result->fetch_assoc();
-    
-        $stmt->close();
-        $db->close();
-        if ($timeSheets) {
-            $timeSheet = [
-                'Time_sheetID' => $timeSheets['time_sheetid'],
-                'ProjectID' => $timeSheets['projectid'],
-                'NgayGiao' => $timeSheets['ngaygiao'],
-                'HanChot' => $timeSheets['hanchot'],
-                'TenDuAn' => $timeSheets['tenduan'],
-                'DiemThuong' => $timeSheets['diemthuong'],
-                'SoGioThucHien' => $timeSheets['sogiothuchien'],
-                'TrangThai' => $timeSheets['trangthai'],
-                'NoiDung' => $timeSheets['noidung']
-            ];
-            return $timeSheet;
+    public function getTimeSheetByID($timeSheetID) {
+        // $apiUrl='http://localhost:9004/apiRequest';
+        // $url = $apiUrl . '/timesheetsID/' . ($timeSheetID);
+        $url = $this->apiUrl . "/timesheetsID/" . urlencode($timeSheetID);
+
+        if (!$this->isApiAvailable($url)) {
+            return null;
         }
+
+        $response = file_get_contents($url);
+        $result = json_decode($response, true);
+        $formattedResults = [];
+
+        if (is_array($result)) {
+        {
+                $formattedResults = [
+                    'Time_sheetID' => $result['timesheetid'] ?? 'N/A',
+                    'ProjectID' => $result['projectid'] ?? 'N/A',
+                    'TenDuAn' => $result['tenduan'] ?? 'N/A',
+                    'NguoiGui' => $result['nguoigui'] ?? 'N/A',
+                    'PhongBan' => $result['phongBan'] ?? 'N/A',
+                    'TrangThai' => $result['trangThai'] ?? 'N/A',
+                    'SoGioThucHien' => $result['sogiothuchien'] ?? 'N/A',
+                    'NgayGiao' => $result['ngaygiao'] ?? 'N/A',
+                    'HanChot' => $result['hanchot'] ?? 'N/A',
+                    'DiemThuong' => $result['diemthuong'] ?? 'N/A',
+                    'Tre' => $result['tre'] ?? 'N/A',
+                    'NoiDung' => $result['noidung'] ?? 'N/A'
+                ];
+            }
+        }
+        //print_r($formattedResults);
+
+        return $formattedResults;
     }
     
     public static function createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung) {

@@ -273,7 +273,7 @@ class Check_inoutModel {
         $data = [];
         while ($checkinoutData = $result->fetch_assoc()) {
             $CheckInOut['ThoiGian'] =  $checkinoutData['date_checkin'];
-            $CheckInOut['HoTen'] =  $checkinoutData['hoten'];
+            $CheckInOut['NhanVien'] =  $checkinoutData['NhanVien'];
             $CheckInOut['GioCheckOut'] =  $checkinoutData['time_checkout'];
             $CheckInOut['GioCheckIn'] =  $checkinoutData['time_checkin'];
             $CheckInOut['Note'] =  $checkinoutData['Note'];
