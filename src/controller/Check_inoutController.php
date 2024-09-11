@@ -67,7 +67,7 @@ class Check_inoutController {
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
          
-            $profile = UserModel::getprofile($user_id);
+            $profile = UserModel::getprofile($user_id,  $_SESSION['API']['Profile']);
 
             $limit = 8;
             $pageHistory = isset($_GET['pageHistory']) ? (int)$_GET['pageHistory'] : 1;

@@ -120,7 +120,7 @@ class VoucherController {
         if (isset($_SESSION['user'])) {
             $title='Trang danh sách Voucher';
             $user_id = $_SESSION['user']['EmpID'];
-            $profile = UserModel::getprofile($user_id);
+            $profile = UserModel::getprofile($user_id,  $_SESSION['API']['Profile']);
             
             ob_start();
             require("./views/pages/NV/check_inout_NV.phtml");

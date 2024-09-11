@@ -36,7 +36,7 @@ class ProjectController {
             switch ($role) {
                 case 'Quản lý':
                 case 'Giám đốc':
-                $profile = $model->getprofile($user_id);
+                $profile = UserModel::getprofile($user_id, $_SESSION['API']['Profile']);
                 $cProject = ProjectModel::getProjectCountsByEmpID($user_id);
                 //$listProject = ProjectModel::getListProject($user_id, $limit, $offset);
                 //print_r($listProject);
@@ -87,7 +87,7 @@ class ProjectController {
                     $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
                     $progressFilters = isset($_GET['processes']) ? $_GET['processes'] : [];
                     $statusFilters = isset($_GET['types']) ? $_GET['types'] : [];
-                    $profile = $model->getprofile($user_id);
+                    $profile = UserModel::getprofile($user_id, $_SESSION['API']['Profile']);
                     $cProject = ProjectModel::getProjectCountsByEmpID_NV($user_id);
                     $listProject = ProjectModel::getListProject_NV($user_id, $limit, $offset);
                     

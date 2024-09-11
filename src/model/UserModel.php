@@ -26,8 +26,7 @@ class UserModel {
         }
     }
 
-    public static function clogin($username, $password) {
-        $apiUrl='http://localhost:9003/apiProfile';
+    public static function clogin($username, $password, $apiUrl) {
 
         $url = $apiUrl . '/getActiveProfile?tenTaiKhoan=' . urlencode($username) . '&matKhau=' . urlencode($password);
 
@@ -53,9 +52,7 @@ class UserModel {
 
     }
 
-    public static function getprofile($user_id){
-
-        $apiUrl='http://localhost:9003/apiProfile';
+    public static function getprofile($user_id, $apiUrl){
         
         $url = $apiUrl . '/findByID/' . $user_id;
 
@@ -107,8 +104,7 @@ class UserModel {
 
 
 
-    public static function getCountNghiPhep($user_id) {
-        $apiUrl='http://localhost:9003/apiProfile';
+    public static function getCountNghiPhep($user_id, $apiUrl) {
         
         $url = $apiUrl . '/CountNghiByID/' . $user_id;
 
@@ -126,8 +122,7 @@ class UserModel {
         return $Nghi;
     }
 
-    public static function getCountTre($user_id) {
-        $apiUrl='http://localhost:9003/apiProfile';
+    public static function getCountTre($user_id, $apiUrl) {
         
         $url = $apiUrl . '/CountLateByID/' . $user_id;
 
@@ -163,8 +158,8 @@ class UserModel {
         return $result;
     }
 
-    public static function getPhongIDByEmpID($empID) {
-        $apiUrl='http://localhost:9003/apiProfile';
+    public static function getPhongIDByEmpID($empID, $apiUrl) {
+
         
         $url = $apiUrl . '/findByID/' . $empID;
 
@@ -189,9 +184,7 @@ class UserModel {
 
 
     
-    public static function getPoint_Month($empID) {
-        $apiUrl='http://localhost:9003/apiProfile';
-        
+    public static function getPoint_Month($empID, $apiUrl) {
         $url = $apiUrl . '/totalPointsByMonth/' . $empID;
 
         if (!self::isApiAvailable($url)) {
@@ -216,8 +209,7 @@ class UserModel {
 
 
 
-    public static function searchProfiles_QL($empID, $searchTerm, $limit, $offset) {
-        $apiUrl = 'http://localhost:9003/apiProfile';
+    public static function searchProfiles_QL($empID, $searchTerm, $limit, $offset, $apiUrl) {
         $url = $apiUrl . '/getProfileNVByQL?empid=' . $empID . '&hoten=' . urlencode($searchTerm) . '&limit=' . $limit . '&offset=' . $offset;
         
         if (!self::isApiAvailable($url)) {
@@ -773,13 +765,13 @@ class UserModel {
         return $total;
     }
 
-    public function GetTime_checkInOut($empID) {
-        
-        $url = $this->apiUrl . '/CurrentTimesheet/' . $empID;
+    public static function GetTime_checkInOut($empID, $apiUrl) {
+        $url = $apiUrl . '/CurrentTimesheet/' . $empID;
 
-        if (!$this->isApiAvailable($url)) {
+        if (!self::isApiAvailable($url)) {
             return null;
         }
+        
 
         $response = file_get_contents($url);
         $checkinoutData = json_decode($response, true);

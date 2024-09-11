@@ -1,15 +1,18 @@
 <?php
 require_once __DIR__ . '/../model/UserModel.php';
 require_once __DIR__ . '/../model/PassModel.php';
+require_once __DIR__ . '/../model/ServiceModel.php';
 require_once __DIR__ . '/../controller/HomeController.php';
 class UserController{
     public function checklogin(){
         $username = isset($_POST['username']) ? $_POST['username'] : '';
         $password = isset($_POST['password']) ? $_POST['password'] : '';
-        $apiUrl = 'http://localhost:9003/apiProfile';
-        $model = new UserModel($apiUrl);
-        $user =  UserModel::clogin($username, $password);
+        $api = ServiceModel::getAPI();
+        $_SESSION['API'] = $api;
+        $user =  UserModel::clogin($username, $password, $_SESSION['API']['Profile']);
         $str = 'Wrong username or password, please check again';
+       
+        
         if ($user === null) {
             $title = 'Login';
             $error_message = "Thông tin đăng nhập sai, vui lòng thử lại";
@@ -17,7 +20,8 @@ class UserController{
         } else {
             $_SESSION['logged_in'] = true;
             $_SESSION['user'] = $user;
-            $checkInOut =  $model->GetTime_checkInOut($user['EmpID']);
+           
+            $checkInOut =  UserModel::GetTime_checkInOut($user['EmpID'], $_SESSION['API']['Profile']);
 
             $_SESSION['CheckInOut']= $checkInOut;
             if (isset($_SESSION['redirect_url'])) {
@@ -42,11 +46,9 @@ class UserController{
     public function CheckInOut(){
         if (isset($_SESSION['user'])) {
             $empID = $_SESSION['user']['EmpID'];
-            $apiUrl = 'http://localhost:9003/apiProfile';
-            $model = new UserModel($apiUrl);
 
             $statusinout = UserModel::UpCheckInOut($empID);
-            $checkInOut =  $model-> GetTime_checkInOut($_SESSION['user']['EmpID']);
+            $checkInOut =  UserModel::GetTime_checkInOut($_SESSION['user']['EmpID'], $_SESSION['API']['Profile']);
             
             
             $_SESSION['CheckInOut']= $checkInOut;

@@ -163,7 +163,7 @@
                 </ul>
                 <ul class="days" id="calendarDays"></ul>
             </div>
-            <?php $monthlyPoints = UserModel::getPoint_Month($_SESSION['user']['EmpID']); ?>
+            <?php $monthlyPoints = UserModel::getPoint_Month($_SESSION['user']['EmpID'],  $_SESSION['API']['Profile']); ?>
             <div class="stats-chart">
                 <h3>Thống kê điểm thưởng theo tháng:</h3>
                 <canvas id="rewardChart"></canvas>

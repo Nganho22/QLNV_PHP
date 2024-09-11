@@ -34,7 +34,7 @@ class HomeController{
                 case 'Nhân viên':
                     $limit = 2;
                     $file = "./views/pages/NV/home_NV.phtml";
-                    $phongID = UserModel::getPhongIDByEmpID($empID);
+                    $phongID = UserModel::getPhongIDByEmpID($empID,  $_SESSION['API']['Profile']);
                     // $projects = UserModel::getProjects_NV($empID);
                     $cprojects = ProjectModel::getCountProjects_NV($empID);
                     $apiUrlActivity = 'http://localhost:9002/apiActivity';
@@ -42,7 +42,7 @@ class HomeController{
                     $cactivities = $modelActivity->getActivitiesByMonth(date('m'));
                     $Activities = $modelActivity->getActivitiesByMonth(date('m'));
                     $checkInOut = $_SESSION['CheckInOut'];
-                    $points = UserModel::getPoint_Month($empID);
+                    $points = UserModel::getPoint_Month($empID,  $_SESSION['API']['Profile']);
                     $deadlines = ProjectModel::getDeadlinesTimesheet($empID);
                     
                     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -95,7 +95,7 @@ class HomeController{
                     $offset_NV = ($page_NV - 1) * $limit;
 
                     if (!empty($searchTerm_NV)) {
-                        $employees = UserModel::searchProfiles_QL($empID, $searchTerm_NV, $limit, $offset_NV);
+                        $employees = UserModel::searchProfiles_QL($empID, $searchTerm_NV, $limit, $offset_NV,  $_SESSION['API']['Profile']);
                         $totalEmployees = UserModel::countSearchProfiles_QL($empID, $searchTerm_NV);
                     } else {
                         $employees = UserModel::getEmployeesList_QL($empID, $limit, $offset_NV);
@@ -109,7 +109,7 @@ class HomeController{
                     $totalTimesheets = ProjectModel::countAllTimesheet_QL($empID);
                     
                     $checkInOut = $_SESSION['CheckInOut'];
-                    $phongID = UserModel::getPhongIDByEmpID($empID);
+                    $phongID = UserModel::getPhongIDByEmpID($empID,  $_SESSION['API']['Profile']);
                     $countWFH = UserModel::getWorkFromHomeCountByEmpID($empID);
                     $absence = UserModel::getAbsence($empID);
                     $phongBans = UserModel::getPhongBanStatistics($empID);
@@ -334,11 +334,11 @@ class HomeController{
         if (isset($_SESSION['user'])) {
             $title='Profile';
             $user_id = $_SESSION['user']['EmpID'];
-            $profile =  UserModel::getprofile($user_id);
+            $profile =  UserModel::getprofile($user_id,  $_SESSION['API']['Profile']);
             
             $timesheets = RequestModel::gettimesheet($user_id);
-            $cNghi= UserModel::getCountNghiPhep($user_id);
-            $cTre= UserModel::getCountTre($user_id);
+            $cNghi= UserModel::getCountNghiPhep($user_id,  $_SESSION['API']['Profile']);
+            $cTre= UserModel::getCountTre($user_id,  $_SESSION['API']['Profile']);
             $cPrj = ProjectModel::getCountPrj_GD();
             $listPrj = ProjectModel::getListPrj_GD();
             if ($_SESSION['user']['Role'] == 'Nhân viên') {
@@ -381,7 +381,7 @@ class HomeController{
             $title='Cập nhật Profile';
             $user_id = $_SESSION['user']['EmpID'];
 
-            $profile = UserModel::getprofile($user_id);
+            $profile = UserModel::getprofile($user_id,  $_SESSION['API']['Profile']);
             $message='';
             if (isset($_GET['status'])) {
                 if ($_GET['status']  === 'checked-in') {
@@ -439,7 +439,7 @@ class HomeController{
             }
 
 
-            $currentProfile  =  UserModel::getprofile($user_id);
+            $currentProfile  =  UserModel::getprofile($user_id,  $_SESSION['API']['Profile']);
             $currentImage = $currentProfile['Image_name'];
 
             // Xử lý ảnh
@@ -524,11 +524,11 @@ class HomeController{
             $title = 'Chi tiết nhân viên';
             $user_id = $_SESSION['user']['EmpID'];
             $ID = isset($_GET['ID']) ? $_GET['ID'] : null;
-            $profile = UserModel::getprofile($ID);
+            $profile = UserModel::getprofile($ID,  $_SESSION['API']['Profile']);
             $role = $profile['Role'];
             $timesheet = ProjectModel::gettimesheet($ID);
-            $cNghi = UserModel::getCountNghiPhep($ID);
-            $cTre = UserModel::getCountTre($ID);
+            $cNghi = UserModel::getCountNghiPhep($ID,  $_SESSION['API']['Profile']);
+            $cTre = UserModel::getCountTre($ID,  $_SESSION['API']['Profile']);
             $cPrj_NV = ProjectModel::getCountPrj_NV($ID);
             $listPrj_NV = ProjectModel::getListPrj_NV($ID);
             $cPrj_QL= ProjectModel::getCountPrj_QL($ID);
