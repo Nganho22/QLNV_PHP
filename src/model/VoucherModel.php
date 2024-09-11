@@ -45,7 +45,7 @@ class VoucherModel {
     
         $existingFelicitationQuery = "SELECT COUNT(*) AS existing
                                         FROM Voucher
-                                        WHERE tinhtrang <> 'Đã dùng'";
+                                        WHERE tinhtrang = 'chưa dùng' and hansudung > CURDATE()";
         $stmt = $conn->prepare($existingFelicitationQuery);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -59,7 +59,7 @@ class VoucherModel {
         $result = $stmt->get_result();
         $exchangeFelicitation = $result->fetch_assoc()['exchange']?? 0;
 
-        $expiredVoucherQuery = "SELECT COUNT(*) AS expired FROM Voucher WHERE hansudung < CURDATE()";
+        $expiredVoucherQuery = "SELECT COUNT(*) AS expired FROM Voucher WHERE tinhtrang <> 'đã dùng' and hansudung < CURDATE()";
         $stmt = $conn->prepare($expiredVoucherQuery);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -86,7 +86,7 @@ class VoucherModel {
                         hansudung,
                         trigia 
                     FROM Voucher 
-                    WHERE tinhtrang <> 'Đã dùng'
+                    WHERE tinhtrang <> 'Đã dùng' and hansudung > CURDATE()
                     LIMIT ? OFFSET ?";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('ii', $limit, $offset);
@@ -120,7 +120,7 @@ class VoucherModel {
                         hansudung,
                         trigia
                     FROM Voucher 
-                    WHERE tinhtrang IS NULL
+                    WHERE tinhtrang IS NULL and hansudung > CURDATE()
                     LIMIT ? OFFSET ?";
     
         $stmt = $conn->prepare($query);
@@ -152,7 +152,7 @@ class VoucherModel {
 
         $query = "SELECT COUNT(*) AS total
                     FROM Voucher
-                    WHERE tinhtrang <> 'Đã dùng'";
+                    WHERE tinhtrang <> 'Đã dùng' and hansudung > CURDATE()";
         $stmt = $conn->prepare($query);
         $stmt->execute();
         
@@ -170,7 +170,7 @@ class VoucherModel {
 
         $query = "SELECT COUNT(*) AS total
                     FROM Voucher
-                    WHERE tinhtrang IS NULL";
+                    WHERE tinhtrang IS NULL and hansudung > CURDATE()";
         $stmt = $conn->prepare($query);
         $stmt->execute();
         
@@ -247,49 +247,18 @@ class VoucherModel {
     public static function getVoucherDetails($voucherID) {
         $db = new Database();
         $conn = $db->connect();
-
-        $query = "SELECT *
+    
+        $query = "SELECT voucherid, tenvoucher, trigia, hansudung, tinhtrang, chitiet, huongdansudung
                 FROM Voucher
                 WHERE voucherid = ? AND tinhtrang is not NULL";
         $stmt = $conn->prepare($query);
         $stmt->bind_param('i', $voucherID);
         $stmt->execute();
         $result = $stmt->get_result();
-        //$voucherDetails = $result->fetch_assoc();
-        $voucherDetails = [];
-            while ($row = $result->fetch_assoc()) {
-                $row = [
-                    'voucherID' => $row['voucherid'] ?? 'N/A',
-                    'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
-                    'TriGia' => $row['trigia'] ?? 'N/A',
-                    'HanSuDung' => $row['hansudung'] ?? 'N/A',
-                    'TinhTrang' => $row['tinhtrang'] ?? 'N/A',
-                    'ChiTiet' => $row['chitiet'] ?? 'N/A',
-                    'HuongDanSuDung' => $row['huongdansudung'] ?? 'N/A'
-                ];
-                $voucherDetails[] = $row;
-            }
-
-        $stmt->close();
-        $db->close();
-        return $voucherDetails;
-    }
-    
-    public static function getExVoucherDetails($voucherID) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $query = "SELECT *
-                FROM Voucher
-                WHERE voucherid = ? AND tinhtrang IS NULL";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $voucherID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        //$voucherDetails = $result->fetch_assoc();
+        // $voucherDetails = $result->fetch_assoc();
         $voucherDetails = [];
         while ($row = $result->fetch_assoc()) {
-            $row = [
+            $voucherDetails[] = [
                 'voucherID' => $row['voucherid'] ?? 'N/A',
                 'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
                 'TriGia' => $row['trigia'] ?? 'N/A',
@@ -298,11 +267,43 @@ class VoucherModel {
                 'ChiTiet' => $row['chitiet'] ?? 'N/A',
                 'HuongDanSuDung' => $row['huongdansudung'] ?? 'N/A'
             ];
-            $voucherDetails[] = $row;
         }
+    
         $stmt->close();
         $db->close();
-        return $voucherDetails;
+        
+        return count($voucherDetails) == 1 ? $voucherDetails[0] : $voucherDetails;
+    }
+    
+    public static function getExVoucherDetails($voucherID) {
+        $db = new Database();
+        $conn = $db->connect();
+
+        $query = "SELECT voucherid, tenvoucher, trigia, hansudung, tinhtrang, chitiet, huongdansudung
+                FROM Voucher
+                WHERE voucherid = ? AND tinhtrang IS NULL";
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $voucherID);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        // $voucherDetails = $result->fetch_assoc();
+        $voucherDetails = [];
+        while ($row = $result->fetch_assoc()) {
+            $voucherDetails[] = [
+                'voucherID' => $row['voucherid'] ?? 'N/A',
+                'TenVoucher' => $row['tenvoucher'] ?? 'N/A',
+                'TriGia' => $row['trigia'] ?? 'N/A',
+                'HanSuDung' => $row['hansudung'] ?? 'N/A',
+                'TinhTrang' => $row['tinhtrang'] ?? 'N/A',
+                'ChiTiet' => $row['chitiet'] ?? 'N/A',
+                'HuongDanSuDung' => $row['huongdansudung'] ?? 'N/A'
+            ];
+        }
+    
+        $stmt->close();
+        $db->close();
+        
+        return count($voucherDetails) == 1 ? $voucherDetails[0] : $voucherDetails;
     }
 
     public static function updateVoucherTinhTrangEx($voucherID) {
@@ -319,6 +320,7 @@ class VoucherModel {
             return false;
         }
     }
+    
     public static function updateVoucherTinhTrangUsed($voucherID) {
         $db = new Database();
         $conn = $db->connect();
@@ -345,12 +347,12 @@ class VoucherModel {
         $stmt->bind_param('i', $voucherID);
         $stmt->execute();
         $result = $stmt->get_result();
-        $tinhtrang = $result->fetch_assoc()['TinhTrang'];
+        $tinhtrang = $result->fetch_assoc()['tinhtrang'];
 
         $stmt->close();
         $db->close();
         
-        return isset($tinhtrang['TinhTrang']) ? $tinhtrang['TinhTrang'] : '';
+        return isset($tinhtrang) ? $tinhtrang : '';;
     }
 
     public static function getEmployeePointsByID($user_id) {
@@ -364,7 +366,7 @@ class VoucherModel {
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $points = $result->fetch_assoc()['DiemThuong'] ?? 0;
+        $points = $result->fetch_assoc()['diemthuong'] ?? 0;
 
         $stmt->close();
         $db->close();
@@ -382,7 +384,7 @@ class VoucherModel {
         $stmt->execute();
         
         $result = $stmt->get_result();
-        $currentPoints = $result->fetch_assoc()['DiemThuong'] ?? 0;
+        $currentPoints = $result->fetch_assoc()['diemthuong'] ?? 0;
         
         // Tính điểm thưởng mới
         $newPoints = $currentPoints - $pointEx;
@@ -397,6 +399,7 @@ class VoucherModel {
         $updateStmt->close();
         $db->close();
     }
+
     public static function addFelicitation($point, $noiDung, $nguoiNhan, $voucherID) {
         $point = -abs($point);
         $db = new Database();

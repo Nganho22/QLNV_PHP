@@ -215,73 +215,67 @@
         }
     });
 
-            // Xử lý sự kiện nhấn vào liên kết voucher-link
-            $(document).on('click', '.voucher-link', function(e) {
-                e.preventDefault(); // Ngăn không cho liên kết thực hiện hành động mặc định
-                var voucherID = $(this).data('id'); // Lấy VoucherID từ thuộc tính data-id
-                var type = $(this).closest('tr').data('type'); // Lấy loại voucher từ thuộc tính data-type của hàng
-                loadVoucherDetails(voucherID, type);
+        $(document).on('click', '#available_voucher-table .voucher-link', function(e) {
+            e.preventDefault();
+            var voucherID = $(this).data('id'); // Lấy VoucherID từ thuộc tính data-id
+            loadVoucherDetails(voucherID);
+        });
+
+        function loadVoucherDetails(voucherID) {
+            $.ajax({
+                url: 'index.php?action=GetVoucherDetails&voucherID=' + voucherID,
+                method: 'GET',
+                success: function(response) {
+                    var data = JSON.parse(response);
+
+                    // Cập nhật thông tin vào các phần tử chi tiết voucher
+                    $('#valueBox').text(data.TriGia);
+                    $('#voucher-name').text(data.TenVoucher);
+                    $('#noidung').val(data.TenVoucher);
+                    $('#voucher-expiry').text(data.HanSuDung);
+                    $('#voucher-status').text(data.TinhTrang);
+                    $('#voucher-detail').text(data.ChiTiet);
+                    $('#voucher-guide').text(data.HuongDanSuDung);
+                    $('#voucher-action-btn').text('Dùng Voucher');
+                    $('#voucher-id-input').val(voucherID);
+                    // $('#valuePoint').val(data.TriGia);
+                },
+                error: function() {
+                    console.error('Không thể tải dữ liệu chi tiết voucher hiện có');
+                }
             });
+        }
 
-            function loadVoucherDetails(voucherID, type) {
-                $.ajax({
-                    url: 'index.php?action=GetVoucherDetails&voucherID=' + voucherID,
-                    method: 'GET',
-                    success: function(response) {
-                        var data = JSON.parse(response);
+        // Xử lý sự kiện nhấn vào liên kết voucher-link cho Voucher đổi
+        $(document).on('click', '#exchange_voucher-table .voucher-link', function(e) {
+            e.preventDefault(); // Ngăn không cho liên kết thực hiện hành động mặc định
+            var voucherID = $(this).data('id'); // Lấy VoucherID từ thuộc tính data-id
+            loadVoucherExDetails(voucherID);
+        });
 
-                        // Cập nhật thông tin vào các phần tử chi tiết voucher
-                        $('#valueBox').text(data.TriGia); // Hiển thị trị giá voucher
-                        $('#voucher-name').text(data.TenVoucher);
-                        $('#noidung').val(data.TenVoucher);
-                        $('#voucher-expiry').text(data.HanSuDung);
-                        $('#voucher-status').text(data.TinhTrang);
-                        $('#voucher-detail').text(data.ChiTiet);
-                        $('#voucher-guide').text(data.HuongDanSuDung);
-                        $('#voucher-action-btn').text('Dùng Voucher');
-                        $('#voucher-id-input').val(voucherID);
-                        $('#valuePoint').val(data.TriGia);
-                    
-                    },
-                    error: function() {
-                        console.error('Không thể tải dữ liệu chi tiết voucher');
-                    }
-                });
-            };
+        function loadVoucherExDetails(voucherID) {
+            $.ajax({
+                url: 'index.php?action=GetExVoucherDetails&voucherID=' + voucherID,
+                method: 'GET',
+                success: function(response) {
+                    var data = JSON.parse(response);
 
-                       // Xử lý sự kiện nhấn vào liên kết voucher-link
-            $(document).on('click', '.voucher-link', function(e) {
-                e.preventDefault(); // Ngăn không cho liên kết thực hiện hành động mặc định
-                var voucherID = $(this).data('id'); // Lấy VoucherID từ thuộc tính data-id
-                var type = $(this).closest('tr').data('type'); // Lấy loại voucher từ thuộc tính data-type của hàng
-                loadVoucherExDetails(voucherID, type);
+                    $('#valueBox').text(data.TriGia);
+                    $('#voucher-name').text(data.TenVoucher);
+                    $('#noidung').val(data.TenVoucher);
+                    $('#voucher-expiry').text(data.HanSuDung);
+                    $('#voucher-status').text(data.TinhTrang);
+                    $('#voucher-detail').text(data.ChiTiet);
+                    $('#voucher-guide').text(data.HuongDanSuDung);
+                    $('#voucher-action-btn').text('Đổi Voucher');
+                    $('#voucher-id-input').val(voucherID);
+                    $('#valuePoint').val(data.TriGia);
+                },
+                error: function() {
+                    console.error('Không thể tải dữ liệu chi tiết voucher đổi');
+                }
             });
-
-            function loadVoucherExDetails(voucherID, type) {
-                $.ajax({
-                    url: 'index.php?action=GetExVoucherDetails&voucherID=' + voucherID,
-                    method: 'GET',
-                    success: function(response) {
-                        var data = JSON.parse(response);
-
-                        // Cập nhật thông tin vào các phần tử chi tiết voucher
-                        $('#valueBox').text(data.TriGia); // Hiển thị trị giá voucher
-                        $('#voucher-name').text(data.TenVoucher);
-                        $('#noidung').val(data.TenVoucher);
-                        $('#voucher-expiry').text(data.HanSuDung);
-                        $('#voucher-status').text(data.TinhTrang);
-                        $('#voucher-detail').text(data.ChiTiet);
-                        $('#voucher-guide').text(data.HuongDanSuDung);
-                        $('#voucher-action-btn').text('Đổi Voucher');
-                        $('#voucher-id-input').val(voucherID);
-                        $('#valuePoint').val(data.TriGia);
-                    
-                    },
-                    error: function() {
-                        console.error('Không thể tải dữ liệu chi tiết voucher');
-                    }
-                });
-            };
+        }
 
     
     </script>

@@ -189,10 +189,10 @@ class FelicitationModel {
         $deductedFelicitation = $result->fetch_assoc()['deducted']?? 0;
 
         $availableVoucher = "SELECT COUNT(*) AS cvoucher
-                                FROM Felicitation
-                                WHERE nguoinhan = ? AND voucherid IS NOT NULL";
+                            FROM Voucher
+                            WHERE tinhtrang = 'chưa dùng' and hansudung > CURDATE()";
         $stmt = $conn->prepare($availableVoucher);
-        $stmt->bind_param('i', $user_id);
+        // $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $availableVoucher = $result->fetch_assoc()['cvoucher']?? 0;
