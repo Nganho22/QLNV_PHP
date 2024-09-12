@@ -18,6 +18,8 @@ class ActivityController{
             $searchLK = isset($_GET['searchlk']) ? $_GET['searchlk'] : '';
             $currentPageLK = isset($_GET['pageLK']) ? (int)$_GET['pageLK'] : 1;
             $itemsPerPage = 1;
+            $currentPageTT = isset($_GET['pageTT']) ? (int)$_GET['pageTT'] : 1;
+
 
                 $countActivityByMonth = $model->CountActivityByMonth(date('m'));
                 $countAllActivity = $model->CountActivity();
@@ -25,6 +27,7 @@ class ActivityController{
                 $allActivitiesCB = $model->SearchActivitiesCoBan($searchCB);
                 $allActivitiesLK = $model->SearchActivitiesLienKet($searchLK);
 
+            // Phân trang cho hoạt động trong tháng
             if ($activities !== null) {
                 $totalItems = count($activities);
                 $totalPages = ceil($totalItems / $itemsPerPage);
@@ -34,6 +37,16 @@ class ActivityController{
                 $pagedActivities = [];
                 $totalPages = 1;
             }
+
+            // if ($activities !== null) {
+            //     $totalItemsTT = count($activities);
+            //     $totalPagesTT = ceil($totalItemsTT / $itemsPerPage);
+            //     $offsetTT = ($currentPageTT - 1) * $itemsPerPage;
+            //     $pagedActivitiesTT = array_slice($activities, $offsetTT, $itemsPerPage);
+            // } else {
+            //     $pagedActivitiesTT = [];
+            //     $totalPagesTT = 1;
+            // }
         
             // Phân trang cho hoạt động cơ bản
             if ($allActivitiesCB !== null) {
@@ -59,6 +72,8 @@ class ActivityController{
 
             if (isset($_GET['ajax']) && $_GET['ajax'] === 'true') {
                 echo json_encode([
+                    'activitesTT' => $pagedActivities,
+                    'totalPagesTT' => $totalPages,
                     'activitiesCB' => $pagedActivitiesCB,
                     'totalPagesCB' => $totalPagesCB,
                     'activitiesLK' => $pagedActivitiesLK,

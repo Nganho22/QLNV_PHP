@@ -73,7 +73,7 @@
                                 <?php endif; ?>
                             </ul>
                             <?php if ($totalPages > 1): ?>
-                                <ul class="pagination">
+                                <ul id="paginationTG" class="pagination">
                                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                                         <li class="page-item <?php echo ($i === $currentPage) ? 'active' : ''; ?>">
                                             <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&page=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageCB=<?php echo $currentPageCB; ?>&pageLK=<?php echo $currentPageLK; ?>">
@@ -90,7 +90,7 @@
                             <ul>
                                 <?php if (!empty($pagedActivities)): ?>
                                     <?php foreach ($pagedActivities as $activity): ?>
-                                        <div class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                        <div id="activityTT"  class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
                                             <?php
                                             $statusColor = '#bdbdbd';
 
@@ -126,7 +126,7 @@
                                 <?php endif; ?>
                             </ul>
                             <?php if ($totalPages > 1): ?>
-                                <ul class="pagination">
+                                <ul id="paginationTT" class="pagination">
                                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                                         <li class="page-item <?php echo ($i === $currentPage) ? 'active' : ''; ?>">
                                             <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&page=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageCB=<?php echo $currentPageCB; ?>&pageLK=<?php echo $currentPageLK; ?>">
@@ -271,6 +271,24 @@ $(document).ready(function() {
             success: function(response) {
                 console.log(response);
                 var data = JSON.parse(response);
+
+                var activityTTHtml = '';
+                $.each(data.activitiesTT, function(index, activity) {
+                    var statusColor = getStatusColor(activity.TinhTrang);
+                    activityTTHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + encodeURIComponent(activity.activityID) + '\';">';
+                    activityTTHtml += '<div>' + activity.tenHoatDong + '<br><small>Hạn chót đăng ký: ' + activity.hanCuoiDangKy + '</small><br>';
+                    activityTTHtml += '<small>Ngày bắt đầu: ' + activity.ngayBatDau + ' - Ngày kết thúc: ' + activity.ngayKetThuc + '</small></div>';
+                    activityTTHtml += '<div class="status" style="background-color: ' + statusColor + ';">' + activity.TinhTrang + '</div>';
+                    activityTTHtml += '<br></div>';
+                });
+                $('#activityTT').html(activityTTHtml);
+
+                var paginationTTHtml ='';
+                for (var i = 1; i <= data.totalPages; i++) {
+                    paginationTTHtml += '<li class="page-item ' + (i === page ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+                }
+                $('#paginationTT').html(paginationTTHtml);
+
                 // Cập nhật danh sách hoạt động cơ bản
                 var activityCBHtml = '';
                 $.each(data.activitiesCB, function(index, activity) {
@@ -325,9 +343,10 @@ $(document).ready(function() {
 
     $(document).on('click', '.page-link', function(e) {
         e.preventDefault();
+        var page = $(this).data('page') || 1;
         var pageCB = $(this).data('page-cb') || 1;
         var pageLK = $(this).data('page-lk') || 1;
-        loadActivities(<?php echo $currentPage; ?>, pageCB, pageLK);
+        loadActivities(<?php echo $currentPage; ?>, pageCB, pageLK, page);
     });
 
     // Load dữ liệu khi trang được tải lần đầu
