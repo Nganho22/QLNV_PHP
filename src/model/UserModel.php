@@ -140,23 +140,7 @@ class UserModel {
         return $Late;
     }
 
-    // public static function updateProfile ($suser_id, $gioitinh, $cccd, $sdt, $stk, $diachi, $img , $newPass ) {
-    //     $db = new Database();
-    //     $conn = $db->connect();
-
-    //     if ($newPass) {
-    //         $sql = "UPDATE Profile SET gioitinh = ?, cccd = ?, sodienthoai = ?, stk = ?, diachi = ?, image = ?, matkhau = ? WHERE empid = ?";
-    //         $stmt = $conn->prepare($sql);
-    //         $stmt->bind_param("sssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $newPass, $suser_id);
-    //     } else {
-    //         $sql = "UPDATE Profile SET gioitinh = ?, cccd = ?, sodienthoai = ?, stk = ?, diachi = ?, image = ? WHERE empid = ?";
-    //         $stmt = $conn->prepare($sql);
-    //         $stmt->bind_param("ssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $suser_id);
-    //     }
-    //     $result = $stmt->execute();
-    //     $stmt->close(); // Close statement
-    //     return $result;
-    // }
+    
 
     public static function updateProfile($empID, $gioiTinh, $cccd, $sdt, $stk, $diaChi, $image, $newPass = null, $apiUrl) {
         // URL của API
@@ -318,44 +302,15 @@ class UserModel {
         $data = json_decode($response, true);
         
         
-        if (isset($data['total'])) {
-            return (int)$data['total'];
+        if (isset($data)) {
+            return (int)$data;
         }
         
         return 0;
     }
     
     
-    /* public static function countAllEmployees_QL($empID) {
-        $db = new Database();
-        $conn = $db->connect();
     
-        // Lấy PhongID của người dùng hiện tại
-        $stmt = $conn->prepare("SELECT PhongID FROM Profile WHERE empid = ?");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-        $phongID = $row['PhongID'];
-        $stmt->close();
-    
-        $query = "
-            SELECT COUNT(*) as total
-            FROM Profile
-            WHERE PhongID = ? AND empid <> ?";
-    
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('si', $phongID, $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $row = $result->fetch_assoc();
-    
-        $stmt->close();
-        $db->close();
-    
-        return $row['total'];
-    }
-    */
     public static function countAllEmployees_QL($empID, $apiUrl) {
         $url = $apiUrl . '/countProfilesInSamePhongBan?empID=' . $empID;
         if (!self::isApiAvailable($url)) {
@@ -366,8 +321,8 @@ class UserModel {
         
         
         $data = json_decode($response, true);
-        if (isset($data['total'])) {
-            return (int)$data['total'];
+        if (isset($data)) {
+            return (int)$data;
         }
         
         return 0;

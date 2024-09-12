@@ -128,9 +128,7 @@
                 </ul>
                 <div id="pagination" class="pagination pagination-wrapper">
                     <?php
-                                print_r($totalEmployees);
                         $totalPages = ceil($totalEmployees / $limit);
-                        //print_r($totalPages);
 
                         $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 1;
                         for ($i = 1; $i <= $totalPages; $i++): 
