@@ -303,33 +303,28 @@ class UserModel {
     
 
      
-     public static function countSearchProfiles_QL($empID, $searchTerm) {
-        $searchTerm = "%$searchTerm%";
-        // Đếm số lượng nhân viên trong phòng ban với từ khóa tìm kiếm
-        $query = "
-            SELECT COUNT(empid) as total
-            FROM Profile
-            WHERE phongid = (
-                SELECT phongid
-                FROM Profile 
-                WHERE empid = ?
-            ) AND hoten LIKE ? AND empid <> ?";
-        
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
-        $params = [$empID, $searchTerm, $empID];
-        $stmt->bind_param('isi', ...$params);
-        $stmt->execute();
+    public static function countSearchProfiles_QL($empID, $searchTerm, $apiUrl) {
+        $searchTerm = urlencode($searchTerm);
+        $url = $apiUrl . '/countProfiles?empID=' . $empID . '&searchTerm=' . $searchTerm;
+    
 
-        $result = $stmt->get_result();
-        $total = $result->fetch_assoc()['total'];
-    
-        $stmt->close();
-        $db->close();
-    
-        return $total;
+        if (!self::isApiAvailable($url)) {
+            return 0; 
+        }
+        
+        $response = file_get_contents($url);
+        
+        
+        $data = json_decode($response, true);
+        
+        
+        if (isset($data['total'])) {
+            return (int)$data['total'];
+        }
+        
+        return 0;
     }
+    
     
      public static function countAllEmployees_QL($empID) {
         $db = new Database();

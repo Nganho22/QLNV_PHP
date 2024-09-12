@@ -96,7 +96,7 @@ class HomeController{
 
                     if (!empty($searchTerm_NV)) {
                         $employees = UserModel::searchProfiles_QL($empID, $searchTerm_NV, $limit, $offset_NV,  $_SESSION['API']['Profile']);
-                        $totalEmployees = UserModel::countSearchProfiles_QL($empID, $searchTerm_NV);
+                        $totalEmployees = UserModel::countSearchProfiles_QL($empID, $searchTerm_NV, $_SESSION['API']['Profile']);
                     } else {
                         $employees = UserModel::getEmployeesList_QL($empID, $limit, $offset_NV);
                         $totalEmployees = UserModel::countAllEmployees_QL($empID);
