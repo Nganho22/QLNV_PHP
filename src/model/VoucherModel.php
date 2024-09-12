@@ -370,7 +370,7 @@ class VoucherModel {
         $db->close();
         
         return isset($tinhtrang) ? $tinhtrang : '';;
-    }
+    } 
 
     public static function getEmployeePointsByID($user_id) {
         $db = new Database();

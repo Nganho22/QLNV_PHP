@@ -17,6 +17,7 @@ class VoucherController {
                 $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
             }
         }
+        
             $limit = 3;
             $pageAvailableVoucher = isset($_GET['pageAvailableVoucher']) ? (int)$_GET['pageAvailableVoucher'] : 1;
             $pageExchangeVoucher = isset($_GET['pageExchangeVoucher']) ? (int)$_GET['pageExchangeVoucher'] : 1;

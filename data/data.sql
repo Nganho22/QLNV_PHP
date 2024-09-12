@@ -536,6 +536,7 @@ INSERT INTO Voucher (    voucherid,    tenvoucher,    trigia,    hansudung,    c
 (46, 'Gojek: Giảm 25K vận chuyển', 50, '2024-12-31', 'Giảm 25K cho đơn tối thiếu 100K', 'Nhập mã qua app', NULL),
 (47, 'Gojek: Giảm 50K vận chuyển', 100, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 150K', 'Nhập mã qua app', NULL);
 
+
 INSERT INTO Felicitation (    felicitationid,    point,    date,    noidung,    nguoinhan,    nguoitang,    voucherid)
 VALUES
 (1, 300, '2024-08-21', 'Nhờ hoàn thành Time-sheet', 1, 2, NULL),

@@ -399,8 +399,6 @@ class FelicitationModel {
         return $requests;
     }
     
-    
-
     public static function countFelicitationRequests($user_id) {
         $db = new Database();
         $conn = $db->connect();
