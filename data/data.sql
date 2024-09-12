@@ -523,7 +523,18 @@ INSERT INTO Voucher (    voucherid,    tenvoucher,    trigia,    hansudung,    c
 (33, 'Family Mart: BELANJA Tặng 50,000 vnđ', 100, '2024-11-15', 'Tặng 50K khi thanh toán 300K', 'Quét mã tại quầy', NULL),
 (34, 'Gojek: Giảm 25K vận chuyển', 50, '2024-12-31', 'Giảm 25K cho đơn tối thiếu 100K', 'Nhập mã qua app', NULL),
 (35, 'Gojek: Giảm 50K vận chuyển', 100, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 150K', 'Nhập mã qua app', NULL),
-(36, 'Gofood: Tặng 50K', 100, '2024-10-10', 'Tặng 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', NULL);
+(36, 'Gofood: Tặng 50K', 100, '2024-10-10', 'Tặng 50K cho đơn tối thiếu 100K', 'Nhập mã qua app', NULL),
+(37, 'GrabBike: Giảm 20,000 vnđ', 50, '2024-11-15', 'Giảm 20K cho đơn tối thiếu 50K', 'Nhập mã qua app', NULL),
+(38, 'GrabCar: Giảm 40,000 vnđ', 100, '2024-10-10', 'Giảm 40K cho đơn tối thiếu 100K', 'Nhập mã qua app', NULL),
+(39, 'GrabMart: Giảm 50,000 vnđ', 150, '2024-10-10', 'Giảm 50K cho đơn tối thiếu 200K', 'Nhập mã qua app', NULL),
+(40, 'Jollibee: Giảm 50K', 150, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 100K', 'Quét mã tại quầy', 'Đã dùng'),
+(41, 'ShopeeFoodxJollibee: Giảm 90K', 200, '2024-09-05', 'Giảm 90K cho đơn tối thiếu 200K', 'Nhập mã qua app', NULL),
+(42, 'Shopee: Giảm 90K đơn tối thiếu 90K', 200, '2024-09-05', 'Giảm 90K cho đơn tối thiếu 90K', 'Nhập mã qua app', NULL),
+(43, 'Shopee: Giảm 130K đơn tối thiếu 130K', 250, '2024-09-05', 'Giảm 130K cho đơn tối thiếu 130K', 'Nhập mã qua app', NULL),
+(44, 'Family Mart: Tặng 20,000 vnđ', 50, '2024-09-05', 'Giảm 20K cho đơn tối thiếu 50K', 'Quét mã tại quầy', NULL),
+(45, 'Family Mart: BELANJA Tặng 50,000 vnđ', 100, '2024-11-15', 'Tặng 50K khi thanh toán 300K', 'Quét mã tại quầy', NULL),
+(46, 'Gojek: Giảm 25K vận chuyển', 50, '2024-12-31', 'Giảm 25K cho đơn tối thiếu 100K', 'Nhập mã qua app', NULL),
+(47, 'Gojek: Giảm 50K vận chuyển', 100, '2024-09-05', 'Giảm 50K cho đơn tối thiếu 150K', 'Nhập mã qua app', NULL);
 
 INSERT INTO Felicitation (    felicitationid,    point,    date,    noidung,    nguoinhan,    nguoitang,    voucherid)
 VALUES
@@ -590,6 +601,6 @@ VALUES
 (61, -100, '2024-07-05', 'Đổi voucher: Giảm 50K khi thanh toán Google Play', 2, NULL, 19),
 (62, -300, '2024-07-21', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 1, NULL, 30),
 (63, -250, '2024-08-18', 'Đổi Voucher:Tặng 100K cho đơn tối thiếu 499K khi thanh toán tại quầy', 1, NULL, 24),
-(64, -300, '2024-07-21', 'Đổi Voucher: Tặng 500,000VND khi đặt vé máy bay Vietnam Airlines', 1, NULL, 30),
+(64, -300, '2024-07-21', 'Đổi voucher: Giảm 50K khi thanh toán Google Play', 1, NULL, 19),
 (65, 300, '2024-08-21', 'Nhờ hoàn thành Time-sheet', 2, NULL, NULL),
 (66, 300, '2024-08-21', 'Nhờ hoàn thành Time-sheet', 2, NULL, NULL);

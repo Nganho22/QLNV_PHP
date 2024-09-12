@@ -187,20 +187,26 @@ class FelicitationModel {
         $stmt->execute();
         $result = $stmt->get_result();
         $deductedFelicitation = $result->fetch_assoc()['deducted']?? 0;
-
+        //Voucher hiện có
         $availableVoucher = "SELECT COUNT(*) AS cvoucher
-                            FROM Voucher
-                            WHERE tinhtrang = 'chưa dùng' and hansudung > CURDATE()";
+                            FROM Felicitation f
+                            JOIN Voucher v ON f.voucherid = v.voucherid
+                            WHERE f.nguoinhan = ? AND v.hansudung > CURDATE() AND v.tinhtrang = 'Chưa dùng'";
         $stmt = $conn->prepare($availableVoucher);
-        // $stmt->bind_param('i', $user_id);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $availableVoucher = $result->fetch_assoc()['cvoucher']?? 0;
-
+        $availableVoucher = $result->fetch_assoc()['cvoucher'] ?? 0;
+        //Voucher đã dùng
         $usedVoucher = "SELECT COUNT(*) AS uvoucher
                         FROM Voucher
-                        WHERE tinhtrang = 'Đã dùng'";
+                        WHERE voucherid IN (
+                            SELECT voucherid
+                            FROM Felicitation
+                            WHERE nguoinhan = ? AND voucherid IS NOT NULL
+                        ) AND tinhtrang = 'Đã dùng'";
         $stmt = $conn->prepare($usedVoucher);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $usedVoucher = $result->fetch_assoc()['uvoucher']?? 0;
@@ -250,13 +256,12 @@ class FelicitationModel {
         $deductedPointsAsGiverQuery = "SELECT SUM(f.point) AS deducted
                                     FROM Felicitation f
                                     WHERE f.nguoitang = ?";
-
         $stmt = $conn->prepare($deductedPointsAsGiverQuery);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
-
         $deductedPointsAsGiver = $result->fetch_assoc()['deducted'] ?? 0;
+
         $deductedPointsAsReceiverQuery = "SELECT SUM(f.point) AS deducted
                                   FROM Felicitation f
                                   WHERE f.nguoinhan = ? AND f.point < 0";
@@ -266,17 +271,17 @@ class FelicitationModel {
         $stmt->execute();
         $result = $stmt->get_result();
         $deductedPointsAsReceiver = $result->fetch_assoc()['deducted'] ?? 0;
-        // Tổng hợp điểm bị trừ từ cả hai loại giao dịch
         $deductedFelicitation = -($deductedPointsAsGiver ?? 0) + ($deductedPointsAsReceiver ?? 0);
       
         $availableVoucher = "SELECT COUNT(*) AS cvoucher
-                                FROM Felicitation
-                                WHERE nguoinhan = ? AND voucherid IS NOT NULL";
+                            FROM Felicitation f
+                            JOIN Voucher v ON f.voucherid = v.voucherid
+                            WHERE f.nguoinhan = ? AND v.hansudung > CURDATE() AND v.tinhtrang = 'Chưa dùng dùng'";
         $stmt = $conn->prepare($availableVoucher);
         $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
-        $availableVoucher = $result->fetch_assoc()['cvoucher']?? 0;
+        $availableVoucher = $result->fetch_assoc()['cvoucher'] ?? 0;
 
         $usedVoucher = "SELECT COUNT(*) AS uvoucher
                         FROM Voucher

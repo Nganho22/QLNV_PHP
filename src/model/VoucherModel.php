@@ -36,31 +36,46 @@ class VoucherModel {
         $stmt->execute();
         $result = $stmt->get_result();
         $totalPoint = $result->fetch_assoc()['totalPoint']?? 0;
-
-        $totalFelicitationQuery = "SELECT COUNT(*) AS total FROM Voucher WHERE tinhtrang IS NOT NULL";
+        //Voucher đã có
+        $totalFelicitationQuery = "SELECT COUNT(*) AS total 
+                                        FROM Felicitation f
+                                        JOIN Voucher v ON f.voucherid = v.voucherid
+                                        WHERE f.nguoinhan = ? AND f.voucherid is not null AND v.tinhtrang IS NOT NULL";
         $stmt = $conn->prepare($totalFelicitationQuery);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $totalFelicitation = $result->fetch_assoc()['total'];
-    
+        //Voucher hiện tại
         $existingFelicitationQuery = "SELECT COUNT(*) AS existing
-                                        FROM Voucher
-                                        WHERE tinhtrang = 'chưa dùng' and hansudung > CURDATE()";
+                                       FROM Felicitation f
+                                        JOIN Voucher v ON f.voucherid = v.voucherid
+                                        WHERE f.nguoinhan = ? AND v.hansudung > CURDATE() AND v.tinhtrang = 'Chưa dùng'";
         $stmt = $conn->prepare($existingFelicitationQuery);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $existingFelicitation = $result->fetch_assoc()['existing']?? 0;
-    
+        //Voucher đã dùng
         $exchangeFelicitationQuery = "SELECT COUNT(*) AS exchange
                                         FROM Voucher
-                                        WHERE tinhtrang = 'Đã dùng'";
+                                        WHERE voucherid IN (
+                                            SELECT voucherid
+                                            FROM Felicitation
+                                            WHERE nguoinhan = ? AND voucherid IS NOT NULL
+                                        ) AND tinhtrang = 'Đã dùng'";
         $stmt = $conn->prepare($exchangeFelicitationQuery);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $exchangeFelicitation = $result->fetch_assoc()['exchange']?? 0;
-
-        $expiredVoucherQuery = "SELECT COUNT(*) AS expired FROM Voucher WHERE tinhtrang <> 'đã dùng' and hansudung < CURDATE()";
+        //Voucher hết hạn
+        $expiredVoucherQuery = "SELECT COUNT(*) AS expired 
+                        FROM Felicitation f
+                        JOIN Voucher v ON f.voucherid = v.voucherid
+                        WHERE f.nguoinhan = ? AND f.voucherid IS NOT NULL AND v.hansudung < CURDATE() AND v.tinhtrang = 'Chưa dùng'";
         $stmt = $conn->prepare($expiredVoucherQuery);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
         $result = $stmt->get_result();
         $expiredVoucher = $result->fetch_assoc()['expired'] ?? 0;
@@ -77,19 +92,20 @@ class VoucherModel {
         ];
     }
 
-    public static function getAvailableVoucherRequestsByEmpID( $limit, $offset) {
+    public static function getAvailableVoucherRequestsByEmpID($user_id, $limit, $offset) {
         $db = new Database();
         $conn = $db->connect();
     
-        $query = "SELECT voucherid, 
-                        tenvoucher, 
-                        hansudung,
-                        trigia 
-                    FROM Voucher 
-                    WHERE tinhtrang <> 'Đã dùng' and hansudung > CURDATE()
+        $query = "SELECT v.voucherid, 
+                        v.tenvoucher, 
+                        v.hansudung,
+                        v.trigia 
+                    FROM Felicitation f
+                    JOIN Voucher v ON f.voucherid = v.voucherid
+                    WHERE f.nguoinhan = ? AND v.tinhtrang ='Chưa dùng' AND v.hansudung > CURDATE()
                     LIMIT ? OFFSET ?";
         $stmt = $conn->prepare($query);
-        $stmt->bind_param('ii', $limit, $offset);
+        $stmt->bind_param('iii', $user_id, $limit, $offset);
         $stmt->execute();
         
         $result = $stmt->get_result();
@@ -146,16 +162,17 @@ class VoucherModel {
         return $requests;
     }
     
-    public static function countAvailableVoucher() {
+    public static function countAvailableVoucher($user_id) {
         $db = new Database();
         $conn = $db->connect();
 
         $query = "SELECT COUNT(*) AS total
-                    FROM Voucher
-                    WHERE tinhtrang <> 'Đã dùng' and hansudung > CURDATE()";
+                    FROM Felicitation f
+                    JOIN Voucher v ON f.voucherid = v.voucherid
+                    WHERE f.nguoinhan = ? AND v.tinhtrang ='Chưa dùng' AND v.hansudung > CURDATE()";
         $stmt = $conn->prepare($query);
+        $stmt->bind_param('i', $user_id);
         $stmt->execute();
-        
         $result = $stmt->get_result();
         $total = $result->fetch_assoc()['total'];
 
