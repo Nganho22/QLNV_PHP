@@ -99,7 +99,7 @@ class HomeController{
                         $totalEmployees = UserModel::countSearchProfiles_QL($empID, $searchTerm_NV, $_SESSION['API']['Profile']);
                     } else {
                         $employees = UserModel::getEmployeesList_QL($empID, $limit, $offset_NV);
-                        $totalEmployees = UserModel::countAllEmployees_QL($empID);
+                        $totalEmployees = UserModel::countAllEmployees_QL($empID,$_SESSION['API']['Profile']);
                     }
 
                     $limit_TS = 5;

@@ -326,7 +326,7 @@ class UserModel {
     }
     
     
-     public static function countAllEmployees_QL($empID) {
+    /* public static function countAllEmployees_QL($empID) {
         $db = new Database();
         $conn = $db->connect();
     
@@ -355,7 +355,27 @@ class UserModel {
     
         return $row['total'];
     }
+    */
+    public static function countAllEmployees_QL($empID, $apiUrl) {
+        $url = $apiUrl . '/countProfilesInSamePhongBan2?empID=' . $empID;
     
+
+        if (!self::isApiAvailable($url)) {
+            return 0; 
+        }
+        
+        $response = file_get_contents($url);
+        
+        
+        $data = json_decode($response, true);
+        
+        
+        if (isset($data['total'])) {
+            return (int)$data['total'];
+        }
+        
+        return 0;
+    }
      public static function getPhongBanStatistics($empID) {
         $db = new Database();
         $conn = $db->connect();
