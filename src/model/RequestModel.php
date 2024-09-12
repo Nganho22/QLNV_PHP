@@ -240,33 +240,81 @@ class RequestModel {
     }
     
     public static function createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $query = "INSERT INTO Request (empid, nguoigui, loai, tieude, ngaygui, ngaychon ,noidung) VALUES (?,?,?,?,?,?,?)";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('issssss', $user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung);
-        $result = $stmt->execute();
+        $apiUrl = 'http://localhost:9004/apiRequest/createRequest';
         
-        $stmt->close();
-        $db->close();
-        return $result;
+        $data = array(
+            'empID' => $user_id,
+            'nguoiGui' => $nguoiGui,
+            'loai' => $loai,
+            'tieuDe' => $tieuDe,
+            'ngayGui' => $ngayGui,
+            'ngayChon' => $ngayChon,
+            'noiDung' => $noiDung
+        );
+    
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        $response = curl_exec($ch);
+    
+        if (curl_errno($ch)) {
+            echo 'Error: ' . curl_error($ch);
+            curl_close($ch);
+            return false;
+        }
+    
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        if ($httpCode == 200) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static function createTimeSheetRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $query = "INSERT INTO Request (empid, nguoigui, loai, tieude, ngaygui, noidung, time_sheetid, up_tinhtrang_timesheet, up_thoigian_timesheet)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('isssssiss', $user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet);
-        $result = $stmt->execute();
-
-        $stmt->close();
-        $db->close();
-        return $result;
+        $apiUrl = 'http://localhost:9004/apiRequest/createTimeSheetRequest'; // URL đến API
+    
+        // Tạo dữ liệu gửi đi (form data)
+        $data = array(
+            'empId' => $user_id,
+            'nguoiGui' => $nguoiGui,
+            'loai' => $loai,
+            'tieuDe' => $tieuDe,
+            'ngayGui' => $ngayGui,
+            'noiDung' => $noiDung,
+            'timeSheetID' => $timeSheetID,
+            'trangThai' => $trangThai,
+            'newUpThoiGianTimesheet' => $newUpThoiGianTimesheet
+        );
+    
+        // Thiết lập cURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/x-www-form-urlencoded'));
+    
+        // Thực thi cURL và lấy kết quả
+        curl_exec($ch);
+    
+        // Lấy mã trạng thái HTTP
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        // Kiểm tra mã trạng thái HTTP
+        if ($httpCode == 200) {
+            return true;
+        } else {
+            return false;
+        }
     }
+    
 
     public static function getDetailRequest($RequestID) {
         $db = new Database();

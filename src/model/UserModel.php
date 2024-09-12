@@ -193,9 +193,9 @@ class UserModel {
     
         // Xử lý kết quả
         if ($httpStatusCode == 200) {
-            return "Profile updated successfully.";
+            return true;
         } else {
-            return "Failed to update profile. HTTP Status Code: " . $httpStatusCode;
+            return false;
         }
     }
     
