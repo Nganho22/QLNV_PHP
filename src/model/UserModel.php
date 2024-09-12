@@ -305,7 +305,7 @@ class UserModel {
      
     public static function countSearchProfiles_QL($empID, $searchTerm, $apiUrl) {
         $searchTerm = urlencode($searchTerm);
-        $url = $apiUrl . '/countProfiles?empID=' . $empID . '&searchTerm=' . $searchTerm;
+        $url = $apiUrl . '/countProfilesBySearch?empID=' . $empID . '&hoTen=' . $searchTerm;
     
 
         if (!self::isApiAvailable($url)) {
@@ -357,9 +357,7 @@ class UserModel {
     }
     */
     public static function countAllEmployees_QL($empID, $apiUrl) {
-        $url = $apiUrl . '/countProfilesInSamePhongBan2?empID=' . $empID;
-    
-
+        $url = $apiUrl . '/countProfilesInSamePhongBan?empID=' . $empID;
         if (!self::isApiAvailable($url)) {
             return 0; 
         }
@@ -368,8 +366,6 @@ class UserModel {
         
         
         $data = json_decode($response, true);
-        
-        
         if (isset($data['total'])) {
             return (int)$data['total'];
         }
@@ -586,8 +582,7 @@ class UserModel {
         return $checkinouts;
     }
 
-    public static function getEmployeesList_QL($empID, $limit, $offset) {
-        $apiUrl = 'http://localhost:9003/apiProfile';
+    public static function getEmployeesList_QL($empID, $limit, $offset, $apiUrl) {
         $url = $apiUrl . '/getProfileNVByQL?empid=' . $empID . '&hoten=' . '&limit=' . $limit . '&offset=' . $offset;
         
         if (!self::isApiAvailable($url)) {

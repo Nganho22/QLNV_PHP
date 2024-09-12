@@ -98,10 +98,9 @@ class HomeController{
                         $employees = UserModel::searchProfiles_QL($empID, $searchTerm_NV, $limit, $offset_NV,  $_SESSION['API']['Profile']);
                         $totalEmployees = UserModel::countSearchProfiles_QL($empID, $searchTerm_NV, $_SESSION['API']['Profile']);
                     } else {
-                        $employees = UserModel::getEmployeesList_QL($empID, $limit, $offset_NV);
+                        $employees = UserModel::getEmployeesList_QL($empID, $limit, $offset_NV, $_SESSION['API']['Profile']);
                         $totalEmployees = UserModel::countAllEmployees_QL($empID,$_SESSION['API']['Profile']);
                     }
-
                     $limit_TS = 5;
                     $page_TS = isset($_GET['page_timesheet']) ? (int)$_GET['page_timesheet'] : 1;
                     $offset_TS = ($page_TS - 1) * $limit_TS;
