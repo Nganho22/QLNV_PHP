@@ -140,23 +140,82 @@ class UserModel {
         return $Late;
     }
 
-    public static function updateProfile ($suser_id, $gioitinh, $cccd, $sdt, $stk, $diachi, $img , $newPass ) {
-        $db = new Database();
-        $conn = $db->connect();
+    // public static function updateProfile ($suser_id, $gioitinh, $cccd, $sdt, $stk, $diachi, $img , $newPass ) {
+    //     $db = new Database();
+    //     $conn = $db->connect();
 
+    //     if ($newPass) {
+    //         $sql = "UPDATE Profile SET gioitinh = ?, cccd = ?, sodienthoai = ?, stk = ?, diachi = ?, image = ?, matkhau = ? WHERE empid = ?";
+    //         $stmt = $conn->prepare($sql);
+    //         $stmt->bind_param("sssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $newPass, $suser_id);
+    //     } else {
+    //         $sql = "UPDATE Profile SET gioitinh = ?, cccd = ?, sodienthoai = ?, stk = ?, diachi = ?, image = ? WHERE empid = ?";
+    //         $stmt = $conn->prepare($sql);
+    //         $stmt->bind_param("ssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $suser_id);
+    //     }
+    //     $result = $stmt->execute();
+    //     $stmt->close(); // Close statement
+    //     return $result;
+    // }
+
+    public static function updateProfile($empID, $gioiTinh, $cccd, $sdt, $stk, $diaChi, $image, $newPass = null, $apiUrl) {
+        // URL của API
+        $url = $apiUrl . '/updateProfile';
+    
+        // Dữ liệu cần gửi đi
+        $data = array(
+            'empID' => $empID,
+            'gioiTinh' => $gioiTinh,
+            'cccd' => $cccd,
+            'sdt' => $sdt,
+            'stk' => $stk,
+            'diaChi' => $diaChi,
+            'image' => $image
+        );
+        
+        // Nếu có newPass thì thêm vào dữ liệu
         if ($newPass) {
-            $sql = "UPDATE Profile SET gioitinh = ?, cccd = ?, sodienthoai = ?, stk = ?, diachi = ?, image = ?, matkhau = ? WHERE empid = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $newPass, $suser_id);
-        } else {
-            $sql = "UPDATE Profile SET gioitinh = ?, cccd = ?, sodienthoai = ?, stk = ?, diachi = ?, image = ? WHERE empid = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->bind_param("ssssssi", $gioitinh, $cccd, $sdt, $stk, $diachi, $img, $suser_id);
+            $data['newPass'] = $newPass;
         }
-        $result = $stmt->execute();
-        $stmt->close(); // Close statement
-        return $result;
+    
+        // Chuyển dữ liệu thành dạng URL query string
+        $postData = http_build_query($data);
+    
+        // Khởi tạo cURL
+        $ch = curl_init($url);
+    
+        // Cấu hình cURL cho PUT request
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT'); // Sử dụng PUT method
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/x-www-form-urlencoded'
+        ));
+    
+        // Gửi yêu cầu và nhận phản hồi
+        $response = curl_exec($ch);
+    
+        // Kiểm tra lỗi cURL
+        if (curl_errno($ch)) {
+            curl_close($ch);
+            return "Request Error: " . curl_error($ch); // Xử lý lỗi
+        }
+    
+        // Lấy HTTP status code
+        $httpStatusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    
+        // Đóng cURL
+        curl_close($ch);
+    
+        // Xử lý kết quả
+        if ($httpStatusCode == 200) {
+            return "Profile updated successfully.";
+        } else {
+            return "Failed to update profile. HTTP Status Code: " . $httpStatusCode;
+        }
     }
+    
+    
 
     public static function getPhongIDByEmpID($empID, $apiUrl) {
 

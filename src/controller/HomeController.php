@@ -470,9 +470,9 @@ class HomeController{
                 }
             }
 
-            $result = UserModel::updateProfile($user_id, $gioitinh, $cccd, $sdt, $stk, $diachi, $image_path, !empty($newPassword) ? $newPassword : null);
-
-            if ($result) {
+            $result = UserModel::updateProfile($user_id, $gioitinh, $cccd, $sdt, $stk, $diachi, $image_path, !empty($newPassword) ? $newPassword : null,$_SESSION['API']['Profile'] );
+            print_r($result);
+            /*if ($result) {
                 echo json_encode([
                     'success' => true,
                     'message' => 'Cập nhật hồ sơ thành công!'
@@ -484,7 +484,7 @@ class HomeController{
                     'message' => 'Lỗi không cập nhật được hồ sơ!'
                 ]);
                 exit();
-            }
+            }*/
         }
         else {
             header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
