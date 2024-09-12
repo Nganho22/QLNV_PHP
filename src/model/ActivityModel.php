@@ -79,6 +79,55 @@ class ActivityModel {
     
         return $activities;
     }
+
+    public function getActivitiesJoin($month) {
+
+    $url = $this->apiUrl . '/month/' . $month;
+    if (!$this->isApiAvailable($url)) {
+        return null;
+    }
+    $response = file_get_contents($url);
+    $activities = json_decode($response, true);
+
+    if (is_array($activities)) {
+        $currentDate = date('d-m-Y');
+        $currentDateObj = DateTime::createFromFormat('d-m-Y', $currentDate);
+        foreach ($activities as &$activity) {
+            
+            if (isset($activity['hanCuoiDangKy'])) {
+                $activity['hanCuoiDangKy'] = $this->formatDate($activity['hanCuoiDangKy']);
+            }
+            if (isset($activity['ngayBatDau'])) {
+                $activity['ngayBatDau'] = $this->formatDate($activity['ngayBatDau']);
+            }
+            if (isset($activity['ngayKetThuc'])) {
+                $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
+            }
+
+            // Chuyển đổi các ngày thành đối tượng DateTime
+            $hanCuoiDangKyDate = DateTime::createFromFormat('d-m-Y', $activity['hanCuoiDangKy']);
+            $ngayBatDauDate = DateTime::createFromFormat('d-m-Y', $activity['ngayBatDau']);
+            $ngayKetThucDate = DateTime::createFromFormat('d-m-Y', $activity['ngayKetThuc']);
+            $activity['TinhTrang'] = 'Chưa xác định';
+            if ($currentDateObj <= $hanCuoiDangKyDate) {
+                $activity['TinhTrang'] = 'Chờ Đăng ký';
+            }
+            if ($currentDateObj > $hanCuoiDangKyDate && $currentDateObj < $ngayBatDauDate) {
+                $activity['TinhTrang'] = 'Sắp diễn ra';
+            } 
+            if ($currentDateObj >= $ngayBatDauDate && $currentDateObj <= $ngayKetThucDate) {
+                $activity['TinhTrang'] = 'Đang diễn ra';
+            }
+            if ($currentDateObj > $ngayKetThucDate) {
+                $activity['TinhTrang'] = 'Kết Thúc';
+            }
+        }
+    } else {
+        return null;
+    }
+
+    return $activities;
+    }
     
     
 

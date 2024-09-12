@@ -20,7 +20,7 @@
     <?php endif; ?>
     <main>
         <div class="container">
-            <h1 class="mb-4">Danh sách hoạt động</h1>
+            <h1 class="mb-4">Danh sách hoạt động</h1>  
             <div class="row">
                 <div class="col-md-8">
                     <div class="activity-summary" style="z-index: 0;">
@@ -37,7 +37,7 @@
                             <ul>
                                 <?php if (!empty($pagedActivities)): ?>
                                     <?php foreach ($pagedActivities as $activity): ?>
-                                        <div class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                        <div id="activityTG" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
                                             <?php
                                             $statusColor = '#bdbdbd';
 
@@ -76,7 +76,7 @@
                                 <ul id="paginationTG" class="pagination">
                                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                                         <li class="page-item <?php echo ($i === $currentPage) ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&page=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageCB=<?php echo $currentPageCB; ?>&pageLK=<?php echo $currentPageLK; ?>">
+                                            <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&page=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageCB=<?php echo $currentPageCB; ?>&pageLK=<?php echo $currentPageLK; ?>&pageTT=<?php echo $currentPageTT; ?>">
                                                 <?php echo $i; ?>
                                             </a>
                                         </li>
@@ -125,11 +125,11 @@
                                     <div>Không có<br>
                                 <?php endif; ?>
                             </ul>
-                            <?php if ($totalPages > 1): ?>
+                            <?php if ($totalPagesTT > 1): ?>
                                 <ul id="paginationTT" class="pagination">
-                                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                                        <li class="page-item <?php echo ($i === $currentPage) ? 'active' : ''; ?>">
-                                            <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&page=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageCB=<?php echo $currentPageCB; ?>&pageLK=<?php echo $currentPageLK; ?>">
+                                    <?php for ($i = 1; $i <= $totalPagesTT; $i++): ?>
+                                        <li class="page-item <?php echo ($i === $currentPageTT) ? 'active' : ''; ?>">
+                                            <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&pageTT=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageCB=<?php echo $currentPageCB; ?>&pageLK=<?php echo $currentPageLK; ?>&page=<?php echo $currentPage; ?>">
                                                 <?php echo $i; ?>
                                             </a>
                                         </li>
@@ -186,7 +186,7 @@
                             <ul id="paginationCB" class="pagination">
                                 <?php for ($i = 1; $i <= $totalPagesCB; $i++): ?>
                                     <li class="page-item <?php echo ($i === $currentPageCB) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&pageCB=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&page=<?php echo $currentPage; ?>&pageLK=<?php echo $currentPageLK; ?>">
+                                        <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&pageCB=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageTT=<?php echo $currentPageTT; ?>&pageLK=<?php echo $currentPageLK; ?>&page=<?php echo $currentPage; ?>">
                                             <?php echo $i; ?>
                                         </a>
                                     </li>
@@ -241,7 +241,7 @@
                             <ul id="paginationLK" class="pagination">
                                 <?php for ($i = 1; $i <= $totalPagesLK; $i++): ?>
                                     <li class="page-item <?php echo ($i === $currentPageLK) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&pageLK=<?php echo $i; ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&page=<?php echo $currentPage; ?>&pageCB=<?php echo $currentPageCB; ?>">
+                                        <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&pageLK=<?php echo $i; ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&pageTT=<?php echo $currentPageTT; ?>&pageCB=<?php echo $currentPageCB; ?>&page=<?php echo $currentPage; ?>">
                                             <?php echo $i; ?>
                                         </a>
                                     </li>
@@ -257,12 +257,18 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(document).ready(function() {
-    function loadActivities(page, pageCB, pageLK) {
+    var currentPage = <?php echo $currentPage; ?>;
+    var currentPageCB = <?php echo $currentPageCB; ?>;
+    var currentPageLK = <?php echo $currentPageLK; ?>;
+    var currentPageTT = <?php echo $currentPageTT; ?>;
+
+    function loadActivities(page, pageCB, pageLK, pageTT) {
         $.ajax({
             url: 'index.php?action=GetActivityPage&ajax=true',
             type: 'GET',
             data: {
                 page: page,
+                pageTT: pageTT,
                 pageCB: pageCB,
                 pageLK: pageLK,
                 searchcb: $('#searchcb').val(),
@@ -271,7 +277,26 @@ $(document).ready(function() {
             success: function(response) {
                 console.log(response);
                 var data = JSON.parse(response);
+                // Cập nhật danh sách tham gia
+                var activityHtml = '';
+                $.each(data.activitiesTG, function(index, activity) {
+                    var statusColor = getStatusColor(activity.TinhTrang);
+                    activityHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + encodeURIComponent(activity.activityID) + '\';">';
+                    activityHtml += '<div>' + activity.tenHoatDong + '<br><small>Hạn chót đăng ký: ' + activity.hanCuoiDangKy + '</small><br>';
+                    activityHtml += '<small>Ngày bắt đầu: ' + activity.ngayBatDau + ' - Ngày kết thúc: ' + activity.ngayKetThuc + '</small></div>';
+                    activityHtml += '<div class="status" style="background-color: ' + statusColor + ';">' + activity.TinhTrang + '</div>';
+                    activityHtml += '<br></div>';
+                });
+                $('#activityTG').html(activityHtml);
 
+                var paginationHtml = '';
+                for (var i = 1; i <= data.totalPagesTG; i++) {
+                    paginationHtml += '<li class="page-item ' + (i === page ? 'active' : '') + '"><a class="page-link" href="#" data-page-tg="' + i + '">' + i + '</a></li>';
+                }
+                $('#paginationTG').html(paginationHtml);
+                console.log(paginationHtml);
+
+                // Cập nhật danh sách theo tháng
                 var activityTTHtml = '';
                 $.each(data.activitiesTT, function(index, activity) {
                     var statusColor = getStatusColor(activity.TinhTrang);
@@ -283,11 +308,12 @@ $(document).ready(function() {
                 });
                 $('#activityTT').html(activityTTHtml);
 
-                var paginationTTHtml ='';
-                for (var i = 1; i <= data.totalPages; i++) {
-                    paginationTTHtml += '<li class="page-item ' + (i === page ? 'active' : '') + '"><a class="page-link" href="#" data-page="' + i + '">' + i + '</a></li>';
+                var paginationTTHtml = '';
+                for (var i = 1; i <= data.totalPagesTT; i++) {
+                    paginationTTHtml += '<li class="page-item ' + (i === pageTT ? 'active' : '') + '"><a class="page-link" href="#" data-page-tt="' + i + '">' + i + '</a></li>';
                 }
                 $('#paginationTT').html(paginationTTHtml);
+                console.log(paginationTTHtml);
 
                 // Cập nhật danh sách hoạt động cơ bản
                 var activityCBHtml = '';
@@ -343,14 +369,31 @@ $(document).ready(function() {
 
     $(document).on('click', '.page-link', function(e) {
         e.preventDefault();
-        var page = $(this).data('page') || 1;
-        var pageCB = $(this).data('page-cb') || 1;
-        var pageLK = $(this).data('page-lk') || 1;
-        loadActivities(<?php echo $currentPage; ?>, pageCB, pageLK, page);
+        // var page = $(this).data('page-tg') || 1;
+        // var pageTT = $(this).data('page-tt') || 1;
+        // var pageCB = $(this).data('page-cb') || 1;
+        // var pageLK = $(this).data('page-lk') || 1;
+        var newPageTG = $(this).data('page-tg');
+        var newPageTT = $(this).data('page-tt');
+        var newPageCB = $(this).data('page-cb');
+        var newPageLK = $(this).data('page-lk');
+        if (newPageTG !== undefined) {
+            currentPage = newPageTG;
+        }
+        if (newPageTT !== undefined) {
+            currentPageTT = newPageTT;
+        }
+        if (newPageCB !== undefined) {
+            currentPageCB = newPageCB;
+        }
+        if (newPageLK !== undefined) {
+            currentPageLK = newPageLK;
+        }
+        loadActivities( currentPage, currentPageCB, currentPageLK, currentPageTT);
     });
 
-    // Load dữ liệu khi trang được tải lần đầu
-    loadActivities(<?php echo $currentPage; ?>, <?php echo $currentPageCB; ?>, <?php echo $currentPageLK; ?>);
+    //Load dữ liệu khi trang được tải lần đầu
+    loadActivities(currentPage, currentPageCB, currentPageLK, currentPageTT);
 });
 </script>
 </body>
