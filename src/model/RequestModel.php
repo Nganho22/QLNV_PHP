@@ -8,7 +8,7 @@ class RequestModel {
         $this->apiUrl = $apiUrl;
     }
 
-    private function isApiAvailable($url) {
+    private static function isApiAvailable($url) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -25,13 +25,12 @@ class RequestModel {
         }
     }
 
-    public function getRequestCountsByEmpID($user_id) {
-        $apiUrl='http://localhost:9004/apiRequest';
+    public static function getRequestCountsByEmpID($user_id, $apiUrl) {
         $url = $apiUrl . '/counts/' . ($user_id);
 
         //$url = $this->apiUrl . "/counts/" . $user_id;
 
-        if (!$this->isApiAvailable($url)) {
+        if (!self::isApiAvailable($url)) {
             return null;
         }
 
@@ -39,22 +38,13 @@ class RequestModel {
         $results = json_decode($response, true);
 
         return $results;
-
-        // if ($results) {
-        //     $user = [
-        //         'total' => $results['total'],
-        //         'pending' => $results['pending'],
-        //         'approved' => $results['approved'],
-        //     ];
-        //     return $results;
-        // }
     }
 
-    public function getPendingRequestsByEmpID($user_id, $limit, $offset) {
+    public static function getPendingRequestsByEmpID($user_id, $limit, $offset, $apiUrl) {
         $page = floor($offset / $limit);
-        $url = $this->apiUrl . "/pending?empID=$user_id&page=$page&size=$limit";
+        $url = $apiUrl . "/pending?empID=$user_id&page=$page&size=$limit";
 
-        if (!$this->isApiAvailable($url)) {
+        if (!self::isApiAvailable($url)) {
             return null;
         }
 
@@ -77,10 +67,10 @@ class RequestModel {
         return $formattedResults;
     }
 
-    public function countPendingRequests($user_id) {
-        $url = $this->apiUrl . "/count/pending?empID=$user_id";
+    public static function countPendingRequests($user_id, $apiUrl) {
+        $url = $apiUrl . "/count/pending?empID=$user_id";
 
-        if (!$this->isApiAvailable($url)) {
+        if (!self::isApiAvailable($url)) {
             return null;
         }
         
@@ -90,11 +80,11 @@ class RequestModel {
         return $total;
     }
 
-    public function getApprovedRequestsByEmpID($user_id, $limit, $offset) {
+    public static function getApprovedRequestsByEmpID($user_id, $limit, $offset, $apiUrl) {
         $page = floor($offset / $limit);
-        $url = $this->apiUrl . "/approved?empID=$user_id&page=$page&size=$limit";
+        $url = $apiUrl . "/approved?empID=$user_id&page=$page&size=$limit";
 
-        if (!$this->isApiAvailable($url)) {
+        if (!self::isApiAvailable($url)) {
             return null;
         }
 
@@ -117,10 +107,10 @@ class RequestModel {
         }
     }
     
-    public function countApprovedRequests($user_id) {
-        $url = $this->apiUrl . "/count/approved?empID=$user_id";
+    public static function countApprovedRequests($user_id, $apiUrl) {
+        $url = $apiUrl . "/count/approved?empID=$user_id";
 
-        if (!$this->isApiAvailable($url)) {
+        if (!self::isApiAvailable($url)) {
             return null;
         }
         
@@ -166,11 +156,10 @@ class RequestModel {
         return $timesheets;
     }
 
-    public function getTimeSheetsByEmpID($user_id) {
-        $apiUrl='http://localhost:9004/apiRequest';
+    public static function getTimeSheetsByEmpID($user_id, $apiUrl) {
         $url = $apiUrl . '/timesheets/' . ($user_id);
 
-        if (!$this->isApiAvailable($url)) {
+        if (!self::isApiAvailable($url)) {
             return null;
         }
 
@@ -203,12 +192,12 @@ class RequestModel {
         return $formattedResults;
     }
 
-    public function getTimeSheetByID($timeSheetID) {
+    public static function getTimeSheetByID($timeSheetID, $apiUrl) {
         // $apiUrl='http://localhost:9004/apiRequest';
         // $url = $apiUrl . '/timesheetsID/' . ($timeSheetID);
-        $url = $this->apiUrl . "/timesheetsID/" . urlencode($timeSheetID);
+        $url = $apiUrl . "/timesheetsID/" . urlencode($timeSheetID);
 
-        if (!$this->isApiAvailable($url)) {
+        if (!self::isApiAvailable($url)) {
             return null;
         }
 
@@ -239,8 +228,9 @@ class RequestModel {
         return $formattedResults;
     }
     
-    public static function createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung) {
-        $apiUrl = 'http://localhost:9004/apiRequest/createRequest';
+    public static function createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung, $url) {
+        $apiUrl = $url . "/createRequest";
+        // $apiUrl = 'http://localhost:9004/apiRequest/createRequest';
         
         $data = array(
             'empID' => $user_id,
@@ -276,10 +266,10 @@ class RequestModel {
         }
     }
 
-    public static function createTimeSheetRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet) {
-        $apiUrl = 'http://localhost:9004/apiRequest/createTimeSheetRequest'; // URL đến API
-    
-        // Tạo dữ liệu gửi đi (form data)
+    public static function createTimeSheetRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet, $url) {
+        //$apiUrl = 'http://localhost:9004/apiRequest/createTimeSheetRequest'; 
+        $apiUrl = $url . "/createTimeSheetRequest";
+
         $data = array(
             'empId' => $user_id,
             'nguoiGui' => $nguoiGui,
@@ -315,9 +305,10 @@ class RequestModel {
         }
     }
     
-    public static function getDetailRequest($RequestID) {
-        $apiUrl = 'http://localhost:9004/apiRequest/getDetailRequest/' . $RequestID;  
-    
+    public static function getDetailRequest($RequestID, $url) {
+        //$apiUrl = 'http://localhost:9004/apiRequest/getDetailRequest/' . $RequestID;  
+        $apiUrl = $url . "/getDetailRequest/" . $RequestID;
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -367,7 +358,10 @@ class RequestModel {
 //============== Quản lý =====================    
 
     private static function getEmpIDsAndPhongID($user_id) {
-        $apiUrl = 'http://localhost:9004/apiRequest/profileInfo/' . $user_id;
+        $url = $_SESSION['API']['Request'];
+        $apiUrl = $url . "/profileInfo/" . $user_id;
+
+        //$apiUrl = 'http://localhost:9004/apiRequest/profileInfo/' . $user_id;
         
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $apiUrl);
@@ -393,7 +387,7 @@ class RequestModel {
         }
     }
 
-    public static function getRequestCountsByEmpID_QL($user_id) {
+    public static function getRequestCountsByEmpID_QL($user_id, $apiUrl) {
         $data = self::getEmpIDsAndPhongID($user_id);
         $phongID = $data['phongID'];
         $empIDs = $data['empIDs'];
@@ -404,8 +398,8 @@ class RequestModel {
         }
     
         $empIDsString = implode(',', $empIDs);
-
-        $url = 'http://localhost:9004/apiRequest/counts?empIDs=' . urlencode($empIDsString);
+        $url = $apiUrl . '/counts?empIDs=' . urlencode($empIDsString);
+        //$url = 'http://localhost:9004/apiRequest/counts?empIDs=' . urlencode($empIDsString);
     
         $ch = curl_init($url);
 
@@ -424,7 +418,7 @@ class RequestModel {
     }
     
 
-    public static function getRequestsByEmpID_QL($user_id) {
+    public static function getRequestsByEmpID_QL($user_id, $apiUrl) {
         $data = self::getEmpIDsAndPhongID($user_id);
         $phongID = $data['phongID'];
         $empIDs = $data['empIDs'];
@@ -435,8 +429,9 @@ class RequestModel {
     
         $empIDsString = implode(',', $empIDs);
     
-        $url = 'http://localhost:9004/apiRequest/by-emp-ids?empIDs=' . urlencode($empIDsString);
-    
+        //$url = 'http://localhost:9004/apiRequest/by-emp-ids?empIDs=' . urlencode($empIDsString);
+        $url = $apiUrl . '/by-emp-ids?empIDs=' . urlencode($empIDsString);
+
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     
@@ -467,95 +462,7 @@ class RequestModel {
         }
     }
     
-
-    public static function searchRequestsByEmpID_QL($user_id, $searchTerm, $limit, $offset) {
-        $data = self::getEmpIDsAndPhongID($user_id);
-        $phongID = $data['phongID'];
-        $empIDs = $data['empIDs'];
-
-        if (!$phongID) {
-            return [];
-        }
-
-        if (empty($empIDs)) {
-            return [];
-        }
-
-        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
-
-        $searchTerm = "%$searchTerm%";
-        $query = "
-            SELECT requestid, empid, tieude, loai, nguoigui, ngaygui, trangthai
-            FROM Request
-            WHERE empid IN ($empIDsString) AND nguoigui LIKE ? 
-            ORDER BY ngaygui DESC
-            LIMIT ? OFFSET ?";
-
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
-        $params = array_merge($empIDs, [$searchTerm, $limit, $offset]);
-        $stmt->bind_param(str_repeat('i', count($empIDs)) . 'sii', ...$params);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $requests = [];
-        while ($row = $result->fetch_assoc()) {
-            $row = [
-                'RequestID' => $row['requestid'] ?? 'N/A',
-                'EmpID' => $row['empid'] ?? 'N/A',
-                'TieuDe' => $row['tieude'] ?? 'N/A',
-                'Loai' => $row['loai'] ?? 'N/A',
-                'NgayGui' => $row['ngaygui'] ?? 'N/A',
-                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
-                'TrangThai' => $row['trangthai'] ?? 'N/A'
-            ];
-            $requests[] = $row;
-        }
-
-        $stmt->close();
-        $db->close();
-
-        return $requests;
-    }
-
-    public static function countSearchRequests_QL($user_id, $searchTerm) {
-        $data = self::getEmpIDsAndPhongID($user_id);
-        $phongID = $data['phongID'];
-        $empIDs = $data['empIDs'];
-
-        if (!$phongID) {
-            return 0;
-        }
-
-        if (empty($empIDs)) {
-            return 0;
-        }
-
-        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
-
-        $searchTerm = "%$searchTerm%";
-        $query = "
-            SELECT COUNT(requestid) as total
-            FROM Request
-            WHERE empid IN ($empIDsString) AND nguoigui LIKE ? ORDER BY ngaygui DESC";
-
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
-        $params = array_merge($empIDs, [$searchTerm]);
-        $stmt->bind_param(str_repeat('i', count($empIDs)) . 's', ...$params);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $total = $result->fetch_assoc()['total'];
-
-        $stmt->close();
-        $db->close();
-
-        return $total;
-    }
-
-    public static function filterRequestsByEmpID_QL($user_id, $searchTerm, $types, $statuses, $limit, $offset) {
+    public static function searchRequestsByEmpID_QL($user_id, $searchTerm, $limit, $offset, $apiUrl) {
         $data = self::getEmpIDsAndPhongID($user_id);
         $phongID = $data['phongID'];
         $empIDs = $data['empIDs'];
@@ -564,68 +471,49 @@ class RequestModel {
             return [];
         }
     
-        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
+        $empIDsString = implode(',', $empIDs);
     
-        // Tạo chuỗi placeholders cho các loại và trạng thái
-        $typesPlaceholders = count($types) > 0 ? implode(',', array_fill(0, count($types), '?')) : '';
-        $statusesPlaceholders = count($statuses) > 0 ? implode(',', array_fill(0, count($statuses), '?')) : '';
-        $searchTerm = "%$searchTerm%";
-        // Xây dựng câu truy vấn SQL
-        $query = "
-            SELECT requestid, empid, tieude, loai, nguoigui, ngaygui, trangthai
-            FROM Request
-            WHERE empid IN ($empIDsString)
-            AND nguoigui LIKE ?
-            " . (count($types) > 0 ? "AND loai IN ($typesPlaceholders)" : "") . "
-            " . (count($statuses) > 0 ? "AND trangthai IN ($statusesPlaceholders)" : "") . "
-            ORDER BY ngaygui DESC
-            LIMIT ? OFFSET ?";
-    
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
-    
-        // Kết hợp tất cả tham số
-        $params = array_merge(
-            $empIDs,                    // EmpID
-            [$searchTerm],             // searchTerm
-            $types,                     // types (Loại)
-            $statuses,                  // statuses (TrangThai)
-            [$limit, $offset]           // LIMIT và OFFSET
-        );
-    
-        // Tạo chuỗi kiểu cho bind_param
-        $typesStr = str_repeat('i', count($empIDs)) // int cho các EmpID
-                  . 's'                       // string cho searchTerm
-                  . (count($types) > 0 ? str_repeat('s', count($types)) : '') // string cho types
-                  . (count($statuses) > 0 ? str_repeat('i', count($statuses)) : '') // int cho statuses
-                  . 'ii';                     // int cho LIMIT và OFFSET
-    
-        $stmt->bind_param($typesStr, ...$params);
-        $stmt->execute();
-        $result = $stmt->get_result();
+        // $url = 'http://localhost:9004/apiRequest/search?empIDs=' . urlencode($empIDsString) . 
+        //        '&searchTerm=' . urlencode($searchTerm) . 
+        //        '&limit=' . $limit . 
+        //        '&offset=' . $offset;
+        
+        $url = $apiUrl . '/search?empIDs=' . urlencode($empIDsString) . 
+                '&searchTerm=' . urlencode($searchTerm) . 
+                '&limit=' . $limit . 
+                '&offset=' . $offset;
 
-        $requests = [];
-        while ($row = $result->fetch_assoc()) {
-            $row = [
-                'RequestID' => $row['requestid'] ?? 'N/A',
-                'EmpID' => $row['empid'] ?? 'N/A',
-                'TieuDe' => $row['tieude'] ?? 'N/A',
-                'Loai' => $row['loai'] ?? 'N/A',
-                'NgayGui' => $row['ngaygui'] ?? 'N/A',
-                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
-                'TrangThai' => $row['trangthai'] ?? 'N/A'
-            ];
-            $requests[] = $row;
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        if ($httpCode == 200) {
+            $result = json_decode($response, true);
+            
+            $requests = [];
+            foreach ($result as $row) {
+                $requests[] = [
+                    'RequestID' => $row['requestid'] ?? 'N/A',
+                    'EmpID' => $row['empid'] ?? 'N/A',
+                    'TieuDe' => $row['tieude'] ?? 'N/A',
+                    'Loai' => $row['loai'] ?? 'N/A',
+                    'NgayGui' => $row['ngaygui'] ?? 'N/A',
+                    'NguoiGui' => $row['nguoigui'] ?? 'N/A',
+                    'TrangThai' => $row['trangthai'] ?? 'N/A'
+                ];
+            }
+            
+            return $requests;
+        } else {
+            return [];
         }
-
-        $stmt->close();
-        $db->close();
-    
-        return $requests;
     }
-    
-    public static function countFilterRequests_QL($user_id, $searchTerm, $types, $statuses) {
+
+    public static function countSearchRequests_QL($user_id, $searchTerm, $apiUrl) {
         $data = self::getEmpIDsAndPhongID($user_id);
         $phongID = $data['phongID'];
         $empIDs = $data['empIDs'];
@@ -634,80 +522,190 @@ class RequestModel {
             return 0;
         }
     
-        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
+        $empIDsString = implode(',', $empIDs);
     
-        // Tạo chuỗi placeholders cho các loại và trạng thái
-        $typesPlaceholders = count($types) > 0 ? implode(',', array_fill(0, count($types), '?')) : '';
-        $statusesPlaceholders = count($statuses) > 0 ? implode(',', array_fill(0, count($statuses), '?')) : '';
-        $searchTerm = "%$searchTerm%";
+        // $url = 'http://localhost:9004/apiRequest/countSearchRequests?empIDs=' . urlencode($empIDsString) . 
+        //        '&searchTerm=' . urlencode($searchTerm);
+    
+        $url = $apiUrl . '/countSearchRequests?empIDs=' . urlencode($empIDsString).
+                '&searchTerm=' . urlencode($searchTerm);
 
-        // Xây dựng câu truy vấn SQL
-        $query = "
-            SELECT COUNT(requestid) as total
-            FROM Request
-            WHERE empid IN ($empIDsString)
-            AND nguoigui LIKE ?
-            " . (count($types) > 0 ? "AND loai IN ($typesPlaceholders)" : "") . "
-            " . (count($statuses) > 0 ? "AND trangthai IN ($statusesPlaceholders)" : "") . "
-            ORDER BY ngaygui DESC";
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
     
-        // Kết hợp tất cả tham số
-        $params = array_merge(
-            $empIDs,                    // EmpID
-            [$searchTerm],             // searchTerm
-            $types,                     // types (Loại)
-            $statuses                   // statuses (TrangThai)
-        );
-    
-        // Tạo chuỗi kiểu cho bind_param
-        $typesStr = str_repeat('i', count($empIDs)) // int cho các EmpID
-                  . 's'                       // string cho searchTerm
-                  . (count($types) > 0 ? str_repeat('s', count($types)) : '') // string cho types
-                  . (count($statuses) > 0 ? str_repeat('i', count($statuses)) : ''); // int cho statuses
-    
-        $stmt->bind_param($typesStr, ...$params);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $total = $result->fetch_assoc()['total'];
-    
-        $stmt->close();
-        $db->close();
-    
-        return $total;
+        if ($httpCode == 200) {
+            return (int) $response;
+        } else {
+            return 0;
+        }
     }
     
-    public static function updateRequest($requestID, $ngayXuLy, $trangThai, $noiDung) {
-        $db = new Database();
-        $conn = $db->connect();
+    public static function filterRequestsByEmpID_QL($user_id, $searchTerm, $types, $statuses, $limit, $offset, $apiUrl) {
+        $data = self::getEmpIDsAndPhongID($user_id);
+        $phongID = $data['phongID'];
+        $empIDs = $data['empIDs'];
     
-        $query = "UPDATE Request SET ngayxuly = ?, trangthai = ?, phanhoi = ? WHERE requestid = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('sssi', $ngayXuLy, $trangThai, $noiDung, $requestID);
-        $result = $stmt->execute();
+        if (!$phongID || empty($empIDs)) {
+            return [];
+        }
+    
+        $empIDsString = implode(',', $empIDs);
+        $typesString = implode(',', $types);
+        $statusesString = implode(',', $statuses);
+        $searchTerm = urlencode("%$searchTerm%");
+    
+        // Tạo URL cho API với các tham số
+        $url = $apiUrl . '/filter?' .
+               'empIDs=' . urlencode($empIDsString) . 
+               '&searchTerm=' . $searchTerm . 
+               '&types=' . urlencode($typesString) . 
+               '&statuses=' . urlencode($statusesString) . 
+               '&limit=' . $limit . 
+               '&offset=' . $offset;
+               
+        // Khởi tạo cURL
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        // Thực thi cURL và lấy phản hồi
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        // Kiểm tra nếu API trả về thành công (HTTP 200)
+        if ($httpCode == 200) {
+            // Giải mã JSON response thành mảng
+            $result = json_decode($response, true);
+            return $result;
+        } else {
+            // Nếu có lỗi hoặc không thành công, trả về mảng trống
+            return [];
+        }
+    }
+
+    public static function countFilterRequests_QL($user_id, $searchTerm, $types, $statuses, $apiUrl) {
+        $data = self::getEmpIDsAndPhongID($user_id);
+        $phongID = $data['phongID'];
+        $empIDs = $data['empIDs'];
+    
+        if (!$phongID || empty($empIDs)) {
+            return 0;
+        }
+    
+        $empIDsString = implode(',', $empIDs);
+        $typesString = implode(',', $types);
+        $statusesString = implode(',', $statuses);
+        $searchTerm = urlencode("%$searchTerm%");
+    
+        $url = $apiUrl . '/countFilter?' .
+               'empIDs=' . urlencode($empIDsString) . 
+               '&searchTerm=' . $searchTerm . 
+               '&types=' . urlencode($typesString) . 
+               '&statuses=' . urlencode($statusesString);
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        //print_r($response);
+
+        if ($httpCode == 200) {
+            $result = json_decode($response, true);
+            // print_r($result);
+            return $result ?? 0; 
+        } else {
+            return 0;
+        }
+    }
+    
+    public static function updateRequest($requestID, $ngayXuLy, $trangThai, $noiDung, $apiUrl) {
+        $url = $apiUrl . '/updateReq/' . urlencode($requestID) . 
+               '?ngayXuLy=' . urlencode($ngayXuLy) . 
+               '&trangThai=' . urlencode($trangThai) . 
+               '&noiDung=' . urlencode($noiDung);
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+    
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        if ($httpCode == 200) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+
+    public static function insertCheckOK($empID, $ngayChon, $opt_WFH, $opt_Nghi, $apiUrl) {
+        $url = $apiUrl . '/checkinout';
         
-        $stmt->close();
-        $db->close();
-        return $result;
-    }
-
-    public static function insertCheckOK($empID, $ngayChon, $opt_WFH, $opt_Nghi) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        $query = "INSERT INTO Check_inout (empid, date_checkin, workfromhome, nghi) VALUES (?,?,?,?)";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('isii', $empID, $ngayChon, $opt_WFH, $opt_Nghi);
-        $result = $stmt->execute();
+        $data = [
+            'empid' => $empID,
+            'datecheckin' => $ngayChon,
+            'workfromhome' => $opt_WFH,
+            'nghi' => $opt_Nghi
+        ];
         
-        $stmt->close();
-        $db->close();
-        return $result;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Accept: application/json'
+        ]);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        return $httpCode == 200 && json_decode($response, true);
     }
-
+    
+    // public static function updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS, $Tre, $apiUrl) {
+    //     $data = array(
+    //         'timeSheetID' => $timeSheetID,
+    //         'trangThai' => $Up_TinhTrang_TS,
+    //         'soGioThucHien' => $up_ThoiGian_TS,
+    //         'tre' => $Tre
+    //     );
+    
+    //     // Khởi tạo cURL
+    //     $ch = curl_init($apiUrl . '/updateTimesheet'); // API endpoint
+    //     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    //     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+    //     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data)); // Dữ liệu gửi đi
+    //     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    //         'Content-Type: application/json',
+    //         'Content-Length: ' . strlen(json_encode($data))
+    //     ));
+        
+    //     // Thực thi cURL và lấy phản hồi
+    //     $response = curl_exec($ch);
+    //     $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    //     curl_close($ch);
+    
+    //     // Kiểm tra mã trạng thái HTTP
+    //     if ($httpCode == 200) {
+    //         // Nếu phản hồi thành công
+    //         return true;
+    //     } else {
+    //         // Nếu có lỗi
+    //         return false;
+    //     }
+    // }
+    
     public static function  updateTimeSheet($timeSheetID, $Up_TinhTrang_TS, $up_ThoiGian_TS, $Tre) {
         $db = new Database();
         $conn = $db->connect();

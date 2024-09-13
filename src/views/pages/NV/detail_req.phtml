@@ -37,6 +37,11 @@
                     </div>
                     <div class="info-row">
                         <div class="info-item"><strong>Ngày Gửi:</strong> <?php echo htmlspecialchars($detail['NgayGui']); ?></div>
+                        <?php if ($detail['Loai'] === 'Nghỉ phép' || $detail['Loai'] === 'From home'): ?>
+                            <div class="info-item"><strong>Ngày Chọn:</strong> <?php echo htmlspecialchars($detail['NgayChon']); ?></div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="info-row">
                         <div class="info-item"><strong>Ngày Xử Lý:</strong> <?php echo htmlspecialchars($detail['NgayXuLy']) == null ? '<span style="color: red;">Chưa được xử lý</span>' : htmlspecialchars($detail['NgayXuLy']); ?></div>
                         <div class="info-item"><strong>Trạng Thái:</strong> 
                             <?php 

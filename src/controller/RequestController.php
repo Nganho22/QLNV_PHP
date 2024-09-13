@@ -9,8 +9,8 @@ class RequestController {
             $title = 'Yêu cầu';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
-            $apiUrl = 'http://localhost:9004/apiRequest';
-            $model = new RequestModel($apiUrl);
+            // $apiUrl = 'http://localhost:9004/apiRequest';
+            // $model = new RequestModel($apiUrl);
 
             //QL
             $qllimit = 7; 
@@ -28,15 +28,15 @@ class RequestController {
                     $limit = 3;
                     $offsetPending = ($pagePending - 1) * $limit ;
                     $offsetApproved = ($pageApproved - 1) * $limit;
-                    $timeSheets = $model->getTimeSheetsByEmpID($user_id);
+                    $timeSheets = RequestModel::getTimeSheetsByEmpID($user_id, $_SESSION['API']['Request']);
                     
                     $file = "./views/pages/NV/request.phtml";
-                    $creq = $model->getRequestCountsByEmpID($user_id);
+                    $creq = RequestModel::getRequestCountsByEmpID($user_id, $_SESSION['API']['Request']);
                 
-                    $pendingRequests =  $model->getPendingRequestsByEmpID($user_id, $limit, $offsetPending);
-                    $approvedRequests = $model->getApprovedRequestsByEmpID($user_id, $limit, $offsetApproved);
-                    $totalPending =  $model->countPendingRequests($user_id);
-                    $totalApproved = $model->countApprovedRequests($user_id);
+                    $pendingRequests =  RequestModel::getPendingRequestsByEmpID($user_id, $limit, $offsetPending, $_SESSION['API']['Request']);
+                    $approvedRequests = RequestModel::getApprovedRequestsByEmpID($user_id, $limit, $offsetApproved, $_SESSION['API']['Request']);
+                    $totalPending =  RequestModel::countPendingRequests($user_id, $_SESSION['API']['Request']);
+                    $totalApproved = RequestModel::countApprovedRequests($user_id, $_SESSION['API']['Request']);
                                     
                     if (isset($_GET['ajax'])) {
                         $pendingHtml = '';
@@ -101,24 +101,24 @@ class RequestController {
                     }
                     break;
                 case 'Quản lý':
-                    $creq = RequestModel::getRequestCountsByEmpID_QL($user_id);
-                    $requests = RequestModel::getRequestsByEmpID_QL($user_id);
+                    $creq = RequestModel::getRequestCountsByEmpID_QL($user_id, $_SESSION['API']['Request']);
+                    $requests = RequestModel::getRequestsByEmpID_QL($user_id, $_SESSION['API']['Request']);
 
                     if (!empty($searchTerm) && (!empty($types) || !empty($statuses))) {
                         // Tìm kiếm và lọc cùng lúc
-                        $requests = RequestModel::filterRequestsByEmpID_QL($user_id, $searchTerm, $types, $statuses, $qllimit, $offset);
-                        $totalRequests = RequestModel::countFilterRequests_QL($user_id, $searchTerm, $types, $statuses);
+                        $requests = RequestModel::filterRequestsByEmpID_QL($user_id, $searchTerm, $types, $statuses, $qllimit, $offset, $_SESSION['API']['Request']);
+                        $totalRequests = RequestModel::countFilterRequests_QL($user_id, $searchTerm, $types, $statuses, $_SESSION['API']['Request']);
                     } elseif (!empty($searchTerm)) {
                         // Chỉ tìm kiếm
-                        $requests = RequestModel::searchRequestsByEmpID_QL($user_id, $searchTerm, $qllimit, $offset);
-                        $totalRequests = RequestModel::countSearchRequests_QL($user_id, $searchTerm);
+                        $requests = RequestModel::searchRequestsByEmpID_QL($user_id, $searchTerm, $qllimit, $offset, $_SESSION['API']['Request']);
+                        $totalRequests = RequestModel::countSearchRequests_QL($user_id, $searchTerm, $_SESSION['API']['Request']);
                     } elseif (!empty($types) || !empty($statuses)) {
                         // Chỉ lọc
-                        $requests = RequestModel::filterRequestsByEmpID_QL($user_id, '', $types, $statuses, $qllimit, $offset);
-                        $totalRequests = RequestModel::countFilterRequests_QL($user_id, '', $types, $statuses);
+                        $requests = RequestModel::filterRequestsByEmpID_QL($user_id, '', $types, $statuses, $qllimit, $offset, $_SESSION['API']['Request']);
+                        $totalRequests = RequestModel::countFilterRequests_QL($user_id, '', $types, $statuses, $_SESSION['API']['Request']);
                     } else {
                         // Không có tìm kiếm và lọc
-                        $requests = RequestModel::getRequestsByEmpID_QL($user_id);
+                        $requests = RequestModel::getRequestsByEmpID_QL($user_id, $_SESSION['API']['Request']);
                         $totalRequests = count($requests);
                         $requests = array_slice($requests, $offset, $qllimit);
                     }
@@ -193,11 +193,11 @@ class RequestController {
     }
 
     public function GetTimeSheetDetails() {
-        $apiUrl = 'http://localhost:9004/apiRequest';
-        $model = new RequestModel($apiUrl);
+        // $apiUrl = 'http://localhost:9004/apiRequest';
+        // $model = new RequestModel($apiUrl);
         if (isset($_GET['timeSheetID'])) {
             $timeSheetID = $_GET['timeSheetID'];
-            $timeSheet = $model->getTimeSheetByID($timeSheetID);
+            $timeSheet = RequestModel::getTimeSheetByID($timeSheetID, $_SESSION['API']['Request']);
             echo json_encode($timeSheet);
         }
     }
@@ -228,7 +228,7 @@ class RequestController {
                 exit();
             }
 
-            $result = RequestModel::createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung);
+            $result = RequestModel::createRequest($user_id, $nguoiGui, $loai, $tieuDe, $ngayGui, $ngayChon, $noiDung, $_SESSION['API']['Request']);
 
             if ($result) {
                 echo json_encode([
@@ -264,8 +264,8 @@ class RequestController {
             $trangThai = $_POST['trangThai'];
             $soGio = $_POST['soGio'];
             $customHours = isset($_POST['customHours']) ? $_POST['customHours'] : null;
-            $apiUrl = 'http://localhost:9004/apiRequest';
-            $model = new RequestModel($apiUrl);
+            // $apiUrl = 'http://localhost:9004/apiRequest';
+            // $model = new RequestModel($apiUrl);
             if (empty($tieuDe)) {
                 echo json_encode([
                     'success' => false,
@@ -296,7 +296,7 @@ class RequestController {
             }
 
             // Lấy thông tin thời gian từ model
-            $timeSheetDetails = $model->getTimeSheetByID($timeSheetID);
+            $timeSheetDetails = RequestModel::getTimeSheetByID($timeSheetID, $_SESSION['API']['Request']);
             
             if ($timeSheetDetails) {
                 // Tính toán thời gian mới
@@ -305,7 +305,7 @@ class RequestController {
                 $newUpThoiGianTimesheet = $upThoiGianTimesheet + $soGio;
                 
                 // Tạo request mới
-                RequestModel::createTimeSheetRequest($userId, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet);
+                RequestModel::createTimeSheetRequest($userId, $nguoiGui, $loai, $tieuDe, $ngayGui, $noiDung, $timeSheetID, $trangThai, $newUpThoiGianTimesheet, $_SESSION['API']['Request']);
                 
                 echo json_encode(['success' => true, 'message' => 'Gửi đơn yêu cầu thành công!']);
                 exit();
@@ -326,8 +326,8 @@ class RequestController {
             $title='Chi tiết Request';
             $user_id = $_SESSION['user']['EmpID'];
             $role = $_SESSION['user']['Role'];
-            $apiUrl = 'http://localhost:9004/apiRequest';
-            $model = new RequestModel($apiUrl);
+            // $apiUrl = 'http://localhost:9004/apiRequest';
+            // $model = new RequestModel($apiUrl);
 
             //$detail = RequestModel::getDetailRequest($requestId);
             //$detail_ts = $model->getTimeSheetByID($detail['Time_sheetID']);
@@ -345,8 +345,8 @@ class RequestController {
             }
             switch ($role) {
                 case 'Nhân viên':
-                    $detail = RequestModel::getDetailRequest($requestId);
-                    $detail_ts = $model->getTimeSheetByID($detail['Time_sheetID']);
+                    $detail = RequestModel::getDetailRequest($requestId, $_SESSION['API']['Request']);
+                    $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID'], $_SESSION['API']['Request']);
 
                     ob_start();
                     require("./views/pages/NV/detail_req.phtml");
@@ -354,8 +354,8 @@ class RequestController {
                     require(__DIR__ . '/../views/template.phtml');
                     break;
                 case 'Quản lý':
-                    $detail = RequestModel::getDetailRequest($requestId);
-                    $detail_ts = $model->getTimeSheetByID($detail['Time_sheetID']);
+                    $detail = RequestModel::getDetailRequest($requestId, $_SESSION['API']['Request']);
+                    $detail_ts = RequestModel::getTimeSheetByID($detail['Time_sheetID'], $_SESSION['API']['Request']);
 
                     if ($_SERVER['REQUEST_METHOD'] === 'POST') { 
                         $ngayPhanHoi = $_POST['ngayPhanHoi'];
@@ -367,7 +367,7 @@ class RequestController {
                         $responseMessage = 'Xử lý đơn thành công';
                         $responseSuccess = true;
 
-                        $result = RequestModel::updateRequest($requestId, $ngayPhanHoi, $trangThai, $noiDung);
+                        $result = RequestModel::updateRequest($requestId, $ngayPhanHoi, $trangThai, $noiDung, $_SESSION['API']['Request']);
                         
                         if ($result) {
                             if ($trangThai == 1) {
@@ -376,7 +376,7 @@ class RequestController {
                                     $opt_WFH = ($loai == 'From home') ? 1 : 0;
                                     $opt_Nghi = ($loai == 'Nghỉ phép') ? 1 : 0;
                                     
-                                    $insertCheckOKResult = RequestModel::insertCheckOK($empID, $ngayChon, $opt_WFH, $opt_Nghi);
+                                    $insertCheckOKResult = RequestModel::insertCheckOK($empID, $ngayChon, $opt_WFH, $opt_Nghi, $_SESSION['API']['Request']);
                                     if (!$insertCheckOKResult) {
                                         $responseMessage = 'Xử lý đơn thành công nhưng lỗi cập nhật check in-out.';
                                         $responseSuccess = false;
