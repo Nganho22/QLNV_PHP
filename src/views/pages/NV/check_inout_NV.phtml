@@ -73,7 +73,8 @@
                 timeCheckout: entry.Time_checkout,
                 isAbsent: entry.Nghi == 1,
                 isLate: entry.Late == 1,
-                isWorkFromHome: entry.WorkFromHome == 1
+                isWorkFromHome: entry.WorkFromHome == 1,
+                isOvertime: entry.Overtime == 1
             };
         });
 
@@ -91,43 +92,57 @@
             daysElement.innerHTML = '';
             monthYearElement.textContent = `${date.toLocaleString('default', { month: 'long' })} ${year}`;
 
-            // Add empty cells for the days before the first day of the month
             for (let i = 0; i < startDay; i++) {
                 const emptyCell = document.createElement('li');
                 daysElement.appendChild(emptyCell);
             }
 
-            // Add cells for the days in the month
             for (let day = 1; day <= daysInMonth; day++) {
                 const dayCell = document.createElement('li');
                 const dateString = `${year}-${month + 1}-${day}`;
                 dayCell.textContent = day;
 
-                // Default styles for the day
-                dayCell.style.backgroundColor = ''; // Reset background color
-                dayCell.style.border = ''; // Reset border
-                dayCell.dataset.info = ''; // Reset data-info
-
+                dayCell.style.backgroundColor = ''; 
+                dayCell.style.border = ''; 
+                dayCell.dataset.info = ''; 
+                
                 if (checkInOutMap[dateString]) {
                     const entry = checkInOutMap[dateString];
-                    if (entry.timeCheckin) {
-                        dayCell.dataset.infoCheckin = `IN: ${entry.timeCheckin}`;
+                    
+                    if (entry.isAbsent) {
+                        dayCell.dataset.infoCheckin = 'IN: N/A (nghỉ phép)';
+                        dayCell.dataset.infoCheckout = 'OUT: N/A'; 
+                        dayCell.style.backgroundColor = '#fe7272';
                     } else {
-                        dayCell.dataset.infoCheckin = 'IN: N/A'; 
-                    }
-                    if (entry.timeCheckout) {
-                        dayCell.dataset.infoCheckout = `OUT: ${entry.timeCheckout}`;
-                    } else {
-                        dayCell.dataset.infoCheckout = 'OUT: N/A';
-                    }
-                    if (entry.isWorkFromHome) {
-                        dayCell.style.backgroundColor = '#c2c25e'; 
-                    } else if (entry.isAbsent) {
-                        dayCell.style.backgroundColor = '#fe7272'; 
-                    } else if (entry.isLate) {
-                        dayCell.style.backgroundColor = '#ff8c00'; 
-                    } else {
-                        dayCell.style.backgroundColor = '#a6a6a6'; 
+
+                        if (entry.timeCheckin) {
+                            if (entry.isLate) {
+                                dayCell.dataset.infoCheckin = `IN: ${entry.timeCheckin} (đi trễ)`; 
+                            } else {
+                                dayCell.dataset.infoCheckin = `IN: ${entry.timeCheckin}`;
+                            }
+                        } else {
+                            dayCell.dataset.infoCheckin = 'IN: N/A'; 
+                        }
+                        
+                        if (entry.timeCheckout) {
+                            if (entry.isOvertime) {
+                                dayCell.dataset.infoCheckout = `OUT: ${entry.timeCheckout} (overtime)`; 
+                            } else {
+                                dayCell.dataset.infoCheckout = `OUT: ${entry.timeCheckout}`;
+                            }
+                        } else {
+                            dayCell.dataset.infoCheckout = 'OUT: N/A';
+                        }
+                        
+                        if (entry.isWorkFromHome) {
+                            dayCell.style.backgroundColor = '#c2c25e'; 
+                            dayCell.dataset.infoCheckin += ' (WFH)'; 
+                        } else if (entry.isLate) {
+                            dayCell.style.backgroundColor = '#ff8c00'; 
+                        } else {
+                            dayCell.style.backgroundColor = '#a6a6a6'; 
+                        }
                     }
                 } else if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
                     dayCell.style.backgroundColor = '#74ffa9'; 

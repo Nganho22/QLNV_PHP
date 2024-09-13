@@ -77,7 +77,9 @@
                 timeCheckin: entry.Time_checkin,
                 timeCheckout: entry.Time_checkout,
                 isAbsent: entry.Nghi == 1,
-                isLate: entry.Late > 0
+                isLate: entry.Late == 1,
+                isWorkFromHome: entry.WorkFromHome == 1,
+                isOvertime: entry.Overtime == 1
             };
         });
 
@@ -107,34 +109,52 @@
             const dateString = `${year}-${month + 1}-${day}`;
             dayCell.textContent = day;
 
-            // Default styles for the day
-            dayCell.style.backgroundColor = ''; // Reset background color
-            dayCell.style.border = ''; // Reset border
-            dayCell.dataset.info = ''; // Reset data-info
+            dayCell.style.backgroundColor = '';
+            dayCell.style.border = '';
+            dayCell.dataset.info = '';
 
-        if (checkInOutMap[dateString]) {
-            const entry = checkInOutMap[dateString];
-            if (entry.timeCheckin) {
-                    dayCell.dataset.infoCheckin = `IN: ${entry.timeCheckin}`;
+            if (checkInOutMap[dateString]) {
+                const entry = checkInOutMap[dateString];
+                
+                if (entry.isAbsent) {
+                    dayCell.dataset.infoCheckin = 'IN: N/A (nghỉ phép)';
+                    dayCell.dataset.infoCheckout = 'OUT: N/A'; 
+                    dayCell.style.backgroundColor = '#fe7272'; 
                 } else {
-                    dayCell.dataset.infoCheckin = 'IN: N/A'; 
-                }
-                if (entry.timeCheckout) {
-                    dayCell.dataset.infoCheckout = `OUT: ${entry.timeCheckout}`;
-                } else {
-                    dayCell.dataset.infoCheckout = 'OUT: N/A';
-                }
 
-            if (entry.isAbsent) {
-                dayCell.style.backgroundColor = '#fe7272'; 
-            } else if (entry.isLate) {
-                dayCell.style.backgroundColor = '#ff8c00'; 
-            } else {
-                dayCell.style.backgroundColor = '#a6a6a6'; 
+                    if (entry.timeCheckin) {
+                        if (entry.isLate) {
+                            dayCell.dataset.infoCheckin = `IN: ${entry.timeCheckin} (đi trễ)`;
+                        } else {
+                            dayCell.dataset.infoCheckin = `IN: ${entry.timeCheckin}`;
+                        }
+                    } else {
+                        dayCell.dataset.infoCheckin = 'IN: N/A'; 
+                    }
+                    
+                    if (entry.timeCheckout) {
+                        if (entry.isOvertime) {
+                            dayCell.dataset.infoCheckout = `OUT: ${entry.timeCheckout} (overtime)`;
+                        } else {
+                            dayCell.dataset.infoCheckout = `OUT: ${entry.timeCheckout}`;
+                        }
+                    } else {
+                        dayCell.dataset.infoCheckout = 'OUT: N/A';
+                    }
+                    
+                    // Xử lý màu nền theo trạng thái
+                    if (entry.isWorkFromHome) {
+                        dayCell.style.backgroundColor = '#c2c25e'; 
+                        dayCell.dataset.infoCheckin += ' (WFH)'; 
+                    } else if (entry.isLate) {
+                        dayCell.style.backgroundColor = '#ff8c00'; 
+                    } else {
+                        dayCell.style.backgroundColor = '#a6a6a6'; 
+                    }
+                }
+            } else if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                dayCell.style.backgroundColor = '#74ffa9'; // Màu xanh cho ngày hiện tại
             }
-                } else if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                    dayCell.style.backgroundColor = '#74ffa9'; // Thêm màu xanh cho ngày hôm nay 
-                }
 
                 daysElement.appendChild(dayCell);
             }
