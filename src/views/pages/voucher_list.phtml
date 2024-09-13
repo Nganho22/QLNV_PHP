@@ -156,7 +156,15 @@
                 </div>                
             </div>
         </div>
-    <script>
+    <script>    
+    $(document).on('submit', '#VoucherForm', function(e) {
+        var voucherID = $('#voucher-id-input').val();
+        if (!voucherID) {
+            e.preventDefault();
+            alert('Vui lòng chọn một voucher trước khi tiếp tục.');
+        }
+    });
+
         $(document).ready(function() {
     // Xử lý phân trang cho yêu cầu xem voucher hiện có
     $(document).on('click', '#available_voucher-pagination .page-link', function(e) {

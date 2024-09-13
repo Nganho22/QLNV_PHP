@@ -247,10 +247,12 @@ class Check_inoutModel {
                          c.time_checkin,
                          c.time_checkout,
                          CASE
+                             WHEN c.late = 1 and c.overtime = 1 THEN 'Đi trễ + Làm thêm giờ'
                              WHEN c.late = 1 THEN 'Trễ'
                              WHEN c.nghi = 1 THEN 'Nghỉ'
                              WHEN c.workfromhome = 1 THEN 'Làm việc tại nhà'
-                             WHEN c.late = 0 AND c.nghi = 0 AND c.workfromhome = 0 THEN 'Không có'
+                             WHEN c.overtime = 1 THEN 'Làm thêm giờ'
+                             WHEN c.late = 0 AND c.nghi = 0 AND c.workfromhome = 0 AND c.overtime = 0 THEN 'Không có'
                             ELSE ''
                          END AS Note,
                          CASE
