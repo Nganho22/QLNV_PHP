@@ -309,8 +309,6 @@ class UserModel {
         return 0;
     }
     
-    
-    
     public static function countAllEmployees_QL($empID, $apiUrl) {
         $url = $apiUrl . '/countProfilesInSamePhongBan?empID=' . $empID;
         if (!self::isApiAvailable($url)) {
@@ -327,43 +325,32 @@ class UserModel {
         
         return 0;
     }
-     public static function getPhongBanStatistics($empID) {
-        $db = new Database();
-        $conn = $db->connect();
-        
 
-        $stmt = $conn->prepare("SELECT phongid FROM Profile WHERE empid = ?");
-        $stmt->bind_param("i", $empID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $phongID = $result->fetch_assoc()['phongid'];
-        $stmt->close();
+    public static function getPhongBanStatistics($empID, $apiUrl) {
+
+        $url = $apiUrl . '/PhongBanStatistics/' . $empID;
     
-        if (!$phongID) {
-            $db->close();
-            return [];
+        if (!self::isApiAvailable($url)) {
+            return []; 
         }
     
-        $stmt = $conn->prepare("SELECT Profile.empid, Profile.hoten
-                                FROM Profile
-                                WHERE Profile.phongid = ?");
-        $stmt->bind_param("s", $phongID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        
-        $employees = [];
-        while ($row = $result->fetch_assoc()) {
-            
-            $employee =[
-                'EmpID' => $row['empid'],
-                'HoTen' => $row['hoten']
-            ];
-            $employees[] = $employee;
+        $response = file_get_contents($url);
+
+        $data = json_decode($response, true);
+
+        if (isset($data) && is_array($data)) {
+            $employees = [];
+            foreach ($data as $row) {
+                $employee = [
+                    'EmpID' => $row['empid'],
+                    'HoTen' => $row['hoten']
+                ];
+                $employees[] = $employee;
+            }
+            return $employees;
         }
     
-        $stmt->close();
-        $db->close();
-        return $employees;
+        return [];
     }
 
     public static function getWorkFromHomeCountByEmpID($empID) {
@@ -486,56 +473,90 @@ class UserModel {
         return $hiendiens;
     }
 
-    public static function getPhongBan_Checkinout($empID) {
-        $db = new Database();
-        $conn = $db->connect();
+    // public static function getPhongBan_Checkinout($empID) {
+    //     $db = new Database();
+    //     $conn = $db->connect();
     
-        $stmtPhongID = $conn->prepare(
-            "SELECT phongid
-             FROM Profile 
-             WHERE empid = ?"
-        );
-        $stmtPhongID->bind_param("i", $empID);
-        $stmtPhongID->execute();
-        $resultPhongID = $stmtPhongID->get_result();
-        $phongID = $resultPhongID->fetch_assoc()['phongid'];
-        $stmtPhongID->close();
+    //     $stmtPhongID = $conn->prepare(
+    //         "SELECT phongid
+    //          FROM Profile 
+    //          WHERE empid = ?"
+    //     );
+    //     $stmtPhongID->bind_param("i", $empID);
+    //     $stmtPhongID->execute();
+    //     $resultPhongID = $stmtPhongID->get_result();
+    //     $phongID = $resultPhongID->fetch_assoc()['phongid'];
+    //     $stmtPhongID->close();
         
-        if (!$phongID) {
-            $db->close();
-            return [];
+    //     if (!$phongID) {
+    //         $db->close();
+    //         return [];
+    //     }
+    
+    //     $stmt = $conn->prepare(
+    //         "SELECT PhongBan.phongid, PhongBan.tenphong, 
+    //                 COALESCE(COUNT(CASE WHEN Check_inout.time_checkin IS NOT NULL THEN 1 END), 0) AS SoLanCheckin,
+    //                 COALESCE(COUNT(CASE WHEN Check_inout.time_checkout IS NOT NULL THEN 1 END), 0) AS SoLanCheckout
+    //          FROM Profile
+    //          INNER JOIN PhongBan ON Profile.phongid = PhongBan.phongid
+    //          LEFT JOIN Check_inout ON Profile.empid = Check_inout.empid
+    //             AND DATE(Check_inout.date_checkin) = CURDATE()
+    //          WHERE PhongBan.phongid = ?
+    //          GROUP BY PhongBan.phongid, PhongBan.tenphong"
+    //     );
+    //     $stmt->bind_param("s", $phongID);
+    //     $stmt->execute();
+    //     $result = $stmt->get_result();
+    
+    //     $checkinouts = [];
+    //     while ($row = $result->fetch_assoc()) {
+    //         $checkinout =[
+    //             'PhongID' => $row['phongid'],
+    //             'TenPhong' => $row['tenphong'],
+    //             'SoLanCheckin' => $row['SoLanCheckin'],
+    //             'SoLanCheckout' => $row['SoLanCheckout']
+    //             ];
+    //         $checkinouts[]=$checkinout;
+    //     }
+    
+    //     $stmt->close();
+    //     $db->close();
+    //     return $checkinouts;
+    // }
+
+    public static function getPhongBan_Checkinout($empID, $apiUrl) {
+        // Tạo URL cho API endpoint
+        $url = $apiUrl . '/PhongBanCheckinout/' . $empID;
+        
+        // Kiểm tra xem API có sẵn không
+        if (!self::isApiAvailable($url)) {
+            return []; 
         }
-    
-        $stmt = $conn->prepare(
-            "SELECT PhongBan.phongid, PhongBan.tenphong, 
-                    COALESCE(COUNT(CASE WHEN Check_inout.time_checkin IS NOT NULL THEN 1 END), 0) AS SoLanCheckin,
-                    COALESCE(COUNT(CASE WHEN Check_inout.time_checkout IS NOT NULL THEN 1 END), 0) AS SoLanCheckout
-             FROM Profile
-             INNER JOIN PhongBan ON Profile.phongid = PhongBan.phongid
-             LEFT JOIN Check_inout ON Profile.empid = Check_inout.empid
-                AND DATE(Check_inout.date_checkin) = CURDATE()
-             WHERE PhongBan.phongid = ?
-             GROUP BY PhongBan.phongid, PhongBan.tenphong"
-        );
-        $stmt->bind_param("s", $phongID);
-        $stmt->execute();
-        $result = $stmt->get_result();
-    
-        $checkinouts = [];
-        while ($row = $result->fetch_assoc()) {
-            $checkinout =[
-                'PhongID' => $row['phongid'],
-                'TenPhong' => $row['tenphong'],
-                'SoLanCheckin' => $row['SoLanCheckin'],
-                'SoLanCheckout' => $row['SoLanCheckout']
+        
+        // Gửi yêu cầu GET đến API và nhận phản hồi
+        $response = file_get_contents($url);
+        
+        // Giải mã JSON từ phản hồi
+        $data = json_decode($response, true);
+        
+        // Kiểm tra dữ liệu trả về
+        if (isset($data) && is_array($data)) {
+            $checkinouts = [];
+            foreach ($data as $row) {
+                $checkinout = [
+                    'PhongID' => $row['phongid'],
+                    'TenPhong' => $row['tenphong'],
+                    'SoLanCheckin' => $row['SoLanCheckin'],
+                    'SoLanCheckout' => $row['SoLanCheckout']
                 ];
-            $checkinouts[]=$checkinout;
+                $checkinouts[] = $checkinout;
+            }
+            return $checkinouts;
         }
-    
-        $stmt->close();
-        $db->close();
-        return $checkinouts;
+        
+        return [];
     }
+    
 
     public static function getEmployeesList_QL($empID, $limit, $offset, $apiUrl) {
         $url = $apiUrl . '/getProfileNVByQL?empid=' . $empID . '&hoten=' . '&limit=' . $limit . '&offset=' . $offset;
@@ -569,12 +590,6 @@ class UserModel {
         
         return $profiles;
     }
-
-    
-
-
-    
-
     
     public static function getEmployeesList_GD($empID, $limit, $offset) {
         $db = new Database();
@@ -618,7 +633,6 @@ class UserModel {
     
         return $row['total'];
     }
-
 
     public static function searchProfiles_GD($searchTerm, $limit, $offset) {
         $searchTerm = "%$searchTerm%";

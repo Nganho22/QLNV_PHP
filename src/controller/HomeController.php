@@ -109,9 +109,9 @@ class HomeController{
                     $phongID = UserModel::getPhongIDByEmpID($empID,  $_SESSION['API']['Profile']);
                     $countWFH = UserModel::getWorkFromHomeCountByEmpID($empID);
                     $absence = UserModel::getAbsence($empID);
-                    $phongBans = UserModel::getPhongBanStatistics($empID);
+                    $phongBans = UserModel::getPhongBanStatistics($empID, $_SESSION['API']['Profile']);
                     $hiendien = UserModel::getHienDien($empID);
-                    $checkinout = UserModel::getPhongBan_Checkinout($empID);
+                    $checkinout = UserModel::getPhongBan_Checkinout($empID, $_SESSION['API']['Profile']);
                     // $employees = UserModel::getEmployeesList_QL($empID);
                     // $timesheets = UserModel::getTimesheetList($empID); 
                     $managedProjects = ProjectModel::getProjects_QL($empID);

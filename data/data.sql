@@ -222,9 +222,9 @@ INSERT INTO Check_inout (stt, empid, date_checkin, time_checkin, time_checkout, 
 
 
 -- update PhongBan
-UPDATE PhongBan SET quanlyid = '1' WHERE phongid = 'P01';
-UPDATE PhongBan SET quanlyid = '2' WHERE phongid = 'P02';
-UPDATE PhongBan SET quanlyid = '4' WHERE phongid = 'P03';
+UPDATE PhongBan SET quanlyid = '2' WHERE phongid = 'P01';
+UPDATE PhongBan SET quanlyid = '7' WHERE phongid = 'P02';
+UPDATE PhongBan SET quanlyid = '14' WHERE phongid = 'P03';
 
 INSERT INTO Project (projectid, ten, ngaygiao, hanchotdukien, hanchot, tiendo, sogiothuchanh, phongid, quanly, tinhtrang)
 VALUES 
