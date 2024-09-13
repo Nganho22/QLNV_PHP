@@ -315,164 +315,158 @@ class RequestModel {
         }
     }
     
-
     public static function getDetailRequest($RequestID) {
-        $db = new Database();
-        $conn = $db->connect();
+        $apiUrl = 'http://localhost:9004/apiRequest/getDetailRequest/' . $RequestID;  
     
-        $query = "SELECT * FROM Request WHERE requestid = ?";
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $RequestID);
-        $stmt->execute();
-        
-        $result = $stmt->get_result();
-        $requests = $result->fetch_assoc();
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     
-        $stmt->close();
-        $db->close();
+        $response = curl_exec($ch);
+    
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+            curl_close($ch);
+            return false;
+        }
+    
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        if ($httpCode == 200) {
+            $result = json_decode($response, true);
+            //print_r($result);
 
-        if ($requests) {
-            $request = [
-                'RequestID' => $requests['requestid'],
-                'NguoiGui' => $requests['nguoigui'],
-                'EmpID' => $requests['empid'],
-                'Loai' => $requests['loai'],
-                'NgayGui' => $requests['ngaygui'],
-                'TrangThai' => $requests['trangthai'],
-                'NgayXuLy' => $requests['ngayxuly'],
-                'NgayChon' => $requests['ngaychon'],
-                'Time_sheetID' => $requests['time_sheetid'],
-                'TieuDe' => $requests['tieude'],
-                'NoiDung' => $requests['noidung'],
-                'PhanHoi' => $requests['phanhoi'],
-                'Up_TinhTrang_Timesheet' => $requests['up_tinhtrang_timesheet'],
-                'Up_ThoiGian_Timesheet' => $requests['up_thoigian_timesheet']
-            ];
-            return $request;
+            if (isset($result['requestid'])) {
+                $request = [
+                    'RequestID' => $result['requestid'],
+                    'NguoiGui' => $result['nguoigui'],
+                    'EmpID' => $result['empid'],
+                    'Loai' => $result['loai'],
+                    'NgayGui' => $result['ngaygui'],
+                    'TrangThai' => $result['trangthai'],
+                    'NgayXuLy' => $result['ngayxuly'],
+                    'NgayChon' => $result['ngaychon'],
+                    'Time_sheetID' => $result['time_sheetid'],
+                    'TieuDe' => $result['tieude'],
+                    'NoiDung' => $result['noidung'],
+                    'PhanHoi' => $result['phanhoi'],
+                    'Up_TinhTrang_Timesheet' => $result['up_tinhtrang_timesheet'],
+                    'Up_ThoiGian_Timesheet' => $result['up_thoigian_timesheet']
+                ];
+                return $request;
+            } else {
+                return null; 
+            }
+        } else {
+            return false; 
         }
     }
+    
 
 //============== Quản lý =====================    
+
     private static function getEmpIDsAndPhongID($user_id) {
-        $db = new Database();
-        $conn = $db->connect();
-
-        // 1. Lấy PhongID và danh sách EmpID từ Profile dựa trên EmpID
-        $query = "
-            SELECT p1.phongid, p2.empid
-            FROM Profile p1
-            LEFT JOIN Profile p2 ON p1.phongid = p2.phongid
-            WHERE p1.empid = ?";
-
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param('i', $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $phongID = null;
-        $empIDs = [];
-
-        while ($row = $result->fetch_assoc()) {
-            if ($phongID === null) {
-                $phongID = $row['phongid'];
+        $apiUrl = 'http://localhost:9004/apiRequest/profileInfo/' . $user_id;
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $apiUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        
+        if ($httpCode == 200) {
+            $result = json_decode($response, true);
+            
+            if ($result && isset($result['phongID']) && isset($result['empIDs'])) {
+                return [
+                    'phongID' => $result['phongID'],
+                    'empIDs' => $result['empIDs']
+                ];
+            } else {
+                return null;
             }
-            $empIDs[] = $row['empid'];
+        } else {
+            return null;
         }
-
-        $stmt->close();
-        $db->close();
-
-        return ['phongID' => $phongID, 'empIDs' => $empIDs];
     }
 
     public static function getRequestCountsByEmpID_QL($user_id) {
         $data = self::getEmpIDsAndPhongID($user_id);
         $phongID = $data['phongID'];
         $empIDs = $data['empIDs'];
-
-        if (!$phongID) {
+    
+        //print_r($data);
+        if (!$phongID || empty($empIDs)) {
             return ['total' => 0, 'pending' => 0, 'approved' => 0];
         }
+    
+        $empIDsString = implode(',', $empIDs);
 
-        if (empty($empIDs)) {
+        $url = 'http://localhost:9004/apiRequest/counts?empIDs=' . urlencode($empIDsString);
+    
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode == 200) {
+            $result = json_decode($response, true);
+            return $result;
+        } else {
             return ['total' => 0, 'pending' => 0, 'approved' => 0];
         }
-
-        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
-
-        $query = "
-            SELECT
-                COUNT(requestid) as total,
-                SUM(CASE WHEN trangthai = 0 THEN 1 ELSE 0 END) as pending,
-                SUM(CASE WHEN trangthai IN (1, 2) THEN 1 ELSE 0 END) as approved
-            FROM Request
-            WHERE empid IN ($empIDsString)";
-
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param(str_repeat('i', count($empIDs)), ...$empIDs);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $counts = $result->fetch_assoc();
-
-        $stmt->close();
-        $db->close();
-
-        return [
-            'total' => $counts['total'],
-            'pending' => $counts['pending'],
-            'approved' => $counts['approved']
-        ];
     }
+    
 
     public static function getRequestsByEmpID_QL($user_id) {
         $data = self::getEmpIDsAndPhongID($user_id);
         $phongID = $data['phongID'];
         $empIDs = $data['empIDs'];
-
-        if (!$phongID) {
+    
+        if (!$phongID || empty($empIDs)) {
             return [];
         }
-
-        if (empty($empIDs)) {
+    
+        $empIDsString = implode(',', $empIDs);
+    
+        $url = 'http://localhost:9004/apiRequest/by-emp-ids?empIDs=' . urlencode($empIDsString);
+    
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        if ($httpCode == 200) {
+            $requests = json_decode($response, true);
+    
+            $formattedRequests = [];
+            foreach ($requests as $request) {
+                $formattedRequests[] = [
+                    'RequestID' => $request['requestid'] ?? 'N/A',
+                    'TieuDe' => $request['tieude'] ?? 'N/A',
+                    'Loai' => $request['loai'] ?? 'N/A',
+                    'NgayGui' => $request['ngaygui'] ?? 'N/A',
+                    'NguoiGui' => $request['nguoigui'] ?? 'N/A',
+                    'NgayXuLy' => $request['ngayxuly'] ?? 'N/A',
+                    'TrangThai' => $request['trangthai'] ?? 'N/A',
+                    'NgayChon' => $request['ngaychon'] ?? 'N/A'
+                ];
+            }
+    
+            return $formattedRequests;
+        } else {
             return [];
         }
-
-        $empIDsString = implode(',', array_fill(0, count($empIDs), '?'));
-
-        $query = "
-            SELECT * 
-            FROM Request
-            WHERE empid IN ($empIDsString) ORDER BY ngaygui DESC";
-
-        $db = new Database();
-        $conn = $db->connect();
-        $stmt = $conn->prepare($query);
-        $stmt->bind_param(str_repeat('i', count($empIDs)), ...$empIDs);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        $requests = [];
-        while ($row = $result->fetch_assoc()) {
-            $row = [
-                'RequestID' => $row['requestid'] ?? 'N/A',
-                'TieuDe' => $row['tieude'] ?? 'N/A',
-                'Loai' => $row['loai'] ?? 'N/A',
-                'NgayGui' => $row['ngaygui'] ?? 'N/A',
-                'NguoiGui' => $row['nguoigui'] ?? 'N/A',
-                'NgayXuLy' => $row['ngayxuly'] ?? 'N/A',
-                'TrangThai' => $row['trangthai'] ?? 'N/A',
-                'NgayChon' => $row['ngaychon'] ?? 'N/A'
-            ];
-            $requests[] = $row;
-        }
-
-        $stmt->close();
-        $db->close();
-        
-        return $requests;
     }
+    
 
     public static function searchRequestsByEmpID_QL($user_id, $searchTerm, $limit, $offset) {
         $data = self::getEmpIDsAndPhongID($user_id);
