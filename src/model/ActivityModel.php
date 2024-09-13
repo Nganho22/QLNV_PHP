@@ -7,13 +7,13 @@ class ActivityModel {
         $this->apiUrl = $apiUrl;
     }
 
-    private function formatDate($date) {
+    private static function formatDate($date) {
 
         $dateTime = DateTime::createFromFormat('Y-m-d', $date);
         return $dateTime ? $dateTime->format('d-m-Y') : $date;
     }
 
-    private function isApiAvailable($url) {
+    private static function isApiAvailable($url) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_NOBODY, true);
@@ -31,10 +31,10 @@ class ActivityModel {
     }
 
 
-    public function getActivitiesByMonth($month) {
+    public static function getActivitiesByMonth($month, $apiUrl) {
 
-        $url = $this->apiUrl . '/month/' . $month;
-        if (!$this->isApiAvailable($url)) {
+        $url = $apiUrl . '/month/' . $month;
+        if (!self::isApiAvailable($url)) {
             return null;
         }
         $response = file_get_contents($url);
@@ -46,13 +46,13 @@ class ActivityModel {
             foreach ($activities as &$activity) {
                 
                 if (isset($activity['hanCuoiDangKy'])) {
-                    $activity['hanCuoiDangKy'] = $this->formatDate($activity['hanCuoiDangKy']);
+                    $activity['hanCuoiDangKy'] = self::formatDate($activity['hanCuoiDangKy']);
                 }
                 if (isset($activity['ngayBatDau'])) {
-                    $activity['ngayBatDau'] = $this->formatDate($activity['ngayBatDau']);
+                    $activity['ngayBatDau'] = self::formatDate($activity['ngayBatDau']);
                 }
                 if (isset($activity['ngayKetThuc'])) {
-                    $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
+                    $activity['ngayKetThuc'] = self::formatDate($activity['ngayKetThuc']);
                 }
     
                 // Chuyển đổi các ngày thành đối tượng DateTime
@@ -80,10 +80,10 @@ class ActivityModel {
         return $activities;
     }
 
-    public function getActivitiesJoin($month) {
+    public static function getActivitiesmonth($month, $apiUrl) {
 
-    $url = $this->apiUrl . '/month/' . $month;
-    if (!$this->isApiAvailable($url)) {
+    $url = $apiUrl . '/month/' . $month;
+    if (!self::isApiAvailable($url)) {
         return null;
     }
     $response = file_get_contents($url);
@@ -95,13 +95,13 @@ class ActivityModel {
         foreach ($activities as &$activity) {
             
             if (isset($activity['hanCuoiDangKy'])) {
-                $activity['hanCuoiDangKy'] = $this->formatDate($activity['hanCuoiDangKy']);
+                $activity['hanCuoiDangKy'] = self::formatDate($activity['hanCuoiDangKy']);
             }
             if (isset($activity['ngayBatDau'])) {
-                $activity['ngayBatDau'] = $this->formatDate($activity['ngayBatDau']);
+                $activity['ngayBatDau'] = self::formatDate($activity['ngayBatDau']);
             }
             if (isset($activity['ngayKetThuc'])) {
-                $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
+                $activity['ngayKetThuc'] = self::formatDate($activity['ngayKetThuc']);
             }
 
             // Chuyển đổi các ngày thành đối tượng DateTime
@@ -131,10 +131,10 @@ class ActivityModel {
     
     
 
-    public function SearchActivitiesCoBan($ten) {
+    public static function SearchActivitiesCoBan($ten, $apiUrl) {
 
-        $url = $this->apiUrl . '/searchCoBan?Ten=' . $ten;
-        if (!$this->isApiAvailable($url)) {
+        $url = $apiUrl . '/searchCoBan?Ten=' . $ten;
+        if (!self::isApiAvailable($url)) {
             return null;
         }
         $response = file_get_contents($url);
@@ -145,13 +145,13 @@ class ActivityModel {
             foreach ($activities as &$activity) {
                 
                 if (isset($activity['hanCuoiDangKy'])) {
-                    $activity['hanCuoiDangKy'] = $this->formatDate($activity['hanCuoiDangKy']);
+                    $activity['hanCuoiDangKy'] = self::formatDate($activity['hanCuoiDangKy']);
                 }
                 if (isset($activity['ngayBatDau'])) {
-                    $activity['ngayBatDau'] = $this->formatDate($activity['ngayBatDau']);
+                    $activity['ngayBatDau'] = self::formatDate($activity['ngayBatDau']);
                 }
                 if (isset($activity['ngayKetThuc'])) {
-                    $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
+                    $activity['ngayKetThuc'] = self::formatDate($activity['ngayKetThuc']);
                 }
     
                 // Chuyển đổi các ngày thành đối tượng DateTime
@@ -179,10 +179,10 @@ class ActivityModel {
         return $activities;
     }
 
-    public function SearchActivitiesLienKet($ten) {
+    public static function SearchActivitiesLienKet($ten, $apiUrl) {
 
-        $url = $this->apiUrl . '/searchLienKet?Ten=' . $ten;
-        if (!$this->isApiAvailable($url)) {
+        $url = $apiUrl . '/searchLienKet?Ten=' . $ten;
+        if (!self::isApiAvailable($url)) {
             return null;
         }
         $response = file_get_contents($url);
@@ -194,13 +194,13 @@ class ActivityModel {
             foreach ($activities as &$activity) {
                 
                 if (isset($activity['hanCuoiDangKy'])) {
-                    $activity['hanCuoiDangKy'] = $this->formatDate($activity['hanCuoiDangKy']);
+                    $activity['hanCuoiDangKy'] = self::formatDate($activity['hanCuoiDangKy']);
                 }
                 if (isset($activity['ngayBatDau'])) {
-                    $activity['ngayBatDau'] = $this->formatDate($activity['ngayBatDau']);
+                    $activity['ngayBatDau'] = self::formatDate($activity['ngayBatDau']);
                 }
                 if (isset($activity['ngayKetThuc'])) {
-                    $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
+                    $activity['ngayKetThuc'] = self::formatDate($activity['ngayKetThuc']);
                 }
     
                 // Chuyển đổi các ngày thành đối tượng DateTime
@@ -228,11 +228,11 @@ class ActivityModel {
         return $activities;
     }
 
-    public function CountActivityByMonth($month) {
+    public static function CountActivityByMonth($month, $apiUrl) {
 
-        $url = $this->apiUrl . '/countByMonth/' . $month;
-        if (!$this->isApiAvailable($url)) {
-            return 0;
+        $url = $apiUrl . '/countByMonth/' . $month;
+        if (!self::isApiAvailable($url)) {
+            return null;
         }
         $response = @file_get_contents($url);
         if ($response === FALSE) {
@@ -254,11 +254,11 @@ class ActivityModel {
         return 0;
     }
 
-    public function CountActivity() {
+    public static function CountActivity($apiUrl) {
 
-        $url = $this->apiUrl . '/countall';
-        if (!$this->isApiAvailable($url)) {
-            return 0;
+        $url = $apiUrl . '/countall';
+        if (!self::isApiAvailable($url)) {
+            return null;
         }
         $response = @file_get_contents($url);
         if ($response === FALSE) {
@@ -280,33 +280,32 @@ class ActivityModel {
         return 0;
     }
     
-    public function GetActivityDetail($ActivityID) {
-        $url = $this->apiUrl . '/Activity/' . $ActivityID;
-        if (!$this->isApiAvailable($url)) {
+    public static function GetActivityDetail($ActivityID, $apiUrl) {
+            $url = $apiUrl . '/activityAndProfile/' . $ActivityID;
+    
+        if (!self::isApiAvailable($url)) {
             return null;
         }
     
-
         $response = file_get_contents($url);
-        $activity = json_decode($response, true);
-        if ($activity) {
-
+        $data = json_decode($response, true);  // Giải mã JSON
+    
+        if (isset($data['activity'])) {
+            $activity = $data['activity'];
+    
             if (isset($activity['hanCuoiDangKy'])) {
-                $activity['hanCuoiDangKy'] = $this->formatDate($activity['hanCuoiDangKy']);
+                $activity['hanCuoiDangKy'] = self::formatDate($activity['hanCuoiDangKy']);
             }
             if (isset($activity['ngayBatDau'])) {
-                $activity['ngayBatDau'] = $this->formatDate($activity['ngayBatDau']);
+                $activity['ngayBatDau'] = self::formatDate($activity['ngayBatDau']);
             }
             if (isset($activity['ngayKetThuc'])) {
-                $activity['ngayKetThuc'] = $this->formatDate($activity['ngayKetThuc']);
+                $activity['ngayKetThuc'] = self::formatDate($activity['ngayKetThuc']);
             }
     
-
             $hanCuoiDangKyDate = DateTime::createFromFormat('d-m-Y', $activity['hanCuoiDangKy']);
             $ngayBatDauDate = DateTime::createFromFormat('d-m-Y', $activity['ngayBatDau']);
             $ngayKetThucDate = DateTime::createFromFormat('d-m-Y', $activity['ngayKetThuc']);
-    
-
             $currentDateObj = new DateTime();
     
             if ($currentDateObj <= $hanCuoiDangKyDate) {
@@ -319,13 +318,81 @@ class ActivityModel {
                 $activity['TinhTrang'] = 'Kết Thúc';
             }
     
+            if (isset($data['profiles'])) {
+                $activity['profiles'] = $data['profiles'];
+
+                $phongBanCounts = [];
+            foreach ($data['profiles'] as $profile) {
+                $phongban = $profile['tenphong'];
+                if (!isset($phongBanCounts[$phongban])) {
+                    $phongBanCounts[$phongban] = 0;
+                }
+                $phongBanCounts[$phongban]++;
+            }
+
+                $activity['phongBanCounts'] = $phongBanCounts;
+            }
+    
             return $activity;
-        }
-        else{
+        } else {
             return null;
         }
+    }
+    
+
+    
+    public static function GetActivityJoin($empID, $apiUrl) {
+        $url = $apiUrl . '/join/SearchByempID/' . $empID;
+        if (!self::isApiAvailable($url)) {
+            return null;
+        }
+    
+
+        $response = file_get_contents($url);
+        $activities = json_decode($response, true);
+        if (is_array($activities)) {
+            $currentDate = date('d-m-Y');
+            $currentDateObj = DateTime::createFromFormat('d-m-Y', $currentDate);
+            foreach ($activities as &$activity) {
+                
+                if (isset($activity['hanCuoiDangKy'])) {
+                    $activity['hanCuoiDangKy'] = self::formatDate($activity['hanCuoiDangKy']);
+                }
+                if (isset($activity['ngayBatDau'])) {
+                    $activity['ngayBatDau'] = self::formatDate($activity['ngayBatDau']);
+                }
+                if (isset($activity['ngayKetThuc'])) {
+                    $activity['ngayKetThuc'] = self::formatDate($activity['ngayKetThuc']);
+                }
+    
+                // Chuyển đổi các ngày thành đối tượng DateTime
+                $hanCuoiDangKyDate = DateTime::createFromFormat('d-m-Y', $activity['hanCuoiDangKy']);
+                $ngayBatDauDate = DateTime::createFromFormat('d-m-Y', $activity['ngayBatDau']);
+                $ngayKetThucDate = DateTime::createFromFormat('d-m-Y', $activity['ngayKetThuc']);
+                $activity['TinhTrang'] = 'Chưa xác định';
+                if ($currentDateObj <= $hanCuoiDangKyDate) {
+                    $activity['TinhTrang'] = 'Chờ Đăng ký';
+                }
+                elseif ($currentDateObj > $hanCuoiDangKyDate && $currentDateObj < $ngayBatDauDate) {
+                    $activity['TinhTrang'] = 'Sắp diễn ra';
+                } 
+                elseif ($currentDateObj >= $ngayBatDauDate && $currentDateObj <= $ngayKetThucDate) {
+                    $activity['TinhTrang'] = 'Đang diễn ra';
+                }
+                elseif ($currentDateObj > $ngayKetThucDate) {
+                    $activity['TinhTrang'] = 'Kết Thúc';
+                }
+            }
+        } else {
+            return null;
+        }
+
+        return $activities;
        
     }
+    
+
+
     
     
     

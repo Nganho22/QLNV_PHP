@@ -20,12 +20,12 @@ class ActivityController{
             $itemsPerPage = 1;
             $currentPageTT = isset($_GET['pageTT']) ? (int)$_GET['pageTT'] : 1;
 
-                $countActivityByMonth = $model->CountActivityByMonth(date('m'));
-                $countAllActivity = $model->CountActivity();
-                $activities = $model->getActivitiesJoin(date('m'));
-                $allActivitiesCB = $model->SearchActivitiesCoBan($searchCB);
-                $allActivitiesLK = $model->SearchActivitiesLienKet($searchLK);
-                $activitiesTT = $model->getActivitiesByMonth(date('m'));
+                $countActivityByMonth = ActivityModel::CountActivityByMonth(date('m'), $_SESSION['API']['Activity']);
+                $countAllActivity = ActivityModel::CountActivity($_SESSION['API']['Activity']);
+                $activities = ActivityModel::GetActivityJoin($empID, $_SESSION['API']['Activity']);
+                $allActivitiesCB = ActivityModel::SearchActivitiesCoBan($searchCB, $_SESSION['API']['Activity']);
+                $allActivitiesLK = ActivityModel::SearchActivitiesLienKet($searchLK, $_SESSION['API']['Activity']);
+                $activitiesTT = ActivityModel::getActivitiesByMonth(date('m'), $_SESSION['API']['Activity']);
 
             // Phân trang cho hoạt động tham gia 
             if ($activities !== null) {
@@ -138,7 +138,7 @@ class ActivityController{
             $apiUrl = 'http://localhost:9002/apiActivity';
             $model = new ActivityModel($apiUrl);
             $ActivityID = intval($_GET['activityId']);
-            $activity = $model->GetActivityDetail($ActivityID);
+            $activity = ActivityModel::GetActivityDetail($ActivityID, $_SESSION['API']['Activity']);
             
             switch ($Role) {
                 case 'Nhân viên':

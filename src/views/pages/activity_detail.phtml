@@ -98,21 +98,13 @@
 
                 <div class="col-md-6">
                     <h4>Danh sách nhân viên tham gia:</h4>
-                    <input type="text" class="form-control" placeholder="Tìm kiếm...">
                     <ul class="list-group mt-2">
-                        <li class="list-group-item">Deanna Annis - <a href="mailto:deannaannis@gmail.com">deannaannis@gmail.com</a></li>
-                        <li class="list-group-item">Andrea Willis - <a href="mailto:andreawillis@gmail.com">andreawillis@gmail.com</a></li>
-                        <li class="list-group-item">Brent Rodrigues - <a href="mailto:brodrigues@gmail.com">brodrigues@gmail.com</a></li>
-                        <!-- Add more participants as needed -->
+                        <?php if($activity['profiles']) :?>
+                            <?php foreach($activity['profiles'] as $profile) :?>
+                        <li class="list-group-item"><?php echo htmlspecialchars($profile['hoten'])?> - <a><?php echo htmlspecialchars($profile['tenphong'])?></a></li>
+                            <?php endforeach;?>
+                        <?php endif;?>
                     </ul>
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination mt-2">
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
         </div>
@@ -132,10 +124,15 @@
         } while (existingColors.includes(color)); // Check if color already exists
         return color;
     }
-    var labels = ['Ban A', 'Ban B', 'Ban C'];
-    var data = [45, 45, 10];
+    var labels = [];
+    var data = [];
     var backgroundColors = [];
-
+    <?php if (isset($activity['phongBanCounts'])): ?>
+        <?php foreach ($activity['phongBanCounts'] as $phongban => $count): ?>
+            labels.push('<?php echo $phongban; ?>'); // Thêm tên phòng ban vào mảng labels
+            data.push(<?php echo $count; ?>); // Thêm số người tham gia vào mảng data
+        <?php endforeach; ?>
+    <?php endif; ?>
     for (var i = 0; i < labels.length; i++) {
         backgroundColors.push(getRandomColor(backgroundColors));
     }
