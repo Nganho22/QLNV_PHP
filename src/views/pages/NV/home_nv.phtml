@@ -39,8 +39,8 @@
                     <p><?php echo count(array_filter($cprojects, fn($p) => $p['TrangThai'] == 'Hoàn thành')); ?></p>
                 </div>
                 <div class="stat-box-down">
-                    <h2>Hoạt động hoàn thành</h2>
-                    <p>Tốt</p>
+                    <h2>Tổng điểm hiện có</h2>
+                    <p><?php echo htmlspecialchars($creq['existing']);?></p>
                 </div>
             </div>
             <div class="tasks-today">

@@ -121,10 +121,9 @@
         </div>
         <br>
 
-        <?php if ($_SESSION['user']['Role'] == 'Nhân viên'): ?>
             <div class="timesheet">
                 <h5>Time-sheet</h5>
-                <?php if (!empty($timesheet)): ?>
+                <?php if (!empty($timesheets)): ?>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -138,10 +137,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach ($timesheet as $timesheet): ?>
+                            <?php foreach ($timesheets as $timesheet): ?>
                                 <tr>
                                     <td> <?php echo htmlspecialchars($timesheet['ProjectID']); ?></td>
-                                    <td> <?php echo htmlspecialchars($timesheet['TenDuAn']); ?></td>
+                                    <td> <a href="index.php?action=GetDetailProjectPage&projectID=<?php echo htmlspecialchars($timesheet['ProjectID']); ?>">
+                                    <?php echo htmlspecialchars($timesheet['TenDuAn']); ?>
+                                    </a></td>
                                     <td> <?php echo htmlspecialchars($timesheet['NguoiGui']); ?></td>
                                     <td> <?php echo htmlspecialchars($timesheet['NgayGiao']); ?></td>
                                     <td> <?php echo htmlspecialchars($timesheet['HanChot']); ?></td>
@@ -155,7 +156,6 @@
                     <p>Hiện tại không có time-sheet.</p>
                 <?php endif; ?>
             </div>
-        <?php endif; ?>
     </div>
 
     <!-- Bootstrap JS -->

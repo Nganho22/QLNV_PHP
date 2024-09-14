@@ -33,6 +33,7 @@ class HomeController{
             switch ($Role) {
                 case 'Nhân viên':
                     $limit = 2;
+                    $creq = FelicitationModel::getFelicitationCountsByEmpID($empID);
                     $file = "./views/pages/NV/home_NV.phtml";
                     $phongID = UserModel::getPhongIDByEmpID($empID,  $_SESSION['API']['Profile']);
                     // $projects = UserModel::getProjects_NV($empID);
@@ -523,7 +524,7 @@ class HomeController{
             $ID = isset($_GET['ID']) ? $_GET['ID'] : null;
             $profile = UserModel::getprofile($ID,  $_SESSION['API']['Profile']);
             $role = $profile['Role'];
-            $timesheet = ProjectModel::gettimesheet($ID);
+            $timesheets = ProjectModel::gettimesheet($ID);
             $cNghi = UserModel::getCountNghiPhep($ID,  $_SESSION['API']['Profile']);
             $cTre = UserModel::getCountTre($ID,  $_SESSION['API']['Profile']);
             $cPrj_NV = ProjectModel::getCountPrj_NV($ID);

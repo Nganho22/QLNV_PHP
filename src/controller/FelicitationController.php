@@ -165,7 +165,7 @@ class FelicitationController {
     public function GetTimeSheetDetails() {
         if (isset($_GET['timeSheetID'])) {
             $timeSheetID = $_GET['timeSheetID'];
-            $timeSheet = RequestModel::getTimeSheetByID($timeSheetID);
+            $timeSheet = RequestModel::gettimesheet($timeSheetID);
             echo json_encode($timeSheet);
         }
     }
