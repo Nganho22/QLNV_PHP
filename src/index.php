@@ -166,6 +166,10 @@ switch ($action)
         $controller = new HomeController();
         $controller->GetProfileDetail();
         break;
+    case 'Join':
+        $controller = new ActivityController();
+        $controller->JoinActivity();
+        break;
 default:
         $controller = new HomeController();
         $controller->login();

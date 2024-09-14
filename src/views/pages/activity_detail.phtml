@@ -82,8 +82,6 @@
                     </div>
                 </div>
             </div>
-
-
             <div class="description mt-4">
                 <h4>Mô tả:</h4>
                 <p><?php echo htmlspecialchars($activity['noiDung']); ?></p>
@@ -105,6 +103,15 @@
                             <?php endforeach;?>
                         <?php endif;?>
                     </ul>
+
+                    <br><?php if( $checkJoin===0 && $_SESSION['user']['Role'] !== 'Giám đốc'):?>
+                        <form action="index.php" method="GET">
+                            <input type="hidden" name="action" value="Join">
+                            <input type="hidden" name="activityId" value="<?php echo urlencode($ActivityID); ?>">
+                            <button type="submit" class="action-button">Join</button>
+                        </form>
+
+                        <?php endif;?>
                 </div>
             </div>
         </div>

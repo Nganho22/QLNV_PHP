@@ -130,6 +130,24 @@ body {
     margin-top: 30px;
 }
 
+
+.action-button {
+    background-color: #4CAF50;
+    /* Màu xanh lá cây */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.action-button:hover {
+    background-color: #45a049;
+    /* Màu khi hover */
+}
+
+
 .description h4 {
     font-size: 18px;
     font-weight: bold;

@@ -390,9 +390,77 @@ class ActivityModel {
         return $activities;
        
     }
+
+    public static function CheckJoin($activityID, $empID,$apiUrl) {
+
+        $url = $apiUrl . '/join/countt?activityID='.$activityID.'&empID='.$empID;
+        if (!self::isApiAvailable($url)) {
+            return null;
+        }
+        $response = @file_get_contents($url);
+        if ($response === FALSE) {
+            return 0;
+        }
     
-
-
+       
+        $countactivities = json_decode($response, true);
+    
+       
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return 0;
+        }
+    
+        
+        if (isset($countactivities) && is_numeric($countactivities)) {
+            return (int)$countactivities;
+        }
+        return 0;
+    }
+    
+    public static function CreateJoinActivity($activityID, $empID, $apiUrl) {
+        $url = $apiUrl . '/join/create';
+        
+        $data = array(
+            'activityID' => $activityID,
+            'employeeID' => $empID,
+        );
+        
+        $postData = http_build_query($data);
+        
+        $options = array(
+            'http' => array(
+                'header'  => "Content-Type: application/x-www-form-urlencoded\r\n" .
+                             "Content-Length: " . strlen($postData) . "\r\n",
+                'method'  => 'POST',
+                'content' => $postData,
+            ),
+        );
+        
+        $context = stream_context_create($options);
+        $response = @file_get_contents($url, false, $context);
+        
+        if ($response === FALSE) {
+            error_log('API call failed.');
+            return 2;
+        }
+        
+        $result = json_decode($response, true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log('JSON decode error: ' . json_last_error_msg());
+            return 2;
+        }
+        
+        if (isset($result['activityID']) && isset($result['employeeID'])) {
+            return 1; 
+        }
+        
+        return 2;
+    }
+    
+    
+    
+    
     
     
     

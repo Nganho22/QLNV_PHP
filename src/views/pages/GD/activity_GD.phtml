@@ -39,10 +39,9 @@
                         <div class="activity-list">
                             <h4>Danh sách các hoạt động, chiến dịch trong tháng:</h4>
                             <ul>
-                                <?php if (!empty($pagedActivities)): ?>
-                                    <?php foreach ($pagedActivities as $activity): ?>
-                                        <div id="activityTT" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
-                                            
+                                <?php if (!empty($pagedActivitiesTT)): ?>
+                                    <?php foreach ($pagedActivitiesTT as $activity): ?>
+                                        <div id="activityTT" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">  
                                         </div>
                                     <?php endforeach; ?>
                                 <?php else:?>
@@ -66,7 +65,6 @@
                         <?php if (!empty($pagedActivitiesCB)): ?>
                             <?php foreach ($pagedActivitiesCB as $activity): ?>
                                 <div id="activityCB" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
-                                
                                 </div>
                             <?php endforeach; ?>
                         <?php else:?>
@@ -151,7 +149,7 @@ $(document).ready(function() {
                 var activityTTHtml = '';
                 $.each(data.activitiesTT, function(index, activity) {
                     var statusColor = getStatusColor(activity.TinhTrang);
-                    activityTTHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + encodeURIComponent(activity.activityID) + '\';">';
+                    activityTTHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + activity.activityID + '\';">';
                     activityTTHtml += '<div>' + activity.tenHoatDong + '<br><small>Hạn chót đăng ký: ' + activity.hanCuoiDangKy + '</small><br>';
                     activityTTHtml += '<small>Ngày bắt đầu: ' + activity.ngayBatDau + ' - Ngày kết thúc: ' + activity.ngayKetThuc + '</small></div>';
                     activityTTHtml += '<div class="status" style="background-color: ' + statusColor + ';">' + activity.TinhTrang + '</div>';
@@ -170,7 +168,7 @@ $(document).ready(function() {
                 var activityCBHtml = '';
                 $.each(data.activitiesCB, function(index, activity) {
                     var statusColor = getStatusColor(activity.TinhTrang);
-                    activityCBHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + encodeURIComponent(activity.activityID) + '\';">';
+                    activityCBHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + activity.activityID + '\';">';
                     activityCBHtml += '<div>' + activity.tenHoatDong + '<br><small>Hạn chót đăng ký: ' + activity.hanCuoiDangKy + '</small><br>';
                     activityCBHtml += '<small>Ngày bắt đầu: ' + activity.ngayBatDau + ' - Ngày kết thúc: ' + activity.ngayKetThuc + '</small></div>';
                     activityCBHtml += '<div class="status" style="background-color: ' + statusColor + ';">' + activity.TinhTrang + '</div>';
@@ -189,7 +187,7 @@ $(document).ready(function() {
                 var activityLKHtml = '';
                 $.each(data.activitiesLK, function(index, activity) {
                     var statusColor = getStatusColor(activity.TinhTrang);
-                    activityLKHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + encodeURIComponent(activity.activityID) + '\';">';
+                    activityLKHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + activity.activityID + '\';">';
                     activityLKHtml += '<div>' + activity.tenHoatDong + '<br><small>Hạn chót đăng ký: ' + activity.hanCuoiDangKy + '</small><br>';
                     activityLKHtml += '<small>Ngày bắt đầu: ' + activity.ngayBatDau + ' - Ngày kết thúc: ' + activity.ngayKetThuc + '</small></div>';
                     activityLKHtml += '<div class="status" style="background-color: ' + statusColor + ';">' + activity.TinhTrang + '</div>';
