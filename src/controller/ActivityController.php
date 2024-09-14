@@ -26,7 +26,7 @@ class ActivityController{
                 $allActivitiesCB = ActivityModel::SearchActivitiesCoBan($searchCB, $_SESSION['API']['Activity']);
                 $allActivitiesLK = ActivityModel::SearchActivitiesLienKet($searchLK, $_SESSION['API']['Activity']);
                 $activitiesTT = ActivityModel::getActivitiesByMonth(date('m'), $_SESSION['API']['Activity']);
-
+                //print_r($activities);
             // Phân trang cho hoạt động tham gia 
             if ($activities !== null) {
                 $totalItems = count($activities);
@@ -172,10 +172,13 @@ class ActivityController{
             $Role = $_SESSION['user']['Role'];
             $title = 'Activity Detail'; 
             $empID = $_SESSION['user']['EmpID'];
-            $ActivityID = intval($_GET['activityId']);
+            $ActivityID = isset($_GET['activityId']) ? $_GET['activityId'] : null;
+            // print_r($ActivityID);
+            //$ActivityID = intval($_GET['activityId']);
             $activity = ActivityModel::GetActivityDetail($ActivityID, $_SESSION['API']['Activity']);
             $checkJoin = ActivityModel::CheckJoin($ActivityID,$empID,$_SESSION['API']['Activity']);
 
+            //print_r($activity);
             switch ($Role) {
                 case 'Nhân viên':
                     $file = "./views/pages/activity_detail.phtml";

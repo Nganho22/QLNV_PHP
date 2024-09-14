@@ -41,7 +41,7 @@
                             <ul>
                                 <?php if (!empty($pagedActivitiesTT)): ?>
                                     <?php foreach ($pagedActivitiesTT as $activity): ?>
-                                        <div id="activityTT" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">  
+                                        <div id="activityTT" class="activity-item">  
                                         </div>
                                     <?php endforeach; ?>
                                 <?php else:?>
@@ -64,7 +64,7 @@
                         </form>
                         <?php if (!empty($pagedActivitiesCB)): ?>
                             <?php foreach ($pagedActivitiesCB as $activity): ?>
-                                <div id="activityCB" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                <div id="activityCB" class="activity-item">
                                 </div>
                             <?php endforeach; ?>
                         <?php else:?>
@@ -85,7 +85,7 @@
                         </form>
                         <?php if (!empty($pagedActivitiesLK)): ?>
                             <?php foreach ($pagedActivitiesLK as $activity): ?>
-                                <div id="activityLK" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                <div id="activityLK" class="activity-item" >
                                 
                                 </div>
                             <?php endforeach; ?>

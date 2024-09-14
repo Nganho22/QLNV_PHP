@@ -37,7 +37,7 @@
                             <ul>
                                 <?php if (!empty($pagedActivities)): ?>
                                     <?php foreach ($pagedActivities as $activity): ?>
-                                        <div id="activityTG" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                        <div id="activityTG" class="activity-item" >
                                             <?php
                                             $statusColor = '#bdbdbd';
 
@@ -90,7 +90,7 @@
                             <ul>
                                 <?php if (!empty($pagedActivities)): ?>
                                     <?php foreach ($pagedActivities as $activity): ?>
-                                        <div id="activityTT"  class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                        <div id="activityTT"  class="activity-item" >
                                             <?php
                                             $statusColor = '#bdbdbd';
 
@@ -147,7 +147,7 @@
                         </form>
                         <?php if (!empty($pagedActivitiesCB)): ?>
                             <?php foreach ($pagedActivitiesCB as $activity): ?>
-                                <div id="activityCB" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                <div id="activityCB" class="activity-item" >
                                 <?php
                                     $statusColor = '#bdbdbd';
 
@@ -202,7 +202,7 @@
                         </form>
                         <?php if (!empty($pagedActivitiesLK)): ?>
                             <?php foreach ($pagedActivitiesLK as $activity): ?>
-                                <div id="activityLK" class="activity-item" onclick="location.href='/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=<?php echo urlencode($activity['activityID']); ?>';">
+                                <div id="activityLK" class="activity-item" >
                                 <?php
                                     $statusColor = '#bdbdbd';
 
@@ -319,12 +319,15 @@ $(document).ready(function() {
                 var activityCBHtml = '';
                 $.each(data.activitiesCB, function(index, activity) {
                     var statusColor = getStatusColor(activity.TinhTrang);
+                    var detailUrl = '/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + encodeURIComponent(activity.activityID);
                     activityCBHtml += '<div class="activity-item" onclick="location.href=\'/QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' + encodeURIComponent(activity.activityID) + '\';">';
                     activityCBHtml += '<div>' + activity.tenHoatDong + '<br><small>Hạn chót đăng ký: ' + activity.hanCuoiDangKy + '</small><br>';
                     activityCBHtml += '<small>Ngày bắt đầu: ' + activity.ngayBatDau + ' - Ngày kết thúc: ' + activity.ngayKetThuc + '</small></div>';
                     activityCBHtml += '<div class="status" style="background-color: ' + statusColor + ';">' + activity.TinhTrang + '</div>';
                     activityCBHtml += '<br></div>';
+                    console.log(encodeURIComponent(activity.activityID));
                 });
+                
                 $('#activityCB').html(activityCBHtml);
 
                 // Cập nhật phân trang hoạt động cơ bản

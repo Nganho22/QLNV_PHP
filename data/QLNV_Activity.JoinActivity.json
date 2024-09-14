@@ -1,0 +1,40 @@
+[{
+  "_id": {
+    "$oid": "66e3c406ab51702ba4a6e062"
+  },
+  "ActivityID": 1,
+  "EmployeeID": 1,
+  "DateJoin": {
+    "$date": "2024-08-19T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66e3da39ab51702ba4a6e06a"
+  },
+  "ActivityID": 1,
+  "EmployeeID": 2,
+  "DateJoin": {
+    "$date": "2024-08-20T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66e3da4cab51702ba4a6e06b"
+  },
+  "ActivityID": 2,
+  "EmployeeID": 2,
+  "DateJoin": {
+    "$date": "2024-08-20T17:00:00.000Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "66e44d75ab51702ba4a6e06e"
+  },
+  "ActivityID": 1,
+  "EmployeeID": 5,
+  "DateJoin": {
+    "$date": "2024-08-19T17:00:00.000Z"
+  }
+}]

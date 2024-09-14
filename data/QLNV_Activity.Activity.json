@@ -1,0 +1,92 @@
+[{
+  "_id": {
+    "$oid": "66d420310d719ea18ba2acd3"
+  },
+  "ActivityID": 1,
+  "TenHoatDong": "Tuần Lễ Trà sữa",
+  "LoaiHoatDong": "Hoạt động gây quỹ",
+  "Point": 5,
+  "NoiDung": "Tuần lễ trà sữa cuối tháng 9",
+  "ChiTiet": "Lập team tham gia tuần lễ trà sữa giảm 30%",
+  "SoNguoiThamGia": 30,
+  "ChiPhi": 100000,
+  "HanCuoiDangKy": {
+    "$date": "2024-08-19T17:00:00.000Z"
+  },
+  "NgayBatDau": {
+    "$date": "2024-09-10T17:00:00.000Z"
+  },
+  "NgayKetThuc": {
+    "$date": "2024-09-17T17:00:00.000Z"
+  },
+  "Loai": 1
+},
+{
+  "_id": {
+    "$oid": "66d420310d719ea18ba2acd4"
+  },
+  "ActivityID": 2,
+  "TenHoatDong": "Team Building mùa hè",
+  "LoaiHoatDong": "Hoạt động vui chơi",
+  "Point": 10,
+  "NoiDung": "Team building do công ty tổ chức",
+  "ChiTiet": "Tham gia các hoạt động: Vòng tròn kết nối, Vẽ tiếp sức, Tin tưởng thuyền trưởng,...",
+  "SoNguoiThamGia": 100,
+  "ChiPhi": 3500000,
+  "HanCuoiDangKy": {
+    "$date": "2024-09-17T17:00:00.000Z"
+  },
+  "NgayBatDau": {
+    "$date": "2024-09-20T17:00:00.000Z"
+  },
+  "NgayKetThuc": {
+    "$date": "2024-09-30T17:00:00.000Z"
+  },
+  "Loai": 1
+},
+{
+  "_id": {
+    "$oid": "66d420310d719ea18ba2acd5"
+  },
+  "ActivityID": 3,
+  "TenHoatDong": "Tuần Lễ Tình Nguyện",
+  "LoaiHoatDong": "Hoạt động tình nguyện",
+  "Point": 5,
+  "NoiDung": "Chiến dịch mùa hè xanh,...",
+  "ChiTiet": "Xây nhà tình thương, làm cầu, làm đường,...",
+  "SoNguoiThamGia": 70,
+  "ChiPhi": 500000,
+  "HanCuoiDangKy": {
+    "$date": "2024-06-30T17:00:00.000Z"
+  },
+  "NgayBatDau": {
+    "$date": "2024-07-10T17:00:00.000Z"
+  },
+  "NgayKetThuc": {
+    "$date": "2024-07-29T17:00:00.000Z"
+  },
+  "Loai": 1
+},
+{
+  "_id": {
+    "$oid": "66d441260d719ea18ba2acd6"
+  },
+  "ActivityID": 4,
+  "TenHoatDong": "Liên Hoan",
+  "LoaiHoatDong": "Hoạt động gây quỹ",
+  "Point": 5,
+  "NoiDung": "Tuần lễ trà sữa cuối tháng 9",
+  "ChiTiet": "Lập team tham gia tuần lễ trà sữa giảm 30%",
+  "SoNguoiThamGia": 30,
+  "ChiPhi": 100000,
+  "HanCuoiDangKy": {
+    "$date": "2024-08-19T17:00:00.000Z"
+  },
+  "NgayBatDau": {
+    "$date": "2024-08-20T17:00:00.000Z"
+  },
+  "NgayKetThuc": {
+    "$date": "2024-09-10T17:00:00.000Z"
+  },
+  "Loai": 2
+}]

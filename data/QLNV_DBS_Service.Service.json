@@ -1,0 +1,36 @@
+[{
+  "_id": {
+    "$oid": "66d2ae76790c7332c14e7d9d"
+  },
+  "mapping": "apiActivity",
+  "port": "9002",
+  "serviceid": 1,
+  "servicename": "Activity"
+},
+{
+  "_id": {
+    "$oid": "66e10ae47979b7641d841d39"
+  },
+  "mapping": "apiProfile",
+  "port": "9003",
+  "serviceid": 2,
+  "servicename": "Profile"
+},
+{
+  "_id": {
+    "$oid": "66e10b157979b7641d841d3a"
+  },
+  "mapping": "apiRequest",
+  "port": "9004",
+  "serviceid": 3,
+  "servicename": "Request"
+},
+{
+  "_id": {
+    "$oid": "66e10b3b7979b7641d841d3b"
+  },
+  "mapping": "apiPoint",
+  "port": "9005",
+  "serviceid": 4,
+  "servicename": "Point"
+}]
