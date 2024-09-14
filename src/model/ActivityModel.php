@@ -457,6 +457,62 @@ class ActivityModel {
         
         return 2;
     }
+
+    public static function CreateActivity($tenHoatDong, $point, $noiDung, $chiTiet, $soNguoiThamGia, $chiPhi, $hanCuoiDangKy, $ngayBatDau, $ngayKetThuc, $loaiHoatDong, $loai, $apiUrl) {
+        $url = $apiUrl . '/activity/create';
+        $data = array(
+            'tenHoatDong' => $tenHoatDong,
+            'loaiHoatDong' => $loaiHoatDong,
+            'point' => $point,
+            'noiDung' => $noiDung,
+            'chiTiet' => $chiTiet,
+            'soNguoiThamGia' => $soNguoiThamGia,
+            'chiPhi' => $chiPhi,
+            'hanCuoiDangKy' => $hanCuoiDangKy,
+            'ngayBatDau' => $ngayBatDau,
+            'ngayKetThuc' => $ngayKetThuc,
+            'loai' => $loai,
+        );
+        
+        $postData = json_encode($data); // Encode data as JSON
+        
+        $options = array(
+            'http' => array(
+                'header'  => "Content-Type: application/json\r\n" .
+                             "Content-Length: " . strlen($postData) . "\r\n",
+                'method'  => 'POST',
+                'content' => $postData,
+            ),
+        );
+        
+       
+        
+        $context = stream_context_create($options);
+        
+        $response = @file_get_contents($url, false, $context);
+        
+        if ($response === FALSE) {
+            error_log('API call failed.');
+            return 0; 
+        }
+        
+        $result = json_decode($response, true);
+        
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            error_log('JSON decode error: ' . json_last_error_msg());
+            return 0; 
+        }
+        
+        if (isset($result['activityID'])) {
+            return $result['activityID'];
+        }
+        
+        return 0;
+    }
+    
+    
+
+    
     
     
     

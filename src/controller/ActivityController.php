@@ -261,5 +261,43 @@ class ActivityController{
             exit();
         }
     }
+
+
+    public function CreateActivity() {
+        if (isset($_SESSION['user'])) {
+            $Role = $_SESSION['user']['Role'];
+            $title = 'Create Activity'; 
+            $empID = $_SESSION['user']['EmpID'];
+            
+
+
+                $tenHoatDong = $_POST['tenHoatDong'];
+                $loaiHoatDong = $_POST['loaiHoatDong'];
+                $noiDung = $_POST['noiDung'];
+                $moTa = $_POST['moTa'];
+                $ngayBatDau = $_POST['ngayBatDau'];
+                $ngayKetThuc = $_POST['ngayKetThuc'];
+                $hanCuoiDangKy = $_POST['ngayHanChotDangKy'];
+                $nganSach = $_POST['nganSach'];
+                $point = $_POST['point'];
+
+
+                
+               $result = ActivityModel::CreateActivity($tenHoatDong, $point, $noiDung, $moTa, 0, $nganSach, $hanCuoiDangKy, $ngayBatDau, $ngayKetThuc, $loaiHoatDong, 1,$_SESSION['API']['Activity']);
+
+                if ($result !== 0) {
+                    header('Location: /QLNV_PHP/src/index.php?action=GetActivityDetail&activityId=' . $result . '&status=success');
+                } else {
+                    header('Location: /QLNV_PHP/src/index.php?action=GetCreateActivityPage&status=fail');
+                }
+                exit();
+            
+        } else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
+    
+    
 }
 ?>

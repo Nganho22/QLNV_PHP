@@ -174,6 +174,10 @@ switch ($action)
         $controller = new ActivityController();
         $controller->GetCreateActivity_page();
         break;
+    case 'CreateActivity':
+        $controller = new ActivityController();
+        $controller->CreateActivity();
+        break;
 default:
         $controller = new HomeController();
         $controller->login();

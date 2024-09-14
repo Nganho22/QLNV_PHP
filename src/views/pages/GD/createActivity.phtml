@@ -7,16 +7,26 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="/QLNV_PHP/src/public/css/activity_detail.css" type="text/css"/>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/activity.css" type="text/css"/> 
 
 </head>
 <body>
+<?php if (!empty($message)): ?>
+        <div class="notification-wrapper">
+            <div class="notification">
+                <span class="close" onclick="this.parentElement.parentElement.style.display='none';">&times;</span>
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        </div>
+    <?php endif; ?>
 <main>
+    
 <div class="container">
     <h2 class="text-center mt-4">Tạo Hoạt động Mới</h2>
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <form action="" method="POST">
-                <input type="hidden" name="action" value="create_project">
+            <form id="form-test" action="index.php?action=CreateActivity" method="POST">
+                <input type="hidden" name="action" value="CreateActivity">
                 <div class="form-group">
                     <label for="tenDuAn">Tên hoạt động</label>
                     <input type="text" class="form-control" id="tenHoatDong" name="tenHoatDong" placeholder="Nhập tên hoạt động" required>
@@ -56,58 +66,42 @@
                     <label for="point">Point</label>
                     <input type="number" class="form-control" id="point" name="point" placeholder="Nhập point nhận thưởng" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-block">Tạo Hoạt Động</button>
+                <button type="submit" class="btn btn-primary btn-block" >Tạo Hoạt Động</button>
             </form>
         </div>
     </div>
 </div>
 </main>
 <script>
-    document.querySelector('form').addEventListener('submit', function (e) {
-        e.preventDefault(); // Ngăn chặn hành động gửi form
+    $(document).ready(function () {
+        $('#form-test').on('submit', function (e) {
+            const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay định dạng YYYY-MM-DD
+            const ngayBatDau = $('#ngayBatDau').val();
+            const ngayKetThuc = $('#ngayKetThuc').val();
+            const ngayHanChotDangKy = $('#ngayHanChotDangKy').val();
+            const point = $('#point').val();
+            const nganSach = $('#nganSach').val();
 
-        const today = new Date().toISOString().split('T')[0]; // Lấy ngày hôm nay định dạng YYYY-MM-DD
-        const ngayBatDau = document.getElementById('ngayBatDau').value;
-        const ngayKetThuc = document.getElementById('ngayKetThuc').value;
-        const ngayHanChotDangKy = document.getElementById('ngayHanChotDangKy').value;
-        const point = document.getElementById('point').value;
-        const nganSach = document.getElementById('nganSach').value;
+            // Validate form inputs
+            if (ngayBatDau < today) {
+                alert("Ngày bắt đầu không được nhỏ hơn ngày hiện tại.");
+                return false; // Ngăn chặn submit nếu không hợp lệ
+            }
+            if (ngayKetThuc < ngayBatDau) {
+                alert("Ngày kết thúc không được nhỏ hơn ngày bắt đầu.");
+                return false;
+            }
+            if (ngayHanChotDangKy > ngayBatDau) {
+                alert("Hạn chót đăng ký phải nhỏ hơn ngày bắt đầu.");
+                return false;
+            }
+            if ((point < 0) || (nganSach < 0)) {
+                alert("Point và ngân sách không được là số âm.");
+                return false;
+            }
 
-
-        // Kiểm tra ngày bắt đầu có nhỏ hơn hôm nay
-        if (ngayBatDau < today) {
-            alert("Ngày bắt đầu không được nhỏ hơn ngày hiện tại.");
-            e.preventDefault(); // Ngăn chặn gửi form
-            return;
-        }
-
-        // Kiểm tra ngày kết thúc có nhỏ hơn ngày bắt đầu
-        if (ngayKetThuc < ngayBatDau) {
-            alert("Ngày kết thúc không được nhỏ hơn ngày bắt đầu.");
-            e.preventDefault();
-            return;
-        }
-
-        // Kiểm tra hạn chót đăng ký có nằm giữa ngày bắt đầu và ngày kết thúc
-        if (ngayHanChotDangKy < ngayBatDau || ngayHanChotDangKy > ngayKetThuc) {
-            alert("Hạn chót đăng ký phải nằm giữa ngày bắt đầu và ngày kết thúc.");
-            e.preventDefault();
-            return;
-        }
-
-        // Kiểm tra point không được là số âm
-        if ((point < 0) || (nganSach < 0)) {
-            alert("Các point và ngân sách không được là số âm.");
-            e.preventDefault();
-            return;
-        }
-        
-        console.log(today);
-        console.log(ngayBatDau);
-        console.log(ngayKetThuc);
-        console.log(ngayHanChotDangKy);
-        console.log(point);
-
+            // Nếu tất cả điều kiện hợp lệ, form sẽ được submit như bình thường
+        });
     });
 </script>
 
