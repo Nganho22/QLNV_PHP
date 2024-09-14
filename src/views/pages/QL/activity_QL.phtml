@@ -38,34 +38,7 @@
                                 <?php if (!empty($pagedActivities)): ?>
                                     <?php foreach ($pagedActivities as $activity): ?>
                                         <div id="activityTG" class="activity-item" >
-                                            <?php
-                                            $statusColor = '#bdbdbd';
-
-                                            switch ($activity['TinhTrang']) {
-                                                case 'Chờ Đăng ký':
-                                                    $statusColor = '#ff9900';
-                                                    break;
-                                                case 'Sắp diễn ra':
-                                                    $statusColor = '#00bfff';
-                                                    break;
-                                                case 'Đang diễn ra':
-                                                    $statusColor = '#32cd32';
-                                                    break;
-                                                case 'Kết Thúc':
-                                                    $statusColor = '#ff6347';
-                                                    break;
-                                                case 'Chưa xác định':
-                                                    $statusColor = '#bdbdbd';
-                                                    break;
-                                            }
-                                            ?>
-                                            <div><?php echo htmlspecialchars($activity['tenHoatDong']); ?><br>
-                                            <small>Hạn chót đăng ký: <?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?></small><br>
-                                            <small>Ngày bắt đầu: <?php echo htmlspecialchars($activity['ngayBatDau']); ?> - Ngày kết thúc: <?php echo htmlspecialchars($activity['ngayKetThuc']); ?></small></div>
-                                            <div class="status" style="background-color: <?php echo $statusColor; ?>;">
-                                                <?php echo htmlspecialchars($activity['TinhTrang']); ?>
-                                            </div>
-                                            <br>
+                                            
                                         </div>
                                     <?php endforeach; ?>
                                 <?php else:?>
@@ -91,34 +64,7 @@
                                 <?php if (!empty($pagedActivities)): ?>
                                     <?php foreach ($pagedActivities as $activity): ?>
                                         <div id="activityTT"  class="activity-item" >
-                                            <?php
-                                            $statusColor = '#bdbdbd';
-
-                                            switch ($activity['TinhTrang']) {
-                                                case 'Chờ Đăng ký':
-                                                    $statusColor = '#ff9900';
-                                                    break;
-                                                case 'Sắp diễn ra':
-                                                    $statusColor = '#00bfff';
-                                                    break;
-                                                case 'Đang diễn ra':
-                                                    $statusColor = '#32cd32';
-                                                    break;
-                                                case 'Kết Thúc':
-                                                    $statusColor = '#ff6347';
-                                                    break;
-                                                case 'Chưa xác định':
-                                                    $statusColor = '#bdbdbd';
-                                                    break;
-                                            }
-                                            ?>
-                                            <div><?php echo htmlspecialchars($activity['tenHoatDong']); ?><br>
-                                            <small>Hạn chót đăng ký: <?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?></small><br>
-                                            <small>Ngày bắt đầu: <?php echo htmlspecialchars($activity['ngayBatDau']); ?> - Ngày kết thúc: <?php echo htmlspecialchars($activity['ngayKetThuc']); ?></small></div>
-                                            <div class="status" style="background-color: <?php echo $statusColor; ?>;">
-                                                <?php echo htmlspecialchars($activity['TinhTrang']); ?>
-                                            </div>
-                                            <br>
+                                            
                                         </div>
                                     <?php endforeach; ?>
                                 <?php else:?>
@@ -142,40 +88,13 @@
                 <div class="col-md-4">
                     <div class="activity-list" style="width: 600px;">
                         <h4>Hoạt động cơ bản:</h4>
-                        <form method="get" action="">
-                            <input type="text" id="searchcb" name="searchcb" class="form-control search-bar" placeholder="Tên hoạt động cơ bản..." value="<?php echo htmlspecialchars($searchCB); ?>">
-                        </form>
+                        <div class="search-wrapper">
+                            <input type="text" id="search-box" name="searchcb" class="form-control search-bar" placeholder="Tên hoạt động cơ bản..." value="<?php echo htmlspecialchars($searchCB); ?>">
+                        </div>
                         <?php if (!empty($pagedActivitiesCB)): ?>
                             <?php foreach ($pagedActivitiesCB as $activity): ?>
                                 <div id="activityCB" class="activity-item" >
-                                <?php
-                                    $statusColor = '#bdbdbd';
-
-                                    switch ($activity['TinhTrang']) {
-                                        case 'Chờ Đăng ký':
-                                            $statusColor = '#ff9900';
-                                            break;
-                                        case 'Sắp diễn ra':
-                                            $statusColor = '#00bfff';
-                                            break;
-                                        case 'Đang diễn ra':
-                                            $statusColor = '#32cd32';
-                                            break;
-                                        case 'Kết Thúc':
-                                            $statusColor = '#ff6347';
-                                            break;
-                                        case 'Chưa xác định':
-                                            $statusColor = '#bdbdbd';
-                                            break;
-                                    }
-                                    ?>
-                                    <div><?php echo htmlspecialchars($activity['tenHoatDong']); ?><br>
-                                    <small>Hạn chót đăng ký: <?php echo htmlspecialchars($activity['hanCuoiDangKy']); ?></small><br>
-                                    <small>Ngày bắt đầu: <?php echo htmlspecialchars($activity['ngayBatDau']); ?> - Ngày kết thúc: <?php echo htmlspecialchars($activity['ngayKetThuc']); ?></small></div>
-                                    <div class="status" style="background-color: <?php echo $statusColor; ?>;">
-                                        <?php echo htmlspecialchars($activity['TinhTrang']); ?>
-                                    </div>
-                                    <br>
+                                
                                 </div>
                             <?php endforeach; ?>
                         <?php else:?>
@@ -184,13 +103,7 @@
                         <br>
                         <?php if ($totalPagesCB > 1): ?>
                             <ul id="paginationCB" class="pagination">
-                                <?php for ($i = 1; $i <= $totalPagesCB; $i++): ?>
-                                    <li class="page-item <?php echo ($i === $currentPageCB) ? 'active' : ''; ?>">
-                                        <a class="page-link" href="?action=<?php echo htmlspecialchars($_GET['action']); ?>&pageCB=<?php echo $i; ?>&searchcb=<?php echo htmlspecialchars($searchCB); ?>&searchlk=<?php echo htmlspecialchars($searchLK); ?>&pageTT=<?php echo $currentPageTT; ?>&pageLK=<?php echo $currentPageLK; ?>&page=<?php echo $currentPage; ?>">
-                                            <?php echo $i; ?>
-                                        </a>
-                                    </li>
-                                <?php endfor; ?>
+                                
                             </ul>
                         <?php endif; ?>
                     </div>
@@ -262,7 +175,14 @@ $(document).ready(function() {
     var currentPageLK = <?php echo $currentPageLK; ?>;
     var currentPageTT = <?php echo $currentPageTT; ?>;
 
+    $('.search-box').off('input change').on('input change', function() { 
+        loadActivities();
+    });
+
     function loadActivities(page, pageCB, pageLK, pageTT) {
+        var searchTerm = $('#search-box').val();
+        console.log(searchTerm);
+
         $.ajax({
             url: 'index.php?action=GetActivityPage&ajax=true',
             type: 'GET',
@@ -271,7 +191,7 @@ $(document).ready(function() {
                 pageTT: pageTT,
                 pageCB: pageCB,
                 pageLK: pageLK,
-                searchcb: $('#searchcb').val(),
+                searchcb: searchTerm,
                 searchlk: $('#searchlk').val()
             },
             success: function(response) {
