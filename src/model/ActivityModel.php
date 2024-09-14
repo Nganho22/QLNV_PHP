@@ -511,14 +511,50 @@ class ActivityModel {
     }
     
     
+ public static function updateEmpActivityPoints($user_id, $point) {
+    $db = new Database();
+    $conn = $db->connect();
+    
+    // Truy vấn để lấy điểm thưởng hiện tại của quản lý
+    $query = "SELECT diemthuong FROM Profile WHERE empid = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('i', $user_id);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $currentPoints = $result->fetch_assoc()['diemthuong'] ?? 0;
+    
+    // Tính điểm thưởng mới
+    $newPoints = $currentPoints + $point;
 
+    // Cập nhật điểm thưởng của quản lý
+    $updateQuery = "UPDATE Profile SET diemthuong = ? WHERE empid = ?";
+    $updateStmt = $conn->prepare($updateQuery);
+    $updateStmt->bind_param('ii', $newPoints, $user_id);
+    $updateStmt->execute();
+
+    $stmt->close();
+    $updateStmt->close();
+    $db->close();
+}
+
+//UpdatePoint cho Felicitation
+public static function addFelicitation($point, $nguoiNhan) {
     
-    
-    
-    
-    
-    
-    
-    
+    $noiDung = "Tham gia hoạt động";
+
+    $db = new Database();
+    $conn = $db->connect();
+
+    $query = "INSERT INTO Felicitation (point, date, noidung, nguoinhan, nguoitang) 
+              VALUES (?, CURDATE(), ?, ?, null)";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param('isi', $point, $noiDung, $nguoiNhan);
+
+    $stmt->execute();
+    $stmt->close();
+    $db->close();
+}
+
 }
 ?>

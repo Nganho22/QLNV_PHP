@@ -181,9 +181,11 @@ class ActivityController{
             }
             
             $ActivityID = intval($_GET['activityId']);
+            $point = intval($_GET['point']);
             error_log("ActivityID: " . $ActivityID);
             error_log("EmployeeID: " . $empID);
-    
+            $result = ActivityModel::addFelicitation($point, $empID); 
+            ActivityModel::updateEmpActivityPoints($empID, $point);
             if (!isset($_SESSION['API']['Activity'])) {
                 header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
                 exit();
