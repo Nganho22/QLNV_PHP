@@ -89,7 +89,7 @@
                     <div class="activity-list" style="width: 600px;">
                         <h4>Hoạt động cơ bản:</h4>
                         <div class="search-wrapper">
-                            <input type="text" id="search-box" name="searchcb" class="form-control search-bar" placeholder="Tên hoạt động cơ bản..." value="<?php echo htmlspecialchars($searchCB); ?>">
+                            <input type="text" id="search-box" class="form-control search-bar" placeholder="Tên hoạt động cơ bản..." >
                         </div>
                         <?php if (!empty($pagedActivitiesCB)): ?>
                             <?php foreach ($pagedActivitiesCB as $activity): ?>
@@ -180,7 +180,7 @@ $(document).ready(function() {
     });
 
     function loadActivities(page, pageCB, pageLK, pageTT) {
-        var searchTerm = $('#search-box').val();
+        var searchTerm = $('.search-box').val();
         console.log(searchTerm);
 
         $.ajax({
