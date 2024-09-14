@@ -78,16 +78,13 @@
             </div>
             <div class="tasks-today">
                 <h3>Lịch trình hôm nay</h3>
-                <ul>
                 <?php foreach ($managedProjects as $project): ?>
-                        <li>
-                            <p><?php echo htmlspecialchars($project['ProjectName']); ?></p>
-                            <span>Tiến độ: <?php echo htmlspecialchars($project['TienDo']); ?></span>
-                            <span>Tình trạng: <?php echo htmlspecialchars($project['TinhTrang']); ?></span>
-                            
-                        </li>
+                    <h5><?php echo htmlspecialchars($project['ProjectName']); ?></h5>
+                    <div class="progress-status">
+                        <span class="progress-left">Tiến độ: 20%</span>
+                        <span class="status-right">Tình trạng: Chưa hoàn thành</span>
+                    </div>
                 <?php endforeach; ?>
-                </ul>
             </div>
         </div>
         <div class="right-panel">

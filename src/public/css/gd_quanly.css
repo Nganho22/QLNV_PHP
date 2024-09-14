@@ -193,6 +193,24 @@ h3 {
     background-color: #e0e0e0;
 }
 
+.progress-status {
+    display: flex;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 10px;
+    justify-content: space-between;
+    width: 100%; /* Điều chỉnh chiều rộng nếu cần */
+}
+
+.progress-left {
+    text-align: left;
+}
+
+.status-right {
+    text-align: right;
+}
+
 .employee-list ul 
 {
     list-style-type: none;
