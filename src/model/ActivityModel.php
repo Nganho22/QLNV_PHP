@@ -133,7 +133,7 @@ class ActivityModel {
 
     public static function SearchActivitiesCoBan($ten, $apiUrl) {
 
-        $url = $apiUrl . '/searchCoBan?Ten=' . $ten;
+        $url = $apiUrl . '/searchCoBan?Ten=' . urlencode($ten);
         if (!self::isApiAvailable($url)) {
             return null;
         }
@@ -181,7 +181,7 @@ class ActivityModel {
 
     public static function SearchActivitiesLienKet($ten, $apiUrl) {
 
-        $url = $apiUrl . '/searchLienKet?Ten=' . $ten;
+        $url = $apiUrl . '/searchLienKet?Ten=' . urlencode($ten);
         if (!self::isApiAvailable($url)) {
             return null;
         }
