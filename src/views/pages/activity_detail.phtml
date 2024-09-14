@@ -99,7 +99,11 @@
                     <ul class="list-group mt-2">
                         <?php if($activity['profiles']) :?>
                             <?php foreach($activity['profiles'] as $profile) :?>
-                        <li class="list-group-item"><?php echo htmlspecialchars($profile['hoten'])?> - <a><?php echo htmlspecialchars($profile['tenphong'])?></a></li>
+                                <li class="list-group-item">
+                                    <a href="index.php?action=GetProfileDetail&ID=<?php echo htmlspecialchars($profile['empid']); ?>">
+                                        <?php echo htmlspecialchars($profile['hoten'])?> -  <?php echo htmlspecialchars($profile['email'])?></a>
+                                    <a><?php echo htmlspecialchars($profile['tenphong'])?></a>
+                                </li>
                             <?php endforeach;?>
                         <?php endif;?>
                     </ul>
