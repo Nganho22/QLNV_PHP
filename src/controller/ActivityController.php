@@ -128,6 +128,43 @@ class ActivityController{
             exit();
         }
     }
+
+    public function GetCreateActivity_page() {
+        if (isset($_SESSION['user'])) {
+            $Role = $_SESSION['user']['Role'];
+            $title = 'Activity Page'; 
+            $empID = $_SESSION['user']['EmpID'];
+            $apiUrl = 'http://localhost:9002/apiActivity';
+
+            $file = "./views/pages/GD/createActivity.phtml";
+              
+            
+          
+            if ($file && file_exists($file)) {
+                $message = '';
+                if (isset($_GET['status'])) {
+                    if ($_GET['status'] === 'checked-in') {
+                        $message = "Bạn đã check-in thành công.";
+                    } elseif ($_GET['status'] === 'checked-out') {
+                        $message = "Bạn đã check-out thành công.";
+                    } elseif ($_GET['status'] === 'already-checked-out') {
+                        $message = "Bạn đã check-out, không thể thực hiện lại.";
+                    } else {
+                        $message = "Đã xảy ra lỗi. Vui lòng thử lại.";
+                    }
+                }
+                ob_start();
+                require($file);
+                $content = ob_get_clean();
+                require(__DIR__ . '/../views/template.phtml');
+            } else {
+                echo "Vai trò không hợp lệ.";
+            }
+        } else {
+            header('Location: /QLNV_PHP/src/index.php?action=login&status=needlogin');
+            exit();
+        }
+    }
     
 
 

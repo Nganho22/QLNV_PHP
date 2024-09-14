@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Dự Án Mới</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/QLNV_PHP/src/public/css/activity_detail.css" type="text/css"/>
+</head>
+<body>
+<main>
+<div class="container">
+    <h2 class="text-center mt-4">Tạo Hoạt động Mới</h2>
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <form action="index.php" method="POST">
+                <input type="hidden" name="action" value="create_project">
+                <div class="form-group">
+                    <label for="tenDuAn">Tên hoạt động</label>
+                    <input type="text" class="form-control" id="tenHoatDong" name="tenHoatDong" placeholder="Nhập tên hoạt động" required>
+                </div>
+                <div class="form-group">
+                    <label for="tenDuAn">Loại Hoạt động</label>
+                    <input type="text" class="form-control" id="loaiHoatDong" name="loaiHoatDong" placeholder="Nhập loại hoạt động" required>
+                </div>
+                <div class="form-group">
+                    <label for="noiDung">Nội dung</label>
+                    <input type="text" class="form-control" id="noiDung" name="noiDung" placeholder="Nhập nội dung hoạt động" required>
+                </div>
+                <div class="form-group">
+                    <label for="moTa">Mô tả Chi tiết</label>
+                    <textarea class="form-control" id="moTa" name="moTa" rows="4" placeholder="Nhập mô tả hoạt động" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="ngayBatDau">Ngày Bắt Đầu</label>
+                    <input type="date" class="form-control" id="ngayBatDau" name="ngayBatDau" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="ngayKetThuc">Ngày Kết Thúc</label>
+                    <input type="date" class="form-control" id="ngayKetThuc" name="ngayKetThuc" required>
+                </div>
+                <div class="form-group">
+                    <label for="HanChotDangKy">Hạn Chót đăng ký</label>
+                    <input type="date" class="form-control" id="ngayHanChotDangKy" name="ngayHanChotDangKy" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nganSach">Ngân Sách</label>
+                    <input type="number" class="form-control" id="nganSach" name="nganSach" placeholder="Nhập ngân sách" required>
+                </div>
+                <div class="form-group">
+                    <label for="point">Point</label>
+                    <input type="number" class="form-control" id="point" name="point" placeholder="Nhập point nhận thưởng" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Tạo Hoạt Động</button>
+            </form>
+        </div>
+    </div>
+</div>
+</main>
+</body>
+</html>
