@@ -80,7 +80,10 @@
                 <h3>Lịch trình hôm nay</h3>
                 <ul>
                 <?php foreach ($managedProjects as $project): ?>
-                    <h5><?php echo htmlspecialchars($project['ProjectName']); ?></h5>
+                    <a href="index.php?action=GetDetailProjectPage&projectID=<?php echo htmlspecialchars($project['ProjectID']); ?>">
+                        <h5><?php echo htmlspecialchars($project['ProjectName']); ?></h5>
+                    </a>
+                    
                     <div class="progress-status">    
                         <span class="progress-left">Tiến độ: <?php echo htmlspecialchars($project['TienDo']); ?></span>
                         <span class="progress-right">Tình trạng: <?php echo htmlspecialchars($project['TinhTrang']); ?></span>

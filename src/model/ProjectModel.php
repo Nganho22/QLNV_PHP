@@ -173,7 +173,8 @@ class ProjectModel {
         $db = new Database();
         $conn = $db->connect();
 
-        $stmt = $conn->prepare("SELECT p.ten AS ProjectName, 
+        $stmt = $conn->prepare("SELECT p.projectid,
+                                       p.ten AS ProjectName, 
                                        p.tiendo, p.tinhtrang
                                 FROM Project p
                                 JOIN Profile prof ON p.quanly = prof.empid
@@ -186,6 +187,7 @@ class ProjectModel {
         $projects = [];
         while ($row = $result->fetch_assoc()) {
             $project=[
+            'ProjectID' => $row['projectid'],
             'ProjectName' => $row['ProjectName'],
             'TienDo' => $row['tiendo'],
             'TinhTrang' => $row['tinhtrang']
