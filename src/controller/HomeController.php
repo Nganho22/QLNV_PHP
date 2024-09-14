@@ -30,6 +30,7 @@ class HomeController{
             $pagePending = isset($_GET['pagePending']) ? (int)$_GET['pagePending'] : 1;
             $offsetPending = ($pagePending - 1) * $limit;
             $timeSheets = FelicitationModel::getTimeSheetsByEmpID($empID);
+            $profile =  UserModel::getprofile($empID,  $_SESSION['API']['Profile']);
             switch ($Role) {
                 case 'Nhân viên':
                     $limit = 2;
