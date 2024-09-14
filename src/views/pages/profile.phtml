@@ -137,6 +137,7 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
+                                <th>Time-sheetID</th>
                                 <th>Project</th>
                                 <th>Tên project</th>
                                 <th>Người gửi</th>
@@ -149,6 +150,9 @@
                         <tbody>
                             <?php foreach ($timesheets as $timesheet): ?>
                                 <tr>
+                                    <td> <a href="index.php?action=GetDetailTimeSheet&timesheetID=<?php echo htmlspecialchars($timesheet['Time_SheetID']); ?>">
+                                    <?php echo htmlspecialchars($timesheet['Time_SheetID']); ?>
+                                    </a></td>
                                     <td> <?php echo htmlspecialchars($timesheet['ProjectID']); ?></td>
                                     <td> <a href="index.php?action=GetDetailProjectPage&projectID=<?php echo htmlspecialchars($timesheet['ProjectID']); ?>">
                                     <?php echo htmlspecialchars($timesheet['TenDuAn']); ?>
